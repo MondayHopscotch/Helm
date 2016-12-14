@@ -7,11 +7,8 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class ShipBodyComponent extends GameComponent {
     public Vector2[] bodyPoints;
-    public float angle;
-
 
     public ShipBodyComponent(Vector2[] points) {
         bodyPoints = points;
-        angle = 0;
     }
 }

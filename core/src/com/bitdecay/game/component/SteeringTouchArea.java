@@ -7,4 +7,8 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class SteeringTouchArea extends GameComponent {
     public Rectangle activeArea;
+
+    public SteeringTouchArea(Rectangle area) {
+        activeArea = new Rectangle(area);
+    }
 }

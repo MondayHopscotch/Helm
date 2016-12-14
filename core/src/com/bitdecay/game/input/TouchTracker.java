@@ -1,5 +1,6 @@
 package com.bitdecay.game.input;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -19,7 +20,8 @@ public class TouchTracker {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 //        System.out.println("Touch Down: ID: " + pointer + " X: " + screenX + " Y: " + screenY + " Button: " + button);
         if (touchCount < maxTouches) {
-            activeTouches.add(new ActiveTouch(pointer, screenX, screenY));
+            // workstation transform on the y
+            activeTouches.add(new ActiveTouch(pointer, screenX, Gdx.graphics.getHeight() - screenY));
             touchCount++;
         }
         return false;
@@ -34,7 +36,8 @@ public class TouchTracker {
             touch = iter.next();
             if (touch.pointerNum == pointer) {
                 touch.currentLocation.x = screenX;
-                touch.currentLocation.y = screenY;
+                // workstation transform on the y
+                touch.currentLocation.y = Gdx.graphics.getHeight() - screenY;
             }
         }
         return false;

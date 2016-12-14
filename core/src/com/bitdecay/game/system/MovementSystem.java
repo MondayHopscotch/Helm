@@ -14,7 +14,6 @@ public class MovementSystem extends AbstractIteratingGameSystem {
         VelocityComponent velocity = entity.getComponent(VelocityComponent.class);
 
         position.position.add(velocity.currentVelocity);
-        System.out.println(velocity.currentVelocity);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.bitdecay.game.system;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.component.RotationComponent;
-import com.bitdecay.game.component.ShipBodyComponent;
 import com.bitdecay.game.component.SteeringTouchArea;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
@@ -13,19 +13,22 @@ import com.bitdecay.game.input.TouchTracker;
  */
 public class SteeringSystem extends AbstractIteratingGameSystem implements InputProcessor {
 
-    TouchTracker tracker = new TouchTracker(1);
+    TouchTracker tracker = new TouchTracker(5);
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
         SteeringTouchArea area = entity.getComponent(SteeringTouchArea.class);
-        ShipBodyComponent shipBody = entity.getComponent(ShipBodyComponent.class);
+        RotationComponent rotation = entity.getComponent(RotationComponent.class);
 
         for (ActiveTouch touch : tracker.activeTouches) {
             if (area.activeArea.contains(touch.startingLocation)) {
                 float deltaX = touch.currentLocation.x - touch.startingLocation.x;
                 float deltaY = touch.currentLocation.y - touch.startingLocation.y;
-                float angle = (float) Math.atan2(deltaY, deltaX);
-                shipBody.angle = angle;
+                Vector2 touchVector = new Vector2(deltaX, deltaY);
+                if (touchVector.len() > 10) {
+                    float angle = (float) Math.atan2(touchVector.y, touchVector.x);
+                    rotation.angle = angle;
+                }
             }
         }
     }
@@ -33,7 +36,7 @@ public class SteeringSystem extends AbstractIteratingGameSystem implements Input
     @Override
     public boolean canActOn(GameEntity entity) {
         return entity.hasComponent(SteeringTouchArea.class) &&
-                entity.hasComponent(ShipBodyComponent.class);
+                entity.hasComponent(RotationComponent.class);
     }
 
     @Override
