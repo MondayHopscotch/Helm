@@ -1,6 +1,7 @@
 package com.bitdecay.game;
 
 import com.bitdecay.game.component.GameComponent;
+import com.bitdecay.game.component.WaitingToStartComponent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,10 @@ public class GameEntity {
 
     public <T> T getComponent(Class<T> componentClazz) {
         return componentClazz.cast(components.get(componentClazz));
+    }
+
+    public <T> void removeComponent(Class<T> componentClazz) {
+        components.remove(componentClazz);
     }
 }
 

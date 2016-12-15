@@ -1,6 +1,7 @@
 package com.bitdecay.game.math;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -19,10 +20,11 @@ public class Geom {
 
     /**
      * Rotates a list of points by the given angle around the origin.
-     * @see Geom#getRotatedPoint(Vector2, float, Vector2)
+     *
      * @param points
      * @param angle
      * @return A list of points corresponding to the rotated version of the provided points
+     * @see Geom#getRotatedPoint(Vector2, float, Vector2)
      */
     public static Vector2[] rotatePoints(Vector2[] points, float angle) {
         Vector2[] newPoints = new Vector2[points.length];
@@ -34,6 +36,7 @@ public class Geom {
 
     /**
      * Rotates a list of points by the given angle around the origin.
+     *
      * @param points
      * @param angle
      * @return A array of coordinates corresponding to the rotated version of the provided points
@@ -41,9 +44,9 @@ public class Geom {
     public static float[] rotatePoints(float[] points, float angle) {
         float[] newPoints = new float[points.length];
         for (int i = 0; i < points.length; i += 2) {
-            Vector2 rotated = getRotatedPoint(points[i], points[i+1], angle, Vector2.Zero);
+            Vector2 rotated = getRotatedPoint(points[i], points[i + 1], angle, Vector2.Zero);
             newPoints[i] = rotated.x;
-            newPoints[i+1] = rotated.y;
+            newPoints[i + 1] = rotated.y;
         }
         return newPoints;
     }
@@ -55,6 +58,7 @@ public class Geom {
     /**
      * Given a working point and a reference point, rotate the working point by
      * the given angle around the reference point.
+     *
      * @param p
      * @param angle
      * @param around
@@ -77,5 +81,12 @@ public class Geom {
         rotated.x = (float) (xnew + around.x);
         rotated.y = (float) (ynew + around.y);
         return rotated;
+    }
+
+    public static float[] rectangleToFloatPoints(Rectangle shape) {
+        return new float[]{shape.x, shape.y,
+                shape.x + shape.width, shape.y,
+                shape.x + shape.width, shape.y + shape.height,
+                shape.x, shape.y + shape.height};
     }
 }

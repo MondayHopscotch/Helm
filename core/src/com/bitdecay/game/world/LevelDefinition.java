@@ -1,5 +1,6 @@
 package com.bitdecay.game.world;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -7,6 +8,8 @@ import com.badlogic.gdx.utils.Array;
  */
 public class LevelDefinition {
     public Array<LineSegment> levelLines;
+
+    public Rectangle finishPlatform = new Rectangle();
 
     public LevelDefinition(Array<LineSegment> lines) {
         this.levelLines = lines;

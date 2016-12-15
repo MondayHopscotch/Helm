@@ -20,19 +20,11 @@ public class BoosterActivationSystem extends AbstractIteratingGameSystem impleme
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
-        BoosterComponent boost = entity.getComponent(BoosterComponent.class);
-
         BoostActivateButton button = entity.getComponent(BoostActivateButton.class);
         button.pressed = false;
 
-        VelocityComponent velocity = entity.getComponent(VelocityComponent.class);
-
-        RotationComponent rotation = entity.getComponent(RotationComponent.class);
-
         for (ActiveTouch touch : tracker.activeTouches) {
             if (button.activeArea.contains(touch.currentLocation)) {
-                Vector2 boostVector = Geom.rotateSinglePoint(new Vector2( boost.strength, 0), rotation.angle);
-                velocity.currentVelocity.add(boostVector.scl(delta));
                 button.pressed = true;
             }
         }
@@ -40,10 +32,7 @@ public class BoosterActivationSystem extends AbstractIteratingGameSystem impleme
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(BoosterComponent.class) &&
-                entity.hasComponent(BoostActivateButton.class) &&
-                entity.hasComponent(RotationComponent.class) &&
-                entity.hasComponent(VelocityComponent.class);
+        return entity.hasComponent(BoostActivateButton.class);
     }
 
     @Override

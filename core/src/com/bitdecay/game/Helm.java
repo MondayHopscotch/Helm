@@ -17,8 +17,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.camera.FollowOrthoCamera;
 import com.bitdecay.game.component.BoostActivateButton;
+import com.bitdecay.game.entities.LandingPlatformEntity;
 import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
+import com.bitdecay.game.system.BoostApplicationSystem;
 import com.bitdecay.game.system.CameraUpdateSystem;
 import com.bitdecay.game.system.CollisionPositionAlignmentSystem;
 import com.bitdecay.game.system.CollisionRotationAlignmentSystem;
@@ -27,6 +29,8 @@ import com.bitdecay.game.system.GameSystem;
 import com.bitdecay.game.system.BoosterActivationSystem;
 import com.bitdecay.game.system.GravitySystem;
 import com.bitdecay.game.system.MovementSystem;
+import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
+import com.bitdecay.game.system.PlayerStartLevelSystem;
 import com.bitdecay.game.system.RenderBodySystem;
 import com.bitdecay.game.system.SteeringSystem;
 import com.bitdecay.game.world.LevelDefinition;
@@ -48,7 +52,7 @@ public class Helm extends ApplicationAdapter {
         cam = new FollowOrthoCamera(1920, 1080);
         cam.minZoom = 3;
         cam.maxZoom = .5f;
-        cam.buffer = 500;
+        cam.buffer = 2000;
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
@@ -56,8 +60,12 @@ public class Helm extends ApplicationAdapter {
         InputMultiplexer inputMux = new InputMultiplexer();
         Gdx.input.setInputProcessor(inputMux);
 
-        BoosterActivationSystem boostSystem = new BoosterActivationSystem();
-        inputMux.addProcessor(boostSystem);
+        BoosterActivationSystem boostButtonSystem = new BoosterActivationSystem();
+        inputMux.addProcessor(boostButtonSystem);
+
+        BoostApplicationSystem boostApplicationSystem = new BoostApplicationSystem();
+
+        PlayerStartLevelSystem startSystem = new PlayerStartLevelSystem();
 
         GravitySystem gravitySystem = new GravitySystem();
 
@@ -73,15 +81,19 @@ public class Helm extends ApplicationAdapter {
         CollisionPositionAlignmentSystem collisionPositionSystem = new CollisionPositionAlignmentSystem();
         CollisionRotationAlignmentSystem collisionRotationSystem = new CollisionRotationAlignmentSystem();
         CollisionSystem collisionSystem = new CollisionSystem();
+        PlayerCollisionHandlerSystem playerCollisionSystem = new PlayerCollisionHandlerSystem();
 
         allSystems.add(cameraSystem);
-        allSystems.add(boostSystem);
+        allSystems.add(boostButtonSystem);
+        allSystems.add(boostApplicationSystem);
+        allSystems.add(startSystem);
         allSystems.add(gravitySystem);
         allSystems.add(steeringSystem);
         allSystems.add(movementSystem);
         allSystems.add(collisionPositionSystem);
         allSystems.add(collisionRotationSystem);
         allSystems.add(collisionSystem);
+        allSystems.add(playerCollisionSystem);
         allSystems.add(renderBodySystem);
 
         ShipEntity ship = new ShipEntity();
@@ -92,13 +104,25 @@ public class Helm extends ApplicationAdapter {
         for (LineSegment line : testLevel.levelLines) {
             allEntities.add(new LineSegmentEntity(line));
         }
+
+        if (testLevel.finishPlatform.area() > 0) {
+            LandingPlatformEntity plat = new LandingPlatformEntity(testLevel.finishPlatform);
+            printMatchingSystems(plat);
+            allEntities.add(plat);
+        }
     }
 
     private LevelDefinition getTestLevel() {
         Array<LineSegment> testLines = new Array<>(10);
         testLines.add(new LineSegment(new Vector2(0, -400), new Vector2(100, -400)));
+        testLines.add(new LineSegment(new Vector2(-800, 300), new Vector2(0, -400)));
+        testLines.add(new LineSegment(new Vector2(100, -400), new Vector2(300, -600)));
 
-        return new LevelDefinition(testLines);
+        LevelDefinition testLevel = new LevelDefinition(testLines);
+
+        testLevel.finishPlatform.set(new Rectangle(300, -600, 150, 50));
+
+        return testLevel;
     }
 
     @Override
@@ -118,7 +142,6 @@ public class Helm extends ApplicationAdapter {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.GREEN);
         shapeRenderer.circle(0, 0, 100);
-        shapeRenderer.circle(1000, 800, 50);
         shapeRenderer.end();
 
 
@@ -134,6 +157,7 @@ public class Helm extends ApplicationAdapter {
     }
 
     private void printMatchingSystems(GameEntity entity) {
+        System.out.println("Entity " + entity.getClass().getSimpleName() + " matches the following systems:");
         for (GameSystem system : allSystems) {
             if (system.canActOn(entity)) {
                 System.out.println(system.getClass().getSimpleName());

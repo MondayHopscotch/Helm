@@ -2,11 +2,11 @@ package com.bitdecay.game.system;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.component.PositionComponent;
+import com.bitdecay.game.component.RenderColorComponent;
 import com.bitdecay.game.component.RotationComponent;
-import com.bitdecay.game.component.ShipBodyComponent;
+import com.bitdecay.game.component.BodyDefComponent;
 import com.bitdecay.game.math.Geom;
 
 /**
@@ -22,9 +22,10 @@ public class RenderBodySystem extends AbstractIteratingGameSystem {
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
-        ShipBodyComponent body = entity.getComponent(ShipBodyComponent.class);
+        BodyDefComponent body = entity.getComponent(BodyDefComponent.class);
         RotationComponent rotation = entity.getComponent(RotationComponent.class);
         PositionComponent position = entity.getComponent(PositionComponent.class);
+        RenderColorComponent color = entity.getComponent(RenderColorComponent.class);
 
         float[] rotated = Geom.rotatePoints(body.bodyPoints, rotation.angle);
         for (int i = 0; i < rotated.length; i += 2) {
@@ -33,20 +34,20 @@ public class RenderBodySystem extends AbstractIteratingGameSystem {
         }
 
         renderer.begin(ShapeRenderer.ShapeType.Line);
-        renderer.setColor(Color.WHITE);
+        renderer.setColor(color.color);
         if (rotated.length > Geom.DATA_POINTS_FOR_LINE) {
             renderer.polygon(rotated);
         } else {
             renderer.polyline(rotated);
         }
-        renderer.circle(position.position.x,position.position.y, 50);
         renderer.end();
     }
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(ShipBodyComponent.class) &&
+        return entity.hasComponent(BodyDefComponent.class) &&
                 entity.hasComponent(PositionComponent.class) &&
-                entity.hasComponent(RotationComponent.class);
+                entity.hasComponent(RotationComponent.class) &&
+                entity.hasComponent(RenderColorComponent.class);
     }
 }
