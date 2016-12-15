@@ -26,16 +26,20 @@ public class RenderBodySystem extends AbstractIteratingGameSystem {
         RotationComponent rotation = entity.getComponent(RotationComponent.class);
         PositionComponent position = entity.getComponent(PositionComponent.class);
 
-        Vector2[] rotated = Geom.rotatePoints(body.bodyPoints, rotation.angle);
-
-        float[] asFloats = new float[rotated.length*2];
-        for (int i = 0; i < rotated.length; i++) {
-            asFloats[i * 2] = rotated[i].x + position.position.x;
-            asFloats[i * 2 + 1] = rotated[i].y + position.position.y;
+        float[] rotated = Geom.rotatePoints(body.bodyPoints, rotation.angle);
+        for (int i = 0; i < rotated.length; i += 2) {
+            rotated[i] += position.position.x;
+            rotated[i+1] += position.position.y;
         }
+
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(Color.WHITE);
-        renderer.polygon(asFloats);
+        if (rotated.length > Geom.DATA_POINTS_FOR_LINE) {
+            renderer.polygon(rotated);
+        } else {
+            renderer.polyline(rotated);
+        }
+        renderer.circle(position.position.x,position.position.y, 50);
         renderer.end();
     }
 

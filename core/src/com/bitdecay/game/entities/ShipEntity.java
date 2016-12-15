@@ -1,11 +1,14 @@
 package com.bitdecay.game.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.component.BoostActivateButton;
 import com.bitdecay.game.component.BoosterComponent;
+import com.bitdecay.game.component.CameraFollowComponent;
+import com.bitdecay.game.component.CollisionGeometryComponent;
 import com.bitdecay.game.component.GravityComponent;
 import com.bitdecay.game.component.PositionComponent;
 import com.bitdecay.game.component.RotationComponent;
@@ -23,12 +26,16 @@ public class ShipEntity extends GameEntity {
         addComponent(new BoosterComponent(20));
         addComponent(new BoostActivateButton(new Rectangle(Gdx.graphics.getWidth()/2, 0, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight())));
 
-        addComponent(new ShipBodyComponent(new Vector2[]{new Vector2(-10, -5), new Vector2(-10, 5), new Vector2(10, 0)}));
+        float[] geomPoints = new float[]{-100, -50, -100, 50, 100, 0};
+        addComponent(new CollisionGeometryComponent(geomPoints));
+        addComponent(new ShipBodyComponent(geomPoints));
         addComponent(new SteeringTouchArea(new Rectangle(0, 0, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight())));
         addComponent(new PositionComponent(new Vector2(0, 0)));
         addComponent(new RotationComponent(Geom.ROTATION_UP));
         addComponent(new VelocityComponent());
 
         addComponent(new GravityComponent());
+
+        addComponent(new CameraFollowComponent());
     }
 }

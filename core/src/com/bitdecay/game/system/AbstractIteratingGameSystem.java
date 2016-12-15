@@ -9,6 +9,7 @@ import com.bitdecay.game.GameEntity;
 public abstract class AbstractIteratingGameSystem implements GameSystem {
     @Override
     public void act(Array<GameEntity> entities, float delta) {
+        before();
         Array.ArrayIterator<GameEntity> iter = new Array.ArrayIterator(entities);
         GameEntity entity;
         while (iter.hasNext()) {
@@ -17,7 +18,18 @@ public abstract class AbstractIteratingGameSystem implements GameSystem {
                 actOnSingle(entity, delta);
             }
         }
+        after();
     }
 
     public abstract void actOnSingle(GameEntity entity, float delta);
+
+    @Override
+    public void before() {
+        // no-op. Override to implement logic
+    }
+
+    @Override
+    public void after() {
+        // no-op. Override to implement logic
+    }
 }

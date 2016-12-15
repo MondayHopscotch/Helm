@@ -13,6 +13,8 @@ import com.bitdecay.game.input.TouchTracker;
  */
 public class SteeringSystem extends AbstractIteratingGameSystem implements InputProcessor {
 
+    public static float STEERING_SENSITIVITY = 25;
+
     TouchTracker tracker = new TouchTracker(5);
 
     @Override
@@ -25,7 +27,7 @@ public class SteeringSystem extends AbstractIteratingGameSystem implements Input
                 float deltaX = touch.currentLocation.x - touch.startingLocation.x;
                 float deltaY = touch.currentLocation.y - touch.startingLocation.y;
                 Vector2 touchVector = new Vector2(deltaX, deltaY);
-                if (touchVector.len() > 10) {
+                if (touchVector.len() > STEERING_SENSITIVITY) {
                     float angle = (float) Math.atan2(touchVector.y, touchVector.x);
                     rotation.angle = angle;
                 }
