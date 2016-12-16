@@ -1,12 +1,11 @@
 package com.bitdecay.game.system;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bitdecay.game.GameEntity;
-import com.bitdecay.game.component.PositionComponent;
+import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.RenderColorComponent;
-import com.bitdecay.game.component.RotationComponent;
 import com.bitdecay.game.component.BodyDefComponent;
+import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.math.Geom;
 
 /**
@@ -16,21 +15,22 @@ public class RenderBodySystem extends AbstractIteratingGameSystem {
 
     private ShapeRenderer renderer;
 
-    public RenderBodySystem(ShapeRenderer renderer) {
+    public RenderBodySystem(GamePilot pilot, ShapeRenderer renderer) {
+        super(pilot);
         this.renderer = renderer;
     }
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
         BodyDefComponent body = entity.getComponent(BodyDefComponent.class);
-        RotationComponent rotation = entity.getComponent(RotationComponent.class);
-        PositionComponent position = entity.getComponent(PositionComponent.class);
+        TransformComponent transform = entity.getComponent(TransformComponent.class);
+
         RenderColorComponent color = entity.getComponent(RenderColorComponent.class);
 
-        float[] rotated = Geom.rotatePoints(body.bodyPoints, rotation.angle);
+        float[] rotated = Geom.rotatePoints(body.bodyPoints, transform.angle);
         for (int i = 0; i < rotated.length; i += 2) {
-            rotated[i] += position.position.x;
-            rotated[i+1] += position.position.y;
+            rotated[i] += transform.position.x;
+            rotated[i+1] += transform.position.y;
         }
 
         renderer.begin(ShapeRenderer.ShapeType.Line);
@@ -46,8 +46,7 @@ public class RenderBodySystem extends AbstractIteratingGameSystem {
     @Override
     public boolean canActOn(GameEntity entity) {
         return entity.hasComponent(BodyDefComponent.class) &&
-                entity.hasComponent(PositionComponent.class) &&
-                entity.hasComponent(RotationComponent.class) &&
+                entity.hasComponent(TransformComponent.class) &&
                 entity.hasComponent(RenderColorComponent.class);
     }
 }

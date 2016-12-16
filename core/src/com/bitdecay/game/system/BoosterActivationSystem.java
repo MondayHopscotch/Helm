@@ -1,15 +1,12 @@
 package com.bitdecay.game.system;
 
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
+import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.component.ActiveComponent;
 import com.bitdecay.game.component.BoostActivateButton;
-import com.bitdecay.game.component.BoosterComponent;
-import com.bitdecay.game.component.RotationComponent;
-import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
-import com.bitdecay.game.math.Geom;
 
 /**
  * Created by Monday on 12/8/2016.
@@ -18,8 +15,17 @@ public class BoosterActivationSystem extends AbstractIteratingGameSystem impleme
 
     TouchTracker tracker = new TouchTracker(5);
 
+    public BoosterActivationSystem(GamePilot pilot) {
+        super(pilot);
+    }
+
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
+        ActiveComponent active = entity.getComponent(ActiveComponent.class);
+        if (!active.active) {
+            return;
+        }
+
         BoostActivateButton button = entity.getComponent(BoostActivateButton.class);
         button.pressed = false;
 
@@ -32,7 +38,8 @@ public class BoosterActivationSystem extends AbstractIteratingGameSystem impleme
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(BoostActivateButton.class);
+        return entity.hasComponent(BoostActivateButton.class) &&
+                entity.hasComponent(ActiveComponent.class);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
+import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.CollidedWithComponent;
 import com.bitdecay.game.component.CollisionGeometryComponent;
 import com.bitdecay.game.component.CollisionKindComponent;
@@ -18,6 +19,10 @@ import java.util.List;
 public class CollisionSystem extends AbstractIteratingGameSystem {
 
     List<GameEntity> allCollisionEntities = new ArrayList<>();
+
+    public CollisionSystem(GamePilot pilot) {
+        super(pilot);
+    }
 
     @Override
     public void before() {
@@ -67,10 +72,10 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
                         geom2.colliding = true;
                         if (CollisionGeometryComponent.Direction.RECEIVES.equals(geom1.direction) &&
                             CollisionGeometryComponent.Direction.DELIVERS.equals(geom2.direction)) {
-                            entity1.addComponent(new CollidedWithComponent(kind2.kind));
+                            entity1.addComponent(new CollidedWithComponent(kind2.kind, geom2.originalGeom));
                         } else if (CollisionGeometryComponent.Direction.DELIVERS.equals(geom1.direction) &&
                                 CollisionGeometryComponent.Direction.RECEIVES.equals(geom2.direction)) {
-                            entity2.addComponent(new CollidedWithComponent(kind1.kind));
+                            entity2.addComponent(new CollidedWithComponent(kind1.kind, geom1.originalGeom));
                         }
                     }
                 }

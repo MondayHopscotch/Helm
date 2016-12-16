@@ -2,6 +2,7 @@ package com.bitdecay.game.system;
 
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
+import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.GravityComponent;
 import com.bitdecay.game.component.VelocityComponent;
 
@@ -11,6 +12,10 @@ import com.bitdecay.game.component.VelocityComponent;
 public class GravitySystem extends AbstractIteratingGameSystem {
 
     Vector2 universalGravity = new Vector2(0, -10);
+
+    public GravitySystem(GamePilot pilot) {
+        super(pilot);
+    }
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {

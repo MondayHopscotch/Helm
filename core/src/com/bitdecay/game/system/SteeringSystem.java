@@ -3,8 +3,10 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
-import com.bitdecay.game.component.RotationComponent;
+import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.component.ActiveComponent;
 import com.bitdecay.game.component.SteeringTouchArea;
+import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
 
@@ -17,10 +19,19 @@ public class SteeringSystem extends AbstractIteratingGameSystem implements Input
 
     TouchTracker tracker = new TouchTracker(5);
 
+    public SteeringSystem(GamePilot pilot) {
+        super(pilot);
+    }
+
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
+        ActiveComponent active = entity.getComponent(ActiveComponent.class);
+        if (!active.active) {
+            return;
+        }
+
         SteeringTouchArea area = entity.getComponent(SteeringTouchArea.class);
-        RotationComponent rotation = entity.getComponent(RotationComponent.class);
+        TransformComponent transform = entity.getComponent(TransformComponent.class);
 
         for (ActiveTouch touch : tracker.activeTouches) {
             if (area.activeArea.contains(touch.startingLocation)) {
@@ -29,7 +40,7 @@ public class SteeringSystem extends AbstractIteratingGameSystem implements Input
                 Vector2 touchVector = new Vector2(deltaX, deltaY);
                 if (touchVector.len() > STEERING_SENSITIVITY) {
                     float angle = (float) Math.atan2(touchVector.y, touchVector.x);
-                    rotation.angle = angle;
+                    transform.angle = angle;
                 }
             }
         }
@@ -38,7 +49,8 @@ public class SteeringSystem extends AbstractIteratingGameSystem implements Input
     @Override
     public boolean canActOn(GameEntity entity) {
         return entity.hasComponent(SteeringTouchArea.class) &&
-                entity.hasComponent(RotationComponent.class);
+                entity.hasComponent(TransformComponent.class) &&
+                entity.hasComponent(ActiveComponent.class);
     }
 
     @Override
