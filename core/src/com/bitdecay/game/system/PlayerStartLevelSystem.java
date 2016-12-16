@@ -8,7 +8,11 @@ import com.bitdecay.game.component.ActiveComponent;
 import com.bitdecay.game.component.BoostActivateButton;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.component.WaitingToStartComponent;
+import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
+import com.bitdecay.game.sound.MusicLibrary;
+import com.bitdecay.game.sound.SFXLibrary;
+import com.bitdecay.game.sound.SoundMode;
 
 /**
  * Created by Monday on 12/14/2016.
@@ -37,21 +41,29 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
             return;
         }
 
-        if (tracker.activeTouches.size > 0) {
-            VelocityComponent velocity = new VelocityComponent();
-            velocity.currentVelocity.set(LAUNCH_VELOCITY);
-            entity.addComponent(velocity);
+        BoostActivateButton button = entity.getComponent(BoostActivateButton.class);
 
-            active.flipControlTimer = PLAYER_CONTROL_DELAY;
+        pilot.doMusic(SoundMode.PAUSE, MusicLibrary.SHIP_BOOST);
 
-            entity.removeComponent(WaitingToStartComponent.class);
+        for (ActiveTouch touch : tracker.activeTouches) {
+            if (button.activeArea.contains(touch.startingLocation)) {
+                VelocityComponent velocity = new VelocityComponent();
+                velocity.currentVelocity.set(LAUNCH_VELOCITY);
+                entity.addComponent(velocity);
+
+                active.flipControlTimer = PLAYER_CONTROL_DELAY;
+
+                entity.removeComponent(WaitingToStartComponent.class);
+                pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_LAUNCH);
+            }
         }
     }
 
     @Override
     public boolean canActOn(GameEntity entity) {
         return entity.hasComponent(WaitingToStartComponent.class) &&
-                entity.hasComponent(ActiveComponent.class);
+                entity.hasComponent(ActiveComponent.class) &&
+                entity.hasComponent(BoostActivateButton.class);
     }
 
     @Override

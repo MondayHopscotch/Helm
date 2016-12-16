@@ -7,6 +7,8 @@ import com.bitdecay.game.component.ActiveComponent;
 import com.bitdecay.game.component.BoostActivateButton;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
+import com.bitdecay.game.sound.MusicLibrary;
+import com.bitdecay.game.sound.SoundMode;
 
 /**
  * Created by Monday on 12/8/2016.
@@ -33,6 +35,12 @@ public class BoosterActivationSystem extends AbstractIteratingGameSystem impleme
             if (button.activeArea.contains(touch.currentLocation)) {
                 button.pressed = true;
             }
+        }
+
+        if (button.pressed) {
+            pilot.doMusic(SoundMode.RESUME, MusicLibrary.SHIP_BOOST);
+        } else {
+            pilot.doMusic(SoundMode.PAUSE, MusicLibrary.SHIP_BOOST);
         }
     }
 

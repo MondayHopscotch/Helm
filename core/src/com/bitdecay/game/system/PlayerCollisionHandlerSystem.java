@@ -8,6 +8,8 @@ import com.bitdecay.game.component.PlayerCollisionComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.component.WaitingToStartComponent;
+import com.bitdecay.game.sound.MusicLibrary;
+import com.bitdecay.game.sound.SoundMode;
 
 /**
  * Created by Monday on 12/14/2016.
@@ -23,6 +25,8 @@ public class PlayerCollisionHandlerSystem extends AbstractIteratingGameSystem {
         System.out.println("Player has collided collided " + collided.with.toString());
         entity.removeComponent(CollidedWithComponent.class);
 
+        pilot.doMusic(SoundMode.STOP, MusicLibrary.SHIP_BOOST);
+
         // Will need to specially handle various kinds of collisions here.
         // i.e. restart the level / play death screen if it is a wall
         //      show score and move to next level if successfully landed on platform
@@ -36,6 +40,7 @@ public class PlayerCollisionHandlerSystem extends AbstractIteratingGameSystem {
         if (!entity.hasComponent(WaitingToStartComponent.class)) {
             entity.addComponent(new WaitingToStartComponent());
         }
+
     }
 
     @Override

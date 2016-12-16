@@ -3,6 +3,8 @@ package com.bitdecay.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -16,6 +18,9 @@ import com.bitdecay.game.camera.FollowOrthoCamera;
 import com.bitdecay.game.entities.LandingPlatformEntity;
 import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
+import com.bitdecay.game.sound.MusicLibrary;
+import com.bitdecay.game.sound.SFXLibrary;
+import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.system.ActiveSystem;
 import com.bitdecay.game.system.BoostApplicationSystem;
 import com.bitdecay.game.system.BoosterActivationSystem;
@@ -31,6 +36,9 @@ import com.bitdecay.game.system.RenderBodySystem;
 import com.bitdecay.game.system.SteeringSystem;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Monday on 12/15/2016.
@@ -130,13 +138,23 @@ public class GameScreen implements Screen, GamePilot {
 
 
         Array<LineSegment> testLines = new Array<>(10);
-        testLines.add(new LineSegment(new Vector2(-800, 300), new Vector2(0, -400)));
-        testLines.add(new LineSegment(new Vector2(0, -400), new Vector2(100, -400)));
-        testLines.add(new LineSegment(new Vector2(100, -400), new Vector2(300, -600)));
+        testLines.add(new LineSegment(new Vector2(-100, 1500), new Vector2(-850, 800)));
+        testLines.add(new LineSegment(new Vector2(-850, 800), new Vector2(-800, 300)));
+        testLines.add(new LineSegment(new Vector2(-800, 300), new Vector2(-100, -101)));
+        testLines.add(new LineSegment(new Vector2(-100, -101), new Vector2(100, -101)));
+        testLines.add(new LineSegment(new Vector2(100, -101), new Vector2(300, -600)));
         testLevel.finishPlatform.set(new Rectangle(300, -650, 150, 50));
         testLines.add(new LineSegment(new Vector2(450, -600), new Vector2(800, -300)));
         testLines.add(new LineSegment(new Vector2(800, -300), new Vector2(1000, 300)));
+        testLines.add(new LineSegment(new Vector2(1000, 300), new Vector2(1100, 1100)));
+        testLines.add(new LineSegment(new Vector2(1100, 1100), new Vector2(1050, 1800)));
+        testLines.add(new LineSegment(new Vector2(1050, 1800), new Vector2(400, 1800)));
+        testLines.add(new LineSegment(new Vector2(400, 1800), new Vector2(-100, 1500)));
 
+        testLines.add(new LineSegment(new Vector2(300, 900), new Vector2(700, 900)));
+        testLines.add(new LineSegment(new Vector2(700, 900), new Vector2(750, 1250)));
+        testLines.add(new LineSegment(new Vector2(750, 1250), new Vector2(500, 1100)));
+        testLines.add(new LineSegment(new Vector2(500, 1100), new Vector2(300, 900)));
 
         testLevel.levelLines = testLines;
 
@@ -162,6 +180,56 @@ public class GameScreen implements Screen, GamePilot {
         setLevel(currentLevel);
     }
 
+    Map<String, Sound> soundMap = new HashMap<>();
+
+    @Override
+    public void doSound(SoundMode mode, String soundName) {
+        System.out.println("Handling sound: " + mode.toString() + " " + soundName);
+        Sound sfx;
+        if (!soundMap.containsKey(soundName)) {
+            soundMap.put(soundName, Gdx.audio.newSound(Gdx.files.internal(SFXLibrary.SFX_DIR + soundName)));
+        }
+
+        sfx = soundMap.get(soundName);
+        if (SoundMode.PLAY.equals(mode)) {
+            sfx.play();
+        } else if (SoundMode.STOP.equals(mode)) {
+            sfx.stop();
+        }
+    }
+
+    Map<String, Music> musicMap = new HashMap<>();
+
+    @Override
+    public void doMusic(SoundMode mode, String soundName) {
+        System.out.println("Handling sound: " + mode.toString() + " " + soundName);
+        Music music;
+        if (!musicMap.containsKey(soundName)) {
+            musicMap.put(soundName, Gdx.audio.newMusic(Gdx.files.internal(MusicLibrary.MUSIC_DIR + soundName)));
+        }
+
+        music = musicMap.get(soundName);
+        music.setLooping(true);
+        switch(mode) {
+            case START:
+            case PLAY:
+            case RESUME:
+                music.play();
+                break;
+            case PAUSE:
+                music.pause();
+                break;
+            case STOP:
+                music.stop();
+                break;
+        }
+        if (SoundMode.PLAY.equals(mode) && !music.isPlaying()) {
+            music.play();
+        } else if (SoundMode.STOP.equals(mode) && music.isPlaying()) {
+            music.stop();
+        }
+    }
+
     @Override
     public void render(float delta) {
         if (delta > .5f) {
@@ -172,12 +240,6 @@ public class GameScreen implements Screen, GamePilot {
         cam.update(delta);
 
         shapeRenderer.setProjectionMatrix(cam.combined);
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.GREEN);
-        shapeRenderer.circle(0, 0, 100);
-        shapeRenderer.end();
-
 
         for (GameSystem system : allSystems) {
             system.act(allEntities, delta);
