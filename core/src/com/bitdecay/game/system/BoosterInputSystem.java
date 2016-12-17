@@ -3,51 +3,37 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.InputProcessor;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.component.ActiveComponent;
-import com.bitdecay.game.component.BoostActivateButton;
+import com.bitdecay.game.component.BoostControlComponent;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
-import com.bitdecay.game.sound.MusicLibrary;
-import com.bitdecay.game.sound.SoundMode;
 
 /**
  * Created by Monday on 12/8/2016.
  */
-public class BoosterActivationSystem extends AbstractIteratingGameSystem implements InputProcessor {
+public class BoosterInputSystem extends AbstractIteratingGameSystem implements InputProcessor {
 
     TouchTracker tracker = new TouchTracker(5);
 
-    public BoosterActivationSystem(GamePilot pilot) {
+    public BoosterInputSystem(GamePilot pilot) {
         super(pilot);
     }
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
-        ActiveComponent active = entity.getComponent(ActiveComponent.class);
-        if (!active.active) {
-            return;
-        }
-
-        BoostActivateButton button = entity.getComponent(BoostActivateButton.class);
+        BoostControlComponent button = entity.getComponent(BoostControlComponent.class);
         button.pressed = false;
 
         for (ActiveTouch touch : tracker.activeTouches) {
             if (button.activeArea.contains(touch.currentLocation)) {
+                System.out.println("BOOST CONTROLS ACTIVATE");
                 button.pressed = true;
             }
-        }
-
-        if (button.pressed) {
-            pilot.doMusic(SoundMode.RESUME, MusicLibrary.SHIP_BOOST);
-        } else {
-            pilot.doMusic(SoundMode.PAUSE, MusicLibrary.SHIP_BOOST);
         }
     }
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(BoostActivateButton.class) &&
-                entity.hasComponent(ActiveComponent.class);
+        return entity.hasComponent(BoostControlComponent.class);
     }
 
     @Override

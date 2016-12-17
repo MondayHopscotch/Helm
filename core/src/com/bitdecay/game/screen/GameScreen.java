@@ -5,7 +5,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -21,18 +20,19 @@ import com.bitdecay.game.entities.ShipEntity;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
-import com.bitdecay.game.system.ActiveSystem;
-import com.bitdecay.game.system.BoostApplicationSystem;
-import com.bitdecay.game.system.BoosterActivationSystem;
+import com.bitdecay.game.system.BoostSystem;
+import com.bitdecay.game.system.BoosterInputSystem;
 import com.bitdecay.game.system.CameraUpdateSystem;
 import com.bitdecay.game.system.CollisionAlignmentSystem;
 import com.bitdecay.game.system.CollisionSystem;
+import com.bitdecay.game.system.DelayedAddSystem;
 import com.bitdecay.game.system.GameSystem;
 import com.bitdecay.game.system.GravitySystem;
 import com.bitdecay.game.system.MovementSystem;
 import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
 import com.bitdecay.game.system.RenderBodySystem;
+import com.bitdecay.game.system.SteeringInputSystem;
 import com.bitdecay.game.system.SteeringSystem;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
@@ -68,18 +68,20 @@ public class GameScreen implements Screen, GamePilot {
         InputMultiplexer inputMux = new InputMultiplexer();
         Gdx.input.setInputProcessor(inputMux);
 
-        BoosterActivationSystem boostButtonSystem = new BoosterActivationSystem(this);
-        inputMux.addProcessor(boostButtonSystem);
+        BoosterInputSystem boosterInputSystem = new BoosterInputSystem(this);
+        inputMux.addProcessor(boosterInputSystem);
 
-        BoostApplicationSystem boostApplicationSystem = new BoostApplicationSystem(this);
+        BoostSystem boostSystem = new BoostSystem(this);
+
+        SteeringInputSystem steeringInputSystem = new SteeringInputSystem(this);
+        inputMux.addProcessor(steeringInputSystem);
+
+        SteeringSystem steeringSystem = new SteeringSystem(this);
 
         PlayerStartLevelSystem startSystem = new PlayerStartLevelSystem(this);
         inputMux.addProcessor(startSystem);
 
         GravitySystem gravitySystem = new GravitySystem(this);
-
-        SteeringSystem steeringSystem = new SteeringSystem(this);
-        inputMux.addProcessor(steeringSystem);
 
         MovementSystem movementSystem = new MovementSystem(this);
 
@@ -91,20 +93,21 @@ public class GameScreen implements Screen, GamePilot {
         CollisionSystem collisionSystem = new CollisionSystem(this);
         PlayerCollisionHandlerSystem playerCollisionSystem = new PlayerCollisionHandlerSystem(this);
 
-        ActiveSystem activeSystem = new ActiveSystem(this);
+        DelayedAddSystem delaySystem = new DelayedAddSystem(this);
 
         allSystems.add(cameraSystem);
-        allSystems.add(boostButtonSystem);
-        allSystems.add(boostApplicationSystem);
+        allSystems.add(boosterInputSystem);
+        allSystems.add(boostSystem);
         allSystems.add(startSystem);
         allSystems.add(gravitySystem);
+        allSystems.add(steeringInputSystem);
         allSystems.add(steeringSystem);
         allSystems.add(movementSystem);
         allSystems.add(collisionAlignmentSystem);
         allSystems.add(collisionSystem);
         allSystems.add(playerCollisionSystem);
         allSystems.add(renderBodySystem);
-        allSystems.add(activeSystem);
+        allSystems.add(delaySystem);
 
         currentLevel = getTestLevel();
         requestRestartLevel();
@@ -184,6 +187,9 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void doSound(SoundMode mode, String soundName) {
+        if (true) {
+            return;
+        }
         System.out.println("Handling sound: " + mode.toString() + " " + soundName);
         Sound sfx;
         if (!soundMap.containsKey(soundName)) {
@@ -202,6 +208,9 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void doMusic(SoundMode mode, String soundName) {
+        if (true) {
+            return;
+        }
         System.out.println("Handling sound: " + mode.toString() + " " + soundName);
         Music music;
         if (!musicMap.containsKey(soundName)) {

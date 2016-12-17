@@ -4,8 +4,10 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.component.ActiveComponent;
-import com.bitdecay.game.component.BoostActivateButton;
+import com.bitdecay.game.component.BoostControlComponent;
+import com.bitdecay.game.component.BoosterComponent;
+import com.bitdecay.game.component.DelayedAddComponent;
+import com.bitdecay.game.component.SteeringComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.component.WaitingToStartComponent;
 import com.bitdecay.game.input.ActiveTouch;
@@ -24,24 +26,19 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
 
     TouchTracker tracker = new TouchTracker(5);
 
-
     public PlayerStartLevelSystem(GamePilot pilot) {
         super(pilot);
     }
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
-        ActiveComponent active = entity.getComponent(ActiveComponent.class);
-        active.active = false;
-        active.flipControlTimer = 0;
-
         WaitingToStartComponent wait = entity.getComponent(WaitingToStartComponent.class);
         wait.delayBeforeStartAllowed -= delta;
         if (wait.delayBeforeStartAllowed > 0) {
             return;
         }
 
-        BoostActivateButton button = entity.getComponent(BoostActivateButton.class);
+        BoostControlComponent button = entity.getComponent(BoostControlComponent.class);
 
         pilot.doMusic(SoundMode.PAUSE, MusicLibrary.SHIP_BOOST);
 
@@ -51,8 +48,10 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
                 velocity.currentVelocity.set(LAUNCH_VELOCITY);
                 entity.addComponent(velocity);
 
-                active.flipControlTimer = PLAYER_CONTROL_DELAY;
+                DelayedAddComponent.DelayedAdd boosterDelay = new DelayedAddComponent.DelayedAdd(new BoosterComponent(25), PLAYER_CONTROL_DELAY);
+                DelayedAddComponent.DelayedAdd steeringDelay = new DelayedAddComponent.DelayedAdd(new SteeringComponent(), PLAYER_CONTROL_DELAY / 2);
 
+                entity.addComponent(new DelayedAddComponent(boosterDelay, steeringDelay));
                 entity.removeComponent(WaitingToStartComponent.class);
                 pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_LAUNCH);
             }
@@ -62,8 +61,7 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
     @Override
     public boolean canActOn(GameEntity entity) {
         return entity.hasComponent(WaitingToStartComponent.class) &&
-                entity.hasComponent(ActiveComponent.class) &&
-                entity.hasComponent(BoostActivateButton.class);
+                entity.hasComponent(BoostControlComponent.class);
     }
 
     @Override
