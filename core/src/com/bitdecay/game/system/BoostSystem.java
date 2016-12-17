@@ -43,6 +43,8 @@ public class BoostSystem extends AbstractIteratingGameSystem {
 
             pilot.doMusic(SoundMode.PAUSE, MusicLibrary.SHIP_BOOST);
         }
+        // button being pressed will update every frame
+        button.pressed = false;
     }
 
     @Override

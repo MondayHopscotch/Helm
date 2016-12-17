@@ -17,6 +17,8 @@ import com.bitdecay.game.camera.FollowOrthoCamera;
 import com.bitdecay.game.entities.LandingPlatformEntity;
 import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
+import com.bitdecay.game.menu.ScoreMenu;
+import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
@@ -28,6 +30,7 @@ import com.bitdecay.game.system.CollisionSystem;
 import com.bitdecay.game.system.DelayedAddSystem;
 import com.bitdecay.game.system.GameSystem;
 import com.bitdecay.game.system.GravitySystem;
+import com.bitdecay.game.system.LandingSystem;
 import com.bitdecay.game.system.MovementSystem;
 import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
@@ -51,11 +54,14 @@ public class GameScreen implements Screen, GamePilot {
     ShapeRenderer shapeRenderer;
 
     Array<GameSystem> allSystems = new Array<>(1);
+    Array<GameSystem> inputSystems = new Array<>(1);
 
     private final LevelDefinition currentLevel;
     Array<GameEntity> allEntities = new Array<>(1000);
 
     private boolean reloadQueued;
+    private final InputMultiplexer inputMux;
+    private ScoreMenu scoreMenu;
 
     public GameScreen(Helm game) {
         this.game = game;
@@ -66,20 +72,36 @@ public class GameScreen implements Screen, GamePilot {
 
         shapeRenderer = new ShapeRenderer();
 
-        InputMultiplexer inputMux = new InputMultiplexer();
+        inputMux = new InputMultiplexer();
         Gdx.input.setInputProcessor(inputMux);
 
+        initSystems();
+
+        initMenus();
+
+        currentLevel = getTestLevel();
+        requestRestartLevel();
+    }
+
+    private void initMenus() {
+        scoreMenu = new ScoreMenu(this);
+    }
+
+    private void initSystems() {
         BoosterInputSystem boosterInputSystem = new BoosterInputSystem(this);
+        inputSystems.add(boosterInputSystem);
         inputMux.addProcessor(boosterInputSystem);
 
         BoostSystem boostSystem = new BoostSystem(this);
 
         SteeringInputSystem steeringInputSystem = new SteeringInputSystem(this);
+        inputSystems.add(steeringInputSystem);
         inputMux.addProcessor(steeringInputSystem);
 
         SteeringSystem steeringSystem = new SteeringSystem(this);
 
         PlayerStartLevelSystem startSystem = new PlayerStartLevelSystem(this);
+        inputSystems.add(startSystem);
         inputMux.addProcessor(startSystem);
 
         GravitySystem gravitySystem = new GravitySystem(this);
@@ -97,6 +119,8 @@ public class GameScreen implements Screen, GamePilot {
 
         DelayedAddSystem delaySystem = new DelayedAddSystem(this);
 
+        LandingSystem landingSystem = new LandingSystem(this);
+
         allSystems.add(cameraSystem);
         allSystems.add(boosterInputSystem);
         allSystems.add(boostSystem);
@@ -111,9 +135,14 @@ public class GameScreen implements Screen, GamePilot {
         allSystems.add(renderBoostSystem);
         allSystems.add(renderBodySystem);
         allSystems.add(delaySystem);
+        allSystems.add(landingSystem);
+    }
 
-        currentLevel = getTestLevel();
-        requestRestartLevel();
+    private void resetInputSystems() {
+        for (GameSystem system : inputSystems) {
+            system.reset();
+        }
+
     }
 
     private void setLevel(LevelDefinition level) {
@@ -132,6 +161,9 @@ public class GameScreen implements Screen, GamePilot {
         ShipEntity ship = new ShipEntity(level.startPosition);
         printMatchingSystems(ship);
         allEntities.add(ship);
+
+        Gdx.input.setInputProcessor(inputMux);
+        scoreMenu.visible = false;
     }
 
     @Override
@@ -183,7 +215,7 @@ public class GameScreen implements Screen, GamePilot {
     @Override
     public void requestRestartLevel() {
         reloadQueued = true;
-        setLevel(currentLevel);
+        scoreMenu.visible = false;
     }
 
     Map<String, Sound> soundMap = new HashMap<>();
@@ -239,6 +271,20 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     @Override
+    public void finishLevel(LandingScore score) {
+        System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
+        scoreMenu.visible = true;
+        Gdx.input.setInputProcessor(scoreMenu.stage);
+        resetInputSystems();
+    }
+
+    @Override
+    public void nextLevel() {
+        setLevel(getTestLevel());
+        reloadQueued = true;
+    }
+
+    @Override
     public void render(float delta) {
         if (delta > .5f) {
             delta = .5f;
@@ -258,6 +304,8 @@ public class GameScreen implements Screen, GamePilot {
             setLevel(getTestLevel());
             reloadQueued = false;
         }
+
+        scoreMenu.updateAndDraw();
     }
 
     @Override

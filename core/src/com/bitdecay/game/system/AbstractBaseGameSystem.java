@@ -22,4 +22,9 @@ public abstract class AbstractBaseGameSystem implements GameSystem {
     public void after() {
         // override to implement
     }
+
+    @Override
+    public void reset() {
+        // override to implement
+    }
 }

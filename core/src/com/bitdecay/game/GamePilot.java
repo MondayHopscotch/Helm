@@ -1,5 +1,6 @@
 package com.bitdecay.game;
 
+import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.SoundMode;
 
 /**
@@ -12,4 +13,8 @@ public interface GamePilot {
     void doSound(SoundMode mode, String soundName);
 
     void doMusic(SoundMode mode, String soundName);
+
+    void finishLevel(LandingScore score);
+
+    void nextLevel();
 }

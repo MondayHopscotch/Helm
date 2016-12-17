@@ -44,6 +44,11 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
     }
 
     @Override
+    public void reset() {
+        tracker = new TouchTracker(5);
+    }
+
+    @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         tracker.touchDown(screenX, screenY, pointer, button);
         return false;

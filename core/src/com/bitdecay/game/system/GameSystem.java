@@ -12,4 +12,6 @@ public interface GameSystem {
 
     void act(Array<GameEntity> entities, float delta);
     boolean canActOn(GameEntity entity);
+
+    void reset();
 }
