@@ -25,7 +25,6 @@ public class BoosterInputSystem extends AbstractIteratingGameSystem implements I
 
         for (ActiveTouch touch : tracker.activeTouches) {
             if (button.activeArea.contains(touch.currentLocation)) {
-                System.out.println("BOOST CONTROLS ACTIVATE");
                 button.pressed = true;
             }
         }

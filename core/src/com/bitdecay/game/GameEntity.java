@@ -16,7 +16,6 @@ public class GameEntity {
     }
 
     public void addComponent(GameComponent component) {
-        System.out.println("Adding Component: " + component.getClass().getSimpleName());
         components.put(component.getClass(), component);
     }
 

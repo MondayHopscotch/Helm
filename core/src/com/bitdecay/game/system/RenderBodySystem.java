@@ -33,14 +33,12 @@ public class RenderBodySystem extends AbstractIteratingGameSystem {
             rotated[i+1] += transform.position.y;
         }
 
-        renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(color.color);
         if (rotated.length > Geom.DATA_POINTS_FOR_LINE) {
             renderer.polygon(rotated);
         } else {
             renderer.polyline(rotated);
         }
-        renderer.end();
     }
 
     @Override

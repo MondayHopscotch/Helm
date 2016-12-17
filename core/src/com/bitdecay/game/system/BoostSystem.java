@@ -31,12 +31,16 @@ public class BoostSystem extends AbstractIteratingGameSystem {
         TransformComponent transform = entity.getComponent(TransformComponent.class);
 
         if (button.pressed) {
-            System.out.println("BOOST THRUST IS GO");
             Vector2 boostVector = Geom.rotateSinglePoint(new Vector2(boost.strength, 0), transform.angle);
             velocity.currentVelocity.add(boostVector.scl(delta));
+
+            boost.engaged = true;
+
             pilot.doMusic(SoundMode.RESUME, MusicLibrary.SHIP_BOOST);
 
         } else {
+            boost.engaged = false;
+
             pilot.doMusic(SoundMode.PAUSE, MusicLibrary.SHIP_BOOST);
         }
     }

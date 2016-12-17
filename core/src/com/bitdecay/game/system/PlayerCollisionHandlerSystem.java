@@ -22,7 +22,6 @@ public class PlayerCollisionHandlerSystem extends AbstractIteratingGameSystem {
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
         CollidedWithComponent collided = entity.getComponent(CollidedWithComponent.class);
-        System.out.println("Player has collided collided " + collided.with.toString());
         entity.removeComponent(CollidedWithComponent.class);
 
         pilot.doMusic(SoundMode.STOP, MusicLibrary.SHIP_BOOST);

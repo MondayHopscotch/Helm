@@ -8,6 +8,7 @@ import com.bitdecay.game.component.BoostControlComponent;
 import com.bitdecay.game.component.BoosterComponent;
 import com.bitdecay.game.component.DelayedAddComponent;
 import com.bitdecay.game.component.SteeringComponent;
+import com.bitdecay.game.component.SteeringControlComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.component.WaitingToStartComponent;
 import com.bitdecay.game.input.ActiveTouch;
@@ -39,11 +40,13 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
         }
 
         BoostControlComponent button = entity.getComponent(BoostControlComponent.class);
+        SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
 
         pilot.doMusic(SoundMode.PAUSE, MusicLibrary.SHIP_BOOST);
 
         for (ActiveTouch touch : tracker.activeTouches) {
             if (button.activeArea.contains(touch.startingLocation)) {
+                steering.angle = SteeringControlComponent.ANGLE_NOT_SET;
                 VelocityComponent velocity = new VelocityComponent();
                 velocity.currentVelocity.set(LAUNCH_VELOCITY);
                 entity.addComponent(velocity);
@@ -61,7 +64,8 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
     @Override
     public boolean canActOn(GameEntity entity) {
         return entity.hasComponent(WaitingToStartComponent.class) &&
-                entity.hasComponent(BoostControlComponent.class);
+                entity.hasComponent(BoostControlComponent.class) &&
+                entity.hasComponent(SteeringControlComponent.class);
     }
 
     @Override

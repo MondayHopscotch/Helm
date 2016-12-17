@@ -32,6 +32,7 @@ import com.bitdecay.game.system.MovementSystem;
 import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
 import com.bitdecay.game.system.RenderBodySystem;
+import com.bitdecay.game.system.RenderBoostSystem;
 import com.bitdecay.game.system.SteeringInputSystem;
 import com.bitdecay.game.system.SteeringSystem;
 import com.bitdecay.game.world.LevelDefinition;
@@ -86,6 +87,7 @@ public class GameScreen implements Screen, GamePilot {
         MovementSystem movementSystem = new MovementSystem(this);
 
         RenderBodySystem renderBodySystem = new RenderBodySystem(this, shapeRenderer);
+        RenderBoostSystem renderBoostSystem = new RenderBoostSystem(this, shapeRenderer);
 
         CameraUpdateSystem cameraSystem = new CameraUpdateSystem(this, cam);
 
@@ -106,6 +108,7 @@ public class GameScreen implements Screen, GamePilot {
         allSystems.add(collisionAlignmentSystem);
         allSystems.add(collisionSystem);
         allSystems.add(playerCollisionSystem);
+        allSystems.add(renderBoostSystem);
         allSystems.add(renderBodySystem);
         allSystems.add(delaySystem);
 
@@ -187,10 +190,6 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void doSound(SoundMode mode, String soundName) {
-        if (true) {
-            return;
-        }
-        System.out.println("Handling sound: " + mode.toString() + " " + soundName);
         Sound sfx;
         if (!soundMap.containsKey(soundName)) {
             soundMap.put(soundName, Gdx.audio.newSound(Gdx.files.internal(SFXLibrary.SFX_DIR + soundName)));
@@ -208,25 +207,25 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void doMusic(SoundMode mode, String soundName) {
-        if (true) {
-            return;
-        }
-        System.out.println("Handling sound: " + mode.toString() + " " + soundName);
         Music music;
         if (!musicMap.containsKey(soundName)) {
             musicMap.put(soundName, Gdx.audio.newMusic(Gdx.files.internal(MusicLibrary.MUSIC_DIR + soundName)));
         }
 
         music = musicMap.get(soundName);
-        music.setLooping(true);
         switch(mode) {
             case START:
             case PLAY:
             case RESUME:
-                music.play();
+                music.setLooping(true);
+                if (!music.isPlaying()) {
+                    music.play();
+                }
                 break;
             case PAUSE:
-                music.pause();
+                if (music.isPlaying()) {
+                    music.pause();
+                }
                 break;
             case STOP:
                 music.stop();
@@ -249,10 +248,11 @@ public class GameScreen implements Screen, GamePilot {
         cam.update(delta);
 
         shapeRenderer.setProjectionMatrix(cam.combined);
-
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (GameSystem system : allSystems) {
             system.act(allEntities, delta);
         }
+        shapeRenderer.end();
 
         if (reloadQueued) {
             setLevel(getTestLevel());
