@@ -8,7 +8,16 @@
   "com.badlogic.gdx.graphics.g2d.BitmapFont": {
     "defaultFont": {
       "file": "font/bit.fnt"
+
     }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+    "default": {
+      "font": "defaultFont",
+      "fontColor": "white",
+      "downFontColor": "white",
+      "pressedOffsetY": -2
+    },
   },
   "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
     "default": {

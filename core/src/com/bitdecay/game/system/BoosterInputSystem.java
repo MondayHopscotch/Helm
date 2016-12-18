@@ -1,38 +1,28 @@
 package com.bitdecay.game.system;
 
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
-import com.bitdecay.game.component.BoostActivateButton;
-import com.bitdecay.game.component.BoosterComponent;
-import com.bitdecay.game.component.RotationComponent;
-import com.bitdecay.game.component.VelocityComponent;
+import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.component.BoostControlComponent;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
-import com.bitdecay.game.math.Geom;
 
 /**
  * Created by Monday on 12/8/2016.
  */
-public class BoosterActivationSystem extends AbstractIteratingGameSystem implements InputProcessor {
+public class BoosterInputSystem extends AbstractIteratingGameSystem implements InputProcessor {
 
     TouchTracker tracker = new TouchTracker(5);
 
+    public BoosterInputSystem(GamePilot pilot) {
+        super(pilot);
+    }
+
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
-        BoosterComponent boost = entity.getComponent(BoosterComponent.class);
-
-        BoostActivateButton button = entity.getComponent(BoostActivateButton.class);
-        button.pressed = false;
-
-        VelocityComponent velocity = entity.getComponent(VelocityComponent.class);
-
-        RotationComponent rotation = entity.getComponent(RotationComponent.class);
-
+        BoostControlComponent button = entity.getComponent(BoostControlComponent.class);
         for (ActiveTouch touch : tracker.activeTouches) {
             if (button.activeArea.contains(touch.currentLocation)) {
-                Vector2 boostVector = Geom.rotateSinglePoint(new Vector2( boost.strength, 0), rotation.angle);
-                velocity.currentVelocity.add(boostVector.scl(delta));
                 button.pressed = true;
             }
         }
@@ -40,10 +30,12 @@ public class BoosterActivationSystem extends AbstractIteratingGameSystem impleme
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(BoosterComponent.class) &&
-                entity.hasComponent(BoostActivateButton.class) &&
-                entity.hasComponent(RotationComponent.class) &&
-                entity.hasComponent(VelocityComponent.class);
+        return entity.hasComponent(BoostControlComponent.class);
+    }
+
+    @Override
+    public void reset() {
+        tracker = new TouchTracker(5);
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.bitdecay.game.component.GameComponent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Created by Monday on 12/8/2016.
@@ -22,6 +21,10 @@ public class GameEntity {
 
     public <T> T getComponent(Class<T> componentClazz) {
         return componentClazz.cast(components.get(componentClazz));
+    }
+
+    public <T> void removeComponent(Class<T> componentClazz) {
+        components.remove(componentClazz);
     }
 }
 

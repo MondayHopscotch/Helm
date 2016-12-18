@@ -5,6 +5,7 @@ package com.bitdecay.game.component;
  */
 public class BoosterComponent extends GameComponent {
     public float strength;
+    public boolean engaged;
 
     public BoosterComponent(float strength) {
         this.strength = strength;
