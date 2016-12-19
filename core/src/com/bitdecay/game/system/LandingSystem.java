@@ -25,6 +25,8 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
     public static final float MAX_LANDING_ANGLE = MathUtils.PI / 10;
     public static final float MAX_LANDING_ANGLE_FOR_SCORE = MathUtils.PI / 15;
+    public static final float LANDING_ANGLE_MERCY = .02f;
+
 
 
 
@@ -64,6 +66,9 @@ public class LandingSystem extends AbstractIteratingGameSystem {
             angleScoreScalar = 0;
         } else {
             angleScoreScalar = (MAX_LANDING_ANGLE_FOR_SCORE - radsAwayFromStraightUp) / MAX_LANDING_ANGLE_FOR_SCORE;
+            // let's just be nice and give the player some angle mercy
+            angleScoreScalar = Math.min(angleScoreScalar + LANDING_ANGLE_MERCY, 1);
+
         }
 
         float speedScoreScalar;
