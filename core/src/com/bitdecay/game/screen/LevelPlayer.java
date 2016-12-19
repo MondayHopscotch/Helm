@@ -16,6 +16,7 @@ import com.bitdecay.game.system.BoosterInputSystem;
 import com.bitdecay.game.system.CameraUpdateSystem;
 import com.bitdecay.game.system.CollisionAlignmentSystem;
 import com.bitdecay.game.system.CollisionSystem;
+import com.bitdecay.game.system.CrashSystem;
 import com.bitdecay.game.system.DelayedAddSystem;
 import com.bitdecay.game.system.GameSystem;
 import com.bitdecay.game.system.GravitySystem;
@@ -100,6 +101,8 @@ public class LevelPlayer {
 
         LandingSystem landingSystem = new LandingSystem(pilot);
 
+        CrashSystem crashSystem = new CrashSystem(pilot);
+
         gameSystems.add(cameraSystem);
         gameSystems.add(boosterInputSystem);
         gameSystems.add(boostSystem);
@@ -113,6 +116,7 @@ public class LevelPlayer {
         gameSystems.add(playerCollisionSystem);
         gameSystems.add(delaySystem);
         gameSystems.add(landingSystem);
+        gameSystems.add(crashSystem);
 
         renderSystems.add(renderBoostSystem);
         renderSystems.add(renderBodySystem);

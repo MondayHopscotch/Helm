@@ -3,15 +3,30 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.math.MathUtils;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.component.BoosterComponent;
+import com.bitdecay.game.component.CrashComponent;
 import com.bitdecay.game.component.PlayerCollisionComponent;
 import com.bitdecay.game.component.RateLandingComponent;
+import com.bitdecay.game.component.TransformComponent;
+import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.scoring.LandingScore;
+import com.bitdecay.game.sound.MusicLibrary;
+import com.bitdecay.game.sound.SoundMode;
 
 /**
  * Created by Monday on 12/17/2016.
  */
 public class LandingSystem extends AbstractIteratingGameSystem {
+
+    public static final float MAX_LANDING_SPEED = 5;
+    public static final float MAX_LANDING_SPEED_FOR_SCORE = 4;
+    public static final float LANDING_SPEED_MERCY = .1f;
+
+    public static final float MAX_LANDING_ANGLE = MathUtils.PI / 10;
+    public static final float MAX_LANDING_ANGLE_FOR_SCORE = MathUtils.PI / 15;
+
+
 
     public LandingSystem(GamePilot pilot) {
         super(pilot);
@@ -19,28 +34,46 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
-        RateLandingComponent landing = entity.getComponent(RateLandingComponent.class);
+        // just ensure the entity can't boost
+        entity.removeComponent(BoosterComponent.class);
+        pilot.doMusic(SoundMode.STOP, MusicLibrary.SHIP_BOOST);
+
         entity.removeComponent(RateLandingComponent.class);
+
+        VelocityComponent velocity = entity.getComponent(VelocityComponent.class);
+        // we don't want the ship to move any more once it's landed
+        entity.removeComponent(VelocityComponent.class);
+
+        TransformComponent transform = entity.getComponent(TransformComponent.class);
+
+        // check landing and either pass/fail
+        float radsAwayFromStraightUp = Math.abs(transform.angle - Geom.ROTATION_UP);
+
+        if (Math.abs(velocity.currentVelocity.y) > MAX_LANDING_SPEED ||
+                radsAwayFromStraightUp > MAX_LANDING_ANGLE) {
+            entity.addComponent(new CrashComponent());
+        }
+
+        System.out.println("Landing Velocity: " + velocity.currentVelocity.y);
+        System.out.println("Landing Angle: " + radsAwayFromStraightUp);
 
         LandingScore score = new LandingScore();
 
-        float radsAwayFromStraightUp = Math.abs(landing.landingAngle - Geom.ROTATION_UP);
-        float maxAngleForScore = MathUtils.PI / 10;
-
         float angleScoreScalar;
-        if (radsAwayFromStraightUp > maxAngleForScore) {
+        if (radsAwayFromStraightUp > MAX_LANDING_ANGLE_FOR_SCORE) {
             angleScoreScalar = 0;
         } else {
-            angleScoreScalar = (maxAngleForScore - radsAwayFromStraightUp) / maxAngleForScore;
+            angleScoreScalar = (MAX_LANDING_ANGLE_FOR_SCORE - radsAwayFromStraightUp) / MAX_LANDING_ANGLE_FOR_SCORE;
         }
 
-        float maxSpeedForScore = 4f;
-
         float speedScoreScalar;
-        if (landing.landingVector.len() > maxSpeedForScore) {
+        if (velocity.currentVelocity.len() > MAX_LANDING_SPEED_FOR_SCORE) {
             speedScoreScalar = 0;
         } else {
-            speedScoreScalar = (maxSpeedForScore - landing.landingVector.len()) / maxSpeedForScore;
+            speedScoreScalar = (MAX_LANDING_SPEED_FOR_SCORE - velocity.currentVelocity.len()) / MAX_LANDING_SPEED_FOR_SCORE;
+
+            //a zero-speed landing is impossible, so make a full score doable
+            speedScoreScalar = Math.min(speedScoreScalar + LANDING_SPEED_MERCY, 1);
         }
 
         score.angleScore = (int) (LandingScore.MAX_ANGLE_SCORE * angleScoreScalar);
@@ -51,6 +84,8 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(RateLandingComponent.class);
+        return entity.hasComponent(RateLandingComponent.class) &&
+                entity.hasComponent(VelocityComponent.class) &&
+                entity.hasComponent(TransformComponent.class);
     }
 }
