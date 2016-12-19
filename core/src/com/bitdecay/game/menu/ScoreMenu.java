@@ -4,12 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.scoring.LandingScore;
 
 /**
  * Created by Monday on 12/17/2016.
@@ -21,6 +23,12 @@ public class ScoreMenu {
     public boolean visible = false;
     private GamePilot pilot;
 
+    private Label landingSpeedLabel;
+    private Label landingSpeedScore;
+
+    private Label landingAngleLabel;
+    private Label landingAngleScore;
+
     public ScoreMenu(final GamePilot pilot) {
         this.pilot = pilot;
         stage = new Stage();
@@ -31,7 +39,41 @@ public class ScoreMenu {
         scoreTable.align(Align.center);
         scoreTable.setOrigin(Align.center);
 
+        Table landingSpeedTable = new Table();
+        landingSpeedLabel = new Label("Landing Speed:", skin);
+        landingSpeedLabel.setFontScale(6);
+        landingSpeedLabel.setAlignment(Align.left);
+
+
+        landingSpeedScore = new Label("----", skin);
+        landingSpeedScore.setFontScale(6);
+        landingSpeedScore.setAlignment(Align.right);
+
+
+        landingSpeedTable.add(landingSpeedLabel).padRight(100);
+        landingSpeedTable.add(landingSpeedScore);
+
+        scoreTable.add(landingSpeedTable);
+        scoreTable.row();
+
+        Table landingAngleTable = new Table();
+        landingAngleLabel = new Label("Landing Angle:", skin);
+        landingAngleLabel.setFontScale(6);
+        landingAngleLabel.setAlignment(Align.left);
+
+        landingAngleScore = new Label("----", skin);
+        landingAngleScore.setFontScale(6);
+        landingAngleScore.setAlignment(Align.right);
+
+
+        landingAngleTable.add(landingAngleLabel).padRight(100);
+        landingAngleTable.add(landingAngleScore);
+
+        scoreTable.add(landingAngleTable);
+        scoreTable.row();
+
         TextButton nextLevelButton = new TextButton("Next Level", skin);
+        nextLevelButton.getLabel().setFontScale(5);
         nextLevelButton.setSize(500, 500);
         nextLevelButton.addListener(new ClickListener() {
             @Override
@@ -50,5 +92,10 @@ public class ScoreMenu {
         if (visible) {
             stage.draw();
         }
+    }
+
+    public void setScore(LandingScore score) {
+        landingSpeedScore.setText(Integer.toString(score.speedScore));
+        landingAngleScore.setText(Integer.toString(score.angleScore));
     }
 }

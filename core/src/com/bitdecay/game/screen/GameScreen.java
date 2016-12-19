@@ -51,6 +51,8 @@ public class GameScreen implements Screen, GamePilot {
     private Helm game;
     FollowOrthoCamera cam;
 
+    LevelPlayer levelPlayer;
+
     ShapeRenderer shapeRenderer;
 
     Array<GameSystem> allSystems = new Array<>(1);
@@ -60,22 +62,15 @@ public class GameScreen implements Screen, GamePilot {
     Array<GameEntity> allEntities = new Array<>(1000);
 
     private boolean reloadQueued;
-    private final InputMultiplexer inputMux;
+    private InputMultiplexer inputMux;
     private ScoreMenu scoreMenu;
 
     public GameScreen(Helm game) {
         this.game = game;
-        cam = new FollowOrthoCamera(1920, 1080);
-        cam.minZoom = 3;
-        cam.maxZoom = .5f;
-        cam.buffer = 2000;
 
         shapeRenderer = new ShapeRenderer();
 
-        inputMux = new InputMultiplexer();
-        Gdx.input.setInputProcessor(inputMux);
-
-        initSystems();
+        levelPlayer = new LevelPlayer(this);
 
         initMenus();
 
@@ -87,82 +82,9 @@ public class GameScreen implements Screen, GamePilot {
         scoreMenu = new ScoreMenu(this);
     }
 
-    private void initSystems() {
-        BoosterInputSystem boosterInputSystem = new BoosterInputSystem(this);
-        inputSystems.add(boosterInputSystem);
-        inputMux.addProcessor(boosterInputSystem);
-
-        BoostSystem boostSystem = new BoostSystem(this);
-
-        SteeringInputSystem steeringInputSystem = new SteeringInputSystem(this);
-        inputSystems.add(steeringInputSystem);
-        inputMux.addProcessor(steeringInputSystem);
-
-        SteeringSystem steeringSystem = new SteeringSystem(this);
-
-        PlayerStartLevelSystem startSystem = new PlayerStartLevelSystem(this);
-        inputSystems.add(startSystem);
-        inputMux.addProcessor(startSystem);
-
-        GravitySystem gravitySystem = new GravitySystem(this);
-
-        MovementSystem movementSystem = new MovementSystem(this);
-
-        RenderBodySystem renderBodySystem = new RenderBodySystem(this, shapeRenderer);
-        RenderBoostSystem renderBoostSystem = new RenderBoostSystem(this, shapeRenderer);
-
-        CameraUpdateSystem cameraSystem = new CameraUpdateSystem(this, cam);
-
-        CollisionAlignmentSystem collisionAlignmentSystem = new CollisionAlignmentSystem(this);
-        CollisionSystem collisionSystem = new CollisionSystem(this);
-        PlayerCollisionHandlerSystem playerCollisionSystem = new PlayerCollisionHandlerSystem(this);
-
-        DelayedAddSystem delaySystem = new DelayedAddSystem(this);
-
-        LandingSystem landingSystem = new LandingSystem(this);
-
-        allSystems.add(cameraSystem);
-        allSystems.add(boosterInputSystem);
-        allSystems.add(boostSystem);
-        allSystems.add(startSystem);
-        allSystems.add(gravitySystem);
-        allSystems.add(steeringInputSystem);
-        allSystems.add(steeringSystem);
-        allSystems.add(movementSystem);
-        allSystems.add(collisionAlignmentSystem);
-        allSystems.add(collisionSystem);
-        allSystems.add(playerCollisionSystem);
-        allSystems.add(renderBoostSystem);
-        allSystems.add(renderBodySystem);
-        allSystems.add(delaySystem);
-        allSystems.add(landingSystem);
-    }
-
-    private void resetInputSystems() {
-        for (GameSystem system : inputSystems) {
-            system.reset();
-        }
-
-    }
-
     private void setLevel(LevelDefinition level) {
-        allEntities.clear();
-
-        for (LineSegment line : level.levelLines) {
-            allEntities.add(new LineSegmentEntity(line));
-        }
-
-        if (level.finishPlatform.area() > 0) {
-            LandingPlatformEntity plat = new LandingPlatformEntity(level.finishPlatform);
-            printMatchingSystems(plat);
-            allEntities.add(plat);
-        }
-
-        ShipEntity ship = new ShipEntity(level.startPosition);
-        printMatchingSystems(ship);
-        allEntities.add(ship);
-
-        Gdx.input.setInputProcessor(inputMux);
+        levelPlayer.loadLevel(level);
+        Gdx.input.setInputProcessor(levelPlayer.getInput());
         scoreMenu.visible = false;
     }
 
@@ -200,16 +122,6 @@ public class GameScreen implements Screen, GamePilot {
 
 
         return testLevel;
-    }
-
-    private void printMatchingSystems(GameEntity entity) {
-        System.out.println("Entity " + entity.getClass().getSimpleName() + " matches the following systems:");
-        for (GameSystem system : allSystems) {
-            if (system.canActOn(entity)) {
-                System.out.println(system.getClass().getSimpleName());
-            }
-        }
-
     }
 
     @Override
@@ -273,9 +185,10 @@ public class GameScreen implements Screen, GamePilot {
     @Override
     public void finishLevel(LandingScore score) {
         System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
+        scoreMenu.setScore(score);
         scoreMenu.visible = true;
         Gdx.input.setInputProcessor(scoreMenu.stage);
-        resetInputSystems();
+        levelPlayer.resetInputSystems();
     }
 
     @Override
@@ -291,14 +204,9 @@ public class GameScreen implements Screen, GamePilot {
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        cam.update(delta);
+        levelPlayer.update(delta);
 
-        shapeRenderer.setProjectionMatrix(cam.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for (GameSystem system : allSystems) {
-            system.act(allEntities, delta);
-        }
-        shapeRenderer.end();
+        levelPlayer.render(delta);
 
         if (reloadQueued) {
             setLevel(getTestLevel());
