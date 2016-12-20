@@ -60,8 +60,6 @@ public class GameScreen implements Screen, GamePilot {
     private boolean reloadQueued;
     private ScoreMenu scoreMenu;
 
-    private Preferences 
-
     public GameScreen(Helm game) {
         this.game = game;
 
