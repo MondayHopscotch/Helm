@@ -26,6 +26,7 @@ import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
 import com.bitdecay.game.system.RenderBodySystem;
 import com.bitdecay.game.system.RenderBoostSystem;
+import com.bitdecay.game.system.RenderFuelSystem;
 import com.bitdecay.game.system.SteeringInputSystem;
 import com.bitdecay.game.system.SteeringSystem;
 import com.bitdecay.game.world.LevelDefinition;
@@ -88,9 +89,6 @@ public class LevelPlayer {
 
         MovementSystem movementSystem = new MovementSystem(pilot);
 
-        RenderBodySystem renderBodySystem = new RenderBodySystem(pilot, shapeRenderer);
-        RenderBoostSystem renderBoostSystem = new RenderBoostSystem(pilot, shapeRenderer);
-
         CameraUpdateSystem cameraSystem = new CameraUpdateSystem(pilot, cam);
 
         CollisionAlignmentSystem collisionAlignmentSystem = new CollisionAlignmentSystem(pilot);
@@ -118,8 +116,13 @@ public class LevelPlayer {
         gameSystems.add(landingSystem);
         gameSystems.add(crashSystem);
 
+        RenderBodySystem renderBodySystem = new RenderBodySystem(pilot, shapeRenderer);
+        RenderBoostSystem renderBoostSystem = new RenderBoostSystem(pilot, shapeRenderer);
+        RenderFuelSystem renderFuelSystem = new RenderFuelSystem(pilot, shapeRenderer);
+
         renderSystems.add(renderBoostSystem);
         renderSystems.add(renderBodySystem);
+        renderSystems.add(renderFuelSystem);
     }
 
     public void resetInputSystems() {
@@ -140,7 +143,7 @@ public class LevelPlayer {
             allEntities.add(plat);
         }
 
-        ShipEntity ship = new ShipEntity(levelDef.startPosition);
+        ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
         allEntities.add(ship);
     }
 

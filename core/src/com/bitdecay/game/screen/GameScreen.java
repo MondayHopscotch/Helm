@@ -119,6 +119,7 @@ public class GameScreen implements Screen, GamePilot {
         testLevel.levelLines = testLines;
 
         testLevel.startPosition =  Vector2.Zero;
+        testLevel.startingFuel = 300;
 
 
         return testLevel;

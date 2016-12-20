@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.component.BodyDefComponent;
 import com.bitdecay.game.component.BoosterComponent;
+import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.math.Geom;
 
@@ -27,14 +29,11 @@ public class RenderBoostSystem extends AbstractIteratingGameSystem {
         TransformComponent transform = entity.getComponent(TransformComponent.class);
 
         if (boost.engaged) {
-            float[] rotated = Geom.rotatePoints(boostJetPoints, transform.angle);
-            for (int i = 0; i < rotated.length; i += 2) {
-                rotated[i] += transform.position.x;
-                rotated[i+1] += transform.position.y;
-            }
+            float[] translated = Geom.rotatePoints(boostJetPoints, transform.angle);
+            translated = Geom.translatePoints(translated, transform.position);
 
             renderer.setColor(Color.FIREBRICK);
-            renderer.polygon(rotated);
+            renderer.polygon(translated);
         }
     }
 

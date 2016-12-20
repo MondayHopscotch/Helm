@@ -12,4 +12,5 @@ public class LevelDefinition {
 
     public Rectangle finishPlatform = new Rectangle();
     public Vector2 startPosition;
+    public int startingFuel;
 }

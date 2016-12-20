@@ -29,6 +29,9 @@ public class ScoreMenu {
     private Label landingAngleLabel;
     private Label landingAngleScore;
 
+    private Label fuelLeftLabel;
+    private Label fuelLeftPercent;
+
     public ScoreMenu(final GamePilot pilot) {
         this.pilot = pilot;
         stage = new Stage();
@@ -65,16 +68,30 @@ public class ScoreMenu {
         landingAngleScore.setFontScale(6);
         landingAngleScore.setAlignment(Align.right);
 
-
         landingAngleTable.add(landingAngleLabel).padRight(100);
         landingAngleTable.add(landingAngleScore);
 
         scoreTable.add(landingAngleTable);
         scoreTable.row();
 
+        Table fuelLeftTable = new Table();
+        fuelLeftLabel = new Label("Fuel Remaining:", skin);
+        fuelLeftLabel.setFontScale(6);
+        fuelLeftLabel.setAlignment(Align.left);
+
+        fuelLeftPercent = new Label("----", skin);
+        fuelLeftPercent.setFontScale(6);
+        fuelLeftPercent.setAlignment(Align.right);
+
+        fuelLeftTable.add(fuelLeftLabel).padRight(100);
+        fuelLeftTable.add(fuelLeftPercent);
+
+        scoreTable.add(fuelLeftTable);
+        scoreTable.row();
+
         TextButton nextLevelButton = new TextButton("Next Level", skin);
         nextLevelButton.getLabel().setFontScale(5);
-        nextLevelButton.setSize(500, 500);
+//        nextLevelButton.setSize(500, 300);
         nextLevelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -82,7 +99,7 @@ public class ScoreMenu {
             }
         });
 
-        scoreTable.add(nextLevelButton).size(500, 500);
+        scoreTable.add(nextLevelButton).padTop(200);
 
         stage.addActor(scoreTable);
     }
@@ -97,5 +114,6 @@ public class ScoreMenu {
     public void setScore(LandingScore score) {
         landingSpeedScore.setText(Integer.toString(score.speedScore));
         landingAngleScore.setText(Integer.toString(score.angleScore));
+        fuelLeftPercent.setText(String.format("%.2f%%", score.fuelLeft * 100));
     }
 }

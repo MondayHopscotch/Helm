@@ -24,7 +24,6 @@ public class Geom {
      * @param points
      * @param angle
      * @return A list of points corresponding to the rotated version of the provided points
-     * @see Geom#getRotatedPoint(Vector2, float, Vector2)
      */
     public static Vector2[] rotatePoints(Vector2[] points, float angle) {
         Vector2[] newPoints = new Vector2[points.length];
@@ -88,5 +87,14 @@ public class Geom {
                 shape.x + shape.width, shape.y,
                 shape.x + shape.width, shape.y + shape.height,
                 shape.x, shape.y + shape.height};
+    }
+
+    public static float[] translatePoints(float[] points, Vector2 translation) {
+        float[] translated = new float[points.length];
+        for (int i = 0; i < points.length; i += 2) {
+            translated[i] = points[i] + translation.x;
+            translated[i+1] = points[i+1] + translation.y;
+        }
+        return translated;
     }
 }

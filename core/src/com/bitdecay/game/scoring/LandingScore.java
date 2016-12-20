@@ -9,4 +9,5 @@ public class LandingScore {
 
     public int angleScore;
     public int speedScore;
+    public float fuelLeft;
 }
