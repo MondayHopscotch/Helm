@@ -2,10 +2,13 @@ package com.bitdecay.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -49,26 +52,18 @@ import java.util.Map;
  */
 public class GameScreen implements Screen, GamePilot {
     private Helm game;
-    FollowOrthoCamera cam;
 
     LevelPlayer levelPlayer;
 
-    ShapeRenderer shapeRenderer;
-
-    Array<GameSystem> allSystems = new Array<>(1);
-    Array<GameSystem> inputSystems = new Array<>(1);
-
     private final LevelDefinition currentLevel;
-    Array<GameEntity> allEntities = new Array<>(1000);
 
     private boolean reloadQueued;
-    private InputMultiplexer inputMux;
     private ScoreMenu scoreMenu;
+
+    private Preferences 
 
     public GameScreen(Helm game) {
         this.game = game;
-
-        shapeRenderer = new ShapeRenderer();
 
         levelPlayer = new LevelPlayer(this);
 
@@ -239,6 +234,5 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void dispose() {
-        shapeRenderer.dispose();
     }
 }

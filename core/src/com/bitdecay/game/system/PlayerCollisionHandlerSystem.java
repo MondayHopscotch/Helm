@@ -10,9 +10,6 @@ import com.bitdecay.game.component.RateLandingComponent;
 import com.bitdecay.game.component.RenderColorComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.VelocityComponent;
-import com.bitdecay.game.component.WaitingToStartComponent;
-import com.bitdecay.game.sound.MusicLibrary;
-import com.bitdecay.game.sound.SoundMode;
 
 /**
  * Created by Monday on 12/14/2016.
