@@ -1,5 +1,6 @@
 package com.bitdecay.game.system;
 
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
@@ -9,19 +10,20 @@ import com.bitdecay.game.component.SteeringComponent;
 import com.bitdecay.game.component.SteeringControlComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.component.ShipLaunchComponent;
-import com.bitdecay.game.input.TouchTracker;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
 
 /**
  * Created by Monday on 12/14/2016.
  */
-public class PlayerStartLevelSystem extends AbstractIteratingGameSystem {
+public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implements InputProcessor {
 
     private static final Vector2 LAUNCH_VELOCITY = new Vector2(0, 5);
     private static final float PLAYER_CONTROL_DELAY = .7f;
 
-    TouchTracker tracker = new TouchTracker(5);
+    // the use of this boolean hinges on there only being a single entity this system operates on
+    boolean entityWaiting = false;
+    boolean launch = false;
 
     public PlayerStartLevelSystem(GamePilot pilot) {
         super(pilot);
@@ -29,13 +31,16 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem {
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
-        ShipLaunchComponent launchCountdown = entity.getComponent(ShipLaunchComponent.class);
-        launchCountdown.countdown -= delta;
-        if (launchCountdown.countdown > 0) {
+
+        entityWaiting = true;
+
+        if (!launch) {
             return;
         }
 
         entity.removeComponent(ShipLaunchComponent.class);
+        entityWaiting = false;
+        launch = false;
 
         // remove player input so the ship doesn't start pointing some weird direction
         SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
@@ -59,7 +64,45 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem {
     }
 
     @Override
-    public void reset() {
-        tracker = new TouchTracker(5);
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (entityWaiting) {
+            launch = true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }

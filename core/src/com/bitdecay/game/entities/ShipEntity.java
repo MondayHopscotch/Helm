@@ -10,7 +10,6 @@ import com.bitdecay.game.component.BoostControlComponent;
 import com.bitdecay.game.component.CameraFollowComponent;
 import com.bitdecay.game.component.CollisionGeometryComponent;
 import com.bitdecay.game.component.CollisionKindComponent;
-import com.bitdecay.game.component.DelayedAddComponent;
 import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.GravityComponent;
 import com.bitdecay.game.component.PlayerCollisionComponent;

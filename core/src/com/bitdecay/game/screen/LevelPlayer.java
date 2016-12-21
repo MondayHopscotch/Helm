@@ -82,6 +82,7 @@ public class LevelPlayer {
         SteeringSystem steeringSystem = new SteeringSystem(pilot);
 
         PlayerStartLevelSystem startSystem = new PlayerStartLevelSystem(pilot);
+        inputMux.addProcessor(startSystem);
 
         GravitySystem gravitySystem = new GravitySystem(pilot);
 
