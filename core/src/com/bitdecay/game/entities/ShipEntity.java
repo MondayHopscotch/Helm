@@ -10,13 +10,14 @@ import com.bitdecay.game.component.BoostControlComponent;
 import com.bitdecay.game.component.CameraFollowComponent;
 import com.bitdecay.game.component.CollisionGeometryComponent;
 import com.bitdecay.game.component.CollisionKindComponent;
+import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.GravityComponent;
 import com.bitdecay.game.component.PlayerCollisionComponent;
 import com.bitdecay.game.component.RenderColorComponent;
 import com.bitdecay.game.component.BodyDefComponent;
 import com.bitdecay.game.component.SteeringControlComponent;
 import com.bitdecay.game.component.TransformComponent;
-import com.bitdecay.game.component.WaitingToStartComponent;
+import com.bitdecay.game.component.ShipLaunchComponent;
 import com.bitdecay.game.math.Geom;
 
 /**
@@ -24,13 +25,14 @@ import com.bitdecay.game.math.Geom;
  */
 public class ShipEntity extends GameEntity {
 
-    public ShipEntity(Vector2 startPosition) {
-        addComponent(new WaitingToStartComponent());
+    public ShipEntity(Vector2 startPosition, int startingFuel) {
+        addComponent(new ShipLaunchComponent(1.5f));
+        addComponent(new FuelComponent(startingFuel));
 
         addComponent(new BoostControlComponent(new Rectangle(Gdx.graphics.getWidth()/2, 0, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight())));
         addComponent(new SteeringControlComponent(new Rectangle(0, 0, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight())));
 
-        float[] geomPoints = new float[]{-100, -50, -100, 50, 100, 0};
+        float[] geomPoints = new float[]{-100, 50, 100, 0, -100, -50};
         addComponent(new CollisionGeometryComponent(geomPoints, CollisionGeometryComponent.Direction.RECEIVES));
         addComponent(new CollisionKindComponent(CollisionKind.PLAYER));
         addComponent(new PlayerCollisionComponent());

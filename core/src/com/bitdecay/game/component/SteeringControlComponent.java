@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class SteeringControlComponent extends GameComponent {
 
-    public static final float ANGLE_NOT_SET = Float.MAX_VALUE;
+    public static final float ANGLE_NOT_SET = Float.POSITIVE_INFINITY;
 
     public Rectangle activeArea;
     public float angle = ANGLE_NOT_SET; // default to signify that no input received yet

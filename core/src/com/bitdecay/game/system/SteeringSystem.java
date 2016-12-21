@@ -20,7 +20,7 @@ public class SteeringSystem extends AbstractIteratingGameSystem {
         SteeringComponent steering = entity.getComponent(SteeringComponent.class);
         TransformComponent transform = entity.getComponent(TransformComponent.class);
 
-        if (control.angle == Float.MAX_VALUE) {
+        if (control.angle == SteeringControlComponent.ANGLE_NOT_SET) {
             // no input received yet. Set value to ships current rotation
             control.angle = transform.angle;
         }

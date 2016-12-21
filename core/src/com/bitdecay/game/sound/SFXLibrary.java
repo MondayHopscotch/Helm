@@ -8,5 +8,5 @@ public class SFXLibrary {
     public static final String SFX_DIR = "sound/fx/";
 
     public static final String SHIP_LAUNCH = "Launch.ogg";
-    public static final String SHIP_BOOST = "BoostNoise.ogg";
+    public static final String SHIP_CRASH = "CrashHigh.ogg";
 }

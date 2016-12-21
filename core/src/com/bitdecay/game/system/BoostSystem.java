@@ -5,6 +5,7 @@ import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.BoostControlComponent;
 import com.bitdecay.game.component.BoosterComponent;
+import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.math.Geom;
@@ -23,6 +24,7 @@ public class BoostSystem extends AbstractIteratingGameSystem {
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
         BoosterComponent boost = entity.getComponent(BoosterComponent.class);
+        FuelComponent fuel = entity.getComponent(FuelComponent.class);
 
         BoostControlComponent button = entity.getComponent(BoostControlComponent.class);
 
@@ -30,14 +32,15 @@ public class BoostSystem extends AbstractIteratingGameSystem {
 
         TransformComponent transform = entity.getComponent(TransformComponent.class);
 
-        if (button.pressed) {
+        if (button.pressed && fuel.fuelRemaining > 0) {
+            fuel.fuelRemaining = Math.max(fuel.fuelRemaining - fuel.burnRate * delta, 0);
+
             Vector2 boostVector = Geom.rotateSinglePoint(new Vector2(boost.strength, 0), transform.angle);
             velocity.currentVelocity.add(boostVector.scl(delta));
 
             boost.engaged = true;
 
             pilot.doMusic(SoundMode.RESUME, MusicLibrary.SHIP_BOOST);
-
         } else {
             boost.engaged = false;
 
@@ -52,6 +55,7 @@ public class BoostSystem extends AbstractIteratingGameSystem {
         return entity.hasComponent(BoosterComponent.class) &&
                 entity.hasComponent(BoostControlComponent.class) &&
                 entity.hasComponent(TransformComponent.class) &&
-                entity.hasComponent(VelocityComponent.class);
+                entity.hasComponent(VelocityComponent.class) &&
+                entity.hasComponent(FuelComponent.class);
     }
 }
