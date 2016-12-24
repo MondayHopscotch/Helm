@@ -6,6 +6,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.Helm;
@@ -42,7 +45,9 @@ import com.bitdecay.game.system.RenderBoostSystem;
 import com.bitdecay.game.system.SteeringInputSystem;
 import com.bitdecay.game.system.SteeringSystem;
 import com.bitdecay.game.world.LevelDefinition;
+import com.bitdecay.game.world.LevelWorld;
 import com.bitdecay.game.world.LineSegment;
+import com.bitdecay.game.world.World1;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +60,7 @@ public class GameScreen implements Screen, GamePilot {
 
     LevelPlayer levelPlayer;
 
-    private final LevelDefinition currentLevel;
+    private LevelWorld currentWorld;
 
     private boolean reloadQueued;
     private ScoreMenu scoreMenu;
@@ -67,7 +72,7 @@ public class GameScreen implements Screen, GamePilot {
 
         initMenus();
 
-        currentLevel = getTestLevel();
+        currentWorld = new World1();
         requestRestartLevel();
     }
 
@@ -91,31 +96,48 @@ public class GameScreen implements Screen, GamePilot {
 
 
         Array<LineSegment> testLines = new Array<>(10);
-        testLines.add(new LineSegment(new Vector2(-100, 1500), new Vector2(-850, 800)));
-        testLines.add(new LineSegment(new Vector2(-850, 800), new Vector2(-800, 300)));
-        testLines.add(new LineSegment(new Vector2(-800, 300), new Vector2(-100, -101)));
-        testLines.add(new LineSegment(new Vector2(-100, -101), new Vector2(100, -101)));
-        testLines.add(new LineSegment(new Vector2(100, -101), new Vector2(300, -600)));
-        testLevel.finishPlatform.set(new Rectangle(300, -650, 150, 50));
-        testLines.add(new LineSegment(new Vector2(450, -600), new Vector2(800, -300)));
-        testLines.add(new LineSegment(new Vector2(800, -300), new Vector2(1000, 300)));
-        testLines.add(new LineSegment(new Vector2(1000, 300), new Vector2(1100, 1100)));
-        testLines.add(new LineSegment(new Vector2(1100, 1100), new Vector2(1050, 1800)));
-        testLines.add(new LineSegment(new Vector2(1050, 1800), new Vector2(400, 1800)));
-        testLines.add(new LineSegment(new Vector2(400, 1800), new Vector2(-100, 1500)));
+        testLines.add(new LineSegment(new Vector2(-1200, 300), new Vector2(-1000, 250)));
+        testLines.add(new LineSegment(new Vector2(-1000, 250), new Vector2(-800, 250)));
+        testLines.add(new LineSegment(new Vector2(-800, 250), new Vector2(-400, 24)));
+        testLines.add(new LineSegment(new Vector2(-400, 24), new Vector2(-200, -1100)));
+        testLevel.finishPlatform.set(new Rectangle(-200, -1150, 200, 50));
+//        testLines.add(new LineSegment(new Vector2(-200, -1100), new Vector2(0, -1100)));
+        testLines.add(new LineSegment(new Vector2(0, -1100), new Vector2(150, -150)));
+        testLines.add(new LineSegment(new Vector2(150, -150), new Vector2(600, -100)));
+        testLines.add(new LineSegment(new Vector2(600, -100), new Vector2(-200, 1400)));
+        testLines.add(new LineSegment(new Vector2(-200, 1400), new Vector2(-1000, 1000)));
+        testLines.add(new LineSegment(new Vector2(-1000, 1000), new Vector2(-1200, 300)));
+//        testLines.add(new LineSegment(new Vector2(1100, 1100), new Vector2(1050, 1800)));
+//        testLines.add(new LineSegment(new Vector2(1050, 1800), new Vector2(400, 1800)));
+//        testLines.add(new LineSegment(new Vector2(400, 1800), new Vector2(-100, 1500)));
 
-        testLines.add(new LineSegment(new Vector2(300, 900), new Vector2(700, 900)));
-        testLines.add(new LineSegment(new Vector2(700, 900), new Vector2(750, 1250)));
-        testLines.add(new LineSegment(new Vector2(750, 1250), new Vector2(500, 1100)));
-        testLines.add(new LineSegment(new Vector2(500, 1100), new Vector2(300, 900)));
+//        testLines.add(new LineSegment(new Vector2(300, 900), new Vector2(700, 900)));
+//        testLines.add(new LineSegment(new Vector2(700, 900), new Vector2(750, 1250)));
+//        testLines.add(new LineSegment(new Vector2(750, 1250), new Vector2(500, 1100)));
+//        testLines.add(new LineSegment(new Vector2(500, 1100), new Vector2(300, 900)));
 
         testLevel.levelLines = testLines;
 
-        testLevel.startPosition =  Vector2.Zero;
+        testLevel.startPosition =  new Vector2(-900, 351);
         testLevel.startingFuel = 300;
 
+//        return testLevel;
+//
+        Json json = new Json();
+        json.setElementType(LevelDefinition.class, "levelLines", LineSegment.class);
+        String out = json.toJson(testLevel);
 
-        return testLevel;
+        FileHandle level1File = Gdx.files.local("level/level2.json");
+        level1File.writeBytes(out.getBytes(), false);
+
+        LevelDefinition deser = json.fromJson(LevelDefinition.class, out);
+//        JsonWriter writer = new JsonWriter()
+
+        return deser;
+
+//        Json json = new Json();
+//        FileHandle level1File = Gdx.files.internal("level/level1.json");
+//        return json.fromJson(LevelDefinition.class, level1File);
     }
 
     @Override
@@ -187,8 +209,13 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void nextLevel() {
-        setLevel(getTestLevel());
-        reloadQueued = true;
+        LevelDefinition nextLevel = currentWorld.getNextLevel();
+        if (nextLevel == null) {
+            game.setScreen(new TitleScreen(game));
+        } else {
+            setLevel(nextLevel);
+            reloadQueued = true;
+        }
     }
 
     @Override
@@ -203,7 +230,7 @@ public class GameScreen implements Screen, GamePilot {
         levelPlayer.render(delta);
 
         if (reloadQueued) {
-            setLevel(getTestLevel());
+            setLevel(currentWorld.getCurrentLevel());
             reloadQueued = false;
         }
 
