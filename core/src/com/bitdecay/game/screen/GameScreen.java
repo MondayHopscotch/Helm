@@ -91,53 +91,34 @@ public class GameScreen implements Screen, GamePilot {
 
     }
 
-    private LevelDefinition getTestLevel() {
+    public static LevelDefinition saveLevelToFile() {
         LevelDefinition testLevel = new LevelDefinition();
 
 
         Array<LineSegment> testLines = new Array<>(10);
-        testLines.add(new LineSegment(new Vector2(-1200, 300), new Vector2(-1000, 250)));
-        testLines.add(new LineSegment(new Vector2(-1000, 250), new Vector2(-800, 250)));
-        testLines.add(new LineSegment(new Vector2(-800, 250), new Vector2(-400, 24)));
-        testLines.add(new LineSegment(new Vector2(-400, 24), new Vector2(-200, -1100)));
-        testLevel.finishPlatform.set(new Rectangle(-200, -1150, 200, 50));
-//        testLines.add(new LineSegment(new Vector2(-200, -1100), new Vector2(0, -1100)));
-        testLines.add(new LineSegment(new Vector2(0, -1100), new Vector2(150, -150)));
-        testLines.add(new LineSegment(new Vector2(150, -150), new Vector2(600, -100)));
-        testLines.add(new LineSegment(new Vector2(600, -100), new Vector2(-200, 1400)));
-        testLines.add(new LineSegment(new Vector2(-200, 1400), new Vector2(-1000, 1000)));
-        testLines.add(new LineSegment(new Vector2(-1000, 1000), new Vector2(-1200, 300)));
-//        testLines.add(new LineSegment(new Vector2(1100, 1100), new Vector2(1050, 1800)));
-//        testLines.add(new LineSegment(new Vector2(1050, 1800), new Vector2(400, 1800)));
-//        testLines.add(new LineSegment(new Vector2(400, 1800), new Vector2(-100, 1500)));
-
-//        testLines.add(new LineSegment(new Vector2(300, 900), new Vector2(700, 900)));
-//        testLines.add(new LineSegment(new Vector2(700, 900), new Vector2(750, 1250)));
-//        testLines.add(new LineSegment(new Vector2(750, 1250), new Vector2(500, 1100)));
-//        testLines.add(new LineSegment(new Vector2(500, 1100), new Vector2(300, 900)));
+        testLines.add(new LineSegment(new Vector2(-200,0), new Vector2(-200, 1200)));
+        testLines.add(new LineSegment(new Vector2(-200, 1200), new Vector2(1500, 1200)));
+        testLines.add(new LineSegment(new Vector2(1500, 1200), new Vector2(1500, 0)));
+        testLines.add(new LineSegment(new Vector2(1500, 0), new Vector2(1000, 0)));
+        testLines.add(new LineSegment(new Vector2(1000, 0), new Vector2(900, 150)));
+        testLines.add(new LineSegment(new Vector2(500, 150), new Vector2(400, 0)));
+        testLines.add(new LineSegment(new Vector2(400, 0), new Vector2(-200, 0)));
+        testLevel.finishPlatform.set(new Rectangle(500, 100, 400, 50));
 
         testLevel.levelLines = testLines;
 
-        testLevel.startPosition =  new Vector2(-900, 351);
+        testLevel.startPosition =  new Vector2(0, 101);
         testLevel.startingFuel = 300;
 
-//        return testLevel;
-//
         Json json = new Json();
         json.setElementType(LevelDefinition.class, "levelLines", LineSegment.class);
         String out = json.toJson(testLevel);
 
-        FileHandle level1File = Gdx.files.local("level/level2.json");
+        FileHandle level1File = Gdx.files.local("level/level1.json");
         level1File.writeBytes(out.getBytes(), false);
 
         LevelDefinition deser = json.fromJson(LevelDefinition.class, out);
-//        JsonWriter writer = new JsonWriter()
-
         return deser;
-
-//        Json json = new Json();
-//        FileHandle level1File = Gdx.files.internal("level/level1.json");
-//        return json.fromJson(LevelDefinition.class, level1File);
     }
 
     @Override

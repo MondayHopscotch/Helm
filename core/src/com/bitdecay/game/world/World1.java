@@ -14,5 +14,6 @@ public class World1 extends LevelWorld {
 
         levels.add(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/level1.json")));
         levels.add(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/level2.json")));
+        levels.add(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/level3.json")));
     }
 }
