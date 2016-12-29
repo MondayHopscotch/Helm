@@ -63,6 +63,7 @@ public class GameScreen implements Screen, GamePilot {
     private LevelWorld currentWorld;
 
     private boolean reloadQueued;
+
     private ScoreMenu scoreMenu;
 
     public GameScreen(Helm game) {
@@ -182,8 +183,18 @@ public class GameScreen implements Screen, GamePilot {
     @Override
     public void finishLevel(LandingScore score) {
         System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
-        scoreMenu.setScore(score);
+        // temporary
+        int levelScore = score.angleScore + score.speedScore;
+        System.out.println("SCORE: " + levelScore);
+        currentWorld.setLevelScore(currentWorld.getCurrentLevel(), levelScore);
+        // end temp
+        scoreMenu.setScore(score, currentWorld.getTotalScore());
         scoreMenu.visible = true;
+        if (currentWorld.hasNextLevel()) {
+            scoreMenu.setNextLevelOption();
+        } else {
+            scoreMenu.setReturnToMenuOption();
+        }
         Gdx.input.setInputProcessor(scoreMenu.stage);
         levelPlayer.resetInputSystems();
     }
@@ -192,11 +203,30 @@ public class GameScreen implements Screen, GamePilot {
     public void nextLevel() {
         LevelDefinition nextLevel = currentWorld.getNextLevel();
         if (nextLevel == null) {
-            game.setScreen(new TitleScreen(game));
+            returnToTitle();
         } else {
             setLevel(nextLevel);
             reloadQueued = true;
         }
+    }
+
+    @Override
+    public void returnToTitle() {
+
+        int total = currentWorld.getTotalScore();
+
+        int oldHighScore = 0;
+        if (game.prefs.contains(Helm.HIGH_SCORE)) {
+            oldHighScore = game.prefs.getInteger(Helm.HIGH_SCORE);
+        }
+
+        if (total > oldHighScore) {
+            game.prefs.putInteger(Helm.HIGH_SCORE, total);
+            game.prefs.flush();
+            System.out.println("Scorer: SAVING NEW SCORE: " + total);
+        }
+
+        game.setScreen(new TitleScreen(game));
     }
 
     @Override

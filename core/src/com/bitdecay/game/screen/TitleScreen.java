@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -36,14 +37,35 @@ public class TitleScreen implements Screen {
         stage = new Stage();
         skin = new Skin(Gdx.files.internal("skin/skin.json"));
 
-        buildMainMenu();
+        Table mainTable = new Table();
+        mainTable.setFillParent(true);
 
-        buildVersionTag();
+        Actor highScoreActor = buildHighScoreDisplay();
+        mainTable.add(highScoreActor).align(Align.right).expandX();
+        mainTable.row();
+
+        Actor mainMenu = buildMainMenu();
+        mainTable.add(mainMenu).expand();
+        mainTable.row();
+
+        Actor versionActor = buildVersionTag();
+        mainTable.add(versionActor).align(Align.left).expandX();
+
+        stage.addActor(mainTable);
     }
 
-    private void buildMainMenu() {
+    private Actor buildHighScoreDisplay() {
+        Table highScoreTable = new Table();
+
+        Label scoreLabel = new Label("High Score: " + Integer.toString(game.prefs.getInteger(Helm.HIGH_SCORE)), skin);
+        scoreLabel.setFontScale(5);
+        highScoreTable.add(scoreLabel);
+        return highScoreTable;
+    }
+
+    private Actor buildMainMenu() {
         Table mainMenu = new Table();
-        mainMenu.setFillParent(true);
+//        mainMenu.setFillParent(true);
         mainMenu.align(Align.center);
         mainMenu.setOrigin(Align.center);
 
@@ -58,10 +80,10 @@ public class TitleScreen implements Screen {
 
         mainMenu.add(startLabel);
 
-        stage.addActor(mainMenu);
+        return mainMenu;
     }
 
-    private void buildVersionTag() {
+    private Actor buildVersionTag() {
         Table versionTable = new Table();
         versionTable.align(Align.bottomLeft);
         versionTable.setOrigin(Align.bottomLeft);
@@ -71,7 +93,7 @@ public class TitleScreen implements Screen {
 
         versionTable.add(versionLabel);
 
-        stage.addActor(versionTable);
+        return versionTable;
     }
 
     @Override
