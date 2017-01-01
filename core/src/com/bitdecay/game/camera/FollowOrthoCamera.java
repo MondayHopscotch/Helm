@@ -16,42 +16,29 @@ public class FollowOrthoCamera extends OrthographicCamera {
     public float minZoom = 0.1f;
     public float buffer = 10;
     public float snapSpeed = 0.05f;
-    public boolean limitWindow = false;
-    public float limitWindowMinX = 0;
-    public float limitWindowMinY = 0;
-    public float limitWindowMaxX = 0;
-    public float limitWindowMaxY = 0;
-
 
     private List<Vector2> pointsToFollow;
 
     private float targetZoom = 0.1f;
     private Vector2 targetPosition = new Vector2(0, 0);
 
-    private RectangleExt window;
     private float originalWidth = 0;
-    private float widthRatio = 0;
-    private float heightRatio = 0;
-
-    private float minX = 0;
-    private float minY = 0;
-    private float maxX = 0;
-    private float maxY = 0;
-    private float midX = 0;
-    private float midY = 0;
-    private float maxW = 0;
-    private float maxH = 0;
 
     private boolean shake = false;
     private float shakeStrength = 0;
     private float shakeDuration = 0;
 
+    private final float aspectRatio;
+
+    // These are here so we can reuse instances
+    private final Rectangle perfectFitRect = new Rectangle();
+    private final Rectangle aspectFitRect = new Rectangle();
+    private final Rectangle bufferedFitRect = new Rectangle();
+
     public FollowOrthoCamera(float width, float height){
         super(width, height);
         originalWidth = width;
-        widthRatio = height / width;
-        heightRatio = width / height;
-        window = new RectangleExt(0, 0, width, height);
+        aspectRatio = width / height;
     }
 
     public void addFollowPoint(Vector2 point){
@@ -70,24 +57,11 @@ public class FollowOrthoCamera extends OrthographicCamera {
         }
 
         if (pointsToFollow.size() > 0) {
-            getWorldMaxWindow();
+            updateFit();
 
-            window.x = midX;
-            window.y = midY;
-            targetPosition.x = window.x;
-            targetPosition.y = window.y;
-            // try max width first
-            window.width = maxW;
-            window.height = maxW * widthRatio;
-            window.setOriginAtCenter();
-            if (!testAllPoints()) {
-                // then try scaling based on max height
-                window.height = maxH;
-                window.width = maxH * heightRatio;
-                window.setOriginAtCenter();
-            }
-            targetZoom = window.width / originalWidth;
-            //
+            targetPosition.x = bufferedFitRect.width / 2f + bufferedFitRect.x;
+            targetPosition.y = bufferedFitRect.height / 2f + bufferedFitRect.y;
+            targetZoom = bufferedFitRect.width / originalWidth;
             goToTargets();
             pointsToFollow.clear();
         }
@@ -101,33 +75,6 @@ public class FollowOrthoCamera extends OrthographicCamera {
         }
     }
 
-    public void shake(float duration){
-        this.shake = true;
-        this.shakeStrength = 5;
-        this.shakeDuration = duration;
-    }
-
-    public void shake(float duration, float strength){
-        this.shake = true;
-        this.shakeStrength = strength;
-        this.shakeDuration = duration;
-    }
-
-    public void rumble(){
-        this.shake = true;
-        this.shakeStrength = 1;
-        this.shakeDuration = 0.0001f;
-    }
-
-    private boolean testAllPoints(){
-        for (Vector2 point : pointsToFollow){
-            if (!window.contains(point)){
-                return false;
-            }
-        }
-        return true;
-    }
-
     private void goToTargets(){
         float transX = (targetPosition.x - position.x) * snapSpeed;
         float transY = (targetPosition.y - position.y) * snapSpeed;
@@ -136,33 +83,15 @@ public class FollowOrthoCamera extends OrthographicCamera {
         zoom += transZoom;
     }
 
-    private void getWorldMaxWindow(){
-        Rectangle perfectFit = getPerfectFit();
+    private void updateFit(){
+        setPerfectFit();
 
-        Rectangle bufferedFit = new Rectangle(perfectFit);
-        bufferedFit.x -= buffer;
-        bufferedFit.width += 2 * buffer;
+        setAspectFit();
 
-        bufferedFit.y -= buffer;
-        bufferedFit.height += 2 * buffer;
-
-        minX = bufferedFit.x;
-        maxX = bufferedFit.x + bufferedFit.width;
-
-        minY = bufferedFit.y;
-        maxY = bufferedFit.y + bufferedFit.height;
-
-//        minY = (minY < limitWindowMinY ? limitWindowMinY : (minY > limitWindowMaxY ? limitWindowMaxY : minY));
-//        maxY = (maxY > limitWindowMaxY ? limitWindowMaxY : (maxY < limitWindowMinY ? limitWindowMinY : maxY));
-
-        maxW = maxX - minX;
-        maxH = maxY - minY;
-
-        midX = maxW / 2f + minX;
-        midY = maxH / 2f + minY;
+        setBufferedFit();
     }
 
-    private Rectangle getPerfectFit() {
+    private void setPerfectFit() {
         float minX = Float.POSITIVE_INFINITY;
         float minY = Float.POSITIVE_INFINITY;
         float maxX = Float.NEGATIVE_INFINITY;
@@ -194,10 +123,50 @@ public class FollowOrthoCamera extends OrthographicCamera {
         perfectFitWidth = maxX - minX;
         perfectFitHeight = maxY - minY;
 
-        return new Rectangle(minX, minY, perfectFitWidth, perfectFitHeight);
+        perfectFitRect.x = minX;
+        perfectFitRect.y = minY;
+        perfectFitRect.width = perfectFitWidth;
+        perfectFitRect.height = perfectFitHeight;
     }
 
-    private static class CamWindow {
+    private void setBufferedFit() {
+        bufferedFitRect.set(aspectFitRect);
+        bufferedFitRect.x -= buffer;
+        bufferedFitRect.width += 2 * buffer;
 
+        bufferedFitRect.y -= buffer;
+        bufferedFitRect.height += 2 * buffer;
+    }
+
+    private void setAspectFit() {
+        aspectFitRect.set(perfectFitRect);
+        float currentAspect = perfectFitRect.width / perfectFitRect.height;
+        if (currentAspect < aspectRatio) {
+            float newWidth = perfectFitRect.height * aspectRatio;
+            aspectFitRect.x -= (newWidth - perfectFitRect.width) / 2;
+            aspectFitRect.width = newWidth;
+        } else if (currentAspect > aspectRatio) {
+            float newHeight = perfectFitRect.width / aspectRatio;
+            aspectFitRect.y -= (newHeight - perfectFitRect.height) / 2;
+            aspectFitRect.height = newHeight;
+        }
+    }
+
+    public void shake(float duration){
+        this.shake = true;
+        this.shakeStrength = 5;
+        this.shakeDuration = duration;
+    }
+
+    public void shake(float duration, float strength){
+        this.shake = true;
+        this.shakeStrength = strength;
+        this.shakeDuration = duration;
+    }
+
+    public void rumble(){
+        this.shake = true;
+        this.shakeStrength = 1;
+        this.shakeDuration = 0.0001f;
     }
 }

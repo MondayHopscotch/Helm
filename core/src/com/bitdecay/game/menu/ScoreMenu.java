@@ -51,72 +51,66 @@ public class ScoreMenu {
         stage = new Stage();
         skin = new Skin(Gdx.files.internal("skin/skin.json"));
 
+        Table mainTable = new Table();
+        mainTable.setFillParent(true);
+        mainTable.align(Align.center);
+        mainTable.setOrigin(Align.center);
+
         Table scoreTable = new Table();
-        scoreTable.setFillParent(true);
         scoreTable.align(Align.center);
         scoreTable.setOrigin(Align.center);
 
-        Table landingSpeedTable = new Table();
-        landingSpeedLabel = new Label("Landing Speed:", skin);
+        landingSpeedLabel = new Label(getLeftPaddedString("Landing Speed:"), skin);
         landingSpeedLabel.setFontScale(6);
-        landingSpeedLabel.setAlignment(Align.left);
-
+        landingSpeedLabel.setAlignment(Align.right);
 
         landingSpeedScore = new Label("----", skin);
         landingSpeedScore.setFontScale(6);
         landingSpeedScore.setAlignment(Align.right);
+        landingSpeedScore.setOrigin(Align.right);
 
-
-        landingSpeedTable.add(landingSpeedLabel).padRight(100);
-        landingSpeedTable.add(landingSpeedScore);
-
-        scoreTable.add(landingSpeedTable);
+        scoreTable.add(landingSpeedLabel).padRight(100);
+        scoreTable.add(landingSpeedScore).growX();
         scoreTable.row();
 
-        Table landingAngleTable = new Table();
-        landingAngleLabel = new Label("Landing Angle:", skin);
+        landingAngleLabel = new Label(getLeftPaddedString("Landing Angle:"), skin);
         landingAngleLabel.setFontScale(6);
-        landingAngleLabel.setAlignment(Align.left);
+        landingAngleLabel.setAlignment(Align.right);
 
         landingAngleScore = new Label("----", skin);
         landingAngleScore.setFontScale(6);
         landingAngleScore.setAlignment(Align.right);
+        landingAngleScore.setOrigin(Align.right);
 
-        landingAngleTable.add(landingAngleLabel).padRight(100);
-        landingAngleTable.add(landingAngleScore);
-
-        scoreTable.add(landingAngleTable);
+        scoreTable.add(landingAngleLabel).padRight(100);
+        scoreTable.add(landingAngleScore).growX();
         scoreTable.row();
 
-        Table fuelLeftTable = new Table();
-        fuelLeftLabel = new Label("Fuel Remaining:", skin);
+        fuelLeftLabel = new Label(getLeftPaddedString("Fuel Remaining:"), skin);
         fuelLeftLabel.setFontScale(6);
-        fuelLeftLabel.setAlignment(Align.left);
+        fuelLeftLabel.setAlignment(Align.right);
 
         fuelLeftPercent = new Label("----", skin);
         fuelLeftPercent.setFontScale(6);
         fuelLeftPercent.setAlignment(Align.right);
+        fuelLeftPercent.setOrigin(Align.right);
 
-        fuelLeftTable.add(fuelLeftLabel).padRight(100);
-        fuelLeftTable.add(fuelLeftPercent);
-
-        scoreTable.add(fuelLeftTable);
+        scoreTable.add(fuelLeftLabel).padRight(100);
+        scoreTable.add(fuelLeftPercent).growX();
         scoreTable.row();
 
-        Table totalScoreTable = new Table();
-        totalScoreLabel = new Label("Total Score:", skin);
+        totalScoreLabel = new Label(getLeftPaddedString("Total Score:"), skin);
         totalScoreLabel.setFontScale(6);
-        totalScoreLabel.setAlignment(Align.left);
+        totalScoreLabel.setAlignment(Align.right);
 
         totalScoreScore = new Label("----", skin);
-        totalScoreScore.setFontScale(7);
+        totalScoreScore.setFontScale(6);
         totalScoreScore.setAlignment(Align.right);
+        totalScoreScore.setOrigin(Align.right);
         totalScoreScore.setColor(Color.LIGHT_GRAY);
 
-        totalScoreTable.add(totalScoreLabel).padRight(100);
-        totalScoreTable.add(totalScoreScore);
-
-        scoreTable.add(totalScoreTable).padTop(20);
+        scoreTable.add(totalScoreLabel).padRight(100);
+        scoreTable.add(totalScoreScore).growX();
         scoreTable.row();
 
         nextLevelAction = new ClickListener() {
@@ -133,15 +127,28 @@ public class ScoreMenu {
             }
         };
 
+        Table nextTabel = new Table();
+        nextTabel.align(Align.center);
+        nextTabel.setOrigin(Align.center);
         nextButton = new TextButton(NEXT_LEVEL_TEXT, skin);
         nextButton.getLabel().setFontScale(5);
-//        nextLevelButton.setSize(500, 300);
         nextButton.addListener(nextLevelAction);
+        nextButton.align(Align.center);
+        nextButton.setOrigin(Align.center);
 
-        scoreTable.add(nextButton).padTop(200);
+        nextTabel.add(nextButton);
 
-        stage.addActor(scoreTable);
+        mainTable.add(scoreTable);
+        mainTable.row();
+        mainTable.add(nextTabel).padTop(200);
 
+        stage.addActor(mainTable);
+
+    }
+
+    private String getLeftPaddedString(String input) {
+//        return String.format("%15s", input);
+        return input;
     }
 
     public void updateAndDraw() {
@@ -180,10 +187,10 @@ public class ScoreMenu {
                         Actions.run(getShowActorRunnable(nextButton))
                 )
         );
-        landingSpeedScore.setText(Integer.toString(score.speedScore));
-        landingAngleScore.setText(Integer.toString(score.angleScore));
-        totalScoreScore.setText(Integer.toString(totalScore));
-        fuelLeftPercent.setText(String.format("%.2f%%", score.fuelLeft * 100));
+        landingSpeedScore.setText(getLeftPaddedString(Integer.toString(score.speedScore)));
+        landingAngleScore.setText(getLeftPaddedString(Integer.toString(score.angleScore)));
+        totalScoreScore.setText(getLeftPaddedString(Integer.toString(totalScore)));
+        fuelLeftPercent.setText(getLeftPaddedString(String.format("%.2f%%", score.fuelLeft * 100)));
     }
 
     private Runnable getShowActorRunnable(final Actor actor) {

@@ -59,7 +59,7 @@ public class LevelPlayer {
         cam = new FollowOrthoCamera(1920, 1080);
         cam.minZoom = 3;
         cam.maxZoom = .2f;
-        cam.buffer = 1000;
+        cam.buffer = 500;
 
         shapeRenderer = new ShapeRenderer();
 
