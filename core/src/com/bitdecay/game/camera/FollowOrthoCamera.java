@@ -17,18 +17,17 @@ public class FollowOrthoCamera extends OrthographicCamera {
     public float buffer = 10;
     public float snapSpeed = 0.05f;
 
+    private final float aspectRatio;
+    private float originalWidth = 0;
+
     private List<Vector2> pointsToFollow;
 
     private float targetZoom = 0.1f;
     private Vector2 targetPosition = new Vector2(0, 0);
 
-    private float originalWidth = 0;
-
     private boolean shake = false;
     private float shakeStrength = 0;
     private float shakeDuration = 0;
-
-    private final float aspectRatio;
 
     // These are here so we can reuse instances
     private final Rectangle perfectFitRect = new Rectangle();
@@ -129,15 +128,6 @@ public class FollowOrthoCamera extends OrthographicCamera {
         perfectFitRect.height = perfectFitHeight;
     }
 
-    private void setBufferedFit() {
-        bufferedFitRect.set(aspectFitRect);
-        bufferedFitRect.x -= buffer;
-        bufferedFitRect.width += 2 * buffer;
-
-        bufferedFitRect.y -= buffer;
-        bufferedFitRect.height += 2 * buffer;
-    }
-
     private void setAspectFit() {
         aspectFitRect.set(perfectFitRect);
         float currentAspect = perfectFitRect.width / perfectFitRect.height;
@@ -150,6 +140,15 @@ public class FollowOrthoCamera extends OrthographicCamera {
             aspectFitRect.y -= (newHeight - perfectFitRect.height) / 2;
             aspectFitRect.height = newHeight;
         }
+    }
+
+    private void setBufferedFit() {
+        bufferedFitRect.set(aspectFitRect);
+        bufferedFitRect.x -= buffer;
+        bufferedFitRect.width += 2 * buffer;
+
+        bufferedFitRect.y -= buffer;
+        bufferedFitRect.height += 2 * buffer;
     }
 
     public void shake(float duration){
