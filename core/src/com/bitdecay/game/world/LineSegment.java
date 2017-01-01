@@ -9,6 +9,10 @@ public class LineSegment {
     public Vector2 startPoint;
     public Vector2 endPoint;
 
+    public LineSegment() {
+        // Here for JSON
+    }
+
     public LineSegment(Vector2 start, Vector2 end) {
         startPoint = start;
         endPoint = end;

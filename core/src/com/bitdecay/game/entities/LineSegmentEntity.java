@@ -17,12 +17,15 @@ import com.bitdecay.game.world.LineSegment;
  */
 public class LineSegmentEntity extends GameEntity {
     public LineSegmentEntity(LineSegment line) {
-        float[] geomPoints = new float[]{line.startPoint.x, line.startPoint.y, line.endPoint.x, line.endPoint.y};
+        Vector2 midpoint = line.endPoint.cpy().sub(line.startPoint);
+        LineSegment copy = new LineSegment(line.startPoint.cpy().sub(midpoint), line.endPoint.cpy().sub(midpoint));
+
+        float[] geomPoints = new float[]{copy.startPoint.x, copy.startPoint.y, copy.endPoint.x, copy.endPoint.y};
         addComponent(new BodyDefComponent(geomPoints));
         addComponent(new CollisionGeometryComponent(geomPoints, CollisionGeometryComponent.Direction.DELIVERS));
         addComponent(new CollisionKindComponent(CollisionKind.WALL));
 
-        addComponent(new TransformComponent(Vector2.Zero, Geom.NO_ROTATION));
+        addComponent(new TransformComponent(midpoint, Geom.NO_ROTATION));
         addComponent(new RenderColorComponent(Color.RED));
     }
 }

@@ -2,6 +2,7 @@ package com.bitdecay.game.camera;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -15,42 +16,28 @@ public class FollowOrthoCamera extends OrthographicCamera {
     public float minZoom = 0.1f;
     public float buffer = 10;
     public float snapSpeed = 0.05f;
-    public boolean limitWindow = false;
-    public float limitWindowMinX = 0;
-    public float limitWindowMinY = 0;
-    public float limitWindowMaxX = 0;
-    public float limitWindowMaxY = 0;
 
+    private final float aspectRatio;
+    private float originalWidth = 0;
 
-    private List<Vector2> pointsToFollow = new ArrayList<>();
+    private List<Vector2> pointsToFollow;
 
     private float targetZoom = 0.1f;
     private Vector2 targetPosition = new Vector2(0, 0);
-
-    private RectangleExt window;
-    private float originalWidth = 0;
-    private float widthRatio = 0;
-    private float heightRatio = 0;
-
-    private float minX = 0;
-    private float minY = 0;
-    private float maxX = 0;
-    private float maxY = 0;
-    private float midX = 0;
-    private float midY = 0;
-    private float maxW = 0;
-    private float maxH = 0;
 
     private boolean shake = false;
     private float shakeStrength = 0;
     private float shakeDuration = 0;
 
+    // These are here so we can reuse instances
+    private final Rectangle perfectFitRect = new Rectangle();
+    private final Rectangle aspectFitRect = new Rectangle();
+    private final Rectangle bufferedFitRect = new Rectangle();
+
     public FollowOrthoCamera(float width, float height){
         super(width, height);
         originalWidth = width;
-        widthRatio = height / width;
-        heightRatio = width / height;
-        window = new RectangleExt(0, 0, width, height);
+        aspectRatio = width / height;
     }
 
     public void addFollowPoint(Vector2 point){
@@ -64,27 +51,18 @@ public class FollowOrthoCamera extends OrthographicCamera {
 
     public void update(float delta){
         super.update();
-        if (pointsToFollow != null && pointsToFollow.size() > 0) {
-            getWorldMaxWindow();
-
-            window.x = midX;
-            window.y = midY;
-            targetPosition.x = window.x;
-            targetPosition.y = window.y;
-            // try max width first
-            window.width = maxW;
-            window.height = maxW * widthRatio;
-            window.setOriginAtCenter();
-            if (!testAllPoints()) {
-                // then try max height
-                window.height = maxH;
-                window.width = maxH * heightRatio;
-                window.setOriginAtCenter();
-            }
-            targetZoom = window.width / originalWidth;
-            //
-            goToTargets();
+        if (pointsToFollow == null) {
             pointsToFollow = new ArrayList<>();
+        }
+
+        if (pointsToFollow.size() > 0) {
+            updateFit();
+
+            targetPosition.x = bufferedFitRect.width / 2f + bufferedFitRect.x;
+            targetPosition.y = bufferedFitRect.height / 2f + bufferedFitRect.y;
+            targetZoom = bufferedFitRect.width / originalWidth;
+            goToTargets();
+            pointsToFollow.clear();
         }
         if (shake){
             translate(MathUtils.random(-shakeStrength, shakeStrength), MathUtils.random(-shakeStrength, shakeStrength));
@@ -94,6 +72,83 @@ public class FollowOrthoCamera extends OrthographicCamera {
                 shake = false;
             }
         }
+    }
+
+    private void goToTargets(){
+        float transX = (targetPosition.x - position.x) * snapSpeed;
+        float transY = (targetPosition.y - position.y) * snapSpeed;
+        translate(transX, transY);
+        float transZoom = ((targetZoom < maxZoom ? maxZoom : (targetZoom > minZoom ? minZoom : targetZoom)) - zoom) * snapSpeed;
+        zoom += transZoom;
+    }
+
+    private void updateFit(){
+        setPerfectFit();
+
+        setAspectFit();
+
+        setBufferedFit();
+    }
+
+    private void setPerfectFit() {
+        float minX = Float.POSITIVE_INFINITY;
+        float minY = Float.POSITIVE_INFINITY;
+        float maxX = Float.NEGATIVE_INFINITY;
+        float maxY = Float.NEGATIVE_INFINITY;
+        float perfectFitWidth;
+        float perfectFitHeight;
+        if (pointsToFollow.size() <= 0) {
+            minX = 0;
+            minY = 0;
+            maxX = 0;
+            maxY = 0;
+        } else {
+            for (Vector2 point : pointsToFollow) {
+                if (point.x < minX) {
+                    minX = point.x;
+                }
+                if (point.x > maxX) {
+                    maxX = point.x;
+                }
+                if (point.y < minY) {
+                    minY = point.y;
+                }
+                if (point.y > maxY) {
+                    maxY = point.y;
+                }
+            }
+        }
+
+        perfectFitWidth = maxX - minX;
+        perfectFitHeight = maxY - minY;
+
+        perfectFitRect.x = minX;
+        perfectFitRect.y = minY;
+        perfectFitRect.width = perfectFitWidth;
+        perfectFitRect.height = perfectFitHeight;
+    }
+
+    private void setAspectFit() {
+        aspectFitRect.set(perfectFitRect);
+        float currentAspect = perfectFitRect.width / perfectFitRect.height;
+        if (currentAspect < aspectRatio) {
+            float newWidth = perfectFitRect.height * aspectRatio;
+            aspectFitRect.x -= (newWidth - perfectFitRect.width) / 2;
+            aspectFitRect.width = newWidth;
+        } else if (currentAspect > aspectRatio) {
+            float newHeight = perfectFitRect.width / aspectRatio;
+            aspectFitRect.y -= (newHeight - perfectFitRect.height) / 2;
+            aspectFitRect.height = newHeight;
+        }
+    }
+
+    private void setBufferedFit() {
+        bufferedFitRect.set(aspectFitRect);
+        bufferedFitRect.x -= buffer;
+        bufferedFitRect.width += 2 * buffer;
+
+        bufferedFitRect.y -= buffer;
+        bufferedFitRect.height += 2 * buffer;
     }
 
     public void shake(float duration){
@@ -112,74 +167,5 @@ public class FollowOrthoCamera extends OrthographicCamera {
         this.shake = true;
         this.shakeStrength = 1;
         this.shakeDuration = 0.0001f;
-    }
-
-    private boolean testAllPoints(){
-        for (Vector2 point : pointsToFollow){
-            if (!window.contains(point)){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void goToTargets(){
-        float transX = (targetPosition.x - position.x) * snapSpeed;
-        float transY = (targetPosition.y - position.y) * snapSpeed;
-        translate(transX, transY);
-        float transZoom = ((targetZoom < maxZoom ? maxZoom : (targetZoom > minZoom ? minZoom : targetZoom)) - zoom) * snapSpeed;
-        zoom += transZoom;
-    }
-
-    private void getWorldMaxWindow(){
-        minX = 0;
-        minY = 0;
-        maxX = 0;
-        maxY = 0;
-        maxW = 0;
-        maxH = 0;
-        midX = 0;
-        midY = 0;
-        if (pointsToFollow.size() > 0){
-            Vector2 firstPoint = pointsToFollow.get(0);
-            minX = firstPoint.x;
-            minY = firstPoint.y;
-            maxX = minX;
-            maxY = minY;
-        }
-
-        for (Vector2 point : pointsToFollow){
-            if (point.x < minX){
-                minX = point.x;
-            }
-            if (point.x > maxX){
-                maxX = point.x;
-            }
-            if (point.y < minY){
-                minY = point.y;
-            }
-            if (point.y > maxY){
-                maxY = point.y;
-            }
-        }
-
-        if (limitWindow){
-            minX = (minX < limitWindowMinX ? limitWindowMinX : (minX > limitWindowMaxX ? limitWindowMaxX : minX));
-            maxX = (maxX > limitWindowMaxX ? limitWindowMaxX : (maxX < limitWindowMinX ? limitWindowMinX : maxX));
-
-            minY = (minY < limitWindowMinY ? limitWindowMinY : (minY > limitWindowMaxY ? limitWindowMaxY : minY));
-            maxY = (maxY > limitWindowMaxY ? limitWindowMaxY : (maxY < limitWindowMinY ? limitWindowMinY : maxY));
-
-        }
-
-
-        maxW = (maxX - minX) + (buffer * 2);
-        maxH = (maxY - minY) + (buffer * 2);
-        midX = maxW / 2f + (minX - buffer);
-        midY = maxH / 2f + (minY - buffer);
-    }
-
-    private static class CamWindow {
-
     }
 }

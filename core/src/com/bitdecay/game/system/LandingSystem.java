@@ -20,8 +20,8 @@ import com.bitdecay.game.sound.SoundMode;
  */
 public class LandingSystem extends AbstractIteratingGameSystem {
 
-    public static final float MAX_LANDING_SPEED = 5;
-    public static final float MAX_LANDING_SPEED_FOR_SCORE = 4;
+    public static final float MAX_LANDING_SPEED = 10;
+    public static final float MAX_LANDING_SPEED_FOR_SCORE = 7;
     public static final float LANDING_SPEED_MERCY = .225f;
 
     public static final float MAX_LANDING_ANGLE = MathUtils.PI / 10;
