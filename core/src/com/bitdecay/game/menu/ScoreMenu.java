@@ -2,8 +2,10 @@ package com.bitdecay.game.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -12,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.scoring.LandingScore;
+import com.bitdecay.game.sound.SFXLibrary;
+import com.bitdecay.game.sound.SoundMode;
 
 /**
  * Created by Monday on 12/17/2016.
@@ -148,10 +152,60 @@ public class ScoreMenu {
     }
 
     public void setScore(LandingScore score, int totalScore) {
+        stage.addAction(
+                Actions.sequence(
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                setAllInvisible();
+                            }
+                        }),
+                        Actions.delay(.2f),
+                        Actions.run(getShowActorRunnable(landingSpeedLabel)),
+                        Actions.delay(.5f),
+                        Actions.run(getShowActorRunnable(landingSpeedScore)),
+                        Actions.delay(.5f),
+                        Actions.run(getShowActorRunnable(landingAngleLabel)),
+                        Actions.delay(.5f),
+                        Actions.run(getShowActorRunnable(landingAngleScore)),
+                        Actions.delay(.5f),
+                        Actions.run(getShowActorRunnable(fuelLeftLabel)),
+                        Actions.delay(.5f),
+                        Actions.run(getShowActorRunnable(fuelLeftPercent)),
+                        Actions.delay(.5f),
+                        Actions.run(getShowActorRunnable(totalScoreLabel)),
+                        Actions.delay(.5f),
+                        Actions.run(getShowActorRunnable(totalScoreScore)),
+                        Actions.delay(.5f),
+                        Actions.run(getShowActorRunnable(nextButton))
+                )
+        );
         landingSpeedScore.setText(Integer.toString(score.speedScore));
         landingAngleScore.setText(Integer.toString(score.angleScore));
         totalScoreScore.setText(Integer.toString(totalScore));
         fuelLeftPercent.setText(String.format("%.2f%%", score.fuelLeft * 100));
+    }
+
+    private Runnable getShowActorRunnable(final Actor actor) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                actor.setVisible(true);
+                pilot.doSound(SoundMode.PLAY, SFXLibrary.SCORE_POP);
+            }
+        };
+    }
+
+    private void setAllInvisible() {
+        landingSpeedLabel.setVisible(false);
+        landingSpeedScore.setVisible(false);
+        landingAngleLabel.setVisible(false);
+        landingAngleScore.setVisible(false);
+        fuelLeftLabel.setVisible(false);
+        fuelLeftPercent.setVisible(false);
+        totalScoreLabel.setVisible(false);
+        totalScoreScore.setVisible(false);
+        nextButton.setVisible(false);
     }
 
     public void setNextLevelOption() {

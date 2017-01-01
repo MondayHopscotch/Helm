@@ -9,4 +9,6 @@ public class SFXLibrary {
 
     public static final String SHIP_LAUNCH = "Launch.ogg";
     public static final String SHIP_CRASH = "CrashHigh.ogg";
+
+    public static final String SCORE_POP = "ScorePop.ogg";
 }
