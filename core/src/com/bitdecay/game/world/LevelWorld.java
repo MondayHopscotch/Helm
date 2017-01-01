@@ -19,7 +19,7 @@ public abstract class LevelWorld {
     }
 
     public boolean hasNextLevel() {
-        return currentLevel < levels.size;
+        return currentLevel + 1 < levels.size;
     }
 
     public LevelDefinition getNextLevel() {

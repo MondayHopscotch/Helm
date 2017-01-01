@@ -2,6 +2,7 @@ package com.bitdecay.game.camera;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class FollowOrthoCamera extends OrthographicCamera {
     public float limitWindowMaxY = 0;
 
 
-    private List<Vector2> pointsToFollow = new ArrayList<>();
+    private List<Vector2> pointsToFollow;
 
     private float targetZoom = 0.1f;
     private Vector2 targetPosition = new Vector2(0, 0);
@@ -64,7 +65,11 @@ public class FollowOrthoCamera extends OrthographicCamera {
 
     public void update(float delta){
         super.update();
-        if (pointsToFollow != null && pointsToFollow.size() > 0) {
+        if (pointsToFollow == null) {
+            pointsToFollow = new ArrayList<>();
+        }
+
+        if (pointsToFollow.size() > 0) {
             getWorldMaxWindow();
 
             window.x = midX;
@@ -76,7 +81,7 @@ public class FollowOrthoCamera extends OrthographicCamera {
             window.height = maxW * widthRatio;
             window.setOriginAtCenter();
             if (!testAllPoints()) {
-                // then try max height
+                // then try scaling based on max height
                 window.height = maxH;
                 window.width = maxH * heightRatio;
                 window.setOriginAtCenter();
@@ -84,7 +89,7 @@ public class FollowOrthoCamera extends OrthographicCamera {
             targetZoom = window.width / originalWidth;
             //
             goToTargets();
-            pointsToFollow = new ArrayList<>();
+            pointsToFollow.clear();
         }
         if (shake){
             translate(MathUtils.random(-shakeStrength, shakeStrength), MathUtils.random(-shakeStrength, shakeStrength));
@@ -132,51 +137,64 @@ public class FollowOrthoCamera extends OrthographicCamera {
     }
 
     private void getWorldMaxWindow(){
-        minX = 0;
-        minY = 0;
-        maxX = 0;
-        maxY = 0;
-        maxW = 0;
-        maxH = 0;
-        midX = 0;
-        midY = 0;
-        if (pointsToFollow.size() > 0){
-            Vector2 firstPoint = pointsToFollow.get(0);
-            minX = firstPoint.x;
-            minY = firstPoint.y;
-            maxX = minX;
-            maxY = minY;
+        Rectangle perfectFit = getPerfectFit();
+
+        Rectangle bufferedFit = new Rectangle(perfectFit);
+        bufferedFit.x -= buffer;
+        bufferedFit.width += 2 * buffer;
+
+        bufferedFit.y -= buffer;
+        bufferedFit.height += 2 * buffer;
+
+        minX = bufferedFit.x;
+        maxX = bufferedFit.x + bufferedFit.width;
+
+        minY = bufferedFit.y;
+        maxY = bufferedFit.y + bufferedFit.height;
+
+//        minY = (minY < limitWindowMinY ? limitWindowMinY : (minY > limitWindowMaxY ? limitWindowMaxY : minY));
+//        maxY = (maxY > limitWindowMaxY ? limitWindowMaxY : (maxY < limitWindowMinY ? limitWindowMinY : maxY));
+
+        maxW = maxX - minX;
+        maxH = maxY - minY;
+
+        midX = maxW / 2f + minX;
+        midY = maxH / 2f + minY;
+    }
+
+    private Rectangle getPerfectFit() {
+        float minX = Float.POSITIVE_INFINITY;
+        float minY = Float.POSITIVE_INFINITY;
+        float maxX = Float.NEGATIVE_INFINITY;
+        float maxY = Float.NEGATIVE_INFINITY;
+        float perfectFitWidth;
+        float perfectFitHeight;
+        if (pointsToFollow.size() <= 0) {
+            minX = 0;
+            minY = 0;
+            maxX = 0;
+            maxY = 0;
+        } else {
+            for (Vector2 point : pointsToFollow) {
+                if (point.x < minX) {
+                    minX = point.x;
+                }
+                if (point.x > maxX) {
+                    maxX = point.x;
+                }
+                if (point.y < minY) {
+                    minY = point.y;
+                }
+                if (point.y > maxY) {
+                    maxY = point.y;
+                }
+            }
         }
 
-        for (Vector2 point : pointsToFollow){
-            if (point.x < minX){
-                minX = point.x;
-            }
-            if (point.x > maxX){
-                maxX = point.x;
-            }
-            if (point.y < minY){
-                minY = point.y;
-            }
-            if (point.y > maxY){
-                maxY = point.y;
-            }
-        }
+        perfectFitWidth = maxX - minX;
+        perfectFitHeight = maxY - minY;
 
-        if (limitWindow){
-            minX = (minX < limitWindowMinX ? limitWindowMinX : (minX > limitWindowMaxX ? limitWindowMaxX : minX));
-            maxX = (maxX > limitWindowMaxX ? limitWindowMaxX : (maxX < limitWindowMinX ? limitWindowMinX : maxX));
-
-            minY = (minY < limitWindowMinY ? limitWindowMinY : (minY > limitWindowMaxY ? limitWindowMaxY : minY));
-            maxY = (maxY > limitWindowMaxY ? limitWindowMaxY : (maxY < limitWindowMinY ? limitWindowMinY : maxY));
-
-        }
-
-
-        maxW = (maxX - minX) + (buffer * 2);
-        maxH = (maxY - minY) + (buffer * 2);
-        midX = maxW / 2f + (minX - buffer);
-        midY = maxH / 2f + (minY - buffer);
+        return new Rectangle(minX, minY, perfectFitWidth, perfectFitHeight);
     }
 
     private static class CamWindow {
