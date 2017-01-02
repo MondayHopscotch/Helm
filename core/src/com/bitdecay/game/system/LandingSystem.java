@@ -54,6 +54,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         if (Math.abs(velocity.currentVelocity.y) > MAX_LANDING_SPEED ||
                 radsAwayFromStraightUp > MAX_LANDING_ANGLE) {
             entity.addComponent(new CrashComponent());
+            return;
         }
 
         System.out.println("Landing Velocity: " + velocity.currentVelocity.y);

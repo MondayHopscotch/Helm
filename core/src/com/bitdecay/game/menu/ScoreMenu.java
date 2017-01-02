@@ -183,8 +183,8 @@ public class ScoreMenu {
                         Actions.run(getShowActorRunnable(totalScoreLabel)),
                         Actions.delay(.5f),
                         Actions.run(getShowActorRunnable(totalScoreScore)),
-                        Actions.delay(.5f),
-                        Actions.run(getShowActorRunnable(nextButton))
+                        Actions.delay(1f),
+                        Actions.run(getShowActorRunnableWithSFX(nextButton, SFXLibrary.NEXT_LEVEL))
                 )
         );
         landingSpeedScore.setText(getLeftPaddedString(Integer.toString(score.speedScore)));
@@ -194,11 +194,16 @@ public class ScoreMenu {
     }
 
     private Runnable getShowActorRunnable(final Actor actor) {
+        return getShowActorRunnableWithSFX(actor, SFXLibrary.SCORE_POP);
+
+    }
+
+    private Runnable getShowActorRunnableWithSFX(final Actor actor, final String sfxName) {
         return new Runnable() {
             @Override
             public void run() {
                 actor.setVisible(true);
-                pilot.doSound(SoundMode.PLAY, SFXLibrary.SCORE_POP);
+                pilot.doSound(SoundMode.PLAY, sfxName);
             }
         };
     }

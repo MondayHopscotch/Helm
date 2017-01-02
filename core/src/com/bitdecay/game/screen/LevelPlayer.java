@@ -2,7 +2,7 @@ package com.bitdecay.game.screen;
 
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.GameEntity;
@@ -24,11 +24,12 @@ import com.bitdecay.game.system.LandingSystem;
 import com.bitdecay.game.system.MovementSystem;
 import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
-import com.bitdecay.game.system.RenderBodySystem;
-import com.bitdecay.game.system.RenderBoostSystem;
-import com.bitdecay.game.system.RenderFuelSystem;
+import com.bitdecay.game.system.render.RenderBodySystem;
+import com.bitdecay.game.system.render.RenderBoostSystem;
+import com.bitdecay.game.system.render.RenderFuelSystem;
 import com.bitdecay.game.system.SteeringInputSystem;
 import com.bitdecay.game.system.SteeringSystem;
+import com.bitdecay.game.system.render.RenderSteeringSystem;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
 
@@ -39,14 +40,17 @@ public class LevelPlayer {
 
     private GamePilot pilot;
 
-    FollowOrthoCamera cam;
+    OrthographicCamera screenCam;
+    FollowOrthoCamera gameCam;
     ShapeRenderer shapeRenderer;
 
     Array<GameSystem> gameSystems = new Array<>(1);
 
     Array<GameSystem> inputSystems = new Array<>(1);
 
-    Array<GameSystem> renderSystems = new Array<>(1);
+    Array<GameSystem> gameRenderSystems = new Array<>(1);
+
+    Array<GameSystem> screenRenderSystems = new Array<>(1);
 
 
     Array<GameEntity> allEntities = new Array<>(1000);
@@ -56,10 +60,15 @@ public class LevelPlayer {
     public LevelPlayer(GamePilot pilot) {
         this.pilot = pilot;
 
-        cam = new FollowOrthoCamera(1920, 1080);
-        cam.minZoom = 3;
-        cam.maxZoom = .2f;
-        cam.buffer = 500;
+        screenCam = new OrthographicCamera(1920, 1080);
+        screenCam.translate(screenCam.viewportWidth / 2, screenCam.viewportHeight / 2);
+        screenCam.update();
+
+        gameCam = new FollowOrthoCamera(1920, 1080);
+        gameCam.minZoom = 3;
+        gameCam.maxZoom = .2f;
+        gameCam.buffer = 500;
+        gameCam.snapSpeed = 1;
 
         shapeRenderer = new ShapeRenderer();
 
@@ -88,7 +97,7 @@ public class LevelPlayer {
 
         MovementSystem movementSystem = new MovementSystem(pilot);
 
-        CameraUpdateSystem cameraSystem = new CameraUpdateSystem(pilot, cam);
+        CameraUpdateSystem cameraSystem = new CameraUpdateSystem(pilot, gameCam);
 
         CollisionAlignmentSystem collisionAlignmentSystem = new CollisionAlignmentSystem(pilot);
         CollisionSystem collisionSystem = new CollisionSystem(pilot);
@@ -119,9 +128,12 @@ public class LevelPlayer {
         RenderBoostSystem renderBoostSystem = new RenderBoostSystem(pilot, shapeRenderer);
         RenderFuelSystem renderFuelSystem = new RenderFuelSystem(pilot, shapeRenderer);
 
-        renderSystems.add(renderBoostSystem);
-        renderSystems.add(renderBodySystem);
-        renderSystems.add(renderFuelSystem);
+        gameRenderSystems.add(renderBoostSystem);
+        gameRenderSystems.add(renderBodySystem);
+        gameRenderSystems.add(renderFuelSystem);
+
+        RenderSteeringSystem renderSteeringSystem = new RenderSteeringSystem(pilot, screenCam, shapeRenderer);
+        screenRenderSystems.add(renderSteeringSystem);
     }
 
     public void resetInputSystems() {
@@ -132,6 +144,8 @@ public class LevelPlayer {
 
     public void loadLevel(LevelDefinition levelDef) {
         allEntities.clear();
+
+        resetInputSystems();
 
         for (LineSegment line : levelDef.levelLines) {
             allEntities.add(new LineSegmentEntity(line));
@@ -159,13 +173,17 @@ public class LevelPlayer {
         for (GameSystem system : gameSystems) {
             system.act(allEntities, delta);
         }
-        cam.update(delta);
+        gameCam.update(delta);
     }
 
     public void render(float delta) {
-        shapeRenderer.setProjectionMatrix(cam.combined);
+        shapeRenderer.setProjectionMatrix(gameCam.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for (GameSystem system : renderSystems) {
+        for (GameSystem system : gameRenderSystems) {
+            system.act(allEntities, delta);
+        }
+        shapeRenderer.setProjectionMatrix(screenCam.combined);
+        for (GameSystem system : screenRenderSystems) {
             system.act(allEntities, delta);
         }
         shapeRenderer.end();
