@@ -73,6 +73,7 @@ public class TitleScreen implements Screen {
         startLabel.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                finishLoadingAssets();
                 game.setScreen(new GameScreen(game));
             }
         });
@@ -82,6 +83,7 @@ public class TitleScreen implements Screen {
         creditLabel.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                finishLoadingAssets();
                 game.setScreen(new CreditsScreen(game));
             }
         });
@@ -93,6 +95,10 @@ public class TitleScreen implements Screen {
         mainMenu.add(creditLabel);
 
         return mainMenu;
+    }
+
+    private void finishLoadingAssets() {
+        game.assets.finishLoading();
     }
 
     private Actor buildVersionTag() {
@@ -116,6 +122,8 @@ public class TitleScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        game.assets.update();
 
         batch.begin();
         batch.draw(backgroundImage, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
