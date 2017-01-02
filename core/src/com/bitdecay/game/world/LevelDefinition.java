@@ -14,7 +14,7 @@ public class LevelDefinition {
 
     public Rectangle finishPlatform = new Rectangle();
     public Vector2 startPosition = new Vector2();
-    public int startingFuel;
+    public int startingFuel = 300; // placeholder till I figure out what I want to do with this
 
     public LevelDefinition() {
         // Here for JSON
