@@ -65,16 +65,11 @@ public class GameScreen implements Screen, GamePilot {
         scoreMenu.visible = false;
     }
 
-    Map<String, Sound> soundMap = new HashMap<>();
-
     @Override
     public void doSound(SoundMode mode, String soundName) {
-        Sound sfx;
-        if (!soundMap.containsKey(soundName)) {
-            soundMap.put(soundName, Gdx.audio.newSound(Gdx.files.internal(SFXLibrary.SFX_DIR + soundName)));
-        }
 
-        sfx = soundMap.get(soundName);
+        Sound sfx = game.assets.get(soundName, Sound.class);
+
         if (SoundMode.PLAY.equals(mode)) {
             sfx.play();
         } else if (SoundMode.STOP.equals(mode)) {
@@ -82,16 +77,11 @@ public class GameScreen implements Screen, GamePilot {
         }
     }
 
-    Map<String, Music> musicMap = new HashMap<>();
-
     @Override
-    public void doMusic(SoundMode mode, String soundName) {
-        Music music;
-        if (!musicMap.containsKey(soundName)) {
-            musicMap.put(soundName, Gdx.audio.newMusic(Gdx.files.internal(MusicLibrary.MUSIC_DIR + soundName)));
-        }
+    public void doMusic(SoundMode mode, String musicName) {
 
-        music = musicMap.get(soundName);
+        Music music = game.assets.get(musicName, Music.class);
+
         switch(mode) {
             case START:
             case PLAY:
