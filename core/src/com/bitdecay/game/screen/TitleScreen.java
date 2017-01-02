@@ -78,7 +78,19 @@ public class TitleScreen implements Screen {
         });
         startLabel.setFontScale(10);
 
+        Label creditLabel = new Label("Credits", skin);
+        creditLabel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new CreditsScreen(game));
+            }
+        });
+        creditLabel.setFontScale(10);
+
+
         mainMenu.add(startLabel);
+        mainMenu.row();
+        mainMenu.add(creditLabel);
 
         return mainMenu;
     }

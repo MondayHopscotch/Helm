@@ -1,4 +1,4 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.render;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bitdecay.game.GameEntity;
@@ -7,6 +7,7 @@ import com.bitdecay.game.component.RenderColorComponent;
 import com.bitdecay.game.component.BodyDefComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.math.Geom;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 /**
  * Created by Monday on 12/12/2016.

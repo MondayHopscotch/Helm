@@ -13,7 +13,7 @@ import com.bitdecay.game.input.TouchTracker;
  */
 public class SteeringInputSystem extends AbstractIteratingGameSystem implements InputProcessor {
 
-    public static float STEERING_SENSITIVITY = 25;
+    public static float STEERING_SENSITIVITY = 50;
 
     TouchTracker tracker = new TouchTracker(5);
 
@@ -24,9 +24,14 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
         SteeringControlComponent control = entity.getComponent(SteeringControlComponent.class);
+        control.startPoint = null;
+        control.endPoint = null;
 
         for (ActiveTouch touch : tracker.activeTouches) {
             if (control.activeArea.contains(touch.startingLocation)) {
+                control.sensitivity = STEERING_SENSITIVITY;
+                control.startPoint = touch.startingLocation;
+                control.endPoint = touch.currentLocation;
                 float deltaX = touch.currentLocation.x - touch.startingLocation.x;
                 float deltaY = touch.currentLocation.y - touch.startingLocation.y;
                 Vector2 touchVector = new Vector2(deltaX, deltaY);

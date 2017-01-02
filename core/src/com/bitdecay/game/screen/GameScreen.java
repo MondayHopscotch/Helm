@@ -1,52 +1,19 @@
 package com.bitdecay.game.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
-import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.Helm;
-import com.bitdecay.game.camera.FollowOrthoCamera;
-import com.bitdecay.game.entities.LandingPlatformEntity;
-import com.bitdecay.game.entities.LineSegmentEntity;
-import com.bitdecay.game.entities.ShipEntity;
 import com.bitdecay.game.menu.ScoreMenu;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
-import com.bitdecay.game.system.BoostSystem;
-import com.bitdecay.game.system.BoosterInputSystem;
-import com.bitdecay.game.system.CameraUpdateSystem;
-import com.bitdecay.game.system.CollisionAlignmentSystem;
-import com.bitdecay.game.system.CollisionSystem;
-import com.bitdecay.game.system.DelayedAddSystem;
-import com.bitdecay.game.system.GameSystem;
-import com.bitdecay.game.system.GravitySystem;
-import com.bitdecay.game.system.LandingSystem;
-import com.bitdecay.game.system.MovementSystem;
-import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
-import com.bitdecay.game.system.PlayerStartLevelSystem;
-import com.bitdecay.game.system.RenderBodySystem;
-import com.bitdecay.game.system.RenderBoostSystem;
-import com.bitdecay.game.system.SteeringInputSystem;
-import com.bitdecay.game.system.SteeringSystem;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelWorld;
-import com.bitdecay.game.world.LineSegment;
 import com.bitdecay.game.world.World1;
 
 import java.util.HashMap;
@@ -90,36 +57,6 @@ public class GameScreen implements Screen, GamePilot {
     @Override
     public void show() {
 
-    }
-
-    public static LevelDefinition saveLevelToFile() {
-        LevelDefinition testLevel = new LevelDefinition();
-
-
-        Array<LineSegment> testLines = new Array<>(10);
-        testLines.add(new LineSegment(new Vector2(-200,0), new Vector2(-200, 1200)));
-        testLines.add(new LineSegment(new Vector2(-200, 1200), new Vector2(1500, 1200)));
-        testLines.add(new LineSegment(new Vector2(1500, 1200), new Vector2(1500, 0)));
-        testLines.add(new LineSegment(new Vector2(1500, 0), new Vector2(1000, 0)));
-        testLines.add(new LineSegment(new Vector2(1000, 0), new Vector2(900, 150)));
-        testLines.add(new LineSegment(new Vector2(500, 150), new Vector2(400, 0)));
-        testLines.add(new LineSegment(new Vector2(400, 0), new Vector2(-200, 0)));
-        testLevel.finishPlatform.set(new Rectangle(500, 100, 400, 50));
-
-        testLevel.levelLines = testLines;
-
-        testLevel.startPosition =  new Vector2(0, 101);
-        testLevel.startingFuel = 300;
-
-        Json json = new Json();
-        json.setElementType(LevelDefinition.class, "levelLines", LineSegment.class);
-        String out = json.toJson(testLevel);
-
-        FileHandle level1File = Gdx.files.local("level/level1.json");
-        level1File.writeBytes(out.getBytes(), false);
-
-        LevelDefinition deser = json.fromJson(LevelDefinition.class, out);
-        return deser;
     }
 
     @Override
