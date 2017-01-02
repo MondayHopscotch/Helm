@@ -97,4 +97,23 @@ public class Geom {
         }
         return translated;
     }
+
+    public static Vector2 snap(Vector2 point, int snapSize) {
+        return snap((int) point.x, (int) point.y, snapSize);
+    }
+
+    public static Vector2 snap(int x, int y, int snapSize) {
+        int xSnapDir = x >= 0 ? 1 : -1;
+        int ySnapDir = y >= 0 ? 1 : -1;
+        int xOffset = 0 % snapSize;
+        int yOffset = 0 % snapSize;
+        int xSnap = (x + xSnapDir * snapSize / 2) / snapSize;
+        xSnap *= snapSize;
+        xSnap += xOffset;
+        int ySnap = (y + ySnapDir * snapSize / 2) / snapSize;
+        ySnap *= snapSize;
+        ySnap += yOffset;
+
+        return new Vector2(xSnap, ySnap);
+    }
 }

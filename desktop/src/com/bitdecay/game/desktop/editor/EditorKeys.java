@@ -12,8 +12,16 @@ public enum EditorKeys {
     PAN_RIGHT("Camera Right", false, Input.Keys.RIGHT),
     PAN_UP("Camera Up", false, Input.Keys.UP),
     PAN_DOWN("Camera Down", false, Input.Keys.DOWN),
-    ZOOM_IN("Camera Zoom In", false, Input.Keys.NUM_2, Input.Keys.NUMPAD_2),
-    ZOOM_OUT("Camera Zoom Out", false, Input.Keys.NUM_1, Input.Keys.NUMPAD_1);
+    ZOOM_IN("Camera Zoom In", false, Input.Keys.EQUALS),
+    ZOOM_OUT("Camera Zoom Out", false, Input.Keys.MINUS),
+
+    SAVE("Save", false, Input.Keys.S),
+    LOAD("Load", false, Input.Keys.O),
+
+    LINE_MODE("Draw Line", false, Input.Keys.NUM_1),
+    LANDING_MODE("Draw Landing", false, Input.Keys.NUM_2),
+    START_MODE("Place Start", false, Input.Keys.NUM_3);
+
 
     private final String name;
     private final int[] keys;
