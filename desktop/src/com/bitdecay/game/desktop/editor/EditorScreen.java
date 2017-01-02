@@ -1,18 +1,27 @@
 package com.bitdecay.game.desktop.editor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Json;
+import com.bitdecay.game.math.Geom;
+import com.bitdecay.game.world.LevelDefinition;
+import com.bitdecay.game.world.LineSegment;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Monday on 1/1/2017.
  */
-public class EditorScreen implements Screen {
+public class EditorScreen extends InputAdapter implements Screen {
 
     public static final int cellSize = 25;
 
@@ -26,10 +35,24 @@ public class EditorScreen implements Screen {
     OrthographicCamera camera;
     ShapeRenderer shaper;
 
+    private Map<OptionsMode, MouseMode> mouseModes;
+    private MouseMode mouseMode;
+    private final NoOpMouseMode noOpMouseMode = new NoOpMouseMode();
+
+    private LevelBuilder builder = new LevelBuilder();
+
     @Override
     public void show() {
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         shaper = new ShapeRenderer();
+
+        mouseMode = noOpMouseMode;
+        mouseModes = new HashMap<>();
+        mouseModes.put(OptionsMode.DRAW_LINE, new LineSegmentMouseMode(builder));
+        mouseModes.put(OptionsMode.DRAW_LANDING, new LandingPlatMouseMode(builder));
+        mouseModes.put(OptionsMode.PLACE_START, new StartPointMouseMode(builder));
+
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -41,7 +64,33 @@ public class EditorScreen implements Screen {
         camera.update();
         shaper.setProjectionMatrix(camera.combined);
 
+        shaper.begin(ShapeRenderer.ShapeType.Line);
         drawGrid();
+
+        drawCurrentBuilder(shaper);
+
+        mouseMode.render(shaper);
+
+        shaper.end();
+    }
+
+    private void drawCurrentBuilder(ShapeRenderer shaper) {
+        shaper.setColor(Color.RED);
+        if (builder.lines != null) {
+            for (LineSegment line : builder.lines) {
+                shaper.line(line.startPoint.x, line.startPoint.y, line.endPoint.x, line.endPoint.y);
+            }
+        }
+
+        shaper.setColor(Color.WHITE);
+        if (builder.startPoint != null) {
+            shaper.circle(builder.startPoint.x, builder.startPoint.y, 100);
+        }
+
+        shaper.setColor(Color.GREEN);
+        if (builder.landingPlat != null) {
+            shaper.rect(builder.landingPlat.x, builder.landingPlat.y, builder.landingPlat.width, builder.landingPlat.height);
+        }
     }
 
     private void handleInput() {
@@ -69,6 +118,13 @@ public class EditorScreen implements Screen {
                 adjustCamZoom(CAM_ZOOM_SPEED_FAST);
             }
         }
+
+        // check mode hotkeys
+        for (OptionsMode mode : OptionsMode.values()) {
+            if (mode.hotkey != null && mode.hotkey.isJustPressed()) {
+                setMode(mode);
+            }
+        }
     }
 
     private void adjustCamZoom(float change) {
@@ -89,18 +145,15 @@ public class EditorScreen implements Screen {
     }
 
     private void drawGrid() {
-//        if (camera.zoom >= ZOOM_THRESHOLD) {
-//            return;
-//        }
-        shaper.begin(ShapeRenderer.ShapeType.Line);
+        if (camera.zoom >= ZOOM_THRESHOLD) {
+            return;
+        }
+
         shaper.setColor(Color.NAVY);
         Vector2 topLeft = unproject(-cellSize, -cellSize);
-        Vector2 snapTopLeft = snap((int) topLeft.x, (int) topLeft.y, cellSize);
+        Vector2 snapTopLeft = Geom.snap((int) topLeft.x, (int) topLeft.y, cellSize);
         Vector2 bottomRight = unproject(Gdx.graphics.getWidth() + cellSize, Gdx.graphics.getHeight() + cellSize);
-        Vector2 snapBottomRight = snap((int) bottomRight.x, (int) bottomRight.y, cellSize);
-
-        shaper.circle(topLeft.x, topLeft.y, 100);
-        shaper.circle(bottomRight.x, bottomRight.y, 100);
+        Vector2 snapBottomRight = Geom.snap((int) bottomRight.x, (int) bottomRight.y, cellSize);
 
         for (float x = snapTopLeft.x; x <= snapBottomRight.x; x += cellSize) {
             shaper.line(x, snapTopLeft.y, x, snapBottomRight.y);
@@ -108,22 +161,59 @@ public class EditorScreen implements Screen {
         for (float y = snapBottomRight.y; y <= snapTopLeft.y; y += cellSize) {
             shaper.line(snapTopLeft.x, y, snapBottomRight.x, y);
         }
-        shaper.end();
     }
 
-    public Vector2 snap(int x, int y, int snapSize) {
-        int xSnapDir = x >= 0 ? 1 : -1;
-        int ySnapDir = y >= 0 ? 1 : -1;
-        int xOffset = 0 % snapSize;
-        int yOffset = 0 % snapSize;
-        int xSnap = (x + xSnapDir * snapSize / 2) / snapSize;
-        xSnap *= snapSize;
-        xSnap += xOffset;
-        int ySnap = (y + ySnapDir * snapSize / 2) / snapSize;
-        ySnap *= snapSize;
-        ySnap += yOffset;
+    public void setMode(OptionsMode mode) {
+        if (mouseModes.containsKey(mode)) {
+            System.out.println("Setting mode: " + mode);
+            mouseMode = mouseModes.get(mode);
+        } else if (OptionsMode.SAVE_LEVEL.equals(mode)) {
+//            LevelDefinition savedLevel = LevelUtilities.saveLevel(curLevelBuilder, true);
+//            if (savedLevel != null) {
+//                currentFile = FileUtils.lastTouchedFileName;
+//                setLevelBuilder(savedLevel);
+//            }
+            Json json = new Json();
+            json.setElementType(LevelDefinition.class, "levelLines", LineSegment.class);
+            String out = json.toJson(builder.build());
 
-        return new Vector2(xSnap, ySnap);
+            FileHandle level1File = Gdx.files.local("level/level999.json");
+            System.out.println(level1File.file().getAbsolutePath());
+            level1File.writeBytes(out.getBytes(), false);
+        } else if (OptionsMode.LOAD_LEVEL.equals(mode)) {
+//            LevelDefinition loadLevel = LevelUtilities.loadLevel();
+//            if (loadLevel != null) {
+//                currentFile = FileUtils.lastTouchedFileName;
+//                setLevelBuilder(loadLevel);
+//                setCamToOrigin();
+//            }
+        } else {
+            mouseMode = noOpMouseMode;
+        }
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        mouseMode.mouseDown(getMouseCoords(), MouseButton.getButton(button));
+        return super.touchDown(screenX, screenY, pointer, button);
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        mouseMode.mouseUp(getMouseCoords(), MouseButton.getButton(button));
+        return super.touchUp(screenX, screenY, pointer, button);
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        mouseMode.mouseDragged(getMouseCoords());
+        return super.mouseMoved(screenX, screenY);
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        mouseMode.mouseMoved(getMouseCoords());
+        return super.mouseMoved(screenX, screenY);
     }
 
     @Override

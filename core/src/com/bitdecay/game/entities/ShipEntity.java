@@ -34,7 +34,6 @@ public class ShipEntity extends GameEntity {
 
         float[] geomPoints = new float[]{-100, 50, 100, 0, -100, -50};
         addComponent(new CollisionGeometryComponent(geomPoints, CollisionGeometryComponent.Direction.RECEIVES));
-        addComponent(new CollisionKindComponent(CollisionKind.PLAYER));
         addComponent(new PlayerCollisionComponent());
 
         addComponent(new BodyDefComponent(geomPoints));

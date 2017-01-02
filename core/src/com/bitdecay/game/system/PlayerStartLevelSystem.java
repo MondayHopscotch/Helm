@@ -4,7 +4,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.BoosterComponent;
+import com.bitdecay.game.component.CollisionKindComponent;
 import com.bitdecay.game.component.DelayedAddComponent;
 import com.bitdecay.game.component.SteeringComponent;
 import com.bitdecay.game.component.SteeringControlComponent;
@@ -51,9 +53,10 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
         entity.addComponent(velocity);
 
         DelayedAddComponent.DelayedAdd boosterDelay = new DelayedAddComponent.DelayedAdd(new BoosterComponent(25), PLAYER_CONTROL_DELAY);
+        DelayedAddComponent.DelayedAdd collisionDelay = new DelayedAddComponent.DelayedAdd(new CollisionKindComponent(CollisionKind.PLAYER), PLAYER_CONTROL_DELAY);
         DelayedAddComponent.DelayedAdd steeringDelay = new DelayedAddComponent.DelayedAdd(new SteeringComponent(), PLAYER_CONTROL_DELAY / 2);
 
-        entity.addComponent(new DelayedAddComponent(boosterDelay, steeringDelay));
+        entity.addComponent(new DelayedAddComponent(boosterDelay, collisionDelay, steeringDelay));
         pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_LAUNCH);
     }
 
