@@ -11,12 +11,16 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Json;
+import com.bitdecay.game.desktop.editor.file.FileUtils;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 /**
  * Created by Monday on 1/1/2017.
@@ -49,6 +53,7 @@ public class EditorScreen extends InputAdapter implements Screen {
         mouseMode = noOpMouseMode;
         mouseModes = new HashMap<>();
         mouseModes.put(OptionsMode.DRAW_LINE, new LineSegmentMouseMode(builder));
+        mouseModes.put(OptionsMode.DELETE_LINE, new DeleteSegmentMouseMode(builder));
         mouseModes.put(OptionsMode.DRAW_LANDING, new LandingPlatMouseMode(builder));
         mouseModes.put(OptionsMode.PLACE_START, new StartPointMouseMode(builder));
 
@@ -84,7 +89,7 @@ public class EditorScreen extends InputAdapter implements Screen {
 
         shaper.setColor(Color.WHITE);
         if (builder.startPoint != null) {
-            shaper.circle(builder.startPoint.x, builder.startPoint.y, 100);
+            shaper.polygon(new float[] {builder.startPoint.x - 50, builder.startPoint.y - 100, builder.startPoint.x, builder.startPoint.y + 100, builder.startPoint.x + 50, builder.startPoint.y - 100});
         }
 
         shaper.setColor(Color.GREEN);
@@ -168,25 +173,18 @@ public class EditorScreen extends InputAdapter implements Screen {
             System.out.println("Setting mode: " + mode);
             mouseMode = mouseModes.get(mode);
         } else if (OptionsMode.SAVE_LEVEL.equals(mode)) {
-//            LevelDefinition savedLevel = LevelUtilities.saveLevel(curLevelBuilder, true);
-//            if (savedLevel != null) {
-//                currentFile = FileUtils.lastTouchedFileName;
-//                setLevelBuilder(savedLevel);
-//            }
-            Json json = new Json();
-            json.setElementType(LevelDefinition.class, "levelLines", LineSegment.class);
-            String out = json.toJson(builder.build());
-
-            FileHandle level1File = Gdx.files.local("level/level999.json");
-            System.out.println(level1File.file().getAbsolutePath());
-            level1File.writeBytes(out.getBytes(), false);
+            if (builder.landingPlat != null && builder.startPoint != null) {
+                LevelDefinition levDef = builder.build();
+                FileUtils.saveLevelToFile(levDef);
+            } else {
+                // show a warning or something
+                JOptionPane.showMessageDialog(null, "Level must contain a start and end point");
+            }
         } else if (OptionsMode.LOAD_LEVEL.equals(mode)) {
-//            LevelDefinition loadLevel = LevelUtilities.loadLevel();
-//            if (loadLevel != null) {
-//                currentFile = FileUtils.lastTouchedFileName;
-//                setLevelBuilder(loadLevel);
-//                setCamToOrigin();
-//            }
+            LevelDefinition loadLevel = FileUtils.loadLevelFromFile();
+            if (loadLevel != null) {
+                builder.setLevel(loadLevel);
+            }
         } else {
             mouseMode = noOpMouseMode;
         }

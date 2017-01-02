@@ -46,9 +46,33 @@ public class LevelBuilder {
 
     public void setLandingPlatform(Vector2 startPoint, Vector2 endPoint) {
         landingPlat = new Rectangle(startPoint.x, startPoint.y, endPoint.x - startPoint.x, endPoint.y - startPoint.y);
+        if (landingPlat.width < 0) {
+            landingPlat.x += landingPlat.width;
+            landingPlat.width *= -1;
+        }
+
+        if (landingPlat.height < 0) {
+            landingPlat.y += landingPlat.height;
+            landingPlat.height *= -1;
+        }
     }
 
     public void setStartPoint(Vector2 point) {
         startPoint = new Vector2(point);
+    }
+
+    public void setLevel(LevelDefinition level) {
+        lines.clear();
+        for (LineSegment levelLine : level.levelLines) {
+            lines.add(levelLine);
+        }
+
+        startPoint = level.startPosition;
+
+        landingPlat = level.finishPlatform;
+    }
+
+    public void removeLineSegment(LineSegment line) {
+        lines.remove(line);
     }
 }

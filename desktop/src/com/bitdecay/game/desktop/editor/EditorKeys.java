@@ -19,8 +19,9 @@ public enum EditorKeys {
     LOAD("Load", false, Input.Keys.O),
 
     LINE_MODE("Draw Line", false, Input.Keys.NUM_1),
-    LANDING_MODE("Draw Landing", false, Input.Keys.NUM_2),
-    START_MODE("Place Start", false, Input.Keys.NUM_3);
+    DELETE_LINE("Delete Line", false, Input.Keys.NUM_2),
+    LANDING_MODE("Draw Landing", false, Input.Keys.NUM_3),
+    START_MODE("Place Start", false, Input.Keys.NUM_4);
 
 
     private final String name;
