@@ -3,14 +3,12 @@ package com.bitdecay.game.desktop.editor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Json;
 import com.bitdecay.game.desktop.editor.file.FileUtils;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.world.LevelDefinition;
@@ -19,7 +17,6 @@ import com.bitdecay.game.world.LineSegment;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
@@ -44,6 +41,11 @@ public class EditorScreen extends InputAdapter implements Screen {
     private final NoOpMouseMode noOpMouseMode = new NoOpMouseMode();
 
     private LevelBuilder builder = new LevelBuilder();
+    private HelmEditor editor;
+
+    public EditorScreen(HelmEditor editor) {
+        this.editor = editor;
+    }
 
     @Override
     public void show() {
@@ -99,6 +101,13 @@ public class EditorScreen extends InputAdapter implements Screen {
     }
 
     private void handleInput() {
+
+        if (EditorKeys.TEST_LEVEL.isJustPressed()) {
+            if (builder.isLevelValid()) {
+                editor.testLevel(builder.build());
+            }
+        }
+
         if (EditorKeys.PAN_LEFT.isPressed()) {
             camera.translate(-CAM_MOVE_SPEED * camera.zoom, 0);
         } else if (EditorKeys.PAN_RIGHT.isPressed()) {
@@ -173,7 +182,7 @@ public class EditorScreen extends InputAdapter implements Screen {
             System.out.println("Setting mode: " + mode);
             mouseMode = mouseModes.get(mode);
         } else if (OptionsMode.SAVE_LEVEL.equals(mode)) {
-            if (builder.landingPlat != null && builder.startPoint != null) {
+            if (builder.isLevelValid()) {
                 LevelDefinition levDef = builder.build();
                 FileUtils.saveLevelToFile(levDef);
             } else {

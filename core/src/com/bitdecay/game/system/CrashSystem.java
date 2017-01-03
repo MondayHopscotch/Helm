@@ -3,6 +3,7 @@ package com.bitdecay.game.system;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.CrashComponent;
+import com.bitdecay.game.component.SteeringControlComponent;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
@@ -17,6 +18,7 @@ public class CrashSystem extends AbstractIteratingGameSystem {
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
+        entity.removeComponent(SteeringControlComponent.class);
         pilot.doMusic(SoundMode.STOP, MusicLibrary.SHIP_BOOST);
         pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_CRASH);
         pilot.requestRestartLevel();

@@ -38,6 +38,7 @@ import com.bitdecay.game.world.LineSegment;
  */
 public class LevelPlayer {
 
+    private static final int BASE_CAM_BUFFER = 500;
     private GamePilot pilot;
 
     OrthographicCamera screenCam;
@@ -65,10 +66,10 @@ public class LevelPlayer {
         screenCam.update();
 
         gameCam = new FollowOrthoCamera(1920, 1080);
-        gameCam.minZoom = 3;
+        gameCam.minZoom = 10;
         gameCam.maxZoom = .2f;
-        gameCam.buffer = 500;
-        gameCam.snapSpeed = 1;
+        gameCam.buffer = BASE_CAM_BUFFER;
+        gameCam.snapSpeed = .5f;
 
         shapeRenderer = new ShapeRenderer();
 
@@ -173,7 +174,12 @@ public class LevelPlayer {
         for (GameSystem system : gameSystems) {
             system.act(allEntities, delta);
         }
+        scaleCamBuffer();
         gameCam.update(delta);
+    }
+
+    private void scaleCamBuffer() {
+        gameCam.buffer = Math.max(BASE_CAM_BUFFER * gameCam.zoom, 500);
     }
 
     public void render(float delta) {

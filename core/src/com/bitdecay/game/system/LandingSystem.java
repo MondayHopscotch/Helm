@@ -8,6 +8,7 @@ import com.bitdecay.game.component.CrashComponent;
 import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.PlayerCollisionComponent;
 import com.bitdecay.game.component.RateLandingComponent;
+import com.bitdecay.game.component.SteeringControlComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.math.Geom;
@@ -59,6 +60,8 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
         System.out.println("Landing Velocity: " + velocity.currentVelocity.y);
         System.out.println("Landing Angle: " + radsAwayFromStraightUp);
+
+        entity.removeComponent(SteeringControlComponent.class);
 
         LandingScore score = new LandingScore();
 
