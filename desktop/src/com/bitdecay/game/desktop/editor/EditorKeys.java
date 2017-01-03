@@ -21,7 +21,9 @@ public enum EditorKeys {
     LINE_MODE("Draw Line", false, Input.Keys.NUM_1),
     DELETE_LINE("Delete Line", false, Input.Keys.NUM_2),
     LANDING_MODE("Draw Landing", false, Input.Keys.NUM_3),
-    START_MODE("Place Start", false, Input.Keys.NUM_4);
+    START_MODE("Place Start", false, Input.Keys.NUM_4),
+
+    TEST_LEVEL("Test Level", false, Input.Keys.T);
 
 
     private final String name;

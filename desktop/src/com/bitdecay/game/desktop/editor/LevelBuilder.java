@@ -75,4 +75,8 @@ public class LevelBuilder {
     public void removeLineSegment(LineSegment line) {
         lines.remove(line);
     }
+
+    public boolean isLevelValid() {
+        return landingPlat != null && startPoint != null;
+    }
 }

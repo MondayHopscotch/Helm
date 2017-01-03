@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
+import com.bitdecay.game.collision.CollisionDirection;
 import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.BoostControlComponent;
 import com.bitdecay.game.component.CameraFollowComponent;
@@ -33,7 +34,7 @@ public class ShipEntity extends GameEntity {
         addComponent(new SteeringControlComponent(new Rectangle(0, 0, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight())));
 
         float[] geomPoints = new float[]{-100, 50, 100, 0, -100, -50};
-        addComponent(new CollisionGeometryComponent(geomPoints, CollisionGeometryComponent.Direction.RECEIVES));
+        addComponent(new CollisionGeometryComponent(geomPoints, CollisionDirection.RECEIVES));
         addComponent(new PlayerCollisionComponent());
 
         addComponent(new BodyDefComponent(geomPoints));
