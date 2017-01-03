@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
+import com.bitdecay.game.collision.CollisionDirection;
 import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.BodyDefComponent;
 import com.bitdecay.game.component.CameraFollowComponent;
@@ -26,7 +27,7 @@ public class LandingPlatformEntity extends GameEntity {
 
         float[] geomPoints = Geom.rectangleToFloatPoints(copy);
         addComponent(new BodyDefComponent(geomPoints));
-        addComponent(new CollisionGeometryComponent(geomPoints, CollisionGeometryComponent.Direction.DELIVERS));
+        addComponent(new CollisionGeometryComponent(geomPoints, CollisionDirection.DELIVERS));
         addComponent(new CollisionKindComponent(CollisionKind.LANDING_PLATFORM));
 
         addComponent(new TransformComponent(center, Geom.NO_ROTATION));

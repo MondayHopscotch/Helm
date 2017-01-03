@@ -69,7 +69,7 @@ public class LevelPlayer {
         gameCam.minZoom = 10;
         gameCam.maxZoom = .2f;
         gameCam.buffer = BASE_CAM_BUFFER;
-        gameCam.snapSpeed = .5f;
+        gameCam.snapSpeed = .2f;
 
         shapeRenderer = new ShapeRenderer();
 
@@ -179,7 +179,7 @@ public class LevelPlayer {
     }
 
     private void scaleCamBuffer() {
-        gameCam.buffer = Math.max(BASE_CAM_BUFFER * gameCam.zoom, 500);
+        gameCam.buffer = Math.max(BASE_CAM_BUFFER * gameCam.zoom, BASE_CAM_BUFFER);
     }
 
     public void render(float delta) {
