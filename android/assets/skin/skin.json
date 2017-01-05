@@ -1,6 +1,5 @@
 {
   "com.badlogic.gdx.graphics.Color": {
-    "yellow": { "r": 1, "g": 1, "b": 0, "a": 1 },
     "white": { "r": 1, "g": 1, "b": 1, "a": 1 },
     "black": { "r": 0, "g": 0, "b": 0, "a": 1 },
     "green": { "r": 0, "g": 1, "b": 0, "a": 1 }
@@ -8,21 +7,88 @@
   "com.badlogic.gdx.graphics.g2d.BitmapFont": {
     "defaultFont": {
       "file": "font/bit.fnt"
-
+    }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable": {
+    "button-white": {
+      "name": "button",
+      "color": "white"
+    },
+    "button-white-down": {
+      "name": "button_down",
+      "color": "white"
+    },
+    "checked": {
+      "name": "checkbox_checked",
+      "color": "white"
+    },
+    "unchecked": {
+      "name": "checkbox_unchecked",
+      "color": "white"
     }
   },
   "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
     "default": {
+      "up": "button-white" ,
+      "down": "button-white-down",
       "font": "defaultFont",
-      "fontColor": "white",
+      "fontColor": "black",
       "downFontColor": "white",
       "pressedOffsetY": -2
     },
+    "button": {
+      "up": "button-white" ,
+      "down": "button-white-down",
+      "font": "defaultFont",
+      "fontColor": "black",
+      "downFontColor": "white",
+      "pressedOffsetY": -2
+    },
+    "toggle-button": {
+      "up": "button-white" ,
+      "checked": "button-white-down",
+      "font": "defaultFont",
+      "fontColor": "black",
+      "checkedFontColor": "white",
+      "pressedOffsetY": -2
+    }
   },
   "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
     "default": {
       "font": "defaultFont",
       "fontColor": "white"
+    }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
+    "default": {
+      "background": "scrollPane",
+      "corner": "scrollPane",
+      "hScroll": "scrollChannel",
+      "hScrollKnob": "scrollKnob",
+      "vScroll": "scrollChannel",
+      "vScrollKnob": "scrollKnob"
+    }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle": {
+    "default": {
+      "background": "scrollPane",
+      "titleFont": "defaultFont",
+      "titleFontColor": "white",
+      "stageBackground": "scrollPane"
+    }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle": {
+    "default": {
+      "checkboxOn": "checked",
+      "checkboxOff": "unchecked",
+      "font": "defaultFont",
+      "fontColor": "white"
+    }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle": {
+    "default-horizontal": {
+      "background": "scrollChannel",
+      "knob": "scrollKnob"
     }
   }
 }

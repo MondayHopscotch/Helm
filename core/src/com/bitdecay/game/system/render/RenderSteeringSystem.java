@@ -27,11 +27,15 @@ public class RenderSteeringSystem extends AbstractIteratingGameSystem {
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
         SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
+        renderer.setColor(Color.MAROON);
+        if (steering.startPoint != null) {
+            Vector3 startPointScreen = cam.unproject(new Vector3(workstationTransform(steering.startPoint), 0));
+            renderer.circle(startPointScreen.x, startPointScreen.y, steering.sensitivity);
+        }
+
         if (steering.startPoint != null && steering.endPoint != null) {
             Vector3 startPointScreen = cam.unproject(new Vector3(workstationTransform(steering.startPoint), 0));
             Vector3 endPointScreen = cam.unproject(new Vector3(workstationTransform(steering.endPoint), 0));
-            renderer.setColor(Color.MAROON);
-            renderer.circle(startPointScreen.x, startPointScreen.y, steering.sensitivity);
             renderer.line(startPointScreen.x, startPointScreen.y, endPointScreen.x, endPointScreen.y);
             renderer.circle(endPointScreen.x, endPointScreen.y, 10);
         }

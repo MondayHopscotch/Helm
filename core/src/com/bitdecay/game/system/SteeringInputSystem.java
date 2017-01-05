@@ -4,6 +4,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.prefs.GamePrefs;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.component.SteeringControlComponent;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
@@ -17,6 +19,8 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
 
     TouchTracker tracker = new TouchTracker(5);
 
+    private Vector2 simpleSteeringStartVector = new Vector2();
+
     public SteeringInputSystem(GamePilot pilot) {
         super(pilot);
     }
@@ -24,16 +28,28 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
         SteeringControlComponent control = entity.getComponent(SteeringControlComponent.class);
-        control.startPoint = null;
+        control.sensitivity = STEERING_SENSITIVITY;
+
+        boolean dynamicSteering = Helm.prefs.getBoolean(GamePrefs.USE_DYNAMIC_STEERING_CONTROLS, GamePrefs.USE_DYNAMIC_STEERING_CONTROLS_DEFAULT);
+
+        if (dynamicSteering) {
+            control.startPoint = null;
+        } else {
+            setSimpleSteeringStartPoint(control);
+        }
         control.endPoint = null;
 
         for (ActiveTouch touch : tracker.activeTouches) {
             if (control.activeArea.contains(touch.startingLocation)) {
-                control.sensitivity = STEERING_SENSITIVITY;
-                control.startPoint = touch.startingLocation;
-                control.endPoint = touch.currentLocation;
-                float deltaX = touch.currentLocation.x - touch.startingLocation.x;
-                float deltaY = touch.currentLocation.y - touch.startingLocation.y;
+
+                if (dynamicSteering) {
+                    updateDynamicControls(control, touch);
+                } else {
+                    updateSimpleControls(control, touch);
+                }
+
+                float deltaX = control.endPoint.x - control.startPoint.x;
+                float deltaY = control.endPoint.y - control.startPoint.y;
                 Vector2 touchVector = new Vector2(deltaX, deltaY);
                 if (touchVector.len() > STEERING_SENSITIVITY) {
                     float angle = (float) Math.atan2(touchVector.y, touchVector.x);
@@ -41,6 +57,21 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
                 }
             }
         }
+    }
+
+    private void setSimpleSteeringStartPoint(SteeringControlComponent control) {
+        float height_ratio = Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_HEIGHT, .3f);
+        float width_ratio = Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_WIDTH, .3f);
+        control.startPoint = control.activeArea.getSize(simpleSteeringStartVector).scl(width_ratio, height_ratio);
+    }
+
+    private void updateDynamicControls(SteeringControlComponent control, ActiveTouch touch) {
+        control.startPoint = touch.startingLocation;
+        control.endPoint = touch.currentLocation;
+    }
+
+    private void updateSimpleControls(SteeringControlComponent control, ActiveTouch touch) {
+        control.endPoint = touch.currentLocation;
     }
 
     @Override

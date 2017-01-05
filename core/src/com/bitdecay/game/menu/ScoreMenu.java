@@ -49,7 +49,7 @@ public class ScoreMenu {
     public ScoreMenu(final GamePilot pilot) {
         this.pilot = pilot;
         stage = new Stage();
-        skin = new Skin(Gdx.files.internal("skin/skin.json"));
+        skin = pilot.getHelm().skin;
 
         Table mainTable = new Table();
         mainTable.setFillParent(true);

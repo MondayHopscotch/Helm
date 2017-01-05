@@ -26,7 +26,7 @@ public class CreditsScreen implements Screen {
     public CreditsScreen(final Helm game) {
         this.game = game;
 
-        Skin skin = new Skin(Gdx.files.internal("skin/skin.json"));
+        Skin skin = game.skin;
 
         lblTitle = new Label("Credits", skin);
         lblTitle.setFontScale(10);

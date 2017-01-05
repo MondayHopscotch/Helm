@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.Version;
 
@@ -35,7 +37,7 @@ public class TitleScreen implements Screen {
         backgroundImage = new Texture(Gdx.files.internal("img/TitleScreen.png"));
 
         stage = new Stage();
-        skin = new Skin(Gdx.files.internal("skin/skin.json"));
+        skin = game.skin;
 
         Table mainTable = new Table();
         mainTable.setFillParent(true);
@@ -57,7 +59,7 @@ public class TitleScreen implements Screen {
     private Actor buildHighScoreDisplay() {
         Table highScoreTable = new Table();
 
-        Label scoreLabel = new Label("High Score: " + Integer.toString(game.prefs.getInteger(Helm.HIGH_SCORE)), skin);
+        Label scoreLabel = new Label("High Score: " + Integer.toString(Helm.prefs.getInteger(GamePrefs.HIGH_SCORE)), skin);
         scoreLabel.setFontScale(5);
         highScoreTable.add(scoreLabel);
         return highScoreTable;
@@ -79,6 +81,16 @@ public class TitleScreen implements Screen {
         });
         startLabel.setFontScale(10);
 
+        Label optionsLabel = new Label("Options", skin);
+        optionsLabel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                finishLoadingAssets();
+                game.setScreen(new OptionsScreen(game));
+            }
+        });
+        optionsLabel.setFontScale(10);
+
         Label creditLabel = new Label("Credits", skin);
         creditLabel.addListener(new ClickListener() {
             @Override
@@ -91,6 +103,8 @@ public class TitleScreen implements Screen {
 
 
         mainMenu.add(startLabel);
+        mainMenu.row();
+        mainMenu.add(optionsLabel);
         mainMenu.row();
         mainMenu.add(creditLabel);
 
