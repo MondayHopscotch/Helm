@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -30,26 +31,28 @@ public class OptionsScreen implements Screen {
         this.game = game;
 
         stage = new Stage();
-        stage.setDebugAll(true);
         skin = game.skin;
+
 
         Table mainTable = new Table();
         mainTable.setFillParent(true);
 
         Table prefsTable = new Table();
-        prefsTable.setFillParent(true);
+        prefsTable.align(Align.left);
         prefsTable.pad(200);
 
         Label dynamicSteeringLabel = new Label("Use Dynamic Steering", skin);
         dynamicSteeringLabel.setFontScale(3);
         dynamicSteeringInput = new CheckBox(null, skin);
         dynamicSteeringInput.setChecked(Helm.prefs.getBoolean(GamePrefs.USE_DYNAMIC_STEERING_CONTROLS, GamePrefs.USE_DYNAMIC_STEERING_CONTROLS_DEFAULT));
-        dynamicSteeringInput.getImage().setScale(6);
-        dynamicSteeringInput.align(Align.center);
-        dynamicSteeringInput.setOrigin(Align.center);
+        dynamicSteeringInput.getImage().scaleBy(6);
+        dynamicSteeringInput.align(Align.bottomLeft);
+        dynamicSteeringInput.setOrigin(Align.bottomLeft);
 
-        prefsTable.add(dynamicSteeringLabel).align(Align.left);
-        prefsTable.add(dynamicSteeringInput).align(Align.center);
+        prefsTable.add(dynamicSteeringLabel).align(Align.left).expandX();
+        prefsTable.add(dynamicSteeringInput).size(
+                dynamicSteeringInput.getImage().getWidth() * dynamicSteeringInput.getImage().getScaleX(),
+                dynamicSteeringInput.getImage().getHeight() * dynamicSteeringInput.getImage().getScaleY()).align(Align.center);
         prefsTable.row();
 
 
@@ -63,7 +66,7 @@ public class OptionsScreen implements Screen {
             }
         });
 
-        mainTable.add(prefsTable).align(Align.center);
+        mainTable.add(prefsTable).expand().fill().align(Align.left);
         mainTable.row();
         mainTable.add(doneLabel);
 
