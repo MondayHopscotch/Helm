@@ -84,5 +84,11 @@
       "font": "defaultFont",
       "fontColor": "white"
     }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle": {
+    "default-horizontal": {
+      "background": "scrollChannel",
+      "knob": "scrollKnob"
+    }
   }
 }
