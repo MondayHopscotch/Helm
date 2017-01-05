@@ -11,16 +11,34 @@
 
     }
   },
+  "com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable": {
+    "checked": {
+      "name": "checkbox_checked",
+      "color": "white"
+    },
+    "unchecked": {
+      "name": "checkbox_unchecked",
+      "color": "white"
+    }
+  },
   "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
     "default": {
       "font": "defaultFont",
       "fontColor": "white",
       "downFontColor": "white",
       "pressedOffsetY": -2
-    },
+    }
   },
   "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
     "default": {
+      "font": "defaultFont",
+      "fontColor": "white"
+    }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle": {
+    "default": {
+      "checkboxOn": "checked",
+      "checkboxOff": "unchecked",
       "font": "defaultFont",
       "fontColor": "white"
     }

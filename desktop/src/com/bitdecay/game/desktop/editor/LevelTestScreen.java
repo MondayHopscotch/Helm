@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.screen.LevelPlayer;
 import com.bitdecay.game.sound.SoundMode;
@@ -91,6 +92,11 @@ public class LevelTestScreen implements Screen, GamePilot {
     public void returnToTitle() {
         editor.showEditor();
 
+    }
+
+    @Override
+    public Helm getHelm() {
+        return null;
     }
 
     public void setLevel(LevelDefinition level) {

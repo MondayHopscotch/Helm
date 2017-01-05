@@ -6,7 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.GamePrefs;
+import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.ScoreMenu;
 import com.bitdecay.game.scoring.LandingScore;
@@ -150,6 +150,11 @@ public class GameScreen implements Screen, GamePilot {
         }
 
         game.setScreen(new TitleScreen(game));
+    }
+
+    @Override
+    public Helm getHelm() {
+        return game;
     }
 
     @Override

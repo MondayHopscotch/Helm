@@ -1,4 +1,4 @@
-package com.bitdecay.game;
+package com.bitdecay.game.prefs;
 
 /**
  * Created by Monday on 1/4/2017.
