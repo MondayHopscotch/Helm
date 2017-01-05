@@ -6,18 +6,14 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.GamePrefs;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.ScoreMenu;
 import com.bitdecay.game.scoring.LandingScore;
-import com.bitdecay.game.sound.MusicLibrary;
-import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelWorld;
 import com.bitdecay.game.world.World1;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Monday on 12/15/2016.
@@ -143,13 +139,13 @@ public class GameScreen implements Screen, GamePilot {
         int total = currentWorld.getTotalScore();
 
         int oldHighScore = 0;
-        if (game.prefs.contains(Helm.HIGH_SCORE)) {
-            oldHighScore = game.prefs.getInteger(Helm.HIGH_SCORE);
+        if (Helm.prefs.contains(GamePrefs.HIGH_SCORE)) {
+            oldHighScore = Helm.prefs.getInteger(GamePrefs.HIGH_SCORE);
         }
 
         if (total > oldHighScore) {
-            game.prefs.putInteger(Helm.HIGH_SCORE, total);
-            game.prefs.flush();
+            Helm.prefs.putInteger(GamePrefs.HIGH_SCORE, total);
+            Helm.prefs.flush();
             System.out.println("Scorer: SAVING NEW SCORE: " + total);
         }
 

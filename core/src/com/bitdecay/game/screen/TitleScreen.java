@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.bitdecay.game.GamePrefs;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.Version;
 
@@ -57,7 +58,7 @@ public class TitleScreen implements Screen {
     private Actor buildHighScoreDisplay() {
         Table highScoreTable = new Table();
 
-        Label scoreLabel = new Label("High Score: " + Integer.toString(game.prefs.getInteger(Helm.HIGH_SCORE)), skin);
+        Label scoreLabel = new Label("High Score: " + Integer.toString(Helm.prefs.getInteger(GamePrefs.HIGH_SCORE)), skin);
         scoreLabel.setFontScale(5);
         highScoreTable.add(scoreLabel);
         return highScoreTable;

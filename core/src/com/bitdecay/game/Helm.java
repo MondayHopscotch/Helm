@@ -10,15 +10,14 @@ import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
 
 public class Helm extends Game {
-    public static final String HIGH_SCORE = "highScore";
+
+    public static Preferences prefs;
 
     public AssetManager assets;
 
-    public Preferences prefs;
-
     @Override
     public void create() {
-        prefs = Gdx.app.getPreferences("helm-pref");
+        Helm.prefs = Gdx.app.getPreferences("helm-pref");
         assets = new AssetManager();
         SFXLibrary.loadAllAsync(assets);
         MusicLibrary.loadAllAsync(assets);

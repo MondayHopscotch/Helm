@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
+import com.bitdecay.game.GamePrefs;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.collision.CollisionDirection;
 import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.BoostControlComponent;
