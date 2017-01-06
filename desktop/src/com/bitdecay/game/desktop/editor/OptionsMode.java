@@ -6,6 +6,7 @@ public enum OptionsMode {
     DELETE_LINE("Delete Line", EditorKeys.DELETE_LINE),
     DRAW_LANDING("Draw Landing", EditorKeys.LANDING_MODE),
     PLACE_START("Place Start", EditorKeys.START_MODE),
+    SET_FUEL("Set Fuel", EditorKeys.SET_FUEL),
 
     SAVE_LEVEL("Save", EditorKeys.SAVE),
     LOAD_LEVEL("Load", EditorKeys.LOAD);
