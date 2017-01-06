@@ -163,7 +163,7 @@ public class EditorScreen extends InputAdapter implements Screen {
             return;
         }
 
-        shaper.setColor(Color.NAVY);
+        shaper.setColor(new Color(0, 0, .2f, 1));
         Vector2 topLeft = unproject(-cellSize, -cellSize);
         Vector2 snapTopLeft = Geom.snap((int) topLeft.x, (int) topLeft.y, cellSize);
         Vector2 bottomRight = unproject(Gdx.graphics.getWidth() + cellSize, Gdx.graphics.getHeight() + cellSize);
@@ -193,10 +193,68 @@ public class EditorScreen extends InputAdapter implements Screen {
             LevelDefinition loadLevel = FileUtils.loadLevelFromFile();
             if (loadLevel != null) {
                 builder.setLevel(loadLevel);
+                refitCamera();
+            }
+        } else if (OptionsMode.SET_FUEL.equals(mode)) {
+            String result = JOptionPane.showInputDialog(
+                    null,
+                    "Level Starting Fuel (Currently: " + builder.startingFuel + ")",
+                    "Fuel Tool",
+                    JOptionPane.OK_CANCEL_OPTION);
+            if (result == null || "".equals(result)) {
+                // do nothing
+            } else {
+                try {
+                    int startingFuel = Integer.parseInt(result);
+                    builder.startingFuel = startingFuel;
+                } catch (NumberFormatException e) {
+                    System.out.println("Cannot parse '" + result + "' as an integer");
+                }
             }
         } else {
             mouseMode = noOpMouseMode;
         }
+    }
+
+    private void refitCamera() {
+        float xMin = Float.POSITIVE_INFINITY;
+        float xMax = Float.NEGATIVE_INFINITY;
+        float yMin = Float.POSITIVE_INFINITY;
+        float yMax = Float.NEGATIVE_INFINITY;
+        for (LineSegment line : builder.lines) {
+            xMin = Math.min(xMin, line.startPoint.x);
+            xMin = Math.min(xMin, line.endPoint.x);
+
+            xMax = Math.max(xMax, line.startPoint.x);
+            xMax = Math.max(xMax, line.endPoint.x);
+
+            yMin = Math.min(yMin, line.startPoint.y);
+            yMin = Math.min(yMin, line.endPoint.y);
+
+            yMax = Math.max(yMax, line.startPoint.y);
+            yMax = Math.max(yMax, line.endPoint.y);
+        }
+
+        xMin = Math.min(xMin, builder.startPoint.x);
+        xMax = Math.max(xMax, builder.startPoint.x);
+
+        yMin = Math.min(yMin, builder.startPoint.y);
+        yMax = Math.max(yMax, builder.startPoint.y);
+
+        xMin = Math.min(xMin, builder.landingPlat.getCenter(new Vector2()).x);
+        xMax = Math.max(xMax, builder.landingPlat.getCenter(new Vector2()).x);
+
+        yMin = Math.min(yMin, builder.landingPlat.getCenter(new Vector2()).y);
+        yMax = Math.max(yMax, builder.landingPlat.getCenter(new Vector2()).y);
+
+        float centerX = (xMin + xMax) / 2;
+        float centerY = (yMin + yMax) / 2;
+
+        float zoom = (xMax - xMin) / camera.viewportWidth;
+        zoom = Math.max(zoom, (yMax - yMin) / camera.viewportHeight);
+
+        camera.position.set(centerX, centerY, 0);
+        camera.zoom = zoom + .2f;
     }
 
     @Override

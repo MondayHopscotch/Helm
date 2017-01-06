@@ -16,6 +16,7 @@ public class LevelBuilder {
     public ArrayList<LineSegment> lines = new ArrayList<>();
     public Rectangle landingPlat;
     public Vector2 startPoint;
+    public int startingFuel = 300;
 
     public void addLineSegment(Vector2 start, Vector2 end) {
         for (LineSegment line : lines) {
@@ -41,6 +42,8 @@ public class LevelBuilder {
         level.startPosition = new Vector2(startPoint);
         level.finishPlatform = new Rectangle(landingPlat);
 
+        level.startingFuel = startingFuel;
+        
         return level;
     }
 
@@ -68,6 +71,8 @@ public class LevelBuilder {
         }
 
         startPoint = level.startPosition;
+
+        startingFuel = level.startingFuel;
 
         landingPlat = level.finishPlatform;
     }

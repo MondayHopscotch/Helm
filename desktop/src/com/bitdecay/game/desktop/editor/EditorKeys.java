@@ -23,6 +23,8 @@ public enum EditorKeys {
     LANDING_MODE("Draw Landing", false, Input.Keys.NUM_3),
     START_MODE("Place Start", false, Input.Keys.NUM_4),
 
+    SET_FUEL("Set Fuel Level", false, Input.Keys.NUM_5),
+
     TEST_LEVEL("Test Level", false, Input.Keys.T);
 
 
