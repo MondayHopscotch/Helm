@@ -146,8 +146,6 @@ public class LevelPlayer {
     public void loadLevel(LevelDefinition levelDef) {
         allEntities.clear();
 
-        resetInputSystems();
-
         for (LineSegment line : levelDef.levelLines) {
             allEntities.add(new LineSegmentEntity(line));
         }
