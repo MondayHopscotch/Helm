@@ -43,7 +43,7 @@ public class LevelBuilder {
         level.finishPlatform = new Rectangle(landingPlat);
 
         level.startingFuel = startingFuel;
-        
+
         return level;
     }
 

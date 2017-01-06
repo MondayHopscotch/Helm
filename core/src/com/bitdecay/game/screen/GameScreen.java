@@ -1,11 +1,13 @@
 package com.bitdecay.game.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.menu.PauseMenu;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.ScoreMenu;
@@ -29,6 +31,11 @@ public class GameScreen implements Screen, GamePilot {
 
     private ScoreMenu scoreMenu;
 
+    private InputMultiplexer combinedGameInput;
+
+    private PauseMenu pauseMenu;
+    private boolean paused = false;
+
     public GameScreen(Helm game) {
         this.game = game;
 
@@ -36,17 +43,20 @@ public class GameScreen implements Screen, GamePilot {
 
         initMenus();
 
+        combinedGameInput = new InputMultiplexer(pauseMenu.stage, levelPlayer.getInput());
+
         currentWorld = new World1();
         requestRestartLevel();
     }
 
     private void initMenus() {
         scoreMenu = new ScoreMenu(this);
+        pauseMenu = new PauseMenu(this);
     }
 
     private void setLevel(LevelDefinition level) {
         levelPlayer.loadLevel(level);
-        Gdx.input.setInputProcessor(levelPlayer.getInput());
+        Gdx.input.setInputProcessor(combinedGameInput);
         scoreMenu.visible = false;
     }
 
@@ -158,13 +168,21 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     @Override
+    public void togglePause() {
+        System.out.println("PAUSE");
+        paused = !paused;
+    }
+
+    @Override
     public void render(float delta) {
         if (delta > .5f) {
             delta = .5f;
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        levelPlayer.update(delta);
+        if (!paused) {
+            levelPlayer.update(delta);
+        }
 
         levelPlayer.render(delta);
 
@@ -174,6 +192,7 @@ public class GameScreen implements Screen, GamePilot {
         }
 
         scoreMenu.updateAndDraw();
+        pauseMenu.updateAndDraw();
     }
 
     @Override

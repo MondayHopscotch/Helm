@@ -99,6 +99,11 @@ public class LevelTestScreen implements Screen, GamePilot {
         return null;
     }
 
+    @Override
+    public void togglePause() {
+
+    }
+
     public void setLevel(LevelDefinition level) {
         levelPlayer.loadLevel(level);
     }
