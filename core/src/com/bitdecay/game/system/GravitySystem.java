@@ -11,7 +11,8 @@ import com.bitdecay.game.component.VelocityComponent;
  */
 public class GravitySystem extends AbstractIteratingGameSystem {
 
-    Vector2 universalGravity = new Vector2(0, -10);
+    public static final float GRAVITY_STRENGTH = 10;
+    Vector2 universalGravity = new Vector2(0, -GRAVITY_STRENGTH);
 
     public GravitySystem(GamePilot pilot) {
         super(pilot);

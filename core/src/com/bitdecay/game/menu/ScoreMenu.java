@@ -168,24 +168,51 @@ public class ScoreMenu {
                         }),
                         Actions.delay(.2f),
                         Actions.run(getShowActorRunnable(landingSpeedLabel)),
+                        Actions.delay(.05f),
+                        Actions.run(getShowActorRunnable(landingAngleLabel)),
+                        Actions.delay(.05f),
+                        Actions.run(getShowActorRunnable(fuelLeftLabel)),
                         Actions.delay(.5f),
                         Actions.run(getShowActorRunnable(landingSpeedScore)),
                         Actions.delay(.5f),
-                        Actions.run(getShowActorRunnable(landingAngleLabel)),
-                        Actions.delay(.5f),
                         Actions.run(getShowActorRunnable(landingAngleScore)),
                         Actions.delay(.5f),
-                        Actions.run(getShowActorRunnable(fuelLeftLabel)),
-                        Actions.delay(.5f),
                         Actions.run(getShowActorRunnable(fuelLeftPercent)),
-                        Actions.delay(.5f),
+                        Actions.delay(1f),
                         Actions.run(getShowActorRunnable(totalScoreLabel)),
-                        Actions.delay(.5f),
                         Actions.run(getShowActorRunnable(totalScoreScore)),
                         Actions.delay(1f),
                         Actions.run(getShowActorRunnableWithSFX(nextButton, SFXLibrary.NEXT_LEVEL))
                 )
         );
+//        stage.addAction(
+//                Actions.sequence(
+//                        Actions.run(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                setAllInvisible();
+//                            }
+//                        }),
+//                        Actions.delay(.2f),
+//                        Actions.run(getShowActorRunnable(landingSpeedLabel)),
+//                        Actions.delay(.5f),
+//                        Actions.run(getShowActorRunnable(landingSpeedScore)),
+//                        Actions.delay(.5f),
+//                        Actions.run(getShowActorRunnable(landingAngleLabel)),
+//                        Actions.delay(.5f),
+//                        Actions.run(getShowActorRunnable(landingAngleScore)),
+//                        Actions.delay(.5f),
+//                        Actions.run(getShowActorRunnable(fuelLeftLabel)),
+//                        Actions.delay(.5f),
+//                        Actions.run(getShowActorRunnable(fuelLeftPercent)),
+//                        Actions.delay(.5f),
+//                        Actions.run(getShowActorRunnable(totalScoreLabel)),
+//                        Actions.delay(.5f),
+//                        Actions.run(getShowActorRunnable(totalScoreScore)),
+//                        Actions.delay(1f),
+//                        Actions.run(getShowActorRunnableWithSFX(nextButton, SFXLibrary.NEXT_LEVEL))
+//                )
+//        );
         landingSpeedScore.setText(getLeftPaddedString(Integer.toString(score.speedScore)));
         landingAngleScore.setText(getLeftPaddedString(Integer.toString(score.angleScore)));
         totalScoreScore.setText(getLeftPaddedString(Integer.toString(totalScore)));
