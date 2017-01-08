@@ -6,8 +6,15 @@ package com.bitdecay.game.scoring;
 public class LandingScore {
     public static final int MAX_ANGLE_SCORE = 10000;
     public static final int MAX_SPEED_SCORE = 10000;
+    public static final int MAX_ACCURACY_SCORE = 10000;
 
     public int angleScore;
     public int speedScore;
+    public int accuracyScore;
     public float fuelLeft;
+    public int fuelScore;
+
+    public int total() {
+        return angleScore + speedScore + accuracyScore + fuelScore;
+    }
 }

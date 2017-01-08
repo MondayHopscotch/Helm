@@ -26,6 +26,8 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
     // the use of this boolean hinges on there only being a single entity this system operates on
     boolean entityWaiting = false;
     boolean launch = false;
+    private float PLAYER_BOOST_STRENGTH = 25;
+
 
     public PlayerStartLevelSystem(GamePilot pilot) {
         super(pilot);
@@ -52,7 +54,7 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
         velocity.currentVelocity.set(LAUNCH_VELOCITY);
         entity.addComponent(velocity);
 
-        DelayedAddComponent.DelayedAdd boosterDelay = new DelayedAddComponent.DelayedAdd(new BoosterComponent(25), PLAYER_CONTROL_DELAY);
+        DelayedAddComponent.DelayedAdd boosterDelay = new DelayedAddComponent.DelayedAdd(new BoosterComponent(PLAYER_BOOST_STRENGTH), PLAYER_CONTROL_DELAY);
         DelayedAddComponent.DelayedAdd collisionDelay = new DelayedAddComponent.DelayedAdd(new CollisionKindComponent(CollisionKind.PLAYER), PLAYER_CONTROL_DELAY);
         DelayedAddComponent.DelayedAdd steeringDelay = new DelayedAddComponent.DelayedAdd(new SteeringComponent(), PLAYER_CONTROL_DELAY / 2);
 

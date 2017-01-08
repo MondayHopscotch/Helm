@@ -21,4 +21,6 @@ public interface GamePilot {
     void returnToTitle();
 
     Helm getHelm();
+
+    void togglePause();
 }

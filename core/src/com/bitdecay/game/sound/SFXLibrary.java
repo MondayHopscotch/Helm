@@ -13,12 +13,14 @@ public class SFXLibrary {
     public static final String SHIP_LAUNCH = SFX_DIR + "Launch.ogg";
     public static final String SHIP_CRASH = SFX_DIR + "CrashHigh.ogg";
 
+    public static final String LABEL_DISPLAY = SFX_DIR + "LabelDisplay.ogg";
     public static final String SCORE_POP = SFX_DIR + "ScorePop.ogg";
     public static final String NEXT_LEVEL = SFX_DIR + "NextLevel.ogg";
 
     public static final String[] allSounds = new String[] {
             SHIP_LAUNCH,
             SHIP_CRASH,
+            LABEL_DISPLAY,
             SCORE_POP,
             NEXT_LEVEL
     };

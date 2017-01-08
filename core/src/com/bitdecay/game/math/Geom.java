@@ -3,6 +3,8 @@ package com.bitdecay.game.math;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.bitdecay.game.world.LineSegment;
 
 /**
  * Created by Monday on 12/13/2016.
@@ -57,11 +59,6 @@ public class Geom {
     /**
      * Given a working point and a reference point, rotate the working point by
      * the given angle around the reference point.
-     *
-     * @param p
-     * @param angle
-     * @param around
-     * @return A new point with the rotation applied
      */
     private static Vector2 getRotatedPoint(float x, float y, float angle, Vector2 around) {
         Vector2 rotated = new Vector2(x, y);
