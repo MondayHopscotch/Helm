@@ -116,11 +116,9 @@ public class GameScreen implements Screen, GamePilot {
     @Override
     public void finishLevel(LandingScore score) {
         System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
-        // temporary
-        int levelScore = score.angleScore + score.speedScore;
+        int levelScore = score.total();
         System.out.println("SCORE: " + levelScore);
         currentWorld.setLevelScore(currentWorld.getCurrentLevel(), levelScore);
-        // end temp
         scoreMenu.setScore(score, currentWorld.getTotalScore());
         scoreMenu.visible = true;
         if (currentWorld.hasNextLevel()) {

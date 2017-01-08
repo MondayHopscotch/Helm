@@ -39,6 +39,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         entity.removeComponent(BoosterComponent.class);
         pilot.doMusic(SoundMode.STOP, MusicLibrary.SHIP_BOOST);
 
+        RateLandingComponent landing = entity.getComponent(RateLandingComponent.class);
         entity.removeComponent(RateLandingComponent.class);
 
         FuelComponent fuel = entity.getComponent(FuelComponent.class);
@@ -58,40 +59,74 @@ public class LandingSystem extends AbstractIteratingGameSystem {
             return;
         }
 
-        System.out.println("Landing Velocity: " + velocity.currentVelocity.y);
-        System.out.println("Landing Angle: " + radsAwayFromStraightUp);
-
         entity.removeComponent(SteeringControlComponent.class);
 
         LandingScore score = new LandingScore();
-
-        float angleScoreScalar;
-        if (radsAwayFromStraightUp > MAX_LANDING_ANGLE_FOR_SCORE) {
-            angleScoreScalar = 0;
-        } else {
-            angleScoreScalar = (MAX_LANDING_ANGLE_FOR_SCORE - radsAwayFromStraightUp) / MAX_LANDING_ANGLE_FOR_SCORE;
-            // let's just be nice and give the player some angle mercy
-            angleScoreScalar = Math.min(angleScoreScalar + LANDING_ANGLE_MERCY, 1);
-
-        }
-
-        float speedScoreScalar;
-        if (velocity.currentVelocity.len() > MAX_LANDING_SPEED_FOR_SCORE) {
-            speedScoreScalar = 0;
-        } else {
-            speedScoreScalar = (MAX_LANDING_SPEED_FOR_SCORE - velocity.currentVelocity.len()) / MAX_LANDING_SPEED_FOR_SCORE;
-
-            //a zero-speed landing is impossible, so make a full score doable
-            speedScoreScalar = Math.min(speedScoreScalar + LANDING_SPEED_MERCY, 1);
-        }
-
-        float fuelPercentage = fuel.fuelRemaining / fuel.maxFuel;
-
-        score.angleScore = (int) (LandingScore.MAX_ANGLE_SCORE * angleScoreScalar);
-        score.speedScore = (int)(LandingScore.MAX_SPEED_SCORE * speedScoreScalar);
-        score.fuelLeft = fuelPercentage;
+        score.angleScore = rateAngle(radsAwayFromStraightUp);
+        score.speedScore = rateSpeed(velocity);
+        score.accuracyScore = rateAccuracy(transform, landing);
+        score.fuelLeft = fuel.fuelRemaining / fuel.maxFuel;
+        score.fuelScore = rateFuelRemaining(fuel);
 
         pilot.finishLevel(score);
+    }
+
+    private int rateFuelRemaining(FuelComponent fuel) {
+        System.out.println("Fuel: " + fuel.fuelRemaining + "/" + fuel.maxFuel);
+        // higher starting fuel and higher burn rate have higher reward for remaining fuel
+        return (int) ( (fuel.maxFuel * fuel.burnRate) * (fuel.fuelRemaining / fuel.maxFuel));
+    }
+
+    private int rateAngle(float radsAwayFromStraightUp) {
+        System.out.println("Landing Angle: " + radsAwayFromStraightUp);
+        if (radsAwayFromStraightUp > MAX_LANDING_ANGLE_FOR_SCORE) {
+            return 0;
+        } else {
+            float scalar = (MAX_LANDING_ANGLE_FOR_SCORE - radsAwayFromStraightUp) / MAX_LANDING_ANGLE_FOR_SCORE;
+            // let's just be nice and give the player some angle mercy
+            scalar = Math.min(scalar + LANDING_ANGLE_MERCY, 1);
+            return (int) (LandingScore.MAX_ANGLE_SCORE * scalar);
+        }
+    }
+
+    private int rateSpeed(VelocityComponent velocity) {
+        System.out.println("Landing Velocity: " + velocity.currentVelocity.y);
+        if (velocity.currentVelocity.len() > MAX_LANDING_SPEED_FOR_SCORE) {
+            return 0;
+        } else {
+            float scalar = (MAX_LANDING_SPEED_FOR_SCORE - velocity.currentVelocity.len()) / MAX_LANDING_SPEED_FOR_SCORE;
+
+            //a zero-speed landing is impossible, so make a full scalar doable
+            scalar = Math.min(scalar + LANDING_SPEED_MERCY, 1);
+            return (int)(LandingScore.MAX_SPEED_SCORE * scalar);
+        }
+    }
+
+    private int rateAccuracy(TransformComponent transform, RateLandingComponent landing) {
+        float shipX = transform.position.x;
+        float middleLandingX = Float.NEGATIVE_INFINITY;
+
+        float minX = Float.POSITIVE_INFINITY;
+        float maxX = Float.NEGATIVE_INFINITY;
+
+        for (int i = 0; i < landing.landingGeometry.length; i += 2) {
+            minX = Math.min(minX, landing.landingGeometry[i]);
+            maxX = Math.max(maxX, landing.landingGeometry[i]);
+        }
+
+        System.out.println("MinX: " + minX + "   MaxX: " + maxX);
+        System.out.println("shipX: " + shipX);
+
+        middleLandingX = (minX + maxX) / 2;
+
+        float maxDistanceToScore = (maxX - minX) / 2;
+        float landingDistance = Math.abs(shipX - middleLandingX);
+
+        // can only be at most half the distance from the center
+        float scalar = (maxDistanceToScore - landingDistance) / maxDistanceToScore;
+        scalar = Math.min(1, scalar);
+        scalar = Math.max(0, scalar);
+        return (int) (LandingScore.MAX_ACCURACY_SCORE * scalar);
     }
 
     @Override
