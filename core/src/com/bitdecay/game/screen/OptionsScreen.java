@@ -32,12 +32,15 @@ public class OptionsScreen implements Screen {
     private final Label steeringPositionYLabel;
     private final Label steeringPositionXLabel;
 
+    private float baseFontScale;
+
     public OptionsScreen(final Helm game) {
         this.game = game;
 
         stage = new Stage();
         skin = game.skin;
 
+        baseFontScale = game.fontScale * 0.8f;
 
         Table mainTable = new Table();
         mainTable.setFillParent(true);
@@ -47,10 +50,11 @@ public class OptionsScreen implements Screen {
         prefsTable.pad(200);
 
         Label dynamicSteeringLabel = new Label("Use Dynamic Steering", skin);
-        dynamicSteeringLabel.setFontScale(5);
+        dynamicSteeringLabel.setFontScale(baseFontScale);
         dynamicSteeringInput = new CheckBox(null, skin);
         dynamicSteeringInput.setChecked(Helm.prefs.getBoolean(GamePrefs.USE_DYNAMIC_STEERING_CONTROLS, GamePrefs.USE_DYNAMIC_STEERING_CONTROLS_DEFAULT));
-        dynamicSteeringInput.getImage().scaleBy(6);
+        // this isn't a font, but we can scale it the same
+        dynamicSteeringInput.getImage().scaleBy(game.fontScale);
         dynamicSteeringInput.align(Align.bottomLeft);
         dynamicSteeringInput.setOrigin(Align.bottomLeft);
 
@@ -62,15 +66,17 @@ public class OptionsScreen implements Screen {
         });
 
         steeringPositionXLabel = new Label("Steering Joystick X", skin);
-        steeringPositionXLabel.setFontScale(5);
+        steeringPositionXLabel.setFontScale(baseFontScale);
         steeringXInput = new Slider(.1f, .5f, .05f, false, skin);
         steeringXInput.setAnimateDuration(0.1f);
         // this affects all slider knobs
-        steeringXInput.getStyle().knob.setMinHeight(80);
+
+        int screenHeight = Gdx.graphics.getHeight();
+        steeringXInput.getStyle().knob.setMinHeight(screenHeight / 25);
         steeringXInput.setValue(Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_WIDTH, GamePrefs.SIMPLE_STEERING_WIDTH_DEFAULT));
 
         steeringPositionYLabel = new Label("Steering Joystick Y", skin);
-        steeringPositionYLabel.setFontScale(5);
+        steeringPositionYLabel.setFontScale(baseFontScale);
         steeringYInput = new Slider(.1f, .5f, .05f, false, skin);
         steeringYInput.setAnimateDuration(0.1f);
         steeringYInput.setValue(Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_HEIGHT, GamePrefs.SIMPLE_STEERING_HEIGHT_DEFAULT));
@@ -91,7 +97,7 @@ public class OptionsScreen implements Screen {
 
 
         TextButton doneLabel = new TextButton("Save", skin);
-        doneLabel.getLabel().setFontScale(7);
+        doneLabel.getLabel().setFontScale(baseFontScale * 1.5f);
 
         doneLabel.addListener(new ClickListener() {
             @Override

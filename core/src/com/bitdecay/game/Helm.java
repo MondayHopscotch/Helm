@@ -17,6 +17,7 @@ public class Helm extends Game {
 
     public AssetManager assets;
     public Skin skin;
+    public float fontScale = 1;
 
     @Override
     public void create() {
@@ -26,6 +27,10 @@ public class Helm extends Game {
         MusicLibrary.loadAllAsync(assets);
         loadSkinSync(assets);
         skin = new Skin(Gdx.files.internal("skin/skin.json"), assets.get("skin/ui.atlas", TextureAtlas.class));
+
+        skin.getFont("defaultFont").setUseIntegerPositions(true);
+        // super arbitrary number to try to get fonts to scale nicely for different screens
+        fontScale = (int)(Gdx.graphics.getWidth() / 300f);
 
         setScreen(new TitleScreen(this));
     }

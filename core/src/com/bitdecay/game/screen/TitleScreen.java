@@ -60,7 +60,7 @@ public class TitleScreen implements Screen {
         Table highScoreTable = new Table();
 
         Label scoreLabel = new Label("High Score: " + Integer.toString(Helm.prefs.getInteger(GamePrefs.HIGH_SCORE)), skin);
-        scoreLabel.setFontScale(5);
+        scoreLabel.setFontScale(game.fontScale * .8f);
         highScoreTable.add(scoreLabel);
         return highScoreTable;
     }
@@ -79,7 +79,7 @@ public class TitleScreen implements Screen {
                 game.setScreen(new GameScreen(game));
             }
         });
-        startLabel.setFontScale(10);
+        startLabel.setFontScale(game.fontScale * 1.8f);
 
         Label optionsLabel = new Label("Options", skin);
         optionsLabel.addListener(new ClickListener() {
@@ -89,7 +89,7 @@ public class TitleScreen implements Screen {
                 game.setScreen(new OptionsScreen(game));
             }
         });
-        optionsLabel.setFontScale(10);
+        optionsLabel.setFontScale(game.fontScale * 1.8f);
 
         Label creditLabel = new Label("Credits", skin);
         creditLabel.addListener(new ClickListener() {
@@ -99,7 +99,7 @@ public class TitleScreen implements Screen {
                 game.setScreen(new CreditsScreen(game));
             }
         });
-        creditLabel.setFontScale(10);
+        creditLabel.setFontScale(game.fontScale * 1.8f);
 
 
         mainMenu.add(startLabel);
@@ -121,7 +121,7 @@ public class TitleScreen implements Screen {
         versionTable.setOrigin(Align.bottomLeft);
 
         Label versionLabel = new Label("Version " + Version.CURRENT_VERSION, skin);
-        versionLabel.setFontScale(3);
+        versionLabel.setFontScale(game.fontScale * 0.5f);
 
         versionTable.add(versionLabel);
 

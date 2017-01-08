@@ -29,7 +29,7 @@ public class CreditsScreen implements Screen {
         Skin skin = game.skin;
 
         lblTitle = new Label("Credits", skin);
-        lblTitle.setFontScale(10);
+        lblTitle.setFontScale(game.fontScale * 1.5f);
         lblTitle.setFillParent(true);
         lblTitle.setAlignment(Align.topLeft);
         lblTitle.setColor(Color.SKY);
@@ -40,7 +40,7 @@ public class CreditsScreen implements Screen {
                 "Music:" + SPACE_AFTER_TITLE +
                 "None yet" + SPACE_AFTER_NAME,
                 skin);
-        lblCredits.setFontScale(6);
+        lblCredits.setFontScale(game.fontScale);
         lblCredits.setFillParent(true);
         lblCredits.setAlignment(Align.top);
         lblCredits.setColor(Color.WHITE);

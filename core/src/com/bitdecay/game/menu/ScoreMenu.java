@@ -1,5 +1,6 @@
 package com.bitdecay.game.menu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -67,11 +68,11 @@ public class ScoreMenu {
         scoreTable.setOrigin(Align.center);
 
         landingSpeedLabel = new Label(getLeftPaddedString("Landing Speed:"), skin);
-        landingSpeedLabel.setFontScale(6);
+        landingSpeedLabel.setFontScale(pilot.getHelm().fontScale);
         landingSpeedLabel.setAlignment(Align.right);
 
         landingSpeedScore = new Label("----", skin);
-        landingSpeedScore.setFontScale(6);
+        landingSpeedScore.setFontScale(pilot.getHelm().fontScale);
         landingSpeedScore.setAlignment(Align.right);
         landingSpeedScore.setOrigin(Align.right);
 
@@ -80,11 +81,11 @@ public class ScoreMenu {
         scoreTable.row();
 
         landingAngleLabel = new Label(getLeftPaddedString("Landing Angle:"), skin);
-        landingAngleLabel.setFontScale(6);
+        landingAngleLabel.setFontScale(pilot.getHelm().fontScale);
         landingAngleLabel.setAlignment(Align.right);
 
         landingAngleScore = new Label("----", skin);
-        landingAngleScore.setFontScale(6);
+        landingAngleScore.setFontScale(pilot.getHelm().fontScale);
         landingAngleScore.setAlignment(Align.right);
         landingAngleScore.setOrigin(Align.right);
 
@@ -93,11 +94,11 @@ public class ScoreMenu {
         scoreTable.row();
 
         landingAccuracyLabel = new Label(getLeftPaddedString("Landing Accuracy:"), skin);
-        landingAccuracyLabel.setFontScale(6);
+        landingAccuracyLabel.setFontScale(pilot.getHelm().fontScale);
         landingAccuracyLabel.setAlignment(Align.right);
 
         landingAccuracyScore = new Label("----", skin);
-        landingAccuracyScore.setFontScale(6);
+        landingAccuracyScore.setFontScale(pilot.getHelm().fontScale);
         landingAccuracyScore.setAlignment(Align.right);
         landingAccuracyScore.setOrigin(Align.right);
 
@@ -106,20 +107,20 @@ public class ScoreMenu {
         scoreTable.row();
 
         fuelLeftLabel = new Label(getLeftPaddedString("Fuel Remaining:"), skin);
-        fuelLeftLabel.setFontScale(6);
+        fuelLeftLabel.setFontScale(pilot.getHelm().fontScale);
         fuelLeftLabel.setAlignment(Align.right);
 
         fuelLeftPercent = new Label("----", skin);
-        fuelLeftPercent.setFontScale(6);
+        fuelLeftPercent.setFontScale(pilot.getHelm().fontScale);
         fuelLeftPercent.setAlignment(Align.right);
         fuelLeftPercent.setOrigin(Align.right);
 
         fuelScoreLabel = new Label(getLeftPaddedString("Fuel Score:"), skin);
-        fuelScoreLabel.setFontScale(6);
+        fuelScoreLabel.setFontScale(pilot.getHelm().fontScale);
         fuelScoreLabel.setAlignment(Align.right);
 
         fuelScoreScore = new Label("----", skin);
-        fuelScoreScore.setFontScale(6);
+        fuelScoreScore.setFontScale(pilot.getHelm().fontScale);
         fuelScoreScore.setAlignment(Align.right);
         fuelScoreScore.setOrigin(Align.right);
 
@@ -132,11 +133,11 @@ public class ScoreMenu {
         scoreTable.row();
 
         totalScoreLabel = new Label(getLeftPaddedString("Total Score:"), skin);
-        totalScoreLabel.setFontScale(6);
+        totalScoreLabel.setFontScale(pilot.getHelm().fontScale);
         totalScoreLabel.setAlignment(Align.right);
 
         totalScoreScore = new Label("----", skin);
-        totalScoreScore.setFontScale(6);
+        totalScoreScore.setFontScale(pilot.getHelm().fontScale);
         totalScoreScore.setAlignment(Align.right);
         totalScoreScore.setOrigin(Align.right);
         totalScoreScore.setColor(Color.LIGHT_GRAY);
@@ -159,20 +160,20 @@ public class ScoreMenu {
             }
         };
 
-        Table nextTabel = new Table();
-        nextTabel.align(Align.center);
-        nextTabel.setOrigin(Align.center);
+        Table nextTable = new Table();
+        nextTable.align(Align.center);
+        nextTable.setOrigin(Align.center);
         nextButton = new TextButton(NEXT_LEVEL_TEXT, skin);
-        nextButton.getLabel().setFontScale(5);
+        nextButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
         nextButton.addListener(nextLevelAction);
         nextButton.align(Align.center);
         nextButton.setOrigin(Align.center);
 
-        nextTabel.add(nextButton);
+        nextTable.add(nextButton);
 
         mainTable.add(scoreTable);
         mainTable.row();
-        mainTable.add(nextTabel).padTop(200);
+        mainTable.add(nextTable).padTop(Gdx.graphics.getHeight() / 5);
 
         stage.addActor(mainTable);
 
