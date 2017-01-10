@@ -1,5 +1,6 @@
 package com.bitdecay.game.menu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -40,19 +41,20 @@ public class PauseMenu {
         pauseMenu.setFillParent(true);
         pauseMenu.align(Align.center);
         Label pauseDisplayLabel = new Label("Paused", pilot.getHelm().skin);
-        pauseDisplayLabel.setFontScale(15);
+        pauseDisplayLabel.setFontScale(pilot.getHelm().fontScale * 3);
         pauseMenu.add(pauseDisplayLabel).center();
         pauseMenu.setVisible(false);
         pauseMenu.addListener(pauseListener);
 
         Label pauseButtonLabel = new Label("...", pilot.getHelm().skin);
-        pauseButtonLabel.setFontScale(6);
+        pauseButtonLabel.setFontScale(pilot.getHelm().fontScale);
         pauseButtonLabel.setAlignment(Align.topRight);
         pauseButtonLabel.setOrigin(Align.topRight);
 
         pauseButtonLabel.addListener(pauseListener);
 
-        mainTable.add(pauseButtonLabel).padRight(40).width(200).height(200);
+        int screenWidth = Gdx.graphics.getWidth();
+        mainTable.add(pauseButtonLabel).padRight(screenWidth / 25).width(screenWidth / 10).height(screenWidth / 10);
 
         stage.addActor(mainTable);
         stage.addActor(pauseMenu);
