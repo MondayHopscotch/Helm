@@ -12,7 +12,6 @@ import com.bitdecay.game.camera.FollowOrthoCamera;
 import com.bitdecay.game.entities.LandingPlatformEntity;
 import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
-import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.system.BoostSystem;
 import com.bitdecay.game.system.BoosterInputSystem;
 import com.bitdecay.game.system.CameraUpdateSystem;
@@ -22,11 +21,12 @@ import com.bitdecay.game.system.CrashSystem;
 import com.bitdecay.game.system.DelayedAddSystem;
 import com.bitdecay.game.system.GameSystem;
 import com.bitdecay.game.system.GravitySystem;
-import com.bitdecay.game.system.KeepPlayerOnMapSystem;
+import com.bitdecay.game.system.PlayerBoundarySystem;
 import com.bitdecay.game.system.LandingSystem;
 import com.bitdecay.game.system.MovementSystem;
 import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
+import com.bitdecay.game.system.TimerSystem;
 import com.bitdecay.game.system.render.RenderBodySystem;
 import com.bitdecay.game.system.render.RenderBoostSystem;
 import com.bitdecay.game.system.render.RenderFuelSystem;
@@ -59,7 +59,7 @@ public class LevelPlayer {
 
     Array<GameEntity> allEntities = new Array<>(1000);
     private final InputMultiplexer inputMux;
-    private KeepPlayerOnMapSystem playerOnMapSystem;
+    private PlayerBoundarySystem playerBoundarySystem;
 
 
     public LevelPlayer(GamePilot pilot) {
@@ -112,9 +112,11 @@ public class LevelPlayer {
 
         LandingSystem landingSystem = new LandingSystem(pilot);
 
-        playerOnMapSystem = new KeepPlayerOnMapSystem(pilot);
+        playerBoundarySystem = new PlayerBoundarySystem(pilot);
 
         CrashSystem crashSystem = new CrashSystem(pilot);
+
+        TimerSystem timerSystem = new TimerSystem(pilot);
 
         gameSystems.add(cameraSystem);
         gameSystems.add(boosterInputSystem);
@@ -129,8 +131,9 @@ public class LevelPlayer {
         gameSystems.add(playerCollisionSystem);
         gameSystems.add(delaySystem);
         gameSystems.add(landingSystem);
-        gameSystems.add(playerOnMapSystem);
+        gameSystems.add(playerBoundarySystem);
         gameSystems.add(crashSystem);
+        gameSystems.add(timerSystem);
 
         RenderBodySystem renderBodySystem = new RenderBodySystem(pilot, shapeRenderer);
         RenderBoostSystem renderBoostSystem = new RenderBoostSystem(pilot, shapeRenderer);
@@ -165,10 +168,15 @@ public class LevelPlayer {
         ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
         allEntities.add(ship);
 
-        updateKillSystem(levelDef.levelLines);
+        for (GameSystem gameSystem : gameSystems) {
+            gameSystem.reset();
+        }
+
+
+        updateBoundarySystem(levelDef.levelLines);
     }
 
-    private void updateKillSystem(Array<LineSegment> levelLines) {
+    private void updateBoundarySystem(Array<LineSegment> levelLines) {
         float minX = Float.POSITIVE_INFINITY;
         float maxX = Float.NEGATIVE_INFINITY;
 
@@ -191,7 +199,7 @@ public class LevelPlayer {
         // measurement is from center of level
         largestDimension /= 2;
 
-        playerOnMapSystem.setKillRadius(new Vector2((minX + maxX) / 2, (minY + maxY) / 2), largestDimension);
+        playerBoundarySystem.setKillRadius(new Vector2((minX + maxX) / 2, (minY + maxY) / 2), largestDimension);
     }
 
     public void printMatchingGameSystems(GameEntity entity) {

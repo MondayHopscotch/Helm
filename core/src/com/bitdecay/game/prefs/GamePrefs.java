@@ -6,12 +6,18 @@ package com.bitdecay.game.prefs;
 public class GamePrefs {
     public static final String HIGH_SCORE = "highScore";
 
-    public static final String USE_DYNAMIC_STEERING_CONTROLS = "useDynamicSteeringControls";
-    public static final boolean USE_DYNAMIC_STEERING_CONTROLS_DEFAULT = false;
+    public static final String USE_JOYSTICK_STEERING = "useDynamicSteeringControls";
+    public static final boolean USE_JOYSTICK_STEERING_DEFAULT = false;
 
     public static final String SIMPLE_STEERING_WIDTH = "simpleSteeringWidthRatio";
     public static final float SIMPLE_STEERING_WIDTH_DEFAULT = 0.3f;
 
     public static final String SIMPLE_STEERING_HEIGHT = "simpleSteeringHeightRatio";
     public static final float SIMPLE_STEERING_HEIGHT_DEFAULT = 0.3f;
+
+    // See usages for understanding this number. It's used in multple ways
+    public static final String SENSITIVITY = "steeringSensitivity";
+    public static final int SENSITIVITY_MIN = -100;
+    public static final int SENSITIVITY_MAX = 100;
+    public static final int SENSITIVITY_DEFAULT = 0;
 }

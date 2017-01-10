@@ -23,4 +23,6 @@ public interface GamePilot {
     Helm getHelm();
 
     void togglePause();
+
+    void setTime(float secondsElapsed);
 }

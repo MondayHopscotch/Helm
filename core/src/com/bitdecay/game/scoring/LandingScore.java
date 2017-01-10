@@ -13,6 +13,7 @@ public class LandingScore {
     public int accuracyScore;
     public float fuelLeft;
     public int fuelScore;
+    public float timeTaken;
 
     public int total() {
         return angleScore + speedScore + accuracyScore + fuelScore;
