@@ -9,12 +9,15 @@ public class ActiveTouch {
 
     public int pointerNum;
     public Vector2 startingLocation = new Vector2();
+    public Vector2 lastLocation = new Vector2();
     public Vector2 currentLocation = new Vector2();
 
     public ActiveTouch(int pointerNum, int screenX, int screenY) {
         this.pointerNum = pointerNum;
         startingLocation.x = screenX;
         startingLocation.y = screenY;
+        lastLocation.x = screenX;
+        lastLocation.y = screenY;
         currentLocation.x = screenX;
         currentLocation.y = screenY;
     }

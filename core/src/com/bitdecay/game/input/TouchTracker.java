@@ -35,6 +35,7 @@ public class TouchTracker {
         while (iter.hasNext()) {
             touch = iter.next();
             if (touch.pointerNum == pointer) {
+                touch.lastLocation.set(touch.currentLocation);
                 touch.currentLocation.x = screenX;
                 // workstation transform on the y
                 touch.currentLocation.y = Gdx.graphics.getHeight() - screenY;

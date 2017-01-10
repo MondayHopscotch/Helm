@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.menu.Overlay;
 import com.bitdecay.game.menu.PauseMenu;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.Helm;
@@ -30,11 +31,11 @@ public class GameScreen implements Screen, GamePilot {
     private boolean reloadQueued;
 
     private ScoreMenu scoreMenu;
-
-    private InputMultiplexer combinedGameInput;
-
     private PauseMenu pauseMenu;
     private boolean paused = false;
+    private Overlay overlay;
+
+    private InputMultiplexer combinedGameInput;
 
     public GameScreen(Helm game) {
         this.game = game;
@@ -52,6 +53,7 @@ public class GameScreen implements Screen, GamePilot {
     private void initMenus() {
         scoreMenu = new ScoreMenu(this);
         pauseMenu = new PauseMenu(this);
+        overlay = new Overlay(this);
     }
 
     private void setLevel(LevelDefinition level) {
@@ -172,6 +174,11 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     @Override
+    public void setTime(float secondsElapsed) {
+        overlay.setTime(secondsElapsed);
+    }
+
+    @Override
     public void render(float delta) {
         if (delta > .5f) {
             delta = .5f;
@@ -191,6 +198,7 @@ public class GameScreen implements Screen, GamePilot {
 
         scoreMenu.updateAndDraw();
         pauseMenu.updateAndDraw();
+        overlay.updateAndDraw();
     }
 
     @Override

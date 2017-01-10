@@ -2,7 +2,6 @@ package com.bitdecay.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,11 +25,14 @@ public class OptionsScreen implements Screen {
 
     Stage stage;
     Skin skin;
-    private final CheckBox dynamicSteeringInput;
+    private final CheckBox joystickSteeringInput;
     private final Slider steeringXInput;
     private final Slider steeringYInput;
     private final Label steeringPositionYLabel;
     private final Label steeringPositionXLabel;
+
+    private final Label steeringSensitivityLabel;
+    private final Slider steeringSensitivityInput;
 
     private float baseFontScale;
 
@@ -49,16 +51,22 @@ public class OptionsScreen implements Screen {
         prefsTable.align(Align.left);
         prefsTable.pad(200);
 
-        Label dynamicSteeringLabel = new Label("Use Dynamic Steering", skin);
-        dynamicSteeringLabel.setFontScale(baseFontScale);
-        dynamicSteeringInput = new CheckBox(null, skin);
-        dynamicSteeringInput.setChecked(Helm.prefs.getBoolean(GamePrefs.USE_DYNAMIC_STEERING_CONTROLS, GamePrefs.USE_DYNAMIC_STEERING_CONTROLS_DEFAULT));
-        // this isn't a font, but we can scale it the same
-        dynamicSteeringInput.getImage().scaleBy(game.fontScale);
-        dynamicSteeringInput.align(Align.bottomLeft);
-        dynamicSteeringInput.setOrigin(Align.bottomLeft);
+        steeringSensitivityLabel = new Label("Sensitivity", skin);
+        steeringSensitivityLabel.setFontScale(baseFontScale);
+        steeringSensitivityInput = new Slider(GamePrefs.SENSITIVITY_MIN, GamePrefs.SENSITIVITY_MAX, 1, false, skin);
+        steeringSensitivityInput.setAnimateDuration(0.1f);
+        steeringSensitivityInput.setValue(Helm.prefs.getInteger(GamePrefs.SENSITIVITY, GamePrefs.SENSITIVITY_DEFAULT));
 
-        dynamicSteeringInput.addListener(new ClickListener() {
+        Label joystickSteeringLabel = new Label("Use Joystick Steering", skin);
+        joystickSteeringLabel.setFontScale(baseFontScale);
+        joystickSteeringInput = new CheckBox(null, skin);
+        joystickSteeringInput.setChecked(Helm.prefs.getBoolean(GamePrefs.USE_JOYSTICK_STEERING, GamePrefs.USE_JOYSTICK_STEERING_DEFAULT));
+        // this isn't a font, but we can scale it the same
+        joystickSteeringInput.getImage().scaleBy(game.fontScale);
+        joystickSteeringInput.align(Align.bottomLeft);
+        joystickSteeringInput.setOrigin(Align.bottomLeft);
+
+        joystickSteeringInput.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 updateSteeringSettingVisibility();
@@ -81,10 +89,14 @@ public class OptionsScreen implements Screen {
         steeringYInput.setAnimateDuration(0.1f);
         steeringYInput.setValue(Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_HEIGHT, GamePrefs.SIMPLE_STEERING_HEIGHT_DEFAULT));
 
-        prefsTable.add(dynamicSteeringLabel).align(Align.left).expandX();
-        prefsTable.add(dynamicSteeringInput).size(
-                dynamicSteeringInput.getImage().getWidth() * dynamicSteeringInput.getImage().getScaleX(),
-                dynamicSteeringInput.getImage().getHeight() * dynamicSteeringInput.getImage().getScaleY()).align(Align.center);
+        prefsTable.add(steeringSensitivityLabel).align(Align.left);
+        prefsTable.add(steeringSensitivityInput).width(300);
+        prefsTable.row();
+
+        prefsTable.add(joystickSteeringLabel).align(Align.left).expandX();
+        prefsTable.add(joystickSteeringInput).size(
+                joystickSteeringInput.getImage().getWidth() * joystickSteeringInput.getImage().getScaleX(),
+                joystickSteeringInput.getImage().getHeight() * joystickSteeringInput.getImage().getScaleY()).align(Align.center);
         prefsTable.row();
 
         prefsTable.add(steeringPositionXLabel).align(Align.left);
@@ -116,11 +128,11 @@ public class OptionsScreen implements Screen {
     }
 
     private void updateSteeringSettingVisibility() {
-        boolean usingDynamicSteering = dynamicSteeringInput.isChecked();
-        steeringPositionXLabel.setVisible(!usingDynamicSteering);
-        steeringXInput.setVisible(!usingDynamicSteering);
-        steeringPositionYLabel.setVisible(!usingDynamicSteering);
-        steeringYInput.setVisible(!usingDynamicSteering);
+        boolean usingJoystickSteering = joystickSteeringInput.isChecked();
+        steeringPositionXLabel.setVisible(usingJoystickSteering);
+        steeringXInput.setVisible(usingJoystickSteering);
+        steeringPositionYLabel.setVisible(usingJoystickSteering);
+        steeringYInput.setVisible(usingJoystickSteering);
     }
 
     @Override
@@ -153,7 +165,8 @@ public class OptionsScreen implements Screen {
 
     @Override
     public void hide() {
-        Helm.prefs.putBoolean(GamePrefs.USE_DYNAMIC_STEERING_CONTROLS, dynamicSteeringInput.isChecked());
+        Helm.prefs.putInteger(GamePrefs.SENSITIVITY, (int) steeringSensitivityInput.getValue());
+        Helm.prefs.putBoolean(GamePrefs.USE_JOYSTICK_STEERING, joystickSteeringInput.isChecked());
         Helm.prefs.putFloat(GamePrefs.SIMPLE_STEERING_WIDTH, steeringXInput.getValue());
         Helm.prefs.putFloat(GamePrefs.SIMPLE_STEERING_HEIGHT, steeringYInput.getValue());
         Helm.prefs.flush();

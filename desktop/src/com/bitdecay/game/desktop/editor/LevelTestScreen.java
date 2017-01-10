@@ -104,6 +104,11 @@ public class LevelTestScreen implements Screen, GamePilot {
 
     }
 
+    @Override
+    public void setTime(float secondsElapsed) {
+
+    }
+
     public void setLevel(LevelDefinition level) {
         levelPlayer.loadLevel(level);
     }

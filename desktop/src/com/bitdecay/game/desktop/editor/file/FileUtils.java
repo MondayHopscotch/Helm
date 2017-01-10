@@ -62,7 +62,11 @@ public class FileUtils {
             json.setElementType(LevelDefinition.class, "levelLines", LineSegment.class);
         }
         String asJson = loadFile();
-        return json.fromJson(LevelDefinition.class, asJson);
+        if (asJson == null) {
+            return null;
+        } else {
+            return json.fromJson(LevelDefinition.class, asJson);
+        }
     }
 
     public static String loadFile() {

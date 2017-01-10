@@ -9,6 +9,7 @@ import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.PlayerCollisionComponent;
 import com.bitdecay.game.component.RateLandingComponent;
 import com.bitdecay.game.component.SteeringControlComponent;
+import com.bitdecay.game.component.TimerComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.math.Geom;
@@ -53,6 +54,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         // check landing and either pass/fail
         float radsAwayFromStraightUp = Math.abs(transform.angle - Geom.ROTATION_UP);
 
+        System.out.println("LANDING VECTOR: " + velocity.currentVelocity);
         if (Math.abs(velocity.currentVelocity.y) > MAX_LANDING_SPEED ||
                 radsAwayFromStraightUp > MAX_LANDING_ANGLE) {
             entity.addComponent(new CrashComponent());
@@ -61,12 +63,17 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
         entity.removeComponent(SteeringControlComponent.class);
 
+        TimerComponent timer = entity.getComponent(TimerComponent.class);
+        entity.removeComponent(TimerComponent.class);
+
         LandingScore score = new LandingScore();
         score.angleScore = rateAngle(radsAwayFromStraightUp);
         score.speedScore = rateSpeed(velocity);
         score.accuracyScore = rateAccuracy(transform, landing);
         score.fuelLeft = fuel.fuelRemaining / fuel.maxFuel;
         score.fuelScore = rateFuelRemaining(fuel);
+
+        score.timeTaken = timer.secondsElapsed;
 
         pilot.finishLevel(score);
     }
@@ -134,6 +141,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         return entity.hasComponent(RateLandingComponent.class) &&
                 entity.hasComponent(VelocityComponent.class) &&
                 entity.hasComponent(TransformComponent.class) &&
-                entity.hasComponent(FuelComponent.class);
+                entity.hasComponent(FuelComponent.class) &&
+                entity.hasComponent(TimerComponent.class);
     }
 }

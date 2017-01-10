@@ -10,6 +10,7 @@ import com.bitdecay.game.component.CollisionKindComponent;
 import com.bitdecay.game.component.DelayedAddComponent;
 import com.bitdecay.game.component.SteeringComponent;
 import com.bitdecay.game.component.SteeringControlComponent;
+import com.bitdecay.game.component.TimerComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.component.ShipLaunchComponent;
 import com.bitdecay.game.sound.SFXLibrary;
@@ -53,6 +54,9 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
         VelocityComponent velocity = new VelocityComponent();
         velocity.currentVelocity.set(LAUNCH_VELOCITY);
         entity.addComponent(velocity);
+
+        TimerComponent timer = new TimerComponent();
+        entity.addComponent(timer);
 
         DelayedAddComponent.DelayedAdd boosterDelay = new DelayedAddComponent.DelayedAdd(new BoosterComponent(PLAYER_BOOST_STRENGTH), PLAYER_CONTROL_DELAY);
         DelayedAddComponent.DelayedAdd collisionDelay = new DelayedAddComponent.DelayedAdd(new CollisionKindComponent(CollisionKind.PLAYER), PLAYER_CONTROL_DELAY);

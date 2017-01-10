@@ -10,14 +10,14 @@ import com.bitdecay.game.component.VelocityComponent;
 /**
  * Created by Monday on 1/7/2017.
  */
-public class KeepPlayerOnMapSystem extends AbstractIteratingGameSystem {
+public class PlayerBoundarySystem extends AbstractIteratingGameSystem {
     private static final float PLAYER_DEATH_ZONE_BUFFER = 3000;
 
     private Vector2 center = new Vector2();
     private Vector2 workingVector= new Vector2();
     private float radius;
 
-    public KeepPlayerOnMapSystem(GamePilot pilot) {
+    public PlayerBoundarySystem(GamePilot pilot) {
         super(pilot);
     }
 
