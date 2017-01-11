@@ -15,7 +15,7 @@ public class GamePrefs {
     public static final String SIMPLE_STEERING_HEIGHT = "simpleSteeringHeightRatio";
     public static final float SIMPLE_STEERING_HEIGHT_DEFAULT = 0.3f;
 
-    // See usages for understanding this number. It's used in multple ways
+    // See usages for understanding this number. It's used in multiple ways
     public static final String SENSITIVITY = "steeringSensitivity";
     public static final int SENSITIVITY_MIN = -100;
     public static final int SENSITIVITY_MAX = 100;

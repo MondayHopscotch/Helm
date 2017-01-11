@@ -156,7 +156,7 @@ public class ScoreMenu {
         returnToTitleAction = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                pilot.returnToTitle();
+                pilot.completeWorld();
             }
         };
 

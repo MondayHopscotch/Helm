@@ -18,7 +18,7 @@ public interface GamePilot {
 
     void nextLevel();
 
-    void returnToTitle();
+    void completeWorld();
 
     Helm getHelm();
 

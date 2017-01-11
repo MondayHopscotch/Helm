@@ -16,7 +16,6 @@ import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelWorld;
-import com.bitdecay.game.world.World1;
 
 /**
  * Created by Monday on 12/15/2016.
@@ -37,7 +36,7 @@ public class GameScreen implements Screen, GamePilot {
 
     private InputMultiplexer combinedGameInput;
 
-    public GameScreen(Helm game) {
+    public GameScreen(Helm game, LevelWorld world) {
         this.game = game;
 
         levelPlayer = new LevelPlayer(this);
@@ -46,7 +45,8 @@ public class GameScreen implements Screen, GamePilot {
 
         combinedGameInput = new InputMultiplexer(pauseMenu.stage, levelPlayer.getInput());
 
-        currentWorld = new World1();
+        currentWorld = world;
+
         requestRestartLevel();
     }
 
@@ -136,7 +136,7 @@ public class GameScreen implements Screen, GamePilot {
     public void nextLevel() {
         LevelDefinition nextLevel = currentWorld.getNextLevel();
         if (nextLevel == null) {
-            returnToTitle();
+            completeWorld();
         } else {
             setLevel(nextLevel);
             reloadQueued = true;
@@ -144,17 +144,18 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     @Override
-    public void returnToTitle() {
+    public void completeWorld() {
 
         int total = currentWorld.getTotalScore();
 
         int oldHighScore = 0;
-        if (Helm.prefs.contains(GamePrefs.HIGH_SCORE)) {
-            oldHighScore = Helm.prefs.getInteger(GamePrefs.HIGH_SCORE);
+        String scoreKey = currentWorld.getWorldName() + GamePrefs.HIGH_SCORE;
+        if (Helm.prefs.contains(scoreKey)) {
+            oldHighScore = Helm.prefs.getInteger(scoreKey);
         }
 
         if (total > oldHighScore) {
-            Helm.prefs.putInteger(GamePrefs.HIGH_SCORE, total);
+            Helm.prefs.putInteger(scoreKey, total);
             Helm.prefs.flush();
             System.out.println("Scorer: SAVING NEW SCORE: " + total);
         }
