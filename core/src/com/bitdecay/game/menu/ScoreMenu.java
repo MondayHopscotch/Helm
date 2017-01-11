@@ -224,7 +224,7 @@ public class ScoreMenu {
                 Actions.delay(1f)
         );
 
-        if (world.getCurrentRunTotalScore() > world.getHighScore()) {
+        if (world.getHighScore() > 0 && world.getCurrentRunTotalScore() > world.getHighScore()) {
             totalScoreScore.setColor(Color.GOLD);
             baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.HIGH_SCORE_BEAT, totalScoreLabel, totalScoreScore)));
             baseScoreSequence.addAction(Actions.delay(2.5f));
