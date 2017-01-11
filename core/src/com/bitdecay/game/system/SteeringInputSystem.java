@@ -94,7 +94,6 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
 
     @Override
     public void reset() {
-        // Don't want to reset the steering system?
         tracker = new TouchTracker(5);
     }
 

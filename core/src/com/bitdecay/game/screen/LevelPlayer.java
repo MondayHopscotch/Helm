@@ -130,9 +130,9 @@ public class LevelPlayer {
         gameSystems.add(collisionSystem);
         gameSystems.add(playerCollisionSystem);
         gameSystems.add(delaySystem);
-        gameSystems.add(landingSystem);
         gameSystems.add(playerBoundarySystem);
         gameSystems.add(crashSystem);
+        gameSystems.add(landingSystem);
         gameSystems.add(timerSystem);
 
         RenderBodySystem renderBodySystem = new RenderBodySystem(pilot, shapeRenderer);
@@ -145,6 +145,14 @@ public class LevelPlayer {
 
         RenderSteeringSystem renderSteeringSystem = new RenderSteeringSystem(pilot, screenCam, shapeRenderer);
         screenRenderSystems.add(renderSteeringSystem);
+    }
+
+    public void resetAllButInputSystems() {
+        for (GameSystem gameSystem : gameSystems) {
+            if (!inputSystems.contains(gameSystem, true)) {
+                gameSystem.reset();
+            }
+        }
     }
 
     public void resetInputSystems() {
@@ -168,9 +176,7 @@ public class LevelPlayer {
         ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
         allEntities.add(ship);
 
-        for (GameSystem gameSystem : gameSystems) {
-            gameSystem.reset();
-        }
+        resetAllButInputSystems();
 
 
         updateBoundarySystem(levelDef.levelLines);
