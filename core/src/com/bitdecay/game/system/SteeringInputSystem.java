@@ -17,7 +17,7 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
 
     public static int BASE_JOYSTICK_SENSITIVITY = 75;
 
-    public static int BASE_LINEARITY = 300;
+    public static int BASE_LINEARITY = 400;
     private static float BASE_INTERSECTION = .5f;
 
     TouchTracker tracker = new TouchTracker(5);
@@ -33,10 +33,14 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
         SteeringControlComponent control = entity.getComponent(SteeringControlComponent.class);
 
         boolean joystickSteering = Helm.prefs.getBoolean(GamePrefs.USE_JOYSTICK_STEERING, GamePrefs.USE_JOYSTICK_STEERING_DEFAULT);
+
         int prefSensitivity = Helm.prefs.getInteger(GamePrefs.SENSITIVITY, GamePrefs.SENSITIVITY_DEFAULT);
+
+        int joystickSensitivity = BASE_JOYSTICK_SENSITIVITY - prefSensitivity;
 
         if (joystickSteering) {
             setSimpleSteeringStartPoint(control);
+            control.sensitivity = joystickSensitivity;
         }
         control.endPoint = null;
 
@@ -44,8 +48,6 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
             if (control.activeArea.contains(touch.startingLocation)) {
 
                 if (joystickSteering) {
-                    int joystickSensitivity = BASE_JOYSTICK_SENSITIVITY - prefSensitivity;
-                    control.sensitivity = joystickSensitivity;
                     updateSimpleControls(control, touch);
                     float deltaX = control.endPoint.x - control.startPoint.x;
                     float deltaY = control.endPoint.y - control.startPoint.y;
@@ -78,8 +80,8 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
     }
 
     private void setSimpleSteeringStartPoint(SteeringControlComponent control) {
-        float height_ratio = Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_HEIGHT, .3f);
-        float width_ratio = Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_WIDTH, .3f);
+        float height_ratio = Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_HEIGHT, GamePrefs.SIMPLE_STEERING_HEIGHT_DEFAULT);
+        float width_ratio = Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_WIDTH, GamePrefs.SIMPLE_STEERING_WIDTH_DEFAULT);
         control.startPoint = control.activeArea.getSize(simpleSteeringStartVector).scl(width_ratio, height_ratio);
     }
 
@@ -94,7 +96,6 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
 
     @Override
     public void reset() {
-        // Don't want to reset the steering system?
         tracker = new TouchTracker(5);
     }
 
