@@ -42,10 +42,6 @@ public class TitleScreen implements Screen {
         Table mainTable = new Table();
         mainTable.setFillParent(true);
 
-        Actor highScoreActor = buildHighScoreDisplay();
-        mainTable.add(highScoreActor).align(Align.right).expandX();
-        mainTable.row();
-
         Actor mainMenu = buildMainMenu();
         mainTable.add(mainMenu).expand();
         mainTable.row();
@@ -54,15 +50,6 @@ public class TitleScreen implements Screen {
         mainTable.add(versionActor).align(Align.left).expandX();
 
         stage.addActor(mainTable);
-    }
-
-    private Actor buildHighScoreDisplay() {
-        Table highScoreTable = new Table();
-
-        Label scoreLabel = new Label("High Score: " + Integer.toString(Helm.prefs.getInteger(GamePrefs.HIGH_SCORE)), skin);
-        scoreLabel.setFontScale(game.fontScale * .8f);
-        highScoreTable.add(scoreLabel);
-        return highScoreTable;
     }
 
     private Actor buildMainMenu() {

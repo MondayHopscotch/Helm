@@ -89,7 +89,7 @@ public class LevelTestScreen implements Screen, GamePilot {
     }
 
     @Override
-    public void returnToTitle() {
+    public void completeWorld() {
         editor.showEditor();
 
     }
