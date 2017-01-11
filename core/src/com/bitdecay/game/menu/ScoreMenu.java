@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -16,6 +17,7 @@ import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
+import com.bitdecay.game.world.LevelWorld;
 
 /**
  * Created by Monday on 12/17/2016.
@@ -23,7 +25,7 @@ import com.bitdecay.game.sound.SoundMode;
 public class ScoreMenu {
 
     private static final String NEXT_LEVEL_TEXT = "Next Level";
-    private static final String RETURN_TO_TITLE_TEXT = "Return To Title";
+    private static final String RETURN_TO_TITLE_TEXT = "Finish";
 
     public final Stage stage;
     private final Skin skin;
@@ -191,71 +193,55 @@ public class ScoreMenu {
         }
     }
 
-    public void setScore(LandingScore score, int totalScore) {
-        stage.addAction(
-                Actions.sequence(
-                        Actions.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                setAllInvisible();
-                            }
-                        }),
-                        Actions.delay(.2f),
-                        Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, landingSpeedLabel)),
-                        Actions.delay(.1f),
-                        Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, landingAngleLabel)),
-                        Actions.delay(.1f),
-                        Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, landingAccuracyLabel)),
-                        Actions.delay(.1f),
-                        Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, fuelLeftLabel)),
-                        Actions.delay(.1f),
-                        Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, fuelScoreLabel)),
-                        Actions.delay(.5f),
-                        Actions.run(getShowActorsRunnable(landingSpeedScore)),
-                        Actions.delay(.5f),
-                        Actions.run(getShowActorsRunnable(landingAngleScore)),
-                        Actions.delay(.5f),
-                        Actions.run(getShowActorsRunnable(landingAccuracyScore)),
-                        Actions.delay(.5f),
-                        Actions.run(getShowActorsRunnable(fuelLeftPercent)),
-                        Actions.delay(.5f),
-                        Actions.run(getShowActorsRunnable(fuelScoreScore)),
-                        Actions.delay(1f),
-                        Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, totalScoreLabel, totalScoreScore, nextButton))
-                )
+    public void setScore(LandingScore score, LevelWorld world) {
+        SequenceAction baseScoreSequence = Actions.sequence(
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        setAllInvisible();
+                    }
+                }),
+                Actions.delay(.2f),
+                Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, landingSpeedLabel)),
+                Actions.delay(.1f),
+                Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, landingAngleLabel)),
+                Actions.delay(.1f),
+                Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, landingAccuracyLabel)),
+                Actions.delay(.1f),
+                Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, fuelLeftLabel)),
+                Actions.delay(.1f),
+                Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, fuelScoreLabel)),
+                Actions.delay(.5f),
+                Actions.run(getShowActorsRunnable(landingSpeedScore)),
+                Actions.delay(.5f),
+                Actions.run(getShowActorsRunnable(landingAngleScore)),
+                Actions.delay(.5f),
+                Actions.run(getShowActorsRunnable(landingAccuracyScore)),
+                Actions.delay(.5f),
+                Actions.run(getShowActorsRunnable(fuelLeftPercent)),
+                Actions.delay(.5f),
+                Actions.run(getShowActorsRunnable(fuelScoreScore)),
+                Actions.delay(1f)
         );
-//        stage.addAction(
-//                Actions.sequence(
-//                        Actions.run(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                setAllInvisible();
-//                            }
-//                        }),
-//                        Actions.delay(.2f),
-//                        Actions.run(getShowActorsRunnable(landingSpeedLabel)),
-//                        Actions.delay(.5f),
-//                        Actions.run(getShowActorsRunnable(landingSpeedScore)),
-//                        Actions.delay(.5f),
-//                        Actions.run(getShowActorsRunnable(landingAngleLabel)),
-//                        Actions.delay(.5f),
-//                        Actions.run(getShowActorsRunnable(landingAngleScore)),
-//                        Actions.delay(.5f),
-//                        Actions.run(getShowActorsRunnable(fuelLeftLabel)),
-//                        Actions.delay(.5f),
-//                        Actions.run(getShowActorsRunnable(fuelLeftPercent)),
-//                        Actions.delay(.5f),
-//                        Actions.run(getShowActorsRunnable(totalScoreLabel)),
-//                        Actions.delay(.5f),
-//                        Actions.run(getShowActorsRunnable(totalScoreScore)),
-//                        Actions.delay(1f),
-//                        Actions.run(getShowActorsRunnableWithSFX(nextButton, SFXLibrary.NEXT_LEVEL))
-//                )
-//        );
+
+        if (world.getCurrentRunTotalScore() > world.getHighScore()) {
+            totalScoreScore.setColor(Color.GOLD);
+            baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.HIGH_SCORE_BEAT, totalScoreLabel, totalScoreScore)));
+            baseScoreSequence.addAction(Actions.delay(2.5f));
+        } else {
+            totalScoreScore.setColor(Color.WHITE);
+            baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, totalScoreLabel, totalScoreScore)));
+            baseScoreSequence.addAction(Actions.delay(1f));
+
+        }
+        baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, nextButton)));
+
+        stage.addAction(baseScoreSequence);
+
         landingSpeedScore.setText(getLeftPaddedString(Integer.toString(score.speedScore)));
         landingAngleScore.setText(getLeftPaddedString(Integer.toString(score.angleScore)));
         landingAccuracyScore.setText(getLeftPaddedString(Integer.toString(score.accuracyScore)));
-        totalScoreScore.setText(getLeftPaddedString(Integer.toString(totalScore)));
+        totalScoreScore.setText(getLeftPaddedString(Integer.toString(world.getCurrentRunTotalScore())));
         fuelLeftPercent.setText(getLeftPaddedString(String.format("%.2f%%", score.fuelLeft * 100)));
         fuelScoreScore.setText(getLeftPaddedString(Integer.toString(score.fuelScore)));
     }

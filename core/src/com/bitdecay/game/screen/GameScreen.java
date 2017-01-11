@@ -121,7 +121,7 @@ public class GameScreen implements Screen, GamePilot {
         int levelScore = score.total();
         System.out.println("SCORE: " + levelScore);
         currentWorld.setLevelScore(currentWorld.getCurrentLevel(), levelScore);
-        scoreMenu.setScore(score, currentWorld.getTotalScore());
+        scoreMenu.setScore(score, currentWorld);
         scoreMenu.visible = true;
         if (currentWorld.hasNextLevel()) {
             scoreMenu.setNextLevelOption();
@@ -146,21 +146,20 @@ public class GameScreen implements Screen, GamePilot {
     @Override
     public void completeWorld() {
 
-        int total = currentWorld.getTotalScore();
+        int total = currentWorld.getCurrentRunTotalScore();
 
-        int oldHighScore = 0;
+        int oldHighScore = currentWorld.getHighScore();
         String scoreKey = currentWorld.getWorldName() + GamePrefs.HIGH_SCORE;
         if (Helm.prefs.contains(scoreKey)) {
             oldHighScore = Helm.prefs.getInteger(scoreKey);
         }
 
         if (total > oldHighScore) {
-            Helm.prefs.putInteger(scoreKey, total);
-            Helm.prefs.flush();
+            currentWorld.setHighScore(Helm.prefs, total);
             System.out.println("Scorer: SAVING NEW SCORE: " + total);
         }
 
-        game.setScreen(new TitleScreen(game));
+        game.setScreen(new WorldSelectScreen(game));
     }
 
     @Override
