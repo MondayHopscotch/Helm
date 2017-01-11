@@ -1,6 +1,9 @@
 package com.bitdecay.game.world;
 
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.Array;
+import com.bitdecay.game.Helm;
+import com.bitdecay.game.prefs.GamePrefs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +22,19 @@ public abstract class LevelWorld {
     }
 
     public abstract String getWorldName();
+
+    public int getHighScore() {
+        return Helm.prefs.getInteger(getScoreKey(), 0);
+    }
+
+    public void setHighScore(Preferences prefs, int total) {
+        prefs.putInteger(getScoreKey(), total);
+        prefs.flush();
+    }
+
+    private String getScoreKey() {
+        return getWorldName() + GamePrefs.HIGH_SCORE;
+    }
 
     public boolean hasNextLevel() {
         return currentLevel + 1 < levels.size;
@@ -41,7 +57,7 @@ public abstract class LevelWorld {
         levelScores.put(level, score);
     }
 
-    public int getTotalScore() {
+    public int getCurrentRunTotalScore() {
         int total = 0;
         for (Integer levelScore : levelScores.values()) {
             total += levelScore;

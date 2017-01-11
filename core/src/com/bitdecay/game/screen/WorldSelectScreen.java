@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
-import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.world.LevelWorld;
 import com.bitdecay.game.world.World1;
 import com.bitdecay.game.world.World2;
@@ -94,7 +93,7 @@ public class WorldSelectScreen implements Screen {
             }
         });
 
-        int worldHighScore = game.prefs.getInteger(world.getWorldName() + GamePrefs.HIGH_SCORE, 0);
+        int worldHighScore = world.getHighScore();
 
         Label worldScoreLabel = new Label(Integer.toString(worldHighScore), skin);
         worldScoreLabel.setAlignment(Align.right);
