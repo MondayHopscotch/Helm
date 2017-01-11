@@ -18,6 +18,8 @@ public abstract class LevelWorld {
         levelScores = new HashMap<>();
     }
 
+    public abstract String getWorldName();
+
     public boolean hasNextLevel() {
         return currentLevel + 1 < levels.size;
     }

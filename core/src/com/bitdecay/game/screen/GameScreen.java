@@ -37,7 +37,7 @@ public class GameScreen implements Screen, GamePilot {
 
     private InputMultiplexer combinedGameInput;
 
-    public GameScreen(Helm game) {
+    public GameScreen(Helm game, LevelWorld world) {
         this.game = game;
 
         levelPlayer = new LevelPlayer(this);
@@ -46,7 +46,8 @@ public class GameScreen implements Screen, GamePilot {
 
         combinedGameInput = new InputMultiplexer(pauseMenu.stage, levelPlayer.getInput());
 
-        currentWorld = new World1();
+        currentWorld = world;
+
         requestRestartLevel();
     }
 

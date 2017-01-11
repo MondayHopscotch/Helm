@@ -71,12 +71,8 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
         //function is: 1/(k+j) * x * (|x|+j)
         // k is the intersection
         // j is the linearity
-        System.out.println("THIS1 linearity: " + linearity + "      intersection " + intersection);
-        System.out.println("THIS1 VECTOR2 IN: " + deltaVector);
         deltaVector.x = (1f / (intersection + linearity)) * deltaVector.x * (Math.abs(deltaVector.x) + linearity);
         deltaVector.y = (1f / (intersection + linearity)) * deltaVector.y * (Math.abs(deltaVector.y) + linearity);
-        System.out.println("THIS1 VECTOR2 OUT: " + deltaVector);
-
     }
 
     private void setSimpleSteeringStartPoint(SteeringControlComponent control) {
