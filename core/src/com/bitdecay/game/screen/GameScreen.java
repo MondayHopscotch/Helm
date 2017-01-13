@@ -179,6 +179,11 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     @Override
+    public boolean isDebug() {
+        return Helm.debug;
+    }
+
+    @Override
     public void render(float delta) {
         if (delta > .5f) {
             delta = .5f;

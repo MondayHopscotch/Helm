@@ -25,4 +25,6 @@ public interface GamePilot {
     void togglePause();
 
     void setTime(float secondsElapsed);
+
+    boolean isDebug();
 }

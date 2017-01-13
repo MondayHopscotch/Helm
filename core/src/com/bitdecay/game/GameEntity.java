@@ -15,6 +15,15 @@ public class GameEntity {
         return components.get(componentClazz) != null;
     }
 
+    public boolean hasComponents(Class<?> ...componentClazzes) {
+        for (Class<?> clazz : componentClazzes) {
+            if (!hasComponent(clazz)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void addComponent(GameComponent component) {
         components.put(component.getClass(), component);
     }

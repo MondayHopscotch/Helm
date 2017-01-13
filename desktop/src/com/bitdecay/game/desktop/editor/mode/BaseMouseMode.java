@@ -1,7 +1,9 @@
-package com.bitdecay.game.desktop.editor;
+package com.bitdecay.game.desktop.editor.mode;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.game.desktop.editor.LevelBuilder;
+import com.bitdecay.game.desktop.editor.MouseButton;
 
 public abstract class BaseMouseMode implements MouseMode {
 

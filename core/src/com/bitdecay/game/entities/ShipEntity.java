@@ -12,6 +12,7 @@ import com.bitdecay.game.component.CollisionGeometryComponent;
 import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.GravityComponent;
 import com.bitdecay.game.component.PlayerCollisionComponent;
+import com.bitdecay.game.component.ProximityComponent;
 import com.bitdecay.game.component.RenderColorComponent;
 import com.bitdecay.game.component.BodyDefComponent;
 import com.bitdecay.game.component.SteeringControlComponent;
@@ -39,6 +40,7 @@ public class ShipEntity extends GameEntity {
         addComponent(new TransformComponent(startPosition, Geom.ROTATION_UP));
         addComponent(new GravityComponent());
 
+        addComponent(new ProximityComponent(0, null));
         addComponent(new CameraFollowComponent());
         addComponent(new RenderColorComponent(Color.WHITE));
     }

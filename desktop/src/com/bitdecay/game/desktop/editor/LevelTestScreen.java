@@ -109,6 +109,11 @@ public class LevelTestScreen implements Screen, GamePilot {
 
     }
 
+    @Override
+    public boolean isDebug() {
+        return true;
+    }
+
     public void setLevel(LevelDefinition level) {
         levelPlayer.loadLevel(level);
     }

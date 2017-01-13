@@ -4,11 +4,13 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.camera.FollowOrthoCamera;
+import com.bitdecay.game.entities.FocusPointEntity;
 import com.bitdecay.game.entities.LandingPlatformEntity;
 import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
@@ -26,7 +28,10 @@ import com.bitdecay.game.system.LandingSystem;
 import com.bitdecay.game.system.MovementSystem;
 import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
+import com.bitdecay.game.system.ProximitySystem;
+import com.bitdecay.game.system.RemoveComponentSystem;
 import com.bitdecay.game.system.TimerSystem;
+import com.bitdecay.game.system.render.DebugFocusPointSystem;
 import com.bitdecay.game.system.render.RenderBodySystem;
 import com.bitdecay.game.system.render.RenderBoostSystem;
 import com.bitdecay.game.system.render.RenderFuelSystem;
@@ -107,8 +112,10 @@ public class LevelPlayer {
         CollisionAlignmentSystem collisionAlignmentSystem = new CollisionAlignmentSystem(pilot);
         CollisionSystem collisionSystem = new CollisionSystem(pilot);
         PlayerCollisionHandlerSystem playerCollisionSystem = new PlayerCollisionHandlerSystem(pilot);
+        ProximitySystem proximitySystem = new ProximitySystem(pilot);
 
         DelayedAddSystem delaySystem = new DelayedAddSystem(pilot);
+        RemoveComponentSystem removeComponentSystem = new RemoveComponentSystem(pilot);
 
         LandingSystem landingSystem = new LandingSystem(pilot);
 
@@ -129,7 +136,9 @@ public class LevelPlayer {
         gameSystems.add(collisionAlignmentSystem);
         gameSystems.add(collisionSystem);
         gameSystems.add(playerCollisionSystem);
+        gameSystems.add(proximitySystem);
         gameSystems.add(delaySystem);
+        gameSystems.add(removeComponentSystem);
         gameSystems.add(playerBoundarySystem);
         gameSystems.add(crashSystem);
         gameSystems.add(landingSystem);
@@ -145,6 +154,11 @@ public class LevelPlayer {
 
         RenderSteeringSystem renderSteeringSystem = new RenderSteeringSystem(pilot, screenCam, shapeRenderer);
         screenRenderSystems.add(renderSteeringSystem);
+
+        if (pilot.isDebug()) {
+            DebugFocusPointSystem debugFocusPointSystem = new DebugFocusPointSystem(pilot, shapeRenderer);
+            gameRenderSystems.add(debugFocusPointSystem);
+        }
     }
 
     public void resetAllButInputSystems() {
@@ -171,6 +185,11 @@ public class LevelPlayer {
         if (levelDef.finishPlatform.area() > 0) {
             LandingPlatformEntity plat = new LandingPlatformEntity(levelDef.finishPlatform);
             allEntities.add(plat);
+        }
+
+        for (Circle focus: levelDef.focusPoints) {
+            FocusPointEntity focusPoint = new FocusPointEntity(focus);
+            allEntities.add(focusPoint);
         }
 
         ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
