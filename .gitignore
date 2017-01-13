@@ -72,3 +72,5 @@ Thumbs.db
 ## Other local files
 /misc/Bfxr_WIN/
 
+## Built files
+*.apk

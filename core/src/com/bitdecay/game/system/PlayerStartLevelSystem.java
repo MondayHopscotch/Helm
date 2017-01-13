@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.collision.CollisionKind;
+import com.bitdecay.game.component.BoostControlComponent;
 import com.bitdecay.game.component.BoosterComponent;
 import com.bitdecay.game.component.CollisionKindComponent;
 import com.bitdecay.game.component.DelayedAddComponent;
@@ -13,6 +14,8 @@ import com.bitdecay.game.component.SteeringControlComponent;
 import com.bitdecay.game.component.TimerComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.component.ShipLaunchComponent;
+import com.bitdecay.game.input.ActiveTouch;
+import com.bitdecay.game.input.TouchTracker;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
 
@@ -29,6 +32,7 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
     boolean launch = false;
     private float PLAYER_BOOST_STRENGTH = 25;
 
+    private TouchTracker touches = new TouchTracker(5);
 
     public PlayerStartLevelSystem(GamePilot pilot) {
         super(pilot);
@@ -37,56 +41,61 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
 
-        entityWaiting = true;
+        BoostControlComponent boostInput = entity.getComponent(BoostControlComponent.class);
 
-        if (!launch) {
-            return;
+        boolean launchTouchFound = false;
+
+        for (ActiveTouch touch : touches.activeTouches) {
+            if (boostInput.activeArea.contains(touch.startingLocation)) {
+                launchTouchFound = true;
+            }
         }
 
-        entity.removeComponent(ShipLaunchComponent.class);
-        entityWaiting = false;
-        launch = false;
+        if (launchTouchFound) {
+            entity.removeComponent(ShipLaunchComponent.class);
 
-        // remove player input so the ship doesn't start pointing some weird direction
-        SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
-        steering.angle = SteeringControlComponent.ANGLE_NOT_SET;
+            // reset player input so the ship doesn't start pointing some weird direction
+            SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
+            steering.angle = SteeringControlComponent.ANGLE_NOT_SET;
 
-        VelocityComponent velocity = new VelocityComponent();
-        velocity.currentVelocity.set(LAUNCH_VELOCITY);
-        entity.addComponent(velocity);
+            VelocityComponent velocity = new VelocityComponent();
+            velocity.currentVelocity.set(LAUNCH_VELOCITY);
+            entity.addComponent(velocity);
 
-        TimerComponent timer = new TimerComponent();
-        entity.addComponent(timer);
+            TimerComponent timer = new TimerComponent();
+            entity.addComponent(timer);
 
-        DelayedAddComponent.DelayedAdd boosterDelay = new DelayedAddComponent.DelayedAdd(new BoosterComponent(PLAYER_BOOST_STRENGTH), PLAYER_CONTROL_DELAY);
-        DelayedAddComponent.DelayedAdd collisionDelay = new DelayedAddComponent.DelayedAdd(new CollisionKindComponent(CollisionKind.PLAYER), PLAYER_CONTROL_DELAY);
-        DelayedAddComponent.DelayedAdd steeringDelay = new DelayedAddComponent.DelayedAdd(new SteeringComponent(), PLAYER_CONTROL_DELAY / 2);
+            DelayedAddComponent.DelayedAdd boosterDelay = new DelayedAddComponent.DelayedAdd(new BoosterComponent(PLAYER_BOOST_STRENGTH), PLAYER_CONTROL_DELAY);
+            DelayedAddComponent.DelayedAdd collisionDelay = new DelayedAddComponent.DelayedAdd(new CollisionKindComponent(CollisionKind.PLAYER), PLAYER_CONTROL_DELAY);
+            DelayedAddComponent.DelayedAdd steeringDelay = new DelayedAddComponent.DelayedAdd(new SteeringComponent(), PLAYER_CONTROL_DELAY / 2);
 
-        entity.addComponent(new DelayedAddComponent(boosterDelay, collisionDelay, steeringDelay));
-        pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_LAUNCH);
+            entity.addComponent(new DelayedAddComponent(boosterDelay, collisionDelay, steeringDelay));
+            pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_LAUNCH);
+        }
     }
 
     @Override
     public boolean canActOn(GameEntity entity) {
         return entity.hasComponent(ShipLaunchComponent.class) &&
-                entity.hasComponent(SteeringControlComponent.class);
+                entity.hasComponent(SteeringControlComponent.class) &&
+                entity.hasComponent(BoostControlComponent.class);
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (entityWaiting) {
-            launch = true;
-        }
+        touches.touchDown(screenX, screenY, pointer, button);
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        touches.touchUp(screenX, screenY, pointer, button);
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        touches.touchDragged(screenX, screenY, pointer);
         return false;
     }
 

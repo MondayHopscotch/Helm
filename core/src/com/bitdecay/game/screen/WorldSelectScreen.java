@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
@@ -55,7 +56,7 @@ public class WorldSelectScreen implements Screen {
         totalHighScoreValue.setFontScale(game.fontScale);
         totalHighScoreValue.setAlignment(Align.right);
 
-        worldTable.add(totalHighScoreLabel);
+        worldTable.add(totalHighScoreLabel).colspan(2);
         worldTable.add(totalHighScoreValue);
 
         mainTable.add(worldTable).width(Gdx.graphics.getWidth() * 0.5f);
@@ -83,15 +84,25 @@ public class WorldSelectScreen implements Screen {
     }
 
     private int buildWorldRow(final LevelWorld world, Table table) {
-        Label worldNameLabel = new Label(world.getWorldName(), skin);
-        worldNameLabel.setAlignment(Align.left);
-        worldNameLabel.setFontScale(game.fontScale);
-        worldNameLabel.addListener(new ClickListener() {
+        ClickListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen(game, world));
             }
-        });
+        };
+
+        TextButton goButton = new TextButton("Go!", skin);
+        goButton.getLabel().setFontScale(game.fontScale);
+        goButton.addListener(listener);
+
+        Label worldNameLabel = new Label(world.getWorldName(), skin);
+        worldNameLabel.setAlignment(Align.left);
+        worldNameLabel.setFontScale(game.fontScale);
+
+//        TextButton worldNameLabel = new TextButton(world.getWorldName(), skin);
+//        worldNameLabel.getLabel().setFontScale(game.fontScale);
+//        worldNameLabel.align(Align.left);
+        worldNameLabel.addListener(listener);
 
         int worldHighScore = world.getHighScore();
 
@@ -99,7 +110,8 @@ public class WorldSelectScreen implements Screen {
         worldScoreLabel.setAlignment(Align.right);
         worldScoreLabel.setFontScale(game.fontScale);
 
-        table.add(worldNameLabel).expandX().fillX();
+        table.add(goButton).expand(false, false);
+        table.add(worldNameLabel).expandX();
         table.add(worldScoreLabel);
         table.row().padTop(game.fontScale * 10);
         return worldHighScore;

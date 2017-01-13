@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.GamePilot;
@@ -45,6 +46,17 @@ public class PauseMenu {
         pauseMenu.add(pauseDisplayLabel).center();
         pauseMenu.setVisible(false);
         pauseMenu.addListener(pauseListener);
+
+        TextButton quitButton = new TextButton("Abandon Current Run", pilot.getHelm().skin);
+        quitButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
+        quitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                pilot.completeWorld();
+            }
+        });
+        pauseMenu.row();
+        pauseMenu.add(quitButton).center();
 
         Label pauseButtonLabel = new Label("...", pilot.getHelm().skin);
         pauseButtonLabel.setFontScale(pilot.getHelm().fontScale);
