@@ -1,6 +1,8 @@
 package com.bitdecay.game.system;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
@@ -14,6 +16,9 @@ import com.bitdecay.game.input.TouchTracker;
  * Created by Monday on 12/16/2016.
  */
 public class SteeringInputSystem extends AbstractIteratingGameSystem implements InputProcessor {
+
+    private static final int REFERENCE_SCREEN_WIDTH = 1920;
+    private static final int REFERENCE_SCREEN_HEIGHT = 1080;
 
     public static int BASE_JOYSTICK_SENSITIVITY = 75;
 
@@ -60,11 +65,27 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
                     // swipe steering
                     int sensitivity = BASE_LINEARITY - prefSensitivity;
                     Vector2 deltaVector = touch.currentLocation.cpy().sub(touch.lastLocation);
+                    scaleBasedOnScreenSize(deltaVector);
                     accelerate(deltaVector, sensitivity, BASE_INTERSECTION);
                     control.angle -= deltaVector.x / sensitivity;
+
+                    if (control.angle != SteeringControlComponent.ANGLE_NOT_SET) {
+                        while (control.angle > MathUtils.PI2) {
+                            control.angle -= MathUtils.PI2;
+                        }
+
+                        while (control.angle < 0) {
+                            control.angle += MathUtils.PI2;
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private void scaleBasedOnScreenSize(Vector2 deltaVector) {
+        deltaVector.x = deltaVector.x / Gdx.graphics.getWidth() * REFERENCE_SCREEN_WIDTH;
+        deltaVector.y = deltaVector.y / Gdx.graphics.getHeight() * REFERENCE_SCREEN_HEIGHT;
     }
 
     private void accelerate(Vector2 deltaVector, int linearity, float intersection) {

@@ -55,6 +55,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         float radsAwayFromStraightUp = Math.abs(transform.angle - Geom.ROTATION_UP);
 
         System.out.println("LANDING VECTOR: " + velocity.currentVelocity);
+        System.out.println("LANDING ANGLE: " + radsAwayFromStraightUp);
         if (Math.abs(velocity.currentVelocity.y) > MAX_LANDING_SPEED ||
                 radsAwayFromStraightUp > MAX_LANDING_ANGLE) {
             entity.addComponent(new CrashComponent());
