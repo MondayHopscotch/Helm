@@ -6,6 +6,9 @@ import com.bitdecay.game.Helm;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
+		if (arg.length > 0) {
+			Helm.debug = true;
+		}
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1600;
 		config.height = 900;

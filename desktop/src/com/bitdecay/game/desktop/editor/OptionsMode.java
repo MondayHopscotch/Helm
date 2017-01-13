@@ -7,6 +7,7 @@ public enum OptionsMode {
     DRAW_LANDING("Draw Landing", EditorKeys.LANDING_MODE),
     PLACE_START("Place Start", EditorKeys.START_MODE),
     SET_FUEL("Set Fuel", EditorKeys.SET_FUEL),
+    ADD_FOCUS("Add Focal Point", EditorKeys.ADD_FOCUS),
 
     SAVE_LEVEL("Save", EditorKeys.SAVE),
     LOAD_LEVEL("Load", EditorKeys.LOAD);

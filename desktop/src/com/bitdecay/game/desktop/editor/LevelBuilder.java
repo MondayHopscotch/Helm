@@ -1,5 +1,6 @@
 package com.bitdecay.game.desktop.editor;
 
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -14,37 +15,13 @@ import java.util.ArrayList;
 public class LevelBuilder {
 
     public ArrayList<LineSegment> lines = new ArrayList<>();
+    public ArrayList<Circle> focusPoints = new ArrayList<>();
     public Rectangle landingPlat;
     public Vector2 startPoint;
     public int startingFuel = 300;
 
-    public void addLineSegment(Vector2 start, Vector2 end) {
-        for (LineSegment line : lines) {
-            if (line.startPoint.equals(start) && line.endPoint.equals(end)) {
-                // same line
-                return;
-            } else if (line.startPoint.equals(end) && line.endPoint.equals(start)) {
-                // same line
-                return;
-            }
-        }
-
-        lines.add(new LineSegment(start, end));
-    }
-
-    public LevelDefinition build() {
-        LevelDefinition level = new LevelDefinition();
-        level.levelLines = new Array<>(lines.size());
-        for (LineSegment line : lines) {
-            level.levelLines.add(line);
-        }
-
-        level.startPosition = new Vector2(startPoint);
-        level.finishPlatform = new Rectangle(landingPlat);
-
-        level.startingFuel = startingFuel;
-
-        return level;
+    public void setStartPoint(Vector2 point) {
+        startPoint = new Vector2(point);
     }
 
     public void setLandingPlatform(Vector2 startPoint, Vector2 endPoint) {
@@ -60,8 +37,26 @@ public class LevelBuilder {
         }
     }
 
-    public void setStartPoint(Vector2 point) {
-        startPoint = new Vector2(point);
+    public void addLineSegment(Vector2 start, Vector2 end) {
+        for (LineSegment line : lines) {
+            if (line.startPoint.equals(start) && line.endPoint.equals(end)) {
+                // same line
+                return;
+            } else if (line.startPoint.equals(end) && line.endPoint.equals(start)) {
+                // same line
+                return;
+            }
+        }
+
+        lines.add(new LineSegment(start, end));
+    }
+
+    public void removeLineSegment(LineSegment line) {
+        lines.remove(line);
+    }
+
+    public void addFocusPoint(Vector2 startPoint, float radius) {
+        focusPoints.add(new Circle(startPoint, radius));
     }
 
     public void setLevel(LevelDefinition level) {
@@ -77,11 +72,26 @@ public class LevelBuilder {
         landingPlat = level.finishPlatform;
     }
 
-    public void removeLineSegment(LineSegment line) {
-        lines.remove(line);
-    }
-
     public boolean isLevelValid() {
         return landingPlat != null && startPoint != null;
+    }
+
+    public LevelDefinition build() {
+        LevelDefinition level = new LevelDefinition();
+        level.levelLines = new Array<>(lines.size());
+        for (LineSegment line : lines) {
+            level.levelLines.add(line);
+        }
+
+        for (Circle focalPoint : focusPoints) {
+            level.focusPoints.add(focalPoint);
+        }
+
+        level.startPosition = new Vector2(startPoint);
+        level.finishPlatform = new Rectangle(landingPlat);
+
+        level.startingFuel = startingFuel;
+
+        return level;
     }
 }

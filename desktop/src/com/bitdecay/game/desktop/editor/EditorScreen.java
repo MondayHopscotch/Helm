@@ -7,9 +7,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.bitdecay.game.desktop.editor.file.FileUtils;
+import com.bitdecay.game.desktop.editor.mode.DeleteSegmentMouseMode;
+import com.bitdecay.game.desktop.editor.mode.FocusPointMouseMode;
+import com.bitdecay.game.desktop.editor.mode.LandingPlatMouseMode;
+import com.bitdecay.game.desktop.editor.mode.LineSegmentMouseMode;
+import com.bitdecay.game.desktop.editor.mode.StartPointMouseMode;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
@@ -36,9 +42,9 @@ public class EditorScreen extends InputAdapter implements Screen {
     OrthographicCamera camera;
     ShapeRenderer shaper;
 
-    private Map<OptionsMode, MouseMode> mouseModes;
-    private MouseMode mouseMode;
-    private final NoOpMouseMode noOpMouseMode = new NoOpMouseMode();
+    private Map<OptionsMode, com.bitdecay.game.desktop.editor.mode.MouseMode> mouseModes;
+    private com.bitdecay.game.desktop.editor.mode.MouseMode mouseMode;
+    private final com.bitdecay.game.desktop.editor.mode.NoOpMouseMode noOpMouseMode = new com.bitdecay.game.desktop.editor.mode.NoOpMouseMode();
 
     private LevelBuilder builder = new LevelBuilder();
     private HelmEditor editor;
@@ -58,6 +64,7 @@ public class EditorScreen extends InputAdapter implements Screen {
         mouseModes.put(OptionsMode.DELETE_LINE, new DeleteSegmentMouseMode(builder));
         mouseModes.put(OptionsMode.DRAW_LANDING, new LandingPlatMouseMode(builder));
         mouseModes.put(OptionsMode.PLACE_START, new StartPointMouseMode(builder));
+        mouseModes.put(OptionsMode.ADD_FOCUS, new FocusPointMouseMode(builder));
 
         Gdx.input.setInputProcessor(this);
     }
@@ -97,6 +104,14 @@ public class EditorScreen extends InputAdapter implements Screen {
         shaper.setColor(Color.GREEN);
         if (builder.landingPlat != null) {
             shaper.rect(builder.landingPlat.x, builder.landingPlat.y, builder.landingPlat.width, builder.landingPlat.height);
+        }
+
+        shaper.setColor(Color.PINK);
+        if (builder.focusPoints != null) {
+            for (Circle focalPoint : builder.focusPoints) {
+                shaper.circle(focalPoint.x, focalPoint.y, focalPoint.radius);
+            }
+
         }
     }
 

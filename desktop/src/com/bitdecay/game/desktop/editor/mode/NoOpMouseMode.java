@@ -1,13 +1,13 @@
-package com.bitdecay.game.desktop.editor;
+package com.bitdecay.game.desktop.editor.mode;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.game.desktop.editor.MouseButton;
 
 /**
  * Created by Monday on 11/8/2015.
  */
-public class NoOpMouseMode implements MouseMode {
+public class NoOpMouseMode implements com.bitdecay.game.desktop.editor.mode.MouseMode {
     @Override
     public void mouseDown(Vector2 point, MouseButton button) {
 

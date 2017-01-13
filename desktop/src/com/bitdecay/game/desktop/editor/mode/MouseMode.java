@@ -1,7 +1,8 @@
-package com.bitdecay.game.desktop.editor;
+package com.bitdecay.game.desktop.editor.mode;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.game.desktop.editor.MouseButton;
 
 public interface MouseMode {
     void mouseDown(Vector2 point, MouseButton button);

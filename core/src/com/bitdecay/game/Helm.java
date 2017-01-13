@@ -14,6 +14,7 @@ import com.bitdecay.game.sound.SFXLibrary;
 public class Helm extends Game {
 
     public static Preferences prefs;
+    public static boolean debug;
 
     public AssetManager assets;
     public Skin skin;
