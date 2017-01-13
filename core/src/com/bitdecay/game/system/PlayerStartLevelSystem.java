@@ -27,9 +27,6 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
     private static final Vector2 LAUNCH_VELOCITY = new Vector2(0, 5);
     private static final float PLAYER_CONTROL_DELAY = .7f;
 
-    // the use of this boolean hinges on there only being a single entity this system operates on
-    boolean entityWaiting = false;
-    boolean launch = false;
     private float PLAYER_BOOST_STRENGTH = 25;
 
     private TouchTracker touches = new TouchTracker(5);
