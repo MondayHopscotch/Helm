@@ -39,6 +39,7 @@ public class TouchTracker {
                 touch.currentLocation.x = screenX;
                 // workstation transform on the y
                 touch.currentLocation.y = Gdx.graphics.getHeight() - screenY;
+                touch.captureDelta();
             }
         }
         return false;

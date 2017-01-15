@@ -27,6 +27,8 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
 
     TouchTracker tracker = new TouchTracker(5);
 
+    Vector2 deltaVector = new Vector2();
+
     private Vector2 simpleSteeringStartVector = new Vector2();
 
     public SteeringInputSystem(GamePilot pilot) {
@@ -63,8 +65,8 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
                     }
                 } else {
                     // swipe steering
+                    touch.consumeDeltaInto(deltaVector);
                     int sensitivity = BASE_LINEARITY - prefSensitivity;
-                    Vector2 deltaVector = touch.currentLocation.cpy().sub(touch.lastLocation);
                     scaleBasedOnScreenSize(deltaVector);
                     accelerate(deltaVector, sensitivity, BASE_INTERSECTION);
                     control.angle -= deltaVector.x / sensitivity;

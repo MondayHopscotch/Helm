@@ -11,6 +11,7 @@ public class ActiveTouch {
     public Vector2 startingLocation = new Vector2();
     public Vector2 lastLocation = new Vector2();
     public Vector2 currentLocation = new Vector2();
+    public Vector2 lastDelta = new Vector2();
 
     public ActiveTouch(int pointerNum, int screenX, int screenY) {
         this.pointerNum = pointerNum;
@@ -20,5 +21,15 @@ public class ActiveTouch {
         lastLocation.y = screenY;
         currentLocation.x = screenX;
         currentLocation.y = screenY;
+    }
+
+    public void captureDelta() {
+        lastDelta.set(currentLocation).sub(lastLocation);
+    }
+
+    public void consumeDeltaInto(Vector2 into) {
+        into.x = lastDelta.x;
+        into.y = lastDelta.y;
+        lastDelta.set(Vector2.Zero);
     }
 }

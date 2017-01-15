@@ -13,12 +13,12 @@ import java.util.Map;
  */
 public abstract class LevelWorld {
     Array<LevelDefinition> levels;
-    Map<LevelDefinition, Integer> levelScores;
+    Map<LevelDefinition, LevelRun> levelRuns;
     int currentLevel = 0;
 
     protected LevelWorld(int levelCount) {
         levels = new Array<>(levelCount);
-        levelScores = new HashMap<>();
+        levelRuns = new HashMap<>();
     }
 
     public abstract String getWorldName();
@@ -27,13 +27,26 @@ public abstract class LevelWorld {
         return Helm.prefs.getInteger(getScoreKey(), 0);
     }
 
-    public void setHighScore(Preferences prefs, int total) {
-        prefs.putInteger(getScoreKey(), total);
-        prefs.flush();
+    public float getBestTime() {
+        return Helm.prefs.getFloat(getTimeKey(), Float.POSITIVE_INFINITY);
     }
 
-    private String getScoreKey() {
+    public void saveHighScore(int total) {
+        Helm.prefs.putInteger(getScoreKey(), total);
+        Helm.prefs.flush();
+    }
+
+    public void saveBestTime(float time) {
+        Helm.prefs.putFloat(getTimeKey(), time);
+        Helm.prefs.flush();
+    }
+
+    public String getScoreKey() {
         return getWorldName() + GamePrefs.HIGH_SCORE;
+    }
+
+    public String getTimeKey() {
+        return getWorldName() + GamePrefs.BEST_TIME;
     }
 
     public boolean hasNextLevel() {
@@ -54,15 +67,65 @@ public abstract class LevelWorld {
     }
 
     public void setLevelScore(LevelDefinition level, int score) {
-        levelScores.put(level, score);
+        if (!levelRuns.containsKey(level)) {
+            levelRuns.put(level, new LevelRun());
+        }
+        levelRuns.get(level).score = score;
+    }
+
+    public void setLevelTime(LevelDefinition level, float time) {
+        if (!levelRuns.containsKey(level)) {
+            levelRuns.put(level, new LevelRun());
+        }
+        levelRuns.get(level).time = time;
     }
 
     public int getCurrentRunTotalScore() {
         int total = 0;
-        for (Integer levelScore : levelScores.values()) {
-            total += levelScore;
+        for (LevelRun levelRun : levelRuns.values()) {
+            total += levelRun.score;
         }
         return total;
+    }
 
+    public float getCurrentRunTotalTime() {
+        float total = 0;
+        for (LevelRun levelRun : levelRuns.values()) {
+            total += levelRun.time;
+        }
+        return total;
+    }
+
+    public void maybeSaveNewRecords() {
+        int total = getCurrentRunTotalScore();
+
+        int oldHighScore = getHighScore();
+        String scoreKey = getWorldName() + GamePrefs.HIGH_SCORE;
+        if (Helm.prefs.contains(scoreKey)) {
+            oldHighScore = Helm.prefs.getInteger(scoreKey);
+        }
+
+        if (total > oldHighScore) {
+            saveHighScore(total);
+            System.out.println("Scorer: SAVING NEW SCORE: " + total);
+        }
+
+        float runTime = getCurrentRunTotalTime();
+
+        float oldBestTime = getBestTime();
+        String timeKey = getTimeKey();
+        if (Helm.prefs.contains(timeKey)) {
+            oldBestTime = Helm.prefs.getFloat(timeKey);
+        }
+
+        if (runTime < oldBestTime) {
+            saveBestTime(runTime);
+            System.out.println("Scorer: SAVING NEW BEST TIME: " + runTime);
+        }
+    }
+
+    private class LevelRun {
+        int score;
+        float time;
     }
 }
