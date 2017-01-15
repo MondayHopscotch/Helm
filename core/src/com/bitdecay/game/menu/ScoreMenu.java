@@ -14,9 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
+import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.world.LevelWorld;
 
 /**
@@ -41,14 +43,18 @@ public class ScoreMenu {
     private Label landingAccuracyLabel;
     private Label landingAccuracyScore;
 
-    private Label totalScoreLabel;
-    private Label totalScoreScore;
-
     private Label fuelLeftLabel;
-    private Label fuelLeftPercent;
 
     private Label fuelScoreLabel;
+
     private Label fuelScoreScore;
+    private Label fuelLeftPercent;
+
+    private Label totalTimeLabel;
+    private Label totalTimeValue;
+
+    private Label totalScoreLabel;
+    private Label totalScoreScore;
 
     private final TextButton nextButton;
 
@@ -142,10 +148,22 @@ public class ScoreMenu {
         totalScoreScore.setFontScale(pilot.getHelm().fontScale);
         totalScoreScore.setAlignment(Align.right);
         totalScoreScore.setOrigin(Align.right);
-        totalScoreScore.setColor(Color.LIGHT_GRAY);
 
         scoreTable.add(totalScoreLabel).padRight(100);
         scoreTable.add(totalScoreScore).growX();
+        scoreTable.row();
+
+        totalTimeLabel = new Label(getLeftPaddedString("Total Time:"), skin);
+        totalTimeLabel.setFontScale(pilot.getHelm().fontScale);
+        totalTimeLabel.setAlignment(Align.right);
+
+        totalTimeValue = new Label("----", skin);
+        totalTimeValue.setFontScale(pilot.getHelm().fontScale);
+        totalTimeValue.setAlignment(Align.right);
+        totalTimeValue.setOrigin(Align.right);
+
+        scoreTable.add(totalTimeLabel).padRight(100);
+        scoreTable.add(totalTimeValue).growX();
         scoreTable.row();
 
         nextLevelAction = new ClickListener() {
@@ -224,13 +242,36 @@ public class ScoreMenu {
                 Actions.delay(1f)
         );
 
+        boolean setNewRecord = false;
         if (world.getHighScore() > 0 && world.getCurrentRunTotalScore() > world.getHighScore()) {
             totalScoreScore.setColor(Color.GOLD);
-            baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.HIGH_SCORE_BEAT, totalScoreLabel, totalScoreScore)));
-            baseScoreSequence.addAction(Actions.delay(2.5f));
+            setNewRecord = true;
         } else {
             totalScoreScore.setColor(Color.WHITE);
-            baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, totalScoreLabel, totalScoreScore)));
+        }
+
+        if (world.getBestTime() != GamePrefs.TIME_NOT_SET && world.getCurrentRunTotalTime() < world.getBestTime()) {
+            totalTimeValue.setColor(Color.GOLD);
+            setNewRecord = true;
+        } else {
+            totalTimeValue.setColor(Color.WHITE);
+        }
+
+        if (setNewRecord) {
+            baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.HIGH_SCORE_BEAT,
+                    totalScoreLabel,
+                    totalScoreScore,
+                    totalTimeLabel,
+                    totalTimeValue
+            )));
+            baseScoreSequence.addAction(Actions.delay(2f));
+        } else {
+            baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL,
+                    totalScoreLabel,
+                    totalScoreScore,
+                    totalTimeLabel,
+                    totalTimeValue
+            )));
             baseScoreSequence.addAction(Actions.delay(1f));
 
         }
@@ -241,9 +282,10 @@ public class ScoreMenu {
         landingSpeedScore.setText(getLeftPaddedString(Integer.toString(score.speedScore)));
         landingAngleScore.setText(getLeftPaddedString(Integer.toString(score.angleScore)));
         landingAccuracyScore.setText(getLeftPaddedString(Integer.toString(score.accuracyScore)));
-        totalScoreScore.setText(getLeftPaddedString(Integer.toString(world.getCurrentRunTotalScore())));
         fuelLeftPercent.setText(getLeftPaddedString(String.format("%.2f%%", score.fuelLeft * 100)));
         fuelScoreScore.setText(getLeftPaddedString(Integer.toString(score.fuelScore)));
+        totalTimeValue.setText(TimerUtils.getFormattedTime(world.getCurrentRunTotalTime()));
+        totalScoreScore.setText(getLeftPaddedString(Integer.toString(world.getCurrentRunTotalScore())));
     }
 
     private Runnable getShowActorsRunnable(final Actor... actors) {
@@ -276,6 +318,8 @@ public class ScoreMenu {
         fuelScoreScore.setVisible(false);
         totalScoreLabel.setVisible(false);
         totalScoreScore.setVisible(false);
+        totalTimeLabel.setVisible(false);
+        totalTimeValue.setVisible(false);
         nextButton.setVisible(false);
     }
 

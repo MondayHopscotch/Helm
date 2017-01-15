@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.prefs.GamePrefs;
+import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.world.LevelWorld;
 import com.bitdecay.game.world.World1;
 import com.bitdecay.game.world.World2;
@@ -30,6 +32,9 @@ public class WorldSelectScreen implements Screen {
         this.game = game;
 
         stage = new Stage();
+        if (Helm.debug) {
+            stage.setDebugAll(true);
+        }
         skin = game.skin;
 
         LevelWorld[] worlds = new LevelWorld[] {
@@ -42,13 +47,19 @@ public class WorldSelectScreen implements Screen {
         mainTable.setFillParent(true);
 
         int totalHighScore = 0;
+        float totalBestTime = 0;
 
         Table worldTable = new Table();
         for (LevelWorld world : worlds) {
-            totalHighScore += buildWorldRow(world, worldTable);
+            buildWorldRow(world, worldTable);
+            totalHighScore += world.getHighScore();
+
+            if (world.getBestTime() != GamePrefs.TIME_NOT_SET) {
+                totalBestTime += world.getBestTime();
+            }
         }
 
-        Label totalHighScoreLabel = new Label("Total Score: ", skin);
+        Label totalHighScoreLabel = new Label("Totals: ", skin);
         totalHighScoreLabel.setFontScale(game.fontScale);
         totalHighScoreLabel.setAlignment(Align.right);
 
@@ -56,10 +67,15 @@ public class WorldSelectScreen implements Screen {
         totalHighScoreValue.setFontScale(game.fontScale);
         totalHighScoreValue.setAlignment(Align.right);
 
+        Label totalBestTimeValue = new Label(TimerUtils.getFormattedTime(totalBestTime), skin);
+        totalBestTimeValue.setFontScale(game.fontScale);
+        totalBestTimeValue.setAlignment(Align.right);
+
         worldTable.add(totalHighScoreLabel).colspan(2);
         worldTable.add(totalHighScoreValue);
+        worldTable.add(totalBestTimeValue);
 
-        mainTable.add(worldTable).width(Gdx.graphics.getWidth() * 0.5f);
+        mainTable.add(worldTable).width(Gdx.graphics.getWidth() * 0.8f);
 
         Table returnTable = new Table();
         returnTable.setFillParent(true);
@@ -99,9 +115,6 @@ public class WorldSelectScreen implements Screen {
         worldNameLabel.setAlignment(Align.left);
         worldNameLabel.setFontScale(game.fontScale);
 
-//        TextButton worldNameLabel = new TextButton(world.getWorldName(), skin);
-//        worldNameLabel.getLabel().setFontScale(game.fontScale);
-//        worldNameLabel.align(Align.left);
         worldNameLabel.addListener(listener);
 
         int worldHighScore = world.getHighScore();
@@ -110,9 +123,19 @@ public class WorldSelectScreen implements Screen {
         worldScoreLabel.setAlignment(Align.right);
         worldScoreLabel.setFontScale(game.fontScale);
 
+        float worldTimeScore = world.getBestTime();
+
+        Label worldTimeLabel = new Label(TimerUtils.getFormattedTime(worldTimeScore), skin);
+        if (worldTimeScore == GamePrefs.TIME_NOT_SET) {
+            worldTimeLabel.setText("--");
+        }
+        worldTimeLabel.setAlignment(Align.right);
+        worldTimeLabel.setFontScale(game.fontScale);
+
         table.add(goButton).expand(false, false);
         table.add(worldNameLabel).expandX();
-        table.add(worldScoreLabel);
+        table.add(worldScoreLabel).expandX();
+        table.add(worldTimeLabel);
         table.row().padTop(game.fontScale * 10);
         return worldHighScore;
     }
