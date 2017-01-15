@@ -79,6 +79,11 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
     }
 
     @Override
+    public void reset() {
+        touches = new TouchTracker(5);
+    }
+
+    @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         touches.touchDown(screenX, screenY, pointer, button);
         return false;
