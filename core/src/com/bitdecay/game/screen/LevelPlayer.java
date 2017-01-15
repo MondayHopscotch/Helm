@@ -46,11 +46,15 @@ import com.bitdecay.game.world.LineSegment;
  */
 public class LevelPlayer {
 
-    private static final int BASE_CAM_BUFFER = 500;
-    private GamePilot pilot;
+    public static final float DELTA_STEP = 1/60f;
+    float deltaRemainder;
 
-    OrthographicCamera screenCam;
+    private static final int BASE_CAM_BUFFER = 500;
     FollowOrthoCamera gameCam;
+
+    private GamePilot pilot;
+    OrthographicCamera screenCam;
+
     ShapeRenderer shapeRenderer;
 
     Array<GameSystem> gameSystems = new Array<>(1);
@@ -237,11 +241,15 @@ public class LevelPlayer {
     }
 
     public void update(float delta) {
-        for (GameSystem system : gameSystems) {
-            system.act(allEntities, delta);
+        deltaRemainder += delta;
+        while (deltaRemainder > DELTA_STEP) {
+            deltaRemainder -= DELTA_STEP;
+            for (GameSystem system : gameSystems) {
+                system.act(allEntities, delta);
+            }
+            scaleCamBuffer();
+            gameCam.update(delta);
         }
-        scaleCamBuffer();
-        gameCam.update(delta);
     }
 
     private void scaleCamBuffer() {
