@@ -23,8 +23,9 @@ public enum EditorKeys {
     LANDING_MODE("Draw Landing", false, Input.Keys.NUM_3),
     START_MODE("Place Start", false, Input.Keys.NUM_4),
     ADD_FOCUS("Add Focal Point", false, Input.Keys.NUM_5),
+    REMOVE_FOCUS("Remove Focal Point", false, Input.Keys.NUM_6),
 
-    SET_FUEL("Set Fuel Level", false, Input.Keys.NUM_6),
+    SET_FUEL("Set Fuel Level", false, Input.Keys.NUM_7),
 
     TEST_LEVEL("Test Level", false, Input.Keys.T);
 

@@ -8,6 +8,7 @@ public enum OptionsMode {
     PLACE_START("Place Start", EditorKeys.START_MODE),
     SET_FUEL("Set Fuel", EditorKeys.SET_FUEL),
     ADD_FOCUS("Add Focal Point", EditorKeys.ADD_FOCUS),
+    REMOVE_FOCUS("Remove Focal Point", EditorKeys.REMOVE_FOCUS),
 
     SAVE_LEVEL("Save", EditorKeys.SAVE),
     LOAD_LEVEL("Load", EditorKeys.LOAD);
