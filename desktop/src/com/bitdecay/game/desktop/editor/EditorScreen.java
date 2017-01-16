@@ -62,10 +62,6 @@ public class EditorScreen extends InputAdapter implements Screen {
 
     public EditorScreen(HelmEditor editor) {
         this.editor = editor;
-    }
-
-    @Override
-    public void show() {
         stage = new Stage();
         skin = new Skin(Gdx.files.internal("skin/skin.json"), new TextureAtlas(Gdx.files.internal("skin/ui.atlas")));
 
@@ -82,8 +78,13 @@ public class EditorScreen extends InputAdapter implements Screen {
         mouseModes.put(OptionsMode.PLACE_START, new StartPointMouseMode(builder));
         mouseModes.put(OptionsMode.ADD_FOCUS, new FocusPointMouseMode(builder));
         mouseModes.put(OptionsMode.REMOVE_FOCUS, new DeleteFocusMouseMode(builder));
+    }
 
+    @Override
+    public void show() {
         Gdx.input.setInputProcessor(this);
+        updateOverlay();
+        refitCamera();
     }
 
     private void buildOverlay() {
@@ -295,17 +296,29 @@ public class EditorScreen extends InputAdapter implements Screen {
             yMax = Math.max(yMax, line.endPoint.y);
         }
 
-        xMin = Math.min(xMin, builder.startPoint.x);
-        xMax = Math.max(xMax, builder.startPoint.x);
+        if (builder.startPoint != null) {
+            xMin = Math.min(xMin, builder.startPoint.x);
+            xMax = Math.max(xMax, builder.startPoint.x);
 
-        yMin = Math.min(yMin, builder.startPoint.y);
-        yMax = Math.max(yMax, builder.startPoint.y);
+            yMin = Math.min(yMin, builder.startPoint.y);
+            yMax = Math.max(yMax, builder.startPoint.y);
+        }
 
-        xMin = Math.min(xMin, builder.landingPlat.getCenter(new Vector2()).x);
-        xMax = Math.max(xMax, builder.landingPlat.getCenter(new Vector2()).x);
+        if (builder.landingPlat != null) {
+            xMin = Math.min(xMin, builder.landingPlat.getCenter(new Vector2()).x);
+            xMax = Math.max(xMax, builder.landingPlat.getCenter(new Vector2()).x);
 
-        yMin = Math.min(yMin, builder.landingPlat.getCenter(new Vector2()).y);
-        yMax = Math.max(yMax, builder.landingPlat.getCenter(new Vector2()).y);
+            yMin = Math.min(yMin, builder.landingPlat.getCenter(new Vector2()).y);
+            yMax = Math.max(yMax, builder.landingPlat.getCenter(new Vector2()).y);
+        }
+
+        if (xMin == Float.POSITIVE_INFINITY || xMax == Float.NEGATIVE_INFINITY ||
+                yMin == Float.POSITIVE_INFINITY || yMax == Float.NEGATIVE_INFINITY) {
+            xMin = -1000;
+            xMax = 1000;
+            yMin = -1000;
+            yMax = 1000;
+        }
 
         float centerX = (xMin + xMax) / 2;
         float centerY = (yMin + yMax) / 2;
