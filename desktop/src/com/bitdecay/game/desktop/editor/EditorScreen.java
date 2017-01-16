@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.bitdecay.game.desktop.editor.file.FileUtils;
+import com.bitdecay.game.desktop.editor.mode.DeleteFocusMouseMode;
 import com.bitdecay.game.desktop.editor.mode.DeleteSegmentMouseMode;
 import com.bitdecay.game.desktop.editor.mode.FocusPointMouseMode;
 import com.bitdecay.game.desktop.editor.mode.LandingPlatMouseMode;
@@ -65,6 +66,7 @@ public class EditorScreen extends InputAdapter implements Screen {
         mouseModes.put(OptionsMode.DRAW_LANDING, new LandingPlatMouseMode(builder));
         mouseModes.put(OptionsMode.PLACE_START, new StartPointMouseMode(builder));
         mouseModes.put(OptionsMode.ADD_FOCUS, new FocusPointMouseMode(builder));
+        mouseModes.put(OptionsMode.REMOVE_FOCUS, new DeleteFocusMouseMode(builder));
 
         Gdx.input.setInputProcessor(this);
     }

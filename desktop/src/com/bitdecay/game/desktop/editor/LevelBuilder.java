@@ -59,6 +59,10 @@ public class LevelBuilder {
         focusPoints.add(new Circle(startPoint, radius));
     }
 
+    public void removeFocusPoint(Circle focusPoint) {
+        focusPoints.remove(focusPoint);
+    }
+
     public void setLevel(LevelDefinition level) {
         lines.clear();
         for (LineSegment levelLine : level.levelLines) {

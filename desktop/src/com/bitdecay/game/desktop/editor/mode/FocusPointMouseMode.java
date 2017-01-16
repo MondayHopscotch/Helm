@@ -2,7 +2,6 @@ package com.bitdecay.game.desktop.editor.mode;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.GeometryUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.desktop.editor.LevelBuilder;
 import com.bitdecay.game.desktop.editor.MouseButton;
@@ -11,7 +10,7 @@ import com.bitdecay.game.math.Geom;
 /**
  * Created by Monday on 1/13/2017.
  */
-public class FocusPointMouseMode extends com.bitdecay.game.desktop.editor.mode.BaseMouseMode {
+public class FocusPointMouseMode extends BaseMouseMode {
     public FocusPointMouseMode(LevelBuilder builder) {
         super(builder);
     }
