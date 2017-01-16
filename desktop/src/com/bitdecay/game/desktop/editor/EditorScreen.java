@@ -6,10 +6,16 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.desktop.editor.file.FileUtils;
 import com.bitdecay.game.desktop.editor.mode.DeleteFocusMouseMode;
 import com.bitdecay.game.desktop.editor.mode.DeleteSegmentMouseMode;
@@ -40,6 +46,9 @@ public class EditorScreen extends InputAdapter implements Screen {
     private static final float CAM_ZOOM_SPEED_FAST = .2f;
     private static final int ZOOM_THRESHOLD = 5;
 
+    Stage stage;
+    Skin skin;
+
     OrthographicCamera camera;
     ShapeRenderer shaper;
 
@@ -49,6 +58,7 @@ public class EditorScreen extends InputAdapter implements Screen {
 
     private LevelBuilder builder = new LevelBuilder();
     private HelmEditor editor;
+    private Label levelNameLabel;
 
     public EditorScreen(HelmEditor editor) {
         this.editor = editor;
@@ -56,6 +66,11 @@ public class EditorScreen extends InputAdapter implements Screen {
 
     @Override
     public void show() {
+        stage = new Stage();
+        skin = new Skin(Gdx.files.internal("skin/skin.json"), new TextureAtlas(Gdx.files.internal("skin/ui.atlas")));
+
+        buildOverlay();
+
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         shaper = new ShapeRenderer();
 
@@ -69,6 +84,25 @@ public class EditorScreen extends InputAdapter implements Screen {
         mouseModes.put(OptionsMode.REMOVE_FOCUS, new DeleteFocusMouseMode(builder));
 
         Gdx.input.setInputProcessor(this);
+    }
+
+    private void buildOverlay() {
+        Table levelNameTable = new Table();
+        levelNameTable.setFillParent(true);
+        levelNameTable.align(Align.topRight);
+        levelNameTable.setOrigin(Align.topRight);
+
+        levelNameLabel = new Label("---", skin);
+        levelNameLabel.setOrigin(Align.topRight);
+        levelNameLabel.setAlignment(Align.topRight);
+
+        levelNameTable.add(levelNameLabel).padTop(10).padRight(10);
+
+        stage.addActor(levelNameTable);
+    }
+
+    private void updateOverlay() {
+        levelNameLabel.setText(builder.name);
     }
 
     @Override
@@ -88,6 +122,9 @@ public class EditorScreen extends InputAdapter implements Screen {
         mouseMode.render(shaper);
 
         shaper.end();
+
+        stage.act(delta);
+        stage.draw();
     }
 
     private void drawCurrentBuilder(ShapeRenderer shaper) {
@@ -201,7 +238,12 @@ public class EditorScreen extends InputAdapter implements Screen {
         } else if (OptionsMode.SAVE_LEVEL.equals(mode)) {
             if (builder.isLevelValid()) {
                 LevelDefinition levDef = builder.build();
-                FileUtils.saveLevelToFile(levDef);
+                String fileName = FileUtils.saveLevelToFile(levDef);
+                if (fileName != null) {
+                    // right now you'll have to save twice to get this to persist to file
+                    builder.name = fileName;
+                    updateOverlay();
+                }
             } else {
                 // show a warning or something
                 JOptionPane.showMessageDialog(null, "Level must contain a start and end point");
@@ -211,6 +253,7 @@ public class EditorScreen extends InputAdapter implements Screen {
             if (loadLevel != null) {
                 builder.setLevel(loadLevel);
                 refitCamera();
+                updateOverlay();
             }
         } else if (OptionsMode.SET_FUEL.equals(mode)) {
             String result = JOptionPane.showInputDialog(

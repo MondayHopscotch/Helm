@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.JsonValue;
  * Created by Monday on 12/8/2016.
  */
 public class LevelDefinition {
+    public String name = "";
+
     public Array<LineSegment> levelLines = new Array<>();
 
     public Rectangle finishPlatform = new Rectangle();
