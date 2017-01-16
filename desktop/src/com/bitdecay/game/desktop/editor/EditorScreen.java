@@ -103,7 +103,7 @@ public class EditorScreen extends InputAdapter implements Screen {
     }
 
     private void updateOverlay() {
-        levelNameLabel.setText(builder.name);
+        levelNameLabel.setText(FileUtils.lastTouchedFileName);
     }
 
     @Override
@@ -241,8 +241,6 @@ public class EditorScreen extends InputAdapter implements Screen {
                 LevelDefinition levDef = builder.build();
                 String fileName = FileUtils.saveLevelToFile(levDef);
                 if (fileName != null) {
-                    // right now you'll have to save twice to get this to persist to file
-                    builder.name = fileName;
                     updateOverlay();
                 }
             } else {

@@ -14,7 +14,6 @@ import java.util.ArrayList;
  */
 public class LevelBuilder {
 
-    public String name = "";
     public ArrayList<LineSegment> lines = new ArrayList<>();
     public ArrayList<Circle> focusPoints = new ArrayList<>();
     public Rectangle landingPlat;
@@ -65,8 +64,6 @@ public class LevelBuilder {
     }
 
     public void setLevel(LevelDefinition level) {
-        name = level.name;
-
         lines.clear();
         for (LineSegment levelLine : level.levelLines) {
             lines.add(levelLine);
@@ -85,7 +82,6 @@ public class LevelBuilder {
 
     public LevelDefinition build() {
         LevelDefinition level = new LevelDefinition();
-        level.name = name;
         level.levelLines = new Array<>(lines.size());
         for (LineSegment line : lines) {
             level.levelLines.add(line);
