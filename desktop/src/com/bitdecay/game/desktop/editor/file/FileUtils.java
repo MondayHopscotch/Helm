@@ -48,7 +48,7 @@ public class FileUtils {
                 writer.write(json);
                 writer.flush();
                 writer.close();
-                return json;
+                return fileChooser.getSelectedFile().getName();
             } catch (IOException e) {
                 e.printStackTrace();
             }

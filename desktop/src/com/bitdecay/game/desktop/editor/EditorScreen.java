@@ -6,10 +6,16 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.desktop.editor.file.FileUtils;
 import com.bitdecay.game.desktop.editor.mode.DeleteFocusMouseMode;
 import com.bitdecay.game.desktop.editor.mode.DeleteSegmentMouseMode;
@@ -40,6 +46,9 @@ public class EditorScreen extends InputAdapter implements Screen {
     private static final float CAM_ZOOM_SPEED_FAST = .2f;
     private static final int ZOOM_THRESHOLD = 5;
 
+    Stage stage;
+    Skin skin;
+
     OrthographicCamera camera;
     ShapeRenderer shaper;
 
@@ -49,13 +58,15 @@ public class EditorScreen extends InputAdapter implements Screen {
 
     private LevelBuilder builder = new LevelBuilder();
     private HelmEditor editor;
+    private Label levelNameLabel;
 
     public EditorScreen(HelmEditor editor) {
         this.editor = editor;
-    }
+        stage = new Stage();
+        skin = new Skin(Gdx.files.internal("skin/skin.json"), new TextureAtlas(Gdx.files.internal("skin/ui.atlas")));
 
-    @Override
-    public void show() {
+        buildOverlay();
+
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         shaper = new ShapeRenderer();
 
@@ -67,8 +78,32 @@ public class EditorScreen extends InputAdapter implements Screen {
         mouseModes.put(OptionsMode.PLACE_START, new StartPointMouseMode(builder));
         mouseModes.put(OptionsMode.ADD_FOCUS, new FocusPointMouseMode(builder));
         mouseModes.put(OptionsMode.REMOVE_FOCUS, new DeleteFocusMouseMode(builder));
+    }
 
+    @Override
+    public void show() {
         Gdx.input.setInputProcessor(this);
+        updateOverlay();
+        refitCamera();
+    }
+
+    private void buildOverlay() {
+        Table levelNameTable = new Table();
+        levelNameTable.setFillParent(true);
+        levelNameTable.align(Align.topRight);
+        levelNameTable.setOrigin(Align.topRight);
+
+        levelNameLabel = new Label("---", skin);
+        levelNameLabel.setOrigin(Align.topRight);
+        levelNameLabel.setAlignment(Align.topRight);
+
+        levelNameTable.add(levelNameLabel).padTop(10).padRight(10);
+
+        stage.addActor(levelNameTable);
+    }
+
+    private void updateOverlay() {
+        levelNameLabel.setText(FileUtils.lastTouchedFileName);
     }
 
     @Override
@@ -88,6 +123,9 @@ public class EditorScreen extends InputAdapter implements Screen {
         mouseMode.render(shaper);
 
         shaper.end();
+
+        stage.act(delta);
+        stage.draw();
     }
 
     private void drawCurrentBuilder(ShapeRenderer shaper) {
@@ -201,7 +239,10 @@ public class EditorScreen extends InputAdapter implements Screen {
         } else if (OptionsMode.SAVE_LEVEL.equals(mode)) {
             if (builder.isLevelValid()) {
                 LevelDefinition levDef = builder.build();
-                FileUtils.saveLevelToFile(levDef);
+                String fileName = FileUtils.saveLevelToFile(levDef);
+                if (fileName != null) {
+                    updateOverlay();
+                }
             } else {
                 // show a warning or something
                 JOptionPane.showMessageDialog(null, "Level must contain a start and end point");
@@ -211,6 +252,7 @@ public class EditorScreen extends InputAdapter implements Screen {
             if (loadLevel != null) {
                 builder.setLevel(loadLevel);
                 refitCamera();
+                updateOverlay();
             }
         } else if (OptionsMode.SET_FUEL.equals(mode)) {
             String result = JOptionPane.showInputDialog(
@@ -252,17 +294,29 @@ public class EditorScreen extends InputAdapter implements Screen {
             yMax = Math.max(yMax, line.endPoint.y);
         }
 
-        xMin = Math.min(xMin, builder.startPoint.x);
-        xMax = Math.max(xMax, builder.startPoint.x);
+        if (builder.startPoint != null) {
+            xMin = Math.min(xMin, builder.startPoint.x);
+            xMax = Math.max(xMax, builder.startPoint.x);
 
-        yMin = Math.min(yMin, builder.startPoint.y);
-        yMax = Math.max(yMax, builder.startPoint.y);
+            yMin = Math.min(yMin, builder.startPoint.y);
+            yMax = Math.max(yMax, builder.startPoint.y);
+        }
 
-        xMin = Math.min(xMin, builder.landingPlat.getCenter(new Vector2()).x);
-        xMax = Math.max(xMax, builder.landingPlat.getCenter(new Vector2()).x);
+        if (builder.landingPlat != null) {
+            xMin = Math.min(xMin, builder.landingPlat.getCenter(new Vector2()).x);
+            xMax = Math.max(xMax, builder.landingPlat.getCenter(new Vector2()).x);
 
-        yMin = Math.min(yMin, builder.landingPlat.getCenter(new Vector2()).y);
-        yMax = Math.max(yMax, builder.landingPlat.getCenter(new Vector2()).y);
+            yMin = Math.min(yMin, builder.landingPlat.getCenter(new Vector2()).y);
+            yMax = Math.max(yMax, builder.landingPlat.getCenter(new Vector2()).y);
+        }
+
+        if (xMin == Float.POSITIVE_INFINITY || xMax == Float.NEGATIVE_INFINITY ||
+                yMin == Float.POSITIVE_INFINITY || yMax == Float.NEGATIVE_INFINITY) {
+            xMin = -1000;
+            xMax = 1000;
+            yMin = -1000;
+            yMax = 1000;
+        }
 
         float centerX = (xMin + xMax) / 2;
         float centerY = (yMin + yMax) / 2;
