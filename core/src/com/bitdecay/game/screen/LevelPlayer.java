@@ -83,7 +83,7 @@ public class LevelPlayer {
         gameCam.minZoom = 10;
         gameCam.maxZoom = .2f;
         gameCam.buffer = BASE_CAM_BUFFER;
-        gameCam.snapSpeed = .02f;
+        gameCam.snapSpeed = .1f;
 
         shapeRenderer = new ShapeRenderer();
 
