@@ -13,11 +13,11 @@ import java.util.ArrayList;
  * Created by Monday on 1/16/2017.
  */
 
-public class CameraProximitySystem extends AbstractIteratingGameSystem {
+public class ProximityFocusSystem extends AbstractIteratingGameSystem {
     GameEntity master;
     ArrayList<GameEntity> proximityEntities = new ArrayList<>();
 
-    public CameraProximitySystem(GamePilot pilot) {
+    public ProximityFocusSystem(GamePilot pilot) {
         super(pilot);
     }
 

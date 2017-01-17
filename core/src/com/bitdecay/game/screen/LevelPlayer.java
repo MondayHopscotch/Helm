@@ -16,7 +16,7 @@ import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
 import com.bitdecay.game.system.BoostSystem;
 import com.bitdecay.game.system.BoosterInputSystem;
-import com.bitdecay.game.system.CameraProximitySystem;
+import com.bitdecay.game.system.ProximityFocusSystem;
 import com.bitdecay.game.system.CameraUpdateSystem;
 import com.bitdecay.game.system.CollisionAlignmentSystem;
 import com.bitdecay.game.system.CollisionSystem;
@@ -29,7 +29,7 @@ import com.bitdecay.game.system.LandingSystem;
 import com.bitdecay.game.system.MovementSystem;
 import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
-import com.bitdecay.game.system.ProximityOffsetSystem;
+import com.bitdecay.game.system.ProximityRemovalSystem;
 import com.bitdecay.game.system.RemoveComponentSystem;
 import com.bitdecay.game.system.TimerSystem;
 import com.bitdecay.game.system.render.DebugFocusPointSystem;
@@ -117,8 +117,8 @@ public class LevelPlayer {
         CollisionAlignmentSystem collisionAlignmentSystem = new CollisionAlignmentSystem(pilot);
         CollisionSystem collisionSystem = new CollisionSystem(pilot);
         PlayerCollisionHandlerSystem playerCollisionSystem = new PlayerCollisionHandlerSystem(pilot);
-        ProximityOffsetSystem anchorProximitySystem = new ProximityOffsetSystem(pilot);
-        CameraProximitySystem cameraProximitySystem = new CameraProximitySystem(pilot);
+        ProximityRemovalSystem proximityRemovalSystem = new ProximityRemovalSystem(pilot);
+        ProximityFocusSystem cameraProximitySystem = new ProximityFocusSystem(pilot);
 
         DelayedAddSystem delaySystem = new DelayedAddSystem(pilot);
         RemoveComponentSystem removeComponentSystem = new RemoveComponentSystem(pilot);
@@ -142,7 +142,7 @@ public class LevelPlayer {
         gameSystems.add(collisionAlignmentSystem);
         gameSystems.add(collisionSystem);
         gameSystems.add(playerCollisionSystem);
-        gameSystems.add(anchorProximitySystem);
+        gameSystems.add(proximityRemovalSystem);
         gameSystems.add(cameraProximitySystem);
         gameSystems.add(delaySystem);
         gameSystems.add(removeComponentSystem);
