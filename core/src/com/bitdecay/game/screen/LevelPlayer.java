@@ -16,6 +16,7 @@ import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
 import com.bitdecay.game.system.BoostSystem;
 import com.bitdecay.game.system.BoosterInputSystem;
+import com.bitdecay.game.system.CameraProximitySystem;
 import com.bitdecay.game.system.CameraUpdateSystem;
 import com.bitdecay.game.system.CollisionAlignmentSystem;
 import com.bitdecay.game.system.CollisionSystem;
@@ -28,7 +29,7 @@ import com.bitdecay.game.system.LandingSystem;
 import com.bitdecay.game.system.MovementSystem;
 import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
-import com.bitdecay.game.system.ProximitySystem;
+import com.bitdecay.game.system.ProximityOffsetSystem;
 import com.bitdecay.game.system.RemoveComponentSystem;
 import com.bitdecay.game.system.TimerSystem;
 import com.bitdecay.game.system.render.DebugFocusPointSystem;
@@ -116,7 +117,8 @@ public class LevelPlayer {
         CollisionAlignmentSystem collisionAlignmentSystem = new CollisionAlignmentSystem(pilot);
         CollisionSystem collisionSystem = new CollisionSystem(pilot);
         PlayerCollisionHandlerSystem playerCollisionSystem = new PlayerCollisionHandlerSystem(pilot);
-        ProximitySystem proximitySystem = new ProximitySystem(pilot);
+        ProximityOffsetSystem anchorProximitySystem = new ProximityOffsetSystem(pilot);
+        CameraProximitySystem cameraProximitySystem = new CameraProximitySystem(pilot);
 
         DelayedAddSystem delaySystem = new DelayedAddSystem(pilot);
         RemoveComponentSystem removeComponentSystem = new RemoveComponentSystem(pilot);
@@ -140,7 +142,8 @@ public class LevelPlayer {
         gameSystems.add(collisionAlignmentSystem);
         gameSystems.add(collisionSystem);
         gameSystems.add(playerCollisionSystem);
-        gameSystems.add(proximitySystem);
+        gameSystems.add(anchorProximitySystem);
+        gameSystems.add(cameraProximitySystem);
         gameSystems.add(delaySystem);
         gameSystems.add(removeComponentSystem);
         gameSystems.add(playerBoundarySystem);
@@ -197,6 +200,7 @@ public class LevelPlayer {
         }
 
         ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
+        printMatchingGameSystems(ship);
         allEntities.add(ship);
 
         resetAllButInputSystems();

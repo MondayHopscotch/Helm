@@ -22,8 +22,9 @@ public class CameraUpdateSystem extends AbstractIteratingGameSystem {
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
         TransformComponent transform = entity.getComponent(TransformComponent.class);
+        CameraFollowComponent camera = entity.getComponent(CameraFollowComponent.class);
 
-        cam.addFollowPoint(new Vector2(transform.position));
+        cam.addFollowPoint(new Vector2(transform.position).add(camera.offset));
     }
 
     @Override
