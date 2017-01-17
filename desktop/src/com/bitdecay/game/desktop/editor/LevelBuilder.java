@@ -69,6 +69,11 @@ public class LevelBuilder {
             lines.add(levelLine);
         }
 
+        focusPoints.clear();
+        for (Circle circle : level.focusPoints) {
+            focusPoints.add(circle);
+        }
+
         startPoint = level.startPosition;
 
         startingFuel = level.startingFuel;

@@ -11,11 +11,11 @@ import java.util.ArrayList;
 /**
  * Created by Monday on 1/12/2017.
  */
-public class ProximitySystem extends AbstractIteratingGameSystem {
+public class ProximityRemovalSystem extends AbstractIteratingGameSystem {
 
     ArrayList<GameEntity> proximityEntities = new ArrayList<>();
 
-    public ProximitySystem(GamePilot pilot) {
+    public ProximityRemovalSystem(GamePilot pilot) {
         super(pilot);
     }
 

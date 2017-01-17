@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.component.CameraFollowComponent;
 import com.bitdecay.game.component.ProximityComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
@@ -22,23 +23,29 @@ public class DebugFocusPointSystem extends AbstractIteratingGameSystem {
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
-        TransformComponent tranform = entity.getComponent(TransformComponent.class);
+        TransformComponent transform = entity.getComponent(TransformComponent.class);
         ProximityComponent proximity = entity.getComponent(ProximityComponent.class);
+        CameraFollowComponent follow = entity.getComponent(CameraFollowComponent.class);
 
         renderer.setColor(Color.PINK);
         if (proximity.radius > 0) {
-            renderer.circle(tranform.position.x, tranform.position.y, proximity.radius);
+            renderer.circle(transform.position.x, transform.position.y, proximity.radius);
         } else {
-            renderer.circle(tranform.position.x, tranform.position.y, 5);
-            renderer.circle(tranform.position.x, tranform.position.y, 10);
+            renderer.circle(transform.position.x, transform.position.y, 5);
+            renderer.circle(transform.position.x, transform.position.y, 10);
         }
+
+        renderer.circle(transform.position.x + follow.offset.x, transform.position.y + follow.offset.y, 30);
+        renderer.circle(transform.position.x + follow.offset.x, transform.position.y + follow.offset.y, 25);
     }
 
     @Override
     public boolean canActOn(GameEntity entity) {
         return entity.hasComponents(
                 TransformComponent.class,
-                ProximityComponent.class
+                ProximityComponent.class,
+                CameraFollowComponent.class
+
         );
     }
 }

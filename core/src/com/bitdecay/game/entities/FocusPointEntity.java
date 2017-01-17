@@ -16,7 +16,7 @@ public class FocusPointEntity extends GameEntity {
 
     public FocusPointEntity(Circle focusPoint) {
         addComponent(new TransformComponent(new Vector2(focusPoint.x, focusPoint.y), Geom.NO_ROTATION));
-        addComponent(new ProximityComponent(focusPoint.radius, new ForcedRemoveComponent(CameraFollowComponent.class)));
+        addComponent(new ProximityComponent(focusPoint.radius, new ForcedRemoveComponent(CameraFollowComponent.class), false));
         addComponent(new CameraFollowComponent());
     }
 }

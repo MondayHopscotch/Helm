@@ -6,9 +6,11 @@ package com.bitdecay.game.component;
 public class ProximityComponent extends GameComponent {
     public float radius;
     public GameComponent applyWhenTriggered;
+    public boolean isMaster = false;
 
-    public ProximityComponent(float radius, GameComponent addWhenTriggered) {
+    public ProximityComponent(float radius, GameComponent addWhenTriggered, boolean master) {
         this.radius = radius;
         this.applyWhenTriggered = addWhenTriggered;
+        isMaster = master;
     }
 }

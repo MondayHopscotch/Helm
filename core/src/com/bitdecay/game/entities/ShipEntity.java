@@ -40,7 +40,7 @@ public class ShipEntity extends GameEntity {
         addComponent(new TransformComponent(startPosition, Geom.ROTATION_UP));
         addComponent(new GravityComponent());
 
-        addComponent(new ProximityComponent(0, null));
+        addComponent(new ProximityComponent(0, null, true));
         addComponent(new CameraFollowComponent());
         addComponent(new RenderColorComponent(Color.WHITE));
     }
