@@ -97,6 +97,11 @@ public abstract class LevelWorld {
     }
 
     public void maybeSaveNewRecords() {
+        if (levelRuns.size() < levels.size) {
+            System.out.println("Attempted to save score without playing all levels");
+            return;
+        }
+
         int total = getCurrentRunTotalScore();
 
         int oldHighScore = getHighScore();
