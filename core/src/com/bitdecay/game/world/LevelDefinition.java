@@ -11,13 +11,14 @@ import com.badlogic.gdx.utils.JsonValue;
  * Created by Monday on 12/8/2016.
  */
 public class LevelDefinition {
-    public Array<LineSegment> levelLines = new Array<>();
+    public String name = "Unnamed Level";
 
+    public Array<LineSegment> levelLines = new Array<>();
     public Rectangle finishPlatform = new Rectangle();
+
     public Vector2 startPosition = new Vector2();
 
     public Array<Circle> focusPoints = new Array<>();
-
     public int startingFuel = 300;
 
     public LevelDefinition() {

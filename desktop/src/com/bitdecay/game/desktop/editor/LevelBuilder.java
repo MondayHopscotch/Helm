@@ -19,6 +19,7 @@ public class LevelBuilder {
     public Rectangle landingPlat;
     public Vector2 startPoint;
     public int startingFuel = 300;
+    public String name = "<Unnamed level>";
 
     public void setStartPoint(Vector2 point) {
         startPoint = new Vector2(point);
@@ -87,6 +88,7 @@ public class LevelBuilder {
 
     public LevelDefinition build() {
         LevelDefinition level = new LevelDefinition();
+        level.name = name;
         level.levelLines = new Array<>(lines.size());
         for (LineSegment line : lines) {
             level.levelLines.add(line);

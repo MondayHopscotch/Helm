@@ -10,6 +10,8 @@ public enum OptionsMode {
     ADD_FOCUS("Add Focal Point", EditorKeys.ADD_FOCUS),
     REMOVE_FOCUS("Remove Focal Point", EditorKeys.REMOVE_FOCUS),
 
+    SET_NAME("Set Level Name", EditorKeys.SET_NAME),
+
     SAVE_LEVEL("Save", EditorKeys.SAVE),
     LOAD_LEVEL("Load", EditorKeys.LOAD);
 

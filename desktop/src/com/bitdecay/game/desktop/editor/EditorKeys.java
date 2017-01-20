@@ -27,6 +27,8 @@ public enum EditorKeys {
 
     SET_FUEL("Set Fuel Level", false, Input.Keys.NUM_7),
 
+    SET_NAME("Set Level Name", false, Input.Keys.N),
+
     TEST_LEVEL("Test Level", false, Input.Keys.T);
 
 
