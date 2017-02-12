@@ -15,6 +15,7 @@ import com.bitdecay.game.menu.ScoreMenu;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.world.LevelDefinition;
+import com.bitdecay.game.world.LevelInstance;
 import com.bitdecay.game.world.LevelWorld;
 
 /**
@@ -25,7 +26,8 @@ public class GameScreen implements Screen, GamePilot {
 
     LevelPlayer levelPlayer;
 
-    private LevelWorld currentWorld;
+    private LevelWorld activeWorld;
+    private LevelInstance currentLevel;
 
     private boolean reloadQueued;
 
@@ -36,7 +38,7 @@ public class GameScreen implements Screen, GamePilot {
 
     private InputMultiplexer combinedGameInput;
 
-    public GameScreen(Helm game, LevelWorld world) {
+    public GameScreen(Helm game, LevelWorld world, LevelInstance level) {
         this.game = game;
 
         levelPlayer = new LevelPlayer(this);
@@ -45,7 +47,8 @@ public class GameScreen implements Screen, GamePilot {
 
         combinedGameInput = new InputMultiplexer(pauseMenu.stage, levelPlayer.getInput());
 
-        currentWorld = world;
+        currentLevel = level;
+        activeWorld = world;
 
         requestRestartLevel();
     }
@@ -120,34 +123,17 @@ public class GameScreen implements Screen, GamePilot {
         System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
         int levelScore = score.total();
         System.out.println("SCORE: " + levelScore);
-        currentWorld.setLevelScore(currentWorld.getCurrentLevel(), levelScore);
-        currentWorld.setLevelTime(currentWorld.getCurrentLevel(), score.timeTaken);
-        scoreMenu.setScore(score, currentWorld);
+        score.newHighScore = currentLevel.maybeSetNewHighScore(levelScore);
+        score.newBestTime = currentLevel.maybeSetNewBestTime(score.timeTaken);
+        scoreMenu.setScore(score);
         scoreMenu.visible = true;
-        if (currentWorld.hasNextLevel()) {
-            scoreMenu.setNextLevelOption();
-        } else {
-            scoreMenu.setReturnToMenuOption();
-        }
         Gdx.input.setInputProcessor(scoreMenu.stage);
         levelPlayer.resetInputSystems();
     }
 
     @Override
-    public void nextLevel() {
-        LevelDefinition nextLevel = currentWorld.getNextLevel();
-        if (nextLevel == null) {
-            completeWorld();
-        } else {
-            setLevel(nextLevel);
-            reloadQueued = true;
-        }
-    }
-
-    @Override
-    public void completeWorld() {
-        currentWorld.maybeSaveNewRecords();
-        game.setScreen(new WorldSelectScreen(game));
+    public void returnToMenus() {
+        game.setScreen(new LevelSelectScreen(game, activeWorld));
     }
 
     @Override
@@ -185,7 +171,7 @@ public class GameScreen implements Screen, GamePilot {
         levelPlayer.render(delta);
 
         if (reloadQueued) {
-            setLevel(currentWorld.getCurrentLevel());
+            setLevel(currentLevel.levelDef);
             reloadQueued = false;
         }
 

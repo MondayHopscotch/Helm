@@ -83,13 +83,7 @@ public class LevelTestScreen implements Screen, GamePilot {
     }
 
     @Override
-    public void nextLevel() {
-        editor.showEditor();
-
-    }
-
-    @Override
-    public void completeWorld() {
+    public void returnToMenus() {
         editor.showEditor();
 
     }

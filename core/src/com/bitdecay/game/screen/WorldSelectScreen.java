@@ -49,14 +49,21 @@ public class WorldSelectScreen implements Screen {
         int totalHighScore = 0;
         float totalBestTime = 0;
 
+        boolean allLevelsTimed = true;
         Table worldTable = new Table();
         for (LevelWorld world : worlds) {
             buildWorldRow(world, worldTable);
             totalHighScore += world.getHighScore();
 
-            if (world.getBestTime() != GamePrefs.TIME_NOT_SET) {
+            if (world.getBestTime() == GamePrefs.TIME_NOT_SET) {
+                allLevelsTimed = false;
+            } else {
                 totalBestTime += world.getBestTime();
             }
+        }
+
+        if (!allLevelsTimed) {
+            totalBestTime = GamePrefs.TIME_NOT_SET;
         }
 
         Label totalHighScoreLabel = new Label("Totals: ", skin);
@@ -67,7 +74,13 @@ public class WorldSelectScreen implements Screen {
         totalHighScoreValue.setFontScale(game.fontScale);
         totalHighScoreValue.setAlignment(Align.right);
 
-        Label totalBestTimeValue = new Label(TimerUtils.getFormattedTime(totalBestTime), skin);
+        String displayTime;
+        if (totalBestTime == GamePrefs.TIME_NOT_SET) {
+            displayTime = "--";
+        } else {
+            displayTime = TimerUtils.getFormattedTime(totalBestTime);
+        }
+        Label totalBestTimeValue = new Label(displayTime, skin);
         totalBestTimeValue.setFontScale(game.fontScale);
         totalBestTimeValue.setAlignment(Align.right);
 
@@ -103,7 +116,7 @@ public class WorldSelectScreen implements Screen {
         ClickListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game, world));
+                game.setScreen(new LevelSelectScreen(game, world));
             }
         };
 

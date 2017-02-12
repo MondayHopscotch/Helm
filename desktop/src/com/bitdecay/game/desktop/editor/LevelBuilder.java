@@ -80,6 +80,8 @@ public class LevelBuilder {
         startingFuel = level.startingFuel;
 
         landingPlat = level.finishPlatform;
+
+        name = level.name;
     }
 
     public boolean isLevelValid() {

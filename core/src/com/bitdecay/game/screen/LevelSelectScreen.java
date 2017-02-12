@@ -2,6 +2,7 @@ package com.bitdecay.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -30,6 +31,8 @@ public class LevelSelectScreen implements Screen {
     Stage stage;
     Skin skin;
 
+    private final LevelWorld world;
+
     public LevelSelectScreen(final Helm game, final LevelWorld world) {
         this.game = game;
 
@@ -39,20 +42,29 @@ public class LevelSelectScreen implements Screen {
         }
         skin = game.skin;
 
+        this.world = world;
+
         Table mainTable = new Table();
         mainTable.setFillParent(true);
 
         int totalHighScore = 0;
         float totalBestTime = 0;
 
+        boolean allLevelsTimed = true;
         Table levelTable = new Table();
         for (LevelInstance level : world.levels) {
             buildLevelRow(level, levelTable);
             totalHighScore += level.getHighScore();
 
-            if (level.getBestTime() != GamePrefs.TIME_NOT_SET) {
+            if (level.getBestTime() == GamePrefs.TIME_NOT_SET) {
+                allLevelsTimed = false;
+            } else {
                 totalBestTime += level.getBestTime();
             }
+        }
+
+        if (!allLevelsTimed) {
+            totalBestTime = GamePrefs.TIME_NOT_SET;
         }
 
         Label totalHighScoreLabel = new Label("Totals: ", skin);
@@ -63,7 +75,13 @@ public class LevelSelectScreen implements Screen {
         totalHighScoreValue.setFontScale(game.fontScale);
         totalHighScoreValue.setAlignment(Align.right);
 
-        Label totalBestTimeValue = new Label(TimerUtils.getFormattedTime(totalBestTime), skin);
+        String displayTime;
+        if (totalBestTime == GamePrefs.TIME_NOT_SET) {
+            displayTime = "--";
+        } else {
+            displayTime = TimerUtils.getFormattedTime(totalBestTime);
+        }
+        Label totalBestTimeValue = new Label(displayTime, skin);
         totalBestTimeValue.setFontScale(game.fontScale);
         totalBestTimeValue.setAlignment(Align.right);
 
@@ -78,18 +96,18 @@ public class LevelSelectScreen implements Screen {
         returnTable.align(Align.bottomRight);
         returnTable.setOrigin(Align.bottomRight);
 
-        Label returnToTitleLabel = new Label("Return to Title Screen", skin);
-        returnToTitleLabel.setFontScale(game.fontScale);
-        returnToTitleLabel.setAlignment(Align.bottomRight);
-        returnToTitleLabel.setOrigin(Align.bottomRight);
-        returnToTitleLabel.addListener(new ClickListener() {
+        Label returnToWorldSelectLabel = new Label("Return to World Select", skin);
+        returnToWorldSelectLabel.setFontScale(game.fontScale);
+        returnToWorldSelectLabel.setAlignment(Align.bottomRight);
+        returnToWorldSelectLabel.setOrigin(Align.bottomRight);
+        returnToWorldSelectLabel.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new TitleScreen(game));
+                game.setScreen(new WorldSelectScreen(game));
             }
         });
 
-        returnTable.add(returnToTitleLabel);
+        returnTable.add(returnToWorldSelectLabel);
 
         stage.addActor(mainTable);
         stage.addActor(returnTable);
@@ -99,7 +117,7 @@ public class LevelSelectScreen implements Screen {
         ClickListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game, level.levelDef));
+                game.setScreen(new GameScreen(game, world, level));
             }
         };
 
@@ -107,43 +125,46 @@ public class LevelSelectScreen implements Screen {
         goButton.getLabel().setFontScale(game.fontScale);
         goButton.addListener(listener);
 
-        Label worldNameLabel = new Label(level.getWorldName(), skin);
-        worldNameLabel.setAlignment(Align.left);
-        worldNameLabel.setFontScale(game.fontScale);
+        Label levelNameLabel = new Label(level.levelDef.name, skin);
+        levelNameLabel.setAlignment(Align.left);
+        levelNameLabel.setFontScale(game.fontScale);
 
-        worldNameLabel.addListener(listener);
+        levelNameLabel.addListener(listener);
 
-        int worldHighScore = level.getHighScore();
+        int levelHighScore = level.getHighScore();
 
-        Label worldScoreLabel = new Label(Integer.toString(worldHighScore), skin);
-        worldScoreLabel.setAlignment(Align.right);
-        worldScoreLabel.setFontScale(game.fontScale);
+        Label levelScoreLabel = new Label(Integer.toString(levelHighScore), skin);
+        levelScoreLabel.setAlignment(Align.right);
+        levelScoreLabel.setFontScale(game.fontScale);
 
-        float worldTimeScore = level.getBestTime();
+        float levelTimeScore = level.getBestTime();
 
-        Label worldTimeLabel = new Label(TimerUtils.getFormattedTime(worldTimeScore), skin);
-        if (worldTimeScore == GamePrefs.TIME_NOT_SET) {
-            worldTimeLabel.setText("--");
+        Label levelTimeLabel = new Label(TimerUtils.getFormattedTime(levelTimeScore), skin);
+        if (levelTimeScore == GamePrefs.TIME_NOT_SET) {
+            levelTimeLabel.setText("--");
         }
-        worldTimeLabel.setAlignment(Align.right);
-        worldTimeLabel.setFontScale(game.fontScale);
+        levelTimeLabel.setAlignment(Align.right);
+        levelTimeLabel.setFontScale(game.fontScale);
 
         table.add(goButton).expand(false, false);
-        table.add(worldNameLabel).expandX();
-        table.add(worldScoreLabel).expandX();
-        table.add(worldTimeLabel);
+        table.add(levelNameLabel).expandX();
+        table.add(levelScoreLabel).expandX();
+        table.add(levelTimeLabel);
         table.row().padTop(game.fontScale * 10);
-        return worldHighScore;
+        return levelHighScore;
     }
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        stage.act();
+        stage.draw();
     }
 
     @Override
@@ -168,6 +189,6 @@ public class LevelSelectScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 }

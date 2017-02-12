@@ -15,6 +15,9 @@ public class LandingScore {
     public int fuelScore;
     public float timeTaken;
 
+    public boolean newHighScore;
+    public boolean newBestTime;
+
     public int total() {
         return angleScore + speedScore + accuracyScore + fuelScore;
     }

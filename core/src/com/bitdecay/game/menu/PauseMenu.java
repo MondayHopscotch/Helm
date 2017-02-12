@@ -52,7 +52,7 @@ public class PauseMenu {
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                pilot.completeWorld();
+                pilot.returnToMenus();
             }
         });
         pauseMenu.row();

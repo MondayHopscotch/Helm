@@ -18,8 +18,32 @@ public class LevelInstance {
         return Helm.prefs.getInteger(getScoreKey(), 0);
     }
 
+    public boolean maybeSetNewHighScore(int newScore) {
+        int oldHighScore = getHighScore();
+
+        if (newScore > oldHighScore) {
+            saveHighScore(newScore);
+            System.out.println("Saving new high score for " + levelDef.name + ": " + newScore);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public float getBestTime() {
-        return Helm.prefs.getFloat(getTimeKey(), Float.POSITIVE_INFINITY);
+        return Helm.prefs.getFloat(getTimeKey(), GamePrefs.TIME_NOT_SET);
+    }
+
+    public boolean maybeSetNewBestTime(float newTime) {
+        float oldBestTime = getBestTime();
+
+        if (newTime < oldBestTime) {
+            saveBestTime(newTime);
+            System.out.println("Saving new best time for " + levelDef.name + ": " + newTime);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void saveHighScore(int total) {

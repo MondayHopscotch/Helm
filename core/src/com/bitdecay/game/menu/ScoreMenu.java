@@ -14,12 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.time.TimerUtils;
-import com.bitdecay.game.world.LevelWorld;
 
 /**
  * Created by Monday on 12/17/2016.
@@ -57,9 +55,6 @@ public class ScoreMenu {
     private Label totalScoreScore;
 
     private final TextButton nextButton;
-
-    private ClickListener nextLevelAction;
-    private ClickListener returnToTitleAction;
 
     public ScoreMenu(final GamePilot pilot) {
         this.pilot = pilot;
@@ -166,26 +161,17 @@ public class ScoreMenu {
         scoreTable.add(totalTimeValue).growX();
         scoreTable.row();
 
-        nextLevelAction = new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                pilot.nextLevel();
-            }
-        };
-
-        returnToTitleAction = new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                pilot.completeWorld();
-            }
-        };
-
         Table nextTable = new Table();
         nextTable.align(Align.center);
         nextTable.setOrigin(Align.center);
         nextButton = new TextButton(NEXT_LEVEL_TEXT, skin);
         nextButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
-        nextButton.addListener(nextLevelAction);
+        nextButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                pilot.returnToMenus();
+            }
+        });
         nextButton.align(Align.center);
         nextButton.setOrigin(Align.center);
 
@@ -211,7 +197,7 @@ public class ScoreMenu {
         }
     }
 
-    public void setScore(LandingScore score, LevelWorld world) {
+    public void setScore(LandingScore score) {
         SequenceAction baseScoreSequence = Actions.sequence(
                 Actions.run(new Runnable() {
                     @Override
@@ -242,22 +228,19 @@ public class ScoreMenu {
                 Actions.delay(1f)
         );
 
-        boolean setNewRecord = false;
-        if (world.getHighScore() > 0 && world.getCurrentRunTotalScore() > world.getHighScore()) {
+        if (score.newHighScore) {
             totalScoreScore.setColor(Color.GOLD);
-            setNewRecord = true;
         } else {
             totalScoreScore.setColor(Color.WHITE);
         }
 
-        if (world.getBestTime() != GamePrefs.TIME_NOT_SET && world.getCurrentRunTotalTime() < world.getBestTime()) {
+        if (score.newBestTime) {
             totalTimeValue.setColor(Color.GOLD);
-            setNewRecord = true;
         } else {
             totalTimeValue.setColor(Color.WHITE);
         }
 
-        if (setNewRecord) {
+        if (score.newHighScore || score.newBestTime) {
             baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.HIGH_SCORE_BEAT,
                     totalScoreLabel,
                     totalScoreScore,
@@ -284,8 +267,9 @@ public class ScoreMenu {
         landingAccuracyScore.setText(getLeftPaddedString(Integer.toString(score.accuracyScore)));
         fuelLeftPercent.setText(getLeftPaddedString(String.format("%.2f%%", score.fuelLeft * 100)));
         fuelScoreScore.setText(getLeftPaddedString(Integer.toString(score.fuelScore)));
-        totalTimeValue.setText(TimerUtils.getFormattedTime(world.getCurrentRunTotalTime()));
-        totalScoreScore.setText(getLeftPaddedString(Integer.toString(world.getCurrentRunTotalScore())));
+
+        totalTimeValue.setText(TimerUtils.getFormattedTime(score.timeTaken));
+        totalScoreScore.setText(getLeftPaddedString(Integer.toString(score.total())));
     }
 
     private Runnable getShowActorsRunnable(final Actor... actors) {
@@ -322,21 +306,4 @@ public class ScoreMenu {
         totalTimeValue.setVisible(false);
         nextButton.setVisible(false);
     }
-
-    public void setNextLevelOption() {
-        nextButton.removeListener(nextLevelAction);
-        nextButton.removeListener(returnToTitleAction);
-
-        nextButton.getLabel().setText(NEXT_LEVEL_TEXT);
-        nextButton.addListener(nextLevelAction);
-    }
-
-    public void setReturnToMenuOption() {
-        nextButton.removeListener(nextLevelAction);
-        nextButton.removeListener(returnToTitleAction);
-
-        nextButton.getLabel().setText(RETURN_TO_TITLE_TEXT);
-        nextButton.addListener(returnToTitleAction);
-    }
-
 }

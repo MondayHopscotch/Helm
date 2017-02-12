@@ -16,9 +16,7 @@ public interface GamePilot {
 
     void finishLevel(LandingScore score);
 
-    void nextLevel();
-
-    void completeWorld();
+    void returnToMenus();
 
     Helm getHelm();
 
