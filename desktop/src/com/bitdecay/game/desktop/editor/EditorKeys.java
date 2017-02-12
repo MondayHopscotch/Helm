@@ -29,8 +29,9 @@ public enum EditorKeys {
 
     SET_NAME("Set Level Name", false, Input.Keys.N),
 
-    TEST_LEVEL("Test Level", false, Input.Keys.T);
+    TEST_LEVEL("Test Level", false, Input.Keys.T),
 
+    HELP("Help", false, Input.Keys.F1);
 
     private final String name;
     private final int[] keys;
@@ -120,7 +121,6 @@ public enum EditorKeys {
     }
 
     public String getHelp() {
-
         return name + ": " + keyHelp;
     }
 

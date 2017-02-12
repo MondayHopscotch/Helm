@@ -97,7 +97,19 @@ public class EditorScreen extends InputAdapter implements Screen {
         levelNameLabel.setOrigin(Align.topRight);
         levelNameLabel.setAlignment(Align.topRight);
 
-        levelNameTable.add(levelNameLabel).padTop(10).padRight(10);
+        levelNameTable.add(levelNameLabel).padTop(10).padRight(10).padBottom(30);
+        levelNameTable.row();
+
+        for (EditorKeys hotKey : EditorKeys.values()) {
+            Label hotKeyLabel = new Label(hotKey.getHelp(), skin);
+            hotKeyLabel.setColor(Color.GREEN);
+            hotKeyLabel.setOrigin(Align.right);
+            hotKeyLabel.setAlignment(Align.right);
+
+            levelNameTable.add(hotKeyLabel).padRight(10);
+            levelNameTable.row();
+        }
+
 
         stage.addActor(levelNameTable);
     }
