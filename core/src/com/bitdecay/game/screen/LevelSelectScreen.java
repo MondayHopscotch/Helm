@@ -1,12 +1,8 @@
 package com.bitdecay.game.screen;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -14,44 +10,29 @@ import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.time.TimerUtils;
-import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelInstance;
 import com.bitdecay.game.world.LevelWorld;
-import com.bitdecay.game.world.World1;
-import com.bitdecay.game.world.World2;
-import com.bitdecay.game.world.World3;
 
 /**
  * Created by Monday on 2/9/2017.
  */
 
-public class LevelSelectScreen implements Screen {
-
-    private final Helm game;
-    Stage stage;
-    Skin skin;
+public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
     private final LevelWorld world;
 
     public LevelSelectScreen(final Helm game, final LevelWorld world) {
-        this.game = game;
-
-        stage = new Stage();
-        if (Helm.debug) {
-            stage.setDebugAll(true);
-        }
-        skin = game.skin;
-
+        super(game);
         this.world = world;
+        build();
+    }
 
-        Table mainTable = new Table();
-        mainTable.setFillParent(true);
-
+    @Override
+    public void populateRows(Table levelTable) {
         int totalHighScore = 0;
         float totalBestTime = 0;
 
         boolean allLevelsTimed = true;
-        Table levelTable = new Table();
         for (LevelInstance level : world.levels) {
             buildLevelRow(level, levelTable);
             totalHighScore += level.getHighScore();
@@ -88,29 +69,21 @@ public class LevelSelectScreen implements Screen {
         levelTable.add(totalHighScoreLabel).colspan(2);
         levelTable.add(totalHighScoreValue);
         levelTable.add(totalBestTimeValue);
+    }
 
-        mainTable.add(levelTable).width(Gdx.graphics.getWidth() * 0.8f);
-
-        Table returnTable = new Table();
-        returnTable.setFillParent(true);
-        returnTable.align(Align.bottomRight);
-        returnTable.setOrigin(Align.bottomRight);
-
-        Label returnToWorldSelectLabel = new Label("Return to World Select", skin);
-        returnToWorldSelectLabel.setFontScale(game.fontScale);
-        returnToWorldSelectLabel.setAlignment(Align.bottomRight);
-        returnToWorldSelectLabel.setOrigin(Align.bottomRight);
-        returnToWorldSelectLabel.addListener(new ClickListener() {
+    @Override
+    public Actor getReturnButton() {
+        TextButton returnButton = new TextButton("Return to World Select", skin);
+        returnButton.getLabel().setFontScale(game.fontScale);
+        returnButton.align(Align.bottomRight);
+        returnButton.setOrigin(Align.bottomRight);
+        returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new WorldSelectScreen(game));
             }
         });
-
-        returnTable.add(returnToWorldSelectLabel);
-
-        stage.addActor(mainTable);
-        stage.addActor(returnTable);
+        return returnButton;
     }
 
     private int buildLevelRow(final LevelInstance level, Table table) {
@@ -152,43 +125,5 @@ public class LevelSelectScreen implements Screen {
         table.add(levelTimeLabel);
         table.row().padTop(game.fontScale * 10);
         return levelHighScore;
-    }
-
-    @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        stage.act();
-        stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
     }
 }
