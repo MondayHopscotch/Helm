@@ -41,7 +41,7 @@ public class EditorScreen extends InputAdapter implements Screen {
 
     private static final int CAM_MOVE_SPEED = 5;
     private static final float CAM_MAX_ZOOM = 20;
-    private static final float CAM_MIN_ZOOM= .2f;
+    private static final float CAM_MIN_ZOOM = .2f;
     private static final float CAM_ZOOM_SPEED_SLOW = .05f;
     private static final float CAM_ZOOM_SPEED_FAST = .2f;
     private static final int ZOOM_THRESHOLD = 5;
@@ -103,7 +103,7 @@ public class EditorScreen extends InputAdapter implements Screen {
     }
 
     private void updateOverlay() {
-        levelNameLabel.setText(FileUtils.lastTouchedFileName);
+        levelNameLabel.setText(builder.name + " (File: " + FileUtils.lastTouchedFileName + ")");
     }
 
     @Override
@@ -138,7 +138,7 @@ public class EditorScreen extends InputAdapter implements Screen {
 
         shaper.setColor(Color.WHITE);
         if (builder.startPoint != null) {
-            shaper.polygon(new float[] {builder.startPoint.x - 50, builder.startPoint.y - 100, builder.startPoint.x, builder.startPoint.y + 100, builder.startPoint.x + 50, builder.startPoint.y - 100});
+            shaper.polygon(new float[]{builder.startPoint.x - 50, builder.startPoint.y - 100, builder.startPoint.x, builder.startPoint.y + 100, builder.startPoint.x + 50, builder.startPoint.y - 100});
         }
 
         shaper.setColor(Color.GREEN);
@@ -237,41 +237,69 @@ public class EditorScreen extends InputAdapter implements Screen {
             System.out.println("Setting mode: " + mode);
             mouseMode = mouseModes.get(mode);
         } else if (OptionsMode.SAVE_LEVEL.equals(mode)) {
-            if (builder.isLevelValid()) {
-                LevelDefinition levDef = builder.build();
-                String fileName = FileUtils.saveLevelToFile(levDef);
-                if (fileName != null) {
-                    updateOverlay();
-                }
-            } else {
-                // show a warning or something
-                JOptionPane.showMessageDialog(null, "Level must contain a start and end point");
-            }
+            maybePromptForSave();
         } else if (OptionsMode.LOAD_LEVEL.equals(mode)) {
-            LevelDefinition loadLevel = FileUtils.loadLevelFromFile();
-            if (loadLevel != null) {
-                builder.setLevel(loadLevel);
-                refitCamera();
-                updateOverlay();
-            }
+            maybeLoad();
         } else if (OptionsMode.SET_FUEL.equals(mode)) {
-            String result = JOptionPane.showInputDialog(
-                    null,
-                    "Level Starting Fuel (Currently: " + builder.startingFuel + ")",
-                    "Fuel Tool",
-                    JOptionPane.OK_CANCEL_OPTION);
-            if (result == null || "".equals(result)) {
-                // do nothing
-            } else {
-                try {
-                    int startingFuel = Integer.parseInt(result);
-                    builder.startingFuel = startingFuel;
-                } catch (NumberFormatException e) {
-                    System.out.println("Cannot parse '" + result + "' as an integer");
-                }
-            }
+            maybeSetFuel();
+        } else if (OptionsMode.SET_NAME.equals(mode)) {
+            maybeSetName();
         } else {
             mouseMode = noOpMouseMode;
+        }
+    }
+
+    private void maybePromptForSave() {
+        if (builder.isLevelValid()) {
+            LevelDefinition levDef = builder.build();
+            String fileName = FileUtils.saveLevelToFile(levDef);
+            if (fileName != null) {
+                updateOverlay();
+            }
+        } else {
+            // show a warning or something
+            JOptionPane.showMessageDialog(null, "Level must contain a start point, end point, and have a name");
+        }
+    }
+
+    private void maybeLoad() {
+        LevelDefinition loadLevel = FileUtils.loadLevelFromFile();
+        if (loadLevel != null) {
+            builder.setLevel(loadLevel);
+            refitCamera();
+            updateOverlay();
+        }
+    }
+
+    private void maybeSetFuel() {
+        String result = JOptionPane.showInputDialog(
+                null,
+                "Level Starting Fuel (Currently: " + builder.startingFuel + ")",
+                "Fuel Tool",
+                JOptionPane.OK_CANCEL_OPTION);
+        if (result == null || "".equals(result)) {
+            // do nothing
+        } else {
+            try {
+                int startingFuel = Integer.parseInt(result);
+                builder.startingFuel = startingFuel;
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot parse '" + result + "' as an integer");
+            }
+        }
+    }
+
+    private void maybeSetName() {
+        String result = JOptionPane.showInputDialog(
+                null,
+                "Level Name (Currently: " + builder.name + ")",
+                "Level Name Tool",
+                JOptionPane.OK_CANCEL_OPTION);
+        if (result == null || "".equals(result)) {
+            // do nothing
+        } else {
+            builder.name = result;
+            updateOverlay();
         }
     }
 

@@ -61,7 +61,6 @@
   },
   "com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
     "default": {
-      "background": "scrollPane",
       "corner": "scrollPane",
       "hScroll": "scrollChannel",
       "hScrollKnob": "scrollKnob",

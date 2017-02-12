@@ -11,9 +11,9 @@ public class World3 extends LevelWorld {
     public World3() {
         super(2);
         Json json = new Json();
-        levels.add(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/level_hard2.json")));
-        levels.add(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/level_hard1_focus.json")));
-        levels.add(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/level_hard3.json")));
+        addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/extreme/level_hard2.json")));
+        addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/extreme/level_hard1_focus.json")));
+        addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/extreme/level_hard3.json")));
     }
 
     @Override
