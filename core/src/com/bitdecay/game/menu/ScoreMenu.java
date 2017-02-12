@@ -24,8 +24,7 @@ import com.bitdecay.game.time.TimerUtils;
  */
 public class ScoreMenu {
 
-    private static final String NEXT_LEVEL_TEXT = "Next Level";
-    private static final String RETURN_TO_TITLE_TEXT = "Finish";
+    private static final String NEXT_TEXT = "Return to Level Select";
 
     public final Stage stage;
     private final Skin skin;
@@ -164,7 +163,7 @@ public class ScoreMenu {
         Table nextTable = new Table();
         nextTable.align(Align.center);
         nextTable.setOrigin(Align.center);
-        nextButton = new TextButton(NEXT_LEVEL_TEXT, skin);
+        nextButton = new TextButton(NEXT_TEXT, skin);
         nextButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
         nextButton.addListener(new ClickListener() {
             @Override
