@@ -258,7 +258,7 @@ public class EditorScreen extends InputAdapter implements Screen {
             }
         } else {
             // show a warning or something
-            JOptionPane.showMessageDialog(null, "Level must contain a start and end point");
+            JOptionPane.showMessageDialog(null, "Level must contain a start point, end point, and have a name");
         }
     }
 

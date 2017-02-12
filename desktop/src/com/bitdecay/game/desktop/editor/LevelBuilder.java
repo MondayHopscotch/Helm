@@ -19,7 +19,7 @@ public class LevelBuilder {
     public Rectangle landingPlat;
     public Vector2 startPoint;
     public int startingFuel = 300;
-    public String name = "<Unnamed level>";
+    public String name = "";
 
     public void setStartPoint(Vector2 point) {
         startPoint = new Vector2(point);
@@ -85,7 +85,7 @@ public class LevelBuilder {
     }
 
     public boolean isLevelValid() {
-        return landingPlat != null && startPoint != null;
+        return landingPlat != null && startPoint != null && name != null && !name.equals("");
     }
 
     public LevelDefinition build() {
