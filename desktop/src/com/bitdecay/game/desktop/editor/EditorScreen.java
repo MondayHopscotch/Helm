@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -22,6 +24,8 @@ import com.bitdecay.game.desktop.editor.mode.DeleteSegmentMouseMode;
 import com.bitdecay.game.desktop.editor.mode.FocusPointMouseMode;
 import com.bitdecay.game.desktop.editor.mode.LandingPlatMouseMode;
 import com.bitdecay.game.desktop.editor.mode.LineSegmentMouseMode;
+import com.bitdecay.game.desktop.editor.mode.MouseMode;
+import com.bitdecay.game.desktop.editor.mode.NoOpMouseMode;
 import com.bitdecay.game.desktop.editor.mode.StartPointMouseMode;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.world.LevelDefinition;
@@ -48,13 +52,16 @@ public class EditorScreen extends InputAdapter implements Screen {
 
     Stage stage;
     Skin skin;
+    BitmapFont font = new BitmapFont(Gdx.files.internal("font/bit.fnt"));
 
     OrthographicCamera camera;
     ShapeRenderer shaper;
+    SpriteBatch batch;
 
-    private Map<OptionsMode, com.bitdecay.game.desktop.editor.mode.MouseMode> mouseModes;
-    private com.bitdecay.game.desktop.editor.mode.MouseMode mouseMode;
-    private final com.bitdecay.game.desktop.editor.mode.NoOpMouseMode noOpMouseMode = new com.bitdecay.game.desktop.editor.mode.NoOpMouseMode();
+    private Map<OptionsMode, MouseMode> mouseModes;
+    private Map<MouseMode, OptionsMode> reverseMap;
+    private MouseMode mouseMode;
+    private final NoOpMouseMode noOpMouseMode = new NoOpMouseMode();
 
     private LevelBuilder builder = new LevelBuilder();
     private HelmEditor editor;
@@ -69,15 +76,23 @@ public class EditorScreen extends InputAdapter implements Screen {
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         shaper = new ShapeRenderer();
+        batch = new SpriteBatch();
 
         mouseMode = noOpMouseMode;
         mouseModes = new HashMap<>();
-        mouseModes.put(OptionsMode.DRAW_LINE, new LineSegmentMouseMode(builder));
-        mouseModes.put(OptionsMode.DELETE_LINE, new DeleteSegmentMouseMode(builder));
-        mouseModes.put(OptionsMode.DRAW_LANDING, new LandingPlatMouseMode(builder));
-        mouseModes.put(OptionsMode.PLACE_START, new StartPointMouseMode(builder));
-        mouseModes.put(OptionsMode.ADD_FOCUS, new FocusPointMouseMode(builder));
-        mouseModes.put(OptionsMode.REMOVE_FOCUS, new DeleteFocusMouseMode(builder));
+        reverseMap = new HashMap<>();
+
+        addTool(OptionsMode.DRAW_LINE, new LineSegmentMouseMode(builder));
+        addTool(OptionsMode.DELETE_LINE, new DeleteSegmentMouseMode(builder));
+        addTool(OptionsMode.DRAW_LANDING, new LandingPlatMouseMode(builder));
+        addTool(OptionsMode.PLACE_START, new StartPointMouseMode(builder));
+        addTool(OptionsMode.ADD_FOCUS, new FocusPointMouseMode(builder));
+        addTool(OptionsMode.REMOVE_FOCUS, new DeleteFocusMouseMode(builder));
+    }
+
+    private void addTool(OptionsMode option, MouseMode mode) {
+        mouseModes.put(option, mode);
+        reverseMap.put(mode, option);
     }
 
     @Override
@@ -136,8 +151,19 @@ public class EditorScreen extends InputAdapter implements Screen {
 
         shaper.end();
 
+        batch.begin();
+        renderMisc();
+        batch.end();
+
         stage.act(delta);
         stage.draw();
+    }
+
+    private void renderMisc() {
+        OptionsMode selectedOption = reverseMap.get(mouseMode);
+        if (selectedOption != null) {
+            font.draw(batch, selectedOption.label, Gdx.input.getX(), (Gdx.graphics.getHeight() - (Gdx.input.getY() + 20)));
+        }
     }
 
     private void drawCurrentBuilder(ShapeRenderer shaper) {
