@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.time.TimerUtils;
+import com.bitdecay.game.world.ChannelsWorld;
+import com.bitdecay.game.world.IslandsWorld;
 import com.bitdecay.game.world.LevelWorld;
 import com.bitdecay.game.world.World1;
 import com.bitdecay.game.world.World2;
@@ -30,7 +32,9 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         LevelWorld[] worlds = new LevelWorld[] {
                 new World1(),
                 new World2(),
-                new World3()
+                new World3(),
+                new IslandsWorld(),
+                new ChannelsWorld(),
         };
 
         int totalHighScore = 0;
