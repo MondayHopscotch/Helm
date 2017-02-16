@@ -55,6 +55,9 @@ public abstract class AbstractScrollingItemScreen implements Screen {
     }
 
     protected void build() {
+        itemTable.columnDefaults(1).expandX();
+        itemTable.columnDefaults(2).width(game.fontScale * 50);
+        itemTable.columnDefaults(3).width(game.fontScale * 50);
         populateRows(itemTable);
         returnTable.add(getReturnButton());
     }

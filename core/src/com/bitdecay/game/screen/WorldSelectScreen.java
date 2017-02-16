@@ -57,7 +57,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             totalBestTime = GamePrefs.TIME_NOT_SET;
         }
 
-        Label totalHighScoreLabel = new Label("Totals: ", skin);
+        Label totalHighScoreLabel = new Label("Total: ", skin);
         totalHighScoreLabel.setFontScale(game.fontScale);
         totalHighScoreLabel.setAlignment(Align.right);
 
@@ -75,7 +75,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         totalBestTimeValue.setFontScale(game.fontScale);
         totalBestTimeValue.setAlignment(Align.right);
 
-        worldTable.add(totalHighScoreLabel).colspan(2);
+        worldTable.add(totalHighScoreLabel).colspan(2).align(Align.right);
         worldTable.add(totalHighScoreValue);
         worldTable.add(totalBestTimeValue);
     }
@@ -108,7 +108,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         goButton.addListener(listener);
 
         Label worldNameLabel = new Label(world.getWorldName(), skin);
-        worldNameLabel.setAlignment(Align.left);
+        worldNameLabel.setAlignment(Align.center);
         worldNameLabel.setFontScale(game.fontScale);
 
         worldNameLabel.addListener(listener);
@@ -129,8 +129,8 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         worldTimeLabel.setFontScale(game.fontScale);
 
         table.add(goButton).expand(false, false);
-        table.add(worldNameLabel).expandX();
-        table.add(worldScoreLabel).expandX();
+        table.add(worldNameLabel);
+        table.add(worldScoreLabel);
         table.add(worldTimeLabel);
         table.row().padTop(game.fontScale * 10);
         return worldHighScore;
