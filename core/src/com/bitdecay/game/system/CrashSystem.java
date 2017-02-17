@@ -23,6 +23,7 @@ public class CrashSystem extends AbstractIteratingGameSystem {
         entity.removeComponent(SteeringControlComponent.class);
         pilot.doMusic(SoundMode.STOP, MusicLibrary.SHIP_BOOST);
         pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_CRASH);
+        pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_EXPLODE);
 
         TransformComponent transformComponent = entity.getComponent(TransformComponent.class);
 
