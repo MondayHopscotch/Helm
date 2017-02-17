@@ -6,9 +6,9 @@ import com.badlogic.gdx.utils.Json;
 /**
  * Created by Monday on 1/10/2017.
  */
-public class World3 extends LevelWorld {
+public class ExtremeWorld extends LevelWorld {
 
-    public World3() {
+    public ExtremeWorld() {
         super(2);
         Json json = new Json();
         addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/extreme/level_hard2.json")));

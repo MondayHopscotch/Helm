@@ -15,7 +15,7 @@ import com.bitdecay.game.world.IslandsWorld;
 import com.bitdecay.game.world.LevelWorld;
 import com.bitdecay.game.world.World1;
 import com.bitdecay.game.world.World2;
-import com.bitdecay.game.world.World3;
+import com.bitdecay.game.world.ExtremeWorld;
 
 /**
  * Created by Monday on 1/10/2017.
@@ -32,9 +32,9 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         LevelWorld[] worlds = new LevelWorld[] {
                 new World1(),
                 new World2(),
-                new World3(),
                 new IslandsWorld(),
                 new ChannelsWorld(),
+                new ExtremeWorld(),
         };
 
         int totalHighScore = 0;
@@ -57,7 +57,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             totalBestTime = GamePrefs.TIME_NOT_SET;
         }
 
-        Label totalHighScoreLabel = new Label("Totals: ", skin);
+        Label totalHighScoreLabel = new Label("Total: ", skin);
         totalHighScoreLabel.setFontScale(game.fontScale);
         totalHighScoreLabel.setAlignment(Align.right);
 
@@ -75,7 +75,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         totalBestTimeValue.setFontScale(game.fontScale);
         totalBestTimeValue.setAlignment(Align.right);
 
-        worldTable.add(totalHighScoreLabel).colspan(2);
+        worldTable.add(totalHighScoreLabel).colspan(2).align(Align.right);
         worldTable.add(totalHighScoreValue);
         worldTable.add(totalBestTimeValue);
     }
@@ -108,7 +108,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         goButton.addListener(listener);
 
         Label worldNameLabel = new Label(world.getWorldName(), skin);
-        worldNameLabel.setAlignment(Align.left);
+        worldNameLabel.setAlignment(Align.center);
         worldNameLabel.setFontScale(game.fontScale);
 
         worldNameLabel.addListener(listener);
@@ -129,8 +129,8 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         worldTimeLabel.setFontScale(game.fontScale);
 
         table.add(goButton).expand(false, false);
-        table.add(worldNameLabel).expandX();
-        table.add(worldScoreLabel).expandX();
+        table.add(worldNameLabel);
+        table.add(worldScoreLabel);
         table.add(worldTimeLabel);
         table.row().padTop(game.fontScale * 10);
         return worldHighScore;

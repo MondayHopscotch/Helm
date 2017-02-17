@@ -48,7 +48,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
             totalBestTime = GamePrefs.TIME_NOT_SET;
         }
 
-        Label totalHighScoreLabel = new Label("Totals: ", skin);
+        Label totalHighScoreLabel = new Label("Total: ", skin);
         totalHighScoreLabel.setFontScale(game.fontScale);
         totalHighScoreLabel.setAlignment(Align.right);
 
@@ -66,7 +66,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         totalBestTimeValue.setFontScale(game.fontScale);
         totalBestTimeValue.setAlignment(Align.right);
 
-        levelTable.add(totalHighScoreLabel).colspan(2);
+        levelTable.add(totalHighScoreLabel).colspan(2).align(Align.right);
         levelTable.add(totalHighScoreValue);
         levelTable.add(totalBestTimeValue);
     }
@@ -99,7 +99,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         goButton.addListener(listener);
 
         Label levelNameLabel = new Label(level.levelDef.name, skin);
-        levelNameLabel.setAlignment(Align.left);
+        levelNameLabel.setAlignment(Align.center);
         levelNameLabel.setFontScale(game.fontScale);
 
         levelNameLabel.addListener(listener);
@@ -120,8 +120,8 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         levelTimeLabel.setFontScale(game.fontScale);
 
         table.add(goButton).expand(false, false);
-        table.add(levelNameLabel).expandX();
-        table.add(levelScoreLabel).expandX();
+        table.add(levelNameLabel);
+        table.add(levelScoreLabel);
         table.add(levelTimeLabel);
         table.row().padTop(game.fontScale * 10);
         return levelHighScore;

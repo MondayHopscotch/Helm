@@ -29,7 +29,7 @@ public abstract class AbstractScrollingItemScreen implements Screen {
         stage = new Stage();
         if (Helm.debug) {
             stage.setDebugAll(true);
-    }
+        }
         skin = game.skin;
 
         Table container = new Table();
@@ -43,17 +43,21 @@ public abstract class AbstractScrollingItemScreen implements Screen {
         mainTable.add(itemTable).width(Gdx.graphics.getWidth() * 0.8f).padTop(game.fontScale * 10).padBottom(game.fontScale * 30);
 
         returnTable = new Table();
-        returnTable.setFillParent(true);
         returnTable.align(Align.bottomRight);
         returnTable.setOrigin(Align.bottomRight);
 
+
         stage.addActor(container);
-        stage.addActor(returnTable);
 
         container.add(scroll).expand().fill();
+        container.row();
+        container.add(returnTable).expandX().fillX();
     }
 
     protected void build() {
+        itemTable.columnDefaults(1).expandX();
+        itemTable.columnDefaults(2).width(game.fontScale * 50);
+        itemTable.columnDefaults(3).width(game.fontScale * 50);
         populateRows(itemTable);
         returnTable.add(getReturnButton());
     }
