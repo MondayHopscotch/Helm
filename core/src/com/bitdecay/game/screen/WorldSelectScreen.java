@@ -11,6 +11,7 @@ import com.bitdecay.game.Helm;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.world.ChannelsWorld;
+import com.bitdecay.game.world.GravityWorld;
 import com.bitdecay.game.world.IslandsWorld;
 import com.bitdecay.game.world.LevelWorld;
 import com.bitdecay.game.world.World1;
@@ -34,6 +35,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
                 new World2(),
                 new IslandsWorld(),
                 new ChannelsWorld(),
+                new GravityWorld(),
                 new ExtremeWorld(),
         };
 

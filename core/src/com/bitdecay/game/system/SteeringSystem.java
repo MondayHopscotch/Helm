@@ -3,7 +3,7 @@ package com.bitdecay.game.system;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.SteeringComponent;
-import com.bitdecay.game.component.SteeringControlComponent;
+import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.component.TransformComponent;
 
 /**

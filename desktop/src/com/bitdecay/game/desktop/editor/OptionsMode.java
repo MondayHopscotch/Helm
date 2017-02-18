@@ -9,6 +9,8 @@ public enum OptionsMode {
     SET_FUEL("Set Fuel", EditorKeys.SET_FUEL),
     ADD_FOCUS("Add Focal Point", EditorKeys.ADD_FOCUS),
     REMOVE_FOCUS("Remove Focal Point", EditorKeys.REMOVE_FOCUS),
+    ADD_GRAV_WELL("Add Gravity Well", EditorKeys.ADD_GRAV_WELL),
+    REMOVE_GRAV_WELL("Remove Gravity Well", EditorKeys.REMOVE_GRAV_WELL),
 
     SET_NAME("Set Level Name", EditorKeys.SET_NAME),
 

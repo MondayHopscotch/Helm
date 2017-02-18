@@ -5,11 +5,15 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.collision.Collider;
 import com.bitdecay.game.collision.CollisionDirection;
-import com.bitdecay.game.collision.CollisionKind;
-import com.bitdecay.game.component.CollidedWithComponent;
-import com.bitdecay.game.component.CollisionGeometryComponent;
-import com.bitdecay.game.component.CollisionKindComponent;
+import com.bitdecay.game.collision.NoOpCollider;
+import com.bitdecay.game.collision.SolidToCircleCollider;
+import com.bitdecay.game.collision.SolidToLineCollider;
+import com.bitdecay.game.collision.SolidToSolidCollider;
+import com.bitdecay.game.component.collide.CollidedWithComponent;
+import com.bitdecay.game.component.collide.CollisionGeometryComponent;
+import com.bitdecay.game.component.collide.CollisionKindComponent;
 import com.bitdecay.game.math.Geom;
 
 import java.util.ArrayList;
@@ -54,64 +58,39 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
                     CollisionGeometryComponent geom2 = entity2.getComponent(CollisionGeometryComponent.class);
                     CollisionKindComponent kind2 = entity2.getComponent(CollisionKindComponent.class);
 
+                    Collider collider = getCollider(geom1, geom2);
 
-                    float[] geom1WorkingSet = getWorkingGeom(geom1);
-                    float[] geom2WorkingSet = getWorkingGeom(geom2);
-
-                    boolean geom1IsSolid = false;
-                    boolean geom2IsSolid = false;
-                    if (geom1WorkingSet.length > Geom.DATA_POINTS_FOR_LINE) {
-                        geom1IsSolid = true;
-                    }
-                    if (geom2WorkingSet.length > Geom.DATA_POINTS_FOR_LINE) {
-                        geom2IsSolid = true;
-                    }
-
-                    boolean collisionFound = false;
-                    if (geom1IsSolid && geom2IsSolid) {
-                        // TODO: Figure out if this is true: this doesn't appear to be commutative operation
-                        collisionFound = Intersector.intersectPolygons(new Polygon(geom1WorkingSet), new Polygon(geom2WorkingSet), new Polygon());
-                        collisionFound |= Intersector.intersectPolygons(new Polygon(geom2WorkingSet), new Polygon(geom1WorkingSet), new Polygon());
-                    } else if (geom1IsSolid && !geom2IsSolid) {
-                        Vector2 geom2Start = new Vector2(geom2WorkingSet[0], geom2WorkingSet[1]);
-                        Vector2 geom2End = new Vector2(geom2WorkingSet[2], geom2WorkingSet[3]);
-                        collisionFound = Intersector.intersectSegmentPolygon(geom2Start, geom2End, new Polygon(geom1WorkingSet));
-                    } else if (!geom1IsSolid && geom2IsSolid) {
-                        Vector2 geom1Start = new Vector2(geom1WorkingSet[0], geom1WorkingSet[1]);
-                        Vector2 geom1End = new Vector2(geom1WorkingSet[2], geom1WorkingSet[3]);
-                        collisionFound = Intersector.intersectSegmentPolygon(geom1Start, geom1End, new Polygon(geom2WorkingSet));
-                    }
-
-                    if (collisionFound) {
-                        geom1.colliding = true;
-                        geom2.colliding = true;
-                        if (CollisionDirection.RECEIVES.equals(geom1.direction) &&
-                            CollisionDirection.DELIVERS.equals(geom2.direction)) {
-                            entity1.addComponent(new CollidedWithComponent(kind2.kind, geom2WorkingSet));
-                        } else if (CollisionDirection.DELIVERS.equals(geom1.direction) &&
-                                CollisionDirection.RECEIVES.equals(geom2.direction)) {
-                            entity2.addComponent(new CollidedWithComponent(kind1.kind, geom1WorkingSet));
-                        }
+                    if (collider.collisionFound()) {
+                            geom1.colliding = true;
+                            geom2.colliding = true;
+                            if (CollisionDirection.RECEIVES.equals(geom1.direction) &&
+                                    CollisionDirection.DELIVERS.equals(geom2.direction)) {
+                                entity1.addComponent(new CollidedWithComponent(kind2.kind, collider.getGeom2WorkingSet()));
+                            } else if (CollisionDirection.DELIVERS.equals(geom1.direction) &&
+                                    CollisionDirection.RECEIVES.equals(geom2.direction)) {
+                                entity2.addComponent(new CollidedWithComponent(kind1.kind, collider.getGeom1WorkingSet()));
+                            }
                     }
                 }
             }
         }
     }
 
-    private float[] getWorkingGeom(CollisionGeometryComponent geomComponent) {
-        float[] workingGeom = new float[geomComponent.originalGeom.length];
-        System.arraycopy(geomComponent.originalGeom, 0, workingGeom, 0, geomComponent.originalGeom.length);
-
-        // apply rotation first
-        workingGeom = Geom.rotatePoints(workingGeom, geomComponent.rotation);
-
-        // then apply position
-        for (int i = 0; i < workingGeom.length; i += 2) {
-            workingGeom[i] = workingGeom[i] + geomComponent.posX;
-            workingGeom[i+1] = workingGeom[i+1] + geomComponent.posY;
+    private Collider getCollider(CollisionGeometryComponent geom1, CollisionGeometryComponent geom2) {
+        int length1 = geom1.originalGeom.length;
+        int length2 = geom2.originalGeom.length;
+        if (length1 > 4) {
+            if (length2 == 1) {
+                // poly vs circle
+                return new SolidToCircleCollider(geom1, geom2);
+            } else if (length2 == 4) {
+                return new SolidToLineCollider(geom1, geom2);
+            } else {
+                return new SolidToSolidCollider(geom1, geom2);
+            }
         }
-
-        return workingGeom;
+        // I think we can get away with ignoring all other collisions.
+        return new NoOpCollider(geom1, geom2);
     }
 
     @Override

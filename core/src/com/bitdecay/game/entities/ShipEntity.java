@@ -6,16 +6,16 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.collision.CollisionDirection;
-import com.bitdecay.game.component.BoostControlComponent;
+import com.bitdecay.game.component.collide.GeometryComponentFactory;
+import com.bitdecay.game.component.control.BoostControlComponent;
 import com.bitdecay.game.component.CameraFollowComponent;
-import com.bitdecay.game.component.CollisionGeometryComponent;
 import com.bitdecay.game.component.FuelComponent;
-import com.bitdecay.game.component.GravityComponent;
-import com.bitdecay.game.component.PlayerCollisionComponent;
+import com.bitdecay.game.component.GravityAffectedComponent;
+import com.bitdecay.game.component.collide.PlayerCollisionComponent;
 import com.bitdecay.game.component.ProximityComponent;
 import com.bitdecay.game.component.RenderColorComponent;
 import com.bitdecay.game.component.BodyDefComponent;
-import com.bitdecay.game.component.SteeringControlComponent;
+import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.ShipLaunchComponent;
 import com.bitdecay.game.math.Geom;
@@ -33,12 +33,12 @@ public class ShipEntity extends GameEntity {
         addComponent(new SteeringControlComponent(new Rectangle(0, 0, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight())));
 
         float[] geomPoints = new float[]{-100, 50, 100, 0, -100, -50};
-        addComponent(new CollisionGeometryComponent(geomPoints, CollisionDirection.RECEIVES));
+        addComponent(GeometryComponentFactory.getPolygonGeomComponent(geomPoints, CollisionDirection.RECEIVES));
         addComponent(new PlayerCollisionComponent());
 
         addComponent(new BodyDefComponent(geomPoints));
         addComponent(new TransformComponent(startPosition, Geom.ROTATION_UP));
-        addComponent(new GravityComponent());
+        addComponent(new GravityAffectedComponent());
 
         addComponent(new ProximityComponent(0, null, true));
         addComponent(new CameraFollowComponent());

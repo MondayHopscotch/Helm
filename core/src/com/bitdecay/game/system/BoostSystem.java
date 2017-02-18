@@ -3,7 +3,7 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.component.BoostControlComponent;
+import com.bitdecay.game.component.control.BoostControlComponent;
 import com.bitdecay.game.component.BoosterComponent;
 import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.TransformComponent;

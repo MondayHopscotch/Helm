@@ -20,8 +20,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.desktop.editor.file.FileUtils;
 import com.bitdecay.game.desktop.editor.mode.DeleteFocusMouseMode;
+import com.bitdecay.game.desktop.editor.mode.DeleteGravityWellMouseMode;
 import com.bitdecay.game.desktop.editor.mode.DeleteSegmentMouseMode;
 import com.bitdecay.game.desktop.editor.mode.FocusPointMouseMode;
+import com.bitdecay.game.desktop.editor.mode.GravityWellMouseMode;
 import com.bitdecay.game.desktop.editor.mode.LandingPlatMouseMode;
 import com.bitdecay.game.desktop.editor.mode.LineSegmentMouseMode;
 import com.bitdecay.game.desktop.editor.mode.MouseMode;
@@ -88,6 +90,8 @@ public class EditorScreen extends InputAdapter implements Screen {
         addTool(OptionsMode.PLACE_START, new StartPointMouseMode(builder));
         addTool(OptionsMode.ADD_FOCUS, new FocusPointMouseMode(builder));
         addTool(OptionsMode.REMOVE_FOCUS, new DeleteFocusMouseMode(builder));
+        addTool(OptionsMode.ADD_GRAV_WELL, new GravityWellMouseMode(builder));
+        addTool(OptionsMode.REMOVE_GRAV_WELL, new DeleteGravityWellMouseMode(builder));
     }
 
     private void addTool(OptionsMode option, MouseMode mode) {
@@ -189,7 +193,13 @@ public class EditorScreen extends InputAdapter implements Screen {
             for (Circle focalPoint : builder.focusPoints) {
                 shaper.circle(focalPoint.x, focalPoint.y, focalPoint.radius);
             }
+        }
 
+        shaper.setColor(Color.PURPLE);
+        if (builder.gravityWells != null) {
+            for (Circle well : builder.gravityWells) {
+                shaper.circle(well.x, well.y, well.radius);
+            }
         }
     }
 

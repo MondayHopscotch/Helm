@@ -8,10 +8,10 @@ import com.bitdecay.game.collision.CollisionDirection;
 import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.BodyDefComponent;
 import com.bitdecay.game.component.CameraFollowComponent;
-import com.bitdecay.game.component.CollisionGeometryComponent;
-import com.bitdecay.game.component.CollisionKindComponent;
+import com.bitdecay.game.component.collide.CollisionKindComponent;
 import com.bitdecay.game.component.RenderColorComponent;
 import com.bitdecay.game.component.TransformComponent;
+import com.bitdecay.game.component.collide.GeometryComponentFactory;
 import com.bitdecay.game.math.Geom;
 
 /**
@@ -27,7 +27,7 @@ public class LandingPlatformEntity extends GameEntity {
 
         float[] geomPoints = Geom.rectangleToFloatPoints(copy);
         addComponent(new BodyDefComponent(geomPoints));
-        addComponent(new CollisionGeometryComponent(geomPoints, CollisionDirection.DELIVERS));
+        addComponent(GeometryComponentFactory.getPolygonGeomComponent(geomPoints, CollisionDirection.DELIVERS));
         addComponent(new CollisionKindComponent(CollisionKind.LANDING_PLATFORM));
 
         addComponent(new TransformComponent(center, Geom.NO_ROTATION));

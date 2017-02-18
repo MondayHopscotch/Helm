@@ -3,7 +3,7 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.InputProcessor;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.component.BoostControlComponent;
+import com.bitdecay.game.component.control.BoostControlComponent;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
 

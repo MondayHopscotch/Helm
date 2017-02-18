@@ -24,8 +24,10 @@ public enum EditorKeys {
     START_MODE("Place Start", false, Input.Keys.NUM_4),
     ADD_FOCUS("Add Focal Point", false, Input.Keys.NUM_5),
     REMOVE_FOCUS("Remove Focal Point", false, Input.Keys.NUM_6),
+    ADD_GRAV_WELL("Add Gravity Well", false, Input.Keys.NUM_7),
+    REMOVE_GRAV_WELL("Remove Gravity Well", false, Input.Keys.NUM_8),
 
-    SET_FUEL("Set Fuel Level", false, Input.Keys.NUM_7),
+    SET_FUEL("Set Fuel Level", false, Input.Keys.F),
 
     SET_NAME("Set Level Name", false, Input.Keys.N),
 

@@ -3,9 +3,9 @@ package com.bitdecay.game.system;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.collision.CollisionKind;
-import com.bitdecay.game.component.CollidedWithComponent;
+import com.bitdecay.game.component.collide.CollidedWithComponent;
 import com.bitdecay.game.component.CrashComponent;
-import com.bitdecay.game.component.PlayerCollisionComponent;
+import com.bitdecay.game.component.collide.PlayerCollisionComponent;
 import com.bitdecay.game.component.RateLandingComponent;
 import com.bitdecay.game.component.RenderColorComponent;
 import com.bitdecay.game.component.TransformComponent;
@@ -30,7 +30,8 @@ public class PlayerCollisionHandlerSystem extends AbstractIteratingGameSystem {
         //      show score and move to next level if successfully landed on platform
         if (CollisionKind.LANDING_PLATFORM.equals(collided.with)) {
             entity.addComponent(new RateLandingComponent(collided.delivererGeometry));
-        } else if (CollisionKind.WALL.equals(collided.with)) {
+//        } else if (CollisionKind.WALL.equals(collided.with)) {
+        } else {
             entity.addComponent(new CrashComponent());
         }
     }
