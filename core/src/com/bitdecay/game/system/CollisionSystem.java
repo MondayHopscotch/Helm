@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.collision.Collider;
 import com.bitdecay.game.collision.CollisionDirection;
 import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.CollidedWithComponent;
@@ -54,6 +55,7 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
                     CollisionGeometryComponent geom2 = entity2.getComponent(CollisionGeometryComponent.class);
                     CollisionKindComponent kind2 = entity2.getComponent(CollisionKindComponent.class);
 
+                    getCollider(geom1, geom2);
 
                     float[] geom1WorkingSet = getWorkingGeom(geom1);
                     float[] geom2WorkingSet = getWorkingGeom(geom2);
@@ -96,6 +98,10 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
                 }
             }
         }
+    }
+
+    private Collider getCollider(CollisionGeometryComponent geom1, CollisionGeometryComponent geom2) {
+
     }
 
     private float[] getWorkingGeom(CollisionGeometryComponent geomComponent) {

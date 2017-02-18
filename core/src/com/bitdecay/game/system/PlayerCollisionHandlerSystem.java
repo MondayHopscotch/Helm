@@ -30,7 +30,8 @@ public class PlayerCollisionHandlerSystem extends AbstractIteratingGameSystem {
         //      show score and move to next level if successfully landed on platform
         if (CollisionKind.LANDING_PLATFORM.equals(collided.with)) {
             entity.addComponent(new RateLandingComponent(collided.delivererGeometry));
-        } else if (CollisionKind.WALL.equals(collided.with)) {
+//        } else if (CollisionKind.WALL.equals(collided.with)) {
+        } else {
             entity.addComponent(new CrashComponent());
         }
     }

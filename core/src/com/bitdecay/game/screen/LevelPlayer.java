@@ -10,13 +10,14 @@ import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.camera.FollowOrthoCamera;
-import com.bitdecay.game.entities.ExplosionEntity;
 import com.bitdecay.game.entities.FocusPointEntity;
+import com.bitdecay.game.entities.GravityWellEntity;
 import com.bitdecay.game.entities.LandingPlatformEntity;
 import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
 import com.bitdecay.game.system.BoostSystem;
 import com.bitdecay.game.system.BoosterInputSystem;
+import com.bitdecay.game.system.GravityApplicationSystem;
 import com.bitdecay.game.system.ProximityFocusSystem;
 import com.bitdecay.game.system.CameraUpdateSystem;
 import com.bitdecay.game.system.CollisionAlignmentSystem;
@@ -24,7 +25,7 @@ import com.bitdecay.game.system.CollisionSystem;
 import com.bitdecay.game.system.CrashSystem;
 import com.bitdecay.game.system.DelayedAddSystem;
 import com.bitdecay.game.system.GameSystem;
-import com.bitdecay.game.system.GravitySystem;
+import com.bitdecay.game.system.GravityFinderSystem;
 import com.bitdecay.game.system.PlayerBoundarySystem;
 import com.bitdecay.game.system.LandingSystem;
 import com.bitdecay.game.system.MovementSystem;
@@ -40,11 +41,10 @@ import com.bitdecay.game.system.render.RenderExplosionSystem;
 import com.bitdecay.game.system.render.RenderFuelSystem;
 import com.bitdecay.game.system.SteeringInputSystem;
 import com.bitdecay.game.system.SteeringSystem;
+import com.bitdecay.game.system.render.RenderGravityWellSystem;
 import com.bitdecay.game.system.render.RenderSteeringSystem;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
-
-import java.util.Iterator;
 
 /**
  * Created by Monday on 12/18/2016.
@@ -116,7 +116,8 @@ public class LevelPlayer {
         PlayerStartLevelSystem startSystem = new PlayerStartLevelSystem(pilot);
         inputMux.addProcessor(startSystem);
 
-        GravitySystem gravitySystem = new GravitySystem(pilot);
+        GravityFinderSystem gravityFinderSystem = new GravityFinderSystem(pilot);
+        GravityApplicationSystem gravityApplicationSystem = new GravityApplicationSystem(pilot);
 
         MovementSystem movementSystem = new MovementSystem(pilot);
 
@@ -143,7 +144,8 @@ public class LevelPlayer {
         addGameplaySystem(boosterInputSystem);
         addGameplaySystem(boostSystem);
         addGameplaySystem(startSystem);
-        addGameplaySystem(gravitySystem);
+        addGameplaySystem(gravityFinderSystem);
+        addGameplaySystem(gravityApplicationSystem);
         addGameplaySystem(steeringInputSystem);
         addGameplaySystem(steeringSystem);
         addGameplaySystem(movementSystem);
@@ -163,11 +165,13 @@ public class LevelPlayer {
         RenderBoostSystem renderBoostSystem = new RenderBoostSystem(pilot, shapeRenderer);
         RenderFuelSystem renderFuelSystem = new RenderFuelSystem(pilot, shapeRenderer);
         RenderExplosionSystem renderExplosionSystem = new RenderExplosionSystem(pilot, shapeRenderer);
+        RenderGravityWellSystem renderGravityWellSystem = new RenderGravityWellSystem(pilot, shapeRenderer);
 
         gameRenderSystems.add(renderBoostSystem);
         gameRenderSystems.add(renderBodySystem);
         gameRenderSystems.add(renderFuelSystem);
         gameRenderSystems.add(renderExplosionSystem);
+        gameRenderSystems.add(renderGravityWellSystem);
 
         RenderSteeringSystem renderSteeringSystem = new RenderSteeringSystem(pilot, screenCam, shapeRenderer);
         screenRenderSystems.add(renderSteeringSystem);
@@ -218,8 +222,9 @@ public class LevelPlayer {
         printMatchingGameSystems(ship);
         allEntities.add(ship);
 
-        resetAllButInputSystems();
+        allEntities.add(new GravityWellEntity(new Vector2(300, 300), 100));
 
+        resetAllButInputSystems();
 
         updateBoundarySystem(levelDef.levelLines);
     }

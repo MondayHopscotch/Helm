@@ -6,5 +6,6 @@ package com.bitdecay.game.collision;
 public enum CollisionKind {
     WALL,
     LANDING_PLATFORM,
-    PLAYER;
+    PLAYER,
+    GRAVITY_WELL
 }
