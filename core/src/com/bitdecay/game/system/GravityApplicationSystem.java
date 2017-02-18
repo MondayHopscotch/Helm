@@ -67,6 +67,8 @@ public class GravityApplicationSystem extends AbstractIteratingGameSystem {
     }
 
     private float calculateGravityStrength(float size, float distance) {
+        // we modify the distance to get the surface of the black hole to be a little stronger
+        distance -= size / 2;
         return (size * GRAVITY_DENSITY) / (distance * distance);
     }
 

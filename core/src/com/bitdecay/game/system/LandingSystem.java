@@ -53,11 +53,35 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         // check landing and either pass/fail
         float radsAwayFromStraightUp = Math.abs(transform.angle - Geom.ROTATION_UP);
 
+        float minBodyY = Geom.getMinY(landing.playerGeom);
+        float maxPlatY = Geom.getMaxY(landing.landingGeometry);
+        float yDifference = maxPlatY - minBodyY;
+
         System.out.println("LANDING VECTOR: " + velocity.currentVelocity);
         System.out.println("LANDING ANGLE: " + radsAwayFromStraightUp);
+        System.out.println("LANDING Y-DIFFERENCE: " + yDifference);
+
+        // velocity checks
         if (Math.abs(velocity.currentVelocity.y) > MAX_LANDING_SPEED ||
-                radsAwayFromStraightUp > MAX_LANDING_ANGLE) {
+                velocity.currentVelocity.y > 0) {
             entity.addComponent(new CrashComponent());
+            System.out.println("LANDED TO0 HARD: " + velocity.currentVelocity);
+            return;
+        }
+
+        // angle checks
+        if (radsAwayFromStraightUp > MAX_LANDING_ANGLE) {
+            entity.addComponent(new CrashComponent());
+            System.out.println("LANDED CROOKED: " + radsAwayFromStraightUp);
+            return;
+        }
+
+        // positional checks
+        if (yDifference > 5) {
+            // TODO: Tune this value. This represents how far into the platform the player can be to still count
+            // as hitting it from the top
+            entity.addComponent(new CrashComponent());
+            System.out.println("LANDED FROM WRONG SIDE OF PLAT. Y-Difference: " + (maxPlatY - minBodyY));
             return;
         }
 
