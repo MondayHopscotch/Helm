@@ -2,7 +2,7 @@ package com.bitdecay.game.system;
 
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.component.CollisionGeometryComponent;
+import com.bitdecay.game.component.collide.CollisionGeometryComponent;
 import com.bitdecay.game.component.TransformComponent;
 
 /**

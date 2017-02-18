@@ -213,6 +213,11 @@ public class LevelPlayer {
             allEntities.add(plat);
         }
 
+        for (Circle well: levelDef.gravityWells) {
+            GravityWellEntity gravityWell = new GravityWellEntity(well);
+            allEntities.add(gravityWell);
+        }
+
         for (Circle focus: levelDef.focusPoints) {
             FocusPointEntity focusPoint = new FocusPointEntity(focus);
             allEntities.add(focusPoint);
@@ -221,8 +226,6 @@ public class LevelPlayer {
         ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
         printMatchingGameSystems(ship);
         allEntities.add(ship);
-
-        allEntities.add(new GravityWellEntity(new Vector2(300, 300), 100));
 
         resetAllButInputSystems();
 

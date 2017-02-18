@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.component.SteeringControlComponent;
+import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 /**

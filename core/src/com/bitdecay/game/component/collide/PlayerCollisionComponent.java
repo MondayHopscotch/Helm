@@ -1,4 +1,6 @@
-package com.bitdecay.game.component;
+package com.bitdecay.game.component.collide;
+
+import com.bitdecay.game.component.GameComponent;
 
 /**
  * Created by Monday on 12/14/2016.

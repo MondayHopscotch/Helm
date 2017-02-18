@@ -4,15 +4,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.desktop.editor.LevelBuilder;
 
 /**
- * Created by Monday on 1/13/2017.
+ * Created by Monday on 2/18/2017.
  */
-public class FocusPointMouseMode extends AbstractDrawCircleMouseMode {
-    public FocusPointMouseMode(LevelBuilder builder) {
+
+public class GravityWellMouseMode extends AbstractDrawCircleMouseMode {
+    public GravityWellMouseMode(LevelBuilder builder) {
         super(builder);
     }
 
     @Override
     protected void objectDrawn(Vector2 startPoint, float radius) {
-        builder.addFocusPoint(startPoint, radius);
+        builder.addGravityWell(startPoint, radius);
     }
 }

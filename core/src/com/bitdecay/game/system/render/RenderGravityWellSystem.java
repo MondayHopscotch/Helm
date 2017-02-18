@@ -27,7 +27,6 @@ public class RenderGravityWellSystem extends AbstractIteratingGameSystem {
 
         renderer.setColor(Color.PURPLE);
         renderer.circle(transform.position.x, transform.position.y, gravity.size);
-        renderer.rect(transform.position.x - gravity.size / 2, transform.position.y - gravity.size / 2, gravity.size, gravity.size);
     }
 
     @Override

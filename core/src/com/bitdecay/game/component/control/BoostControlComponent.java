@@ -1,6 +1,7 @@
-package com.bitdecay.game.component;
+package com.bitdecay.game.component.control;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.bitdecay.game.component.GameComponent;
 
 /**
  * Created by Monday on 12/8/2016.
