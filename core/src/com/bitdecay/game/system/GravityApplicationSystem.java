@@ -3,7 +3,6 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.component.CrashComponent;
 import com.bitdecay.game.component.GravityAffectedComponent;
 import com.bitdecay.game.component.GravityProducerComponent;
 import com.bitdecay.game.component.TransformComponent;
@@ -17,7 +16,10 @@ import java.util.Iterator;
 
 public class GravityApplicationSystem extends AbstractIteratingGameSystem {
     // this number gets our gravitational pull into a reasonable range. Think of it as "mass"
-    public static final float GRAVITY_DENSITY = 10000;
+    public static final float GRAVITY_DENSITY = 8000;
+    // this number tweaks how close to the surface the point of strongest gravity is.
+    // 1 means on the surface of the well, 0 means at the center of the well
+    public static final float SOURCE_GRAV_MODIFIER = .7f;
 
     Vector2 workingGravityVector = new Vector2();
 
@@ -68,7 +70,7 @@ public class GravityApplicationSystem extends AbstractIteratingGameSystem {
 
     private float calculateGravityStrength(float size, float distance) {
         // we modify the distance to get the surface of the black hole to be a little stronger
-        distance -= size / 2;
+        distance -= (size * SOURCE_GRAV_MODIFIER);
         return (size * GRAVITY_DENSITY) / (distance * distance);
     }
 

@@ -21,6 +21,7 @@ public class BoosterInputSystem extends AbstractIteratingGameSystem implements I
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
         BoostControlComponent button = entity.getComponent(BoostControlComponent.class);
+        button.pressed = false;
         for (ActiveTouch touch : tracker.activeTouches) {
             if (button.activeArea.contains(touch.currentLocation)) {
                 button.pressed = true;
