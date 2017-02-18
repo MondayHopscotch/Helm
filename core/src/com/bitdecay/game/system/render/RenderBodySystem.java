@@ -28,17 +28,13 @@ public class RenderBodySystem extends AbstractIteratingGameSystem {
 
         RenderColorComponent color = entity.getComponent(RenderColorComponent.class);
 
-        float[] rotated = Geom.rotatePoints(body.bodyPoints, transform.angle);
-        for (int i = 0; i < rotated.length; i += 2) {
-            rotated[i] += transform.position.x;
-            rotated[i+1] += transform.position.y;
-        }
+        float[] transformed = Geom.transformPoints(body.bodyPoints, transform);
 
         renderer.setColor(color.color);
-        if (rotated.length > Geom.DATA_POINTS_FOR_LINE) {
-            renderer.polygon(rotated);
+        if (transformed.length > Geom.DATA_POINTS_FOR_LINE) {
+            renderer.polygon(transformed);
         } else {
-            renderer.polyline(rotated);
+            renderer.polyline(transformed);
         }
     }
 

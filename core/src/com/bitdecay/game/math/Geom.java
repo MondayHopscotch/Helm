@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.world.LineSegment;
 
 /**
@@ -112,5 +113,26 @@ public class Geom {
         ySnap += yOffset;
 
         return new Vector2(xSnap, ySnap);
+    }
+
+    // rotate first, then translate
+    public static float[] transformPoints(float[] points, TransformComponent transform) {
+       return translatePoints(rotatePoints(points, transform.angle), transform.position);
+    }
+
+    public static float getMinY(float[] points) {
+        float minY = Float.POSITIVE_INFINITY;
+        for (int i = 1; i < points.length; i += 2) {
+            minY = Math.min(minY, points[i]);
+        }
+        return minY;
+    }
+
+    public static float getMaxY(float[] points) {
+        float maxY = Float.NEGATIVE_INFINITY;
+        for (int i = 1; i < points.length; i += 2) {
+            maxY = Math.max(maxY, points[i]);
+        }
+        return maxY;
     }
 }
