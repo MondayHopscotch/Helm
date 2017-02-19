@@ -1,6 +1,8 @@
 package com.bitdecay.game.unlock;
 
 import com.badlogic.gdx.Preferences;
+import com.bitdecay.game.Helm;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import java.util.Map;
 
 public class Statistics {
     Map<StatName, SingleCountStat> statistics = new HashMap<>();
+    private Preferences preferences;
 
     public void init(Preferences preferences) {
         for (StatName statName : StatName.values()) {
@@ -17,12 +20,13 @@ public class Statistics {
         }
     }
 
-    public void save(Preferences preferences) {
+    public void save() {
         for (StatName statName : statistics.keySet()) {
             SingleCountStat stat = statistics.get(statName);
             System.out.println("Saving stat '" + statName.preferenceID + "' with value '" + stat.count + "'");
-            preferences.putInteger(statName.preferenceID, stat.count);
+            Helm.prefs.putInteger(statName.preferenceID, stat.count);
         }
+        Helm.prefs.flush();
     }
 
     private void initStat(StatName statName, Preferences preferences) {
@@ -41,6 +45,8 @@ public class Statistics {
             System.out.println("Adding '" + count + "' to stat '" + statName.preferenceID + "'");
             stat.count += count;
         }
+
+        save();
     }
 
     public int getCount(StatName statName) {

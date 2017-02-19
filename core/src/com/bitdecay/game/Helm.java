@@ -51,9 +51,6 @@ public class Helm extends Game {
         super.dispose();
         assets.dispose();
         if (Helm.prefs != null) {
-            if (Helm.stats != null) {
-                Helm.stats.save(Helm.prefs);
-            }
             Helm.prefs.flush();
         }
     }
