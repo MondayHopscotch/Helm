@@ -11,10 +11,11 @@ import java.util.Map;
  */
 
 public class Statistics {
-    Map<StatName, SingleCountStat> statistics = new HashMap<>();
+    Map<StatName, LiveStat> statistics = new HashMap<>();
     private Preferences preferences;
 
     public void init(Preferences preferences) {
+        this.preferences = preferences;
         for (StatName statName : StatName.values()) {
             initStat(statName, preferences);
         }
@@ -22,9 +23,8 @@ public class Statistics {
 
     public void save() {
         for (StatName statName : statistics.keySet()) {
-            SingleCountStat stat = statistics.get(statName);
-            System.out.println("Saving stat '" + statName.preferenceID + "' with value '" + stat.count + "'");
-            Helm.prefs.putInteger(statName.preferenceID, stat.count);
+            LiveStat stat = statistics.get(statName);
+            stat.save(preferences);
         }
         Helm.prefs.flush();
     }
@@ -36,36 +36,47 @@ public class Statistics {
             }
         }
 
-        statistics.put(statName, new SingleCountStat(statName, preferences));
+        switch(statName.type) {
+            case COUNT:
+                statistics.put(statName, new LiveCountStat(statName, preferences));
+                break;
+            case TIME:
+                statistics.put(statName, new LiveTimeStat(statName, preferences));
+                break;
+        }
     }
 
-    public void add(StatName statName, int count) {
-        SingleCountStat stat = statistics.get(statName);
+    public void count(StatName statName, int count) {
+        LiveStat stat = statistics.get(statName);
         if (stat != null) {
+            if (StatType.COUNT != stat.statName.type) {
+                System.out.println("Adding count to wrong stat type. Bailing");
+                return;
+            }
             System.out.println("Adding '" + count + "' to stat '" + statName.preferenceID + "'");
-            stat.count += count;
+            ((LiveCountStat)stat).count += count;
+            save();
         }
-
-        save();
     }
 
-    public int getCount(StatName statName) {
-        SingleCountStat stat = statistics.get(statName);
+    public void roll(StatName statName, float time) {
+        LiveStat stat = statistics.get(statName);
         if (stat != null) {
-            return stat.count;
-        } else {
-            return Integer.MIN_VALUE;
+            if (StatType.TIME != stat.statName.type) {
+                System.out.println("Adding time to wrong stat type. Bailing");
+                return;
+            }
+            System.out.println("Adding '" + time + "' to stat '" + statName.preferenceID + "'");
+            ((LiveTimeStat)stat).amount += time;
+            save();
         }
     }
 
-    private class SingleCountStat {
-        int count;
-        private StatName statName;
-
-        public SingleCountStat(StatName statName, Preferences preferences) {
-            this.statName = statName;
-            count = preferences.getInteger(statName.preferenceID, 0);
-            System.out.println("Initializing stat '" + statName.preferenceID + "' with value '" + count + "'");
+    public LiveStat getLiveStat(StatName statName) {
+        if (statistics.containsKey(statName)) {
+            return statistics.get(statName);
+        } else {
+            return new StatNotFound(statName, preferences);
         }
     }
 }

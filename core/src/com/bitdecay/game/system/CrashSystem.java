@@ -33,17 +33,17 @@ public class CrashSystem extends AbstractIteratingGameSystem {
 
         switch (crash.with) {
             case WALL:
-                Helm.stats.add(StatName.WALL_CRASHES, 1);
+                Helm.stats.count(StatName.WALL_CRASHES, 1);
                 break;
             case LANDING_PLATFORM:
-                Helm.stats.add(StatName.LANDING_PLAT_CRASHES, 1);
+                Helm.stats.count(StatName.LANDING_PLAT_CRASHES, 1);
 
                 break;
             case LEVEL_BOUNDARY:
-                Helm.stats.add(StatName.OOB_CRASHES, 1);
+                Helm.stats.count(StatName.OOB_CRASHES, 1);
                 break;
             case GRAVITY_WELL:
-                Helm.stats.add(StatName.GRAV_WELL_CRASHES, 1);
+                Helm.stats.count(StatName.GRAV_WELL_CRASHES, 1);
                 break;
             default:
                 // do nothing

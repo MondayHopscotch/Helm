@@ -36,7 +36,7 @@ public class StatsScreen extends AbstractScrollingItemScreen {
         statNameLabel.setAlignment(Align.center);
         statNameLabel.setFontScale(game.fontScale);
 
-        Label statValueLabel = new Label(Integer.toString(Helm.stats.getCount(statName)), skin);
+        Label statValueLabel = new Label(Helm.stats.getLiveStat(statName).format(), skin);
         statValueLabel.setAlignment(Align.center);
         statValueLabel.setFontScale(game.fontScale);
 
