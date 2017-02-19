@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.unlock.Statistics;
 import com.bitdecay.game.world.LevelDefinition;
 
 /**
@@ -19,6 +20,7 @@ public class HelmEditor extends Game {
     @Override
     public void create() {
         Helm.prefs = Gdx.app.getPreferences("test-prefs");
+        Helm.stats = new Statistics(); // doesn't need to load anything
         editorScreen = new EditorScreen(this);
         levelTestScreen = new LevelTestScreen(this);
         showEditor();

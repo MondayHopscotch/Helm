@@ -5,20 +5,23 @@ package com.bitdecay.game.unlock;
  */
 
 public enum StatName {
-    LAUNCHES("Launches", "playerLaunches"),
-    LANDINGS("Successful Landings", "landings"),
-    WALL_CRASHES("Crashes", "wallCrashes"),
-    GRAV_WELL_CRASHES("Gravity Well Crashes", "gravWellCrashes"),
-    OOB_CRASHES("Out Of Bounds Crashes", "OOBCrashes"),
-    LANDING_PLAT_CRASHES("Landing Platform Crashes", "platformCrashes");
+    FLIGHT_TIME("Total Flight Time", "flightTime", StatType.TIME),
+    LAUNCHES("Launches", "playerLaunches", StatType.COUNT),
+    LANDINGS("Successful Landings", "landings", StatType.COUNT),
+    WALL_CRASHES("Crashes", "wallCrashes", StatType.COUNT),
+    GRAV_WELL_CRASHES("Gravity Well Crashes", "gravWellCrashes", StatType.COUNT),
+    OOB_CRASHES("Out Of Bounds Crashes", "OOBCrashes", StatType.COUNT),
+    LANDING_PLAT_CRASHES("Landing Platform Crashes", "platformCrashes", StatType.COUNT);
 
 
     public final String displayName;
     public final String preferenceID;
+    public StatType type;
 
-    StatName(String display, String preference) {
+    StatName(String display, String preference, StatType type) {
 
         this.displayName = display;
         this.preferenceID = preference;
+        this.type = type;
     }
 }
