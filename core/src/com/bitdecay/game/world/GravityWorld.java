@@ -13,6 +13,9 @@ public class GravityWorld extends LevelWorld {
         Json json = new Json();
         addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/gravity/easy_grav.json")));
         addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/gravity/tough_cookies.json")));
+        addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/gravity/conveyor.json")));
+        addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/gravity/shake_n_bake.json")));
+        addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/gravity/needle.json")));
     }
 
     @Override

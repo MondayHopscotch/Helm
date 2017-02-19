@@ -17,9 +17,13 @@ import java.util.Iterator;
 public class GravityApplicationSystem extends AbstractIteratingGameSystem {
     // this number gets our gravitational pull into a reasonable range. Think of it as "mass"
     public static final float GRAVITY_DENSITY = 8000;
+
     // this number tweaks how close to the surface the point of strongest gravity is.
     // 1 means on the surface of the well, 0 means at the center of the well
-    public static final float SOURCE_GRAV_MODIFIER = .7f;
+    public static final float SOURCE_GRAV_MODIFIER = .8f;
+
+    // I was hoping this would let me tune gravity, but numbers between [1, 2) cause really weird behavior
+    public static final float GRAVITY_DECAY_POWER = 2f;
 
     Vector2 workingGravityVector = new Vector2();
 
@@ -71,7 +75,7 @@ public class GravityApplicationSystem extends AbstractIteratingGameSystem {
     private float calculateGravityStrength(float size, float distance) {
         // we modify the distance to get the surface of the black hole to be a little stronger
         distance -= (size * SOURCE_GRAV_MODIFIER);
-        return (size * GRAVITY_DENSITY) / (distance * distance);
+        return (float) ((size * GRAVITY_DENSITY) / (Math.pow(distance, GRAVITY_DECAY_POWER)));
     }
 
     @Override
