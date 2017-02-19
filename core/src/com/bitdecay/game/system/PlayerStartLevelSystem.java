@@ -4,6 +4,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.control.BoostControlComponent;
 import com.bitdecay.game.component.BoosterComponent;
@@ -18,6 +19,7 @@ import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
+import com.bitdecay.game.unlock.StatName;
 
 /**
  * Created by Monday on 12/14/2016.
@@ -68,6 +70,7 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
 
             entity.addComponent(new DelayedAddComponent(boosterDelay, collisionDelay, steeringDelay));
             pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_LAUNCH);
+            Helm.stats.add(StatName.LAUNCHES, 1);
         }
     }
 

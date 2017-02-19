@@ -10,11 +10,13 @@ import com.bitdecay.game.screen.GameScreen;
 import com.bitdecay.game.screen.TitleScreen;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
+import com.bitdecay.game.unlock.Statistics;
 
 public class Helm extends Game {
+    public static boolean debug;
 
     public static Preferences prefs;
-    public static boolean debug;
+    public static Statistics stats;
 
     public AssetManager assets;
     public Skin skin;
@@ -33,6 +35,9 @@ public class Helm extends Game {
         // super arbitrary number to try to get fonts to scale nicely for different screens
         fontScale = (int)(Gdx.graphics.getWidth() / 300f);
 
+        stats = new Statistics();
+        stats.init(Helm.prefs);
+
         setScreen(new TitleScreen(this));
     }
 
@@ -46,6 +51,9 @@ public class Helm extends Game {
         super.dispose();
         assets.dispose();
         if (Helm.prefs != null) {
+            if (Helm.stats != null) {
+                Helm.stats.save(Helm.prefs);
+            }
             Helm.prefs.flush();
         }
     }

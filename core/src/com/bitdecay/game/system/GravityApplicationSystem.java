@@ -68,7 +68,6 @@ public class GravityApplicationSystem extends AbstractIteratingGameSystem {
             cumulativeGravity.y = 0;
         }
 
-        System.out.println("Gravity Total: " + cumulativeGravity);
         velocity.currentVelocity.add(cumulativeGravity.scl(delta));
     }
 

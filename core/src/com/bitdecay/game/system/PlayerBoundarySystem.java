@@ -3,6 +3,7 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.CrashComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.VelocityComponent;
@@ -31,7 +32,7 @@ public class PlayerBoundarySystem extends AbstractIteratingGameSystem {
         workingVector.set(center);
         TransformComponent transform = entity.getComponent(TransformComponent.class);
         if (workingVector.sub(transform.position).len() > radius) {
-            entity.addComponent(new CrashComponent());
+            entity.addComponent(new CrashComponent(CollisionKind.LEVEL_BOUNDARY));
         }
     }
 

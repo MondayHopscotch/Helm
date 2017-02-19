@@ -3,6 +3,8 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.math.MathUtils;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.Helm;
+import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.BoosterComponent;
 import com.bitdecay.game.component.CrashComponent;
 import com.bitdecay.game.component.FuelComponent;
@@ -15,6 +17,7 @@ import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SoundMode;
+import com.bitdecay.game.unlock.StatName;
 
 /**
  * Created by Monday on 12/17/2016.
@@ -64,14 +67,14 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         // velocity checks
         if (Math.abs(velocity.currentVelocity.y) > MAX_LANDING_SPEED ||
                 velocity.currentVelocity.y > 0) {
-            entity.addComponent(new CrashComponent());
+            entity.addComponent(new CrashComponent(CollisionKind.LANDING_PLATFORM));
             System.out.println("LANDED TO0 HARD: " + velocity.currentVelocity);
             return;
         }
 
         // angle checks
         if (radsAwayFromStraightUp > MAX_LANDING_ANGLE) {
-            entity.addComponent(new CrashComponent());
+            entity.addComponent(new CrashComponent(CollisionKind.LANDING_PLATFORM));
             System.out.println("LANDED CROOKED: " + radsAwayFromStraightUp);
             return;
         }
@@ -80,7 +83,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         if (yDifference > 5) {
             // TODO: Tune this value. This represents how far into the platform the player can be to still count
             // as hitting it from the top
-            entity.addComponent(new CrashComponent());
+            entity.addComponent(new CrashComponent(CollisionKind.LANDING_PLATFORM));
             System.out.println("LANDED FROM WRONG SIDE OF PLAT. Y-Difference: " + (maxPlatY - minBodyY));
             return;
         }
@@ -99,6 +102,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
         score.timeTaken = timer.secondsElapsed;
 
+        Helm.stats.add(StatName.LANDINGS, 1);
         pilot.finishLevel(score);
     }
 

@@ -43,7 +43,7 @@ public class TitleScreen implements Screen {
         mainTable.setFillParent(true);
 
         Actor mainMenu = buildMainMenu();
-        mainTable.add(mainMenu).expand();
+        mainTable.add(mainMenu).expand().align(Align.bottom);
         mainTable.row();
 
         Actor versionActor = buildVersionTag();
@@ -78,6 +78,16 @@ public class TitleScreen implements Screen {
         });
         optionsLabel.setFontScale(game.fontScale * 1.8f);
 
+        Label statsLabel = new Label("Stats", skin);
+        statsLabel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                finishLoadingAssets();
+                game.setScreen(new StatsScreen(game));
+            }
+        });
+        statsLabel.setFontScale(game.fontScale * 1.8f);
+
         Label creditLabel = new Label("Credits", skin);
         creditLabel.addListener(new ClickListener() {
             @Override
@@ -92,6 +102,8 @@ public class TitleScreen implements Screen {
         mainMenu.add(startLabel);
         mainMenu.row();
         mainMenu.add(optionsLabel);
+        mainMenu.row();
+        mainMenu.add(statsLabel);
         mainMenu.row();
         mainMenu.add(creditLabel);
 

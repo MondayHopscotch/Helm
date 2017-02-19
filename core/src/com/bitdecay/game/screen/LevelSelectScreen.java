@@ -29,6 +29,10 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
     @Override
     public void populateRows(Table levelTable) {
+        itemTable.columnDefaults(1).expandX();
+        itemTable.columnDefaults(2).width(game.fontScale * 50);
+        itemTable.columnDefaults(3).width(game.fontScale * 50);
+        
         int totalHighScore = 0;
         float totalBestTime = 0;
 
