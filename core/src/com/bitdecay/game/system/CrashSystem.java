@@ -2,6 +2,7 @@ package com.bitdecay.game.system;
 
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.component.CrashComponent;
 import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.component.TransformComponent;
@@ -9,6 +10,7 @@ import com.bitdecay.game.entities.ExplosionEntity;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
+import com.bitdecay.game.unlock.StatName;
 
 /**
  * Created by Monday on 12/18/2016.
@@ -26,6 +28,26 @@ public class CrashSystem extends AbstractIteratingGameSystem {
         pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_EXPLODE);
 
         TransformComponent transformComponent = entity.getComponent(TransformComponent.class);
+
+        CrashComponent crash = entity.getComponent(CrashComponent.class);
+
+        switch (crash.with) {
+            case WALL:
+                Helm.stats.add(StatName.WALL_CRASHES, 1);
+                break;
+            case LANDING_PLATFORM:
+                Helm.stats.add(StatName.LANDING_PLAT_CRASHES, 1);
+
+                break;
+            case LEVEL_BOUNDARY:
+                Helm.stats.add(StatName.OOB_CRASHES, 1);
+                break;
+            case GRAVITY_WELL:
+                Helm.stats.add(StatName.GRAV_WELL_CRASHES, 1);
+                break;
+            default:
+                // do nothing
+        }
 
         ExplosionEntity explosionEntity = new ExplosionEntity(transformComponent.position);
         levelPlayer.addEntity(explosionEntity);

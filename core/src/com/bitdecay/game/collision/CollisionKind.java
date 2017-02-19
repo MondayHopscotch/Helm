@@ -7,5 +7,6 @@ public enum CollisionKind {
     WALL,
     LANDING_PLATFORM,
     PLAYER,
+    LEVEL_BOUNDARY,
     GRAVITY_WELL
 }

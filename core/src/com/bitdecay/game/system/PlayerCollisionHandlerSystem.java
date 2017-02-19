@@ -40,7 +40,7 @@ public class PlayerCollisionHandlerSystem extends AbstractIteratingGameSystem {
             entity.addComponent(new RateLandingComponent(playerGeom, collided.delivererGeometry));
 //        } else if (CollisionKind.WALL.equals(collided.with)) {
         } else {
-            entity.addComponent(new CrashComponent());
+            entity.addComponent(new CrashComponent(collided.with));
         }
     }
 

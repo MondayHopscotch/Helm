@@ -20,7 +20,7 @@ public abstract class AbstractScrollingItemScreen implements Screen {
     protected final Helm game;
     Stage stage;
     Skin skin;
-    private final Table itemTable;
+    protected final Table itemTable;
     private Table returnTable;
 
     public AbstractScrollingItemScreen(final Helm game) {
@@ -55,9 +55,6 @@ public abstract class AbstractScrollingItemScreen implements Screen {
     }
 
     protected void build() {
-        itemTable.columnDefaults(1).expandX();
-        itemTable.columnDefaults(2).width(game.fontScale * 50);
-        itemTable.columnDefaults(3).width(game.fontScale * 50);
         populateRows(itemTable);
         returnTable.add(getReturnButton());
     }

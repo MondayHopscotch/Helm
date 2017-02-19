@@ -30,6 +30,10 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
     @Override
     public void populateRows(Table worldTable) {
+        itemTable.columnDefaults(1).expandX();
+        itemTable.columnDefaults(2).width(game.fontScale * 50);
+        itemTable.columnDefaults(3).width(game.fontScale * 50);
+
         LevelWorld[] worlds = new LevelWorld[] {
                 new World1(),
                 new World2(),
