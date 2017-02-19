@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Json;
 
 public class GravityWorld extends LevelWorld {
     public GravityWorld() {
-        super(2);
+        super(6);
         Json json = new Json();
         addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/gravity/easy_grav.json")));
         addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/gravity/tough_cookies.json")));

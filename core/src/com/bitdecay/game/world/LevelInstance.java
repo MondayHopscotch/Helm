@@ -15,7 +15,7 @@ public class LevelInstance {
     }
 
     public int getHighScore() {
-        return Helm.prefs.getInteger(getScoreKey(), 0);
+        return Helm.prefs.getInteger(getScoreKey(), GamePrefs.SCORE_NOT_SET);
     }
 
     public boolean maybeSetNewHighScore(int newScore) {
