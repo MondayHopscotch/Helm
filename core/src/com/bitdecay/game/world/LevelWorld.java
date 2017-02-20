@@ -8,11 +8,11 @@ import com.bitdecay.game.prefs.GamePrefs;
  */
 public abstract class LevelWorld {
     public Array<LevelInstance> levels;
-    private final int requiredMedals;
+    public final int requiredLevelsForUnlock;
 
-    protected LevelWorld(int requiredMedals) {
+    protected LevelWorld(int requiredLevelsForUnlock) {
         levels = new Array<>();
-        this.requiredMedals = requiredMedals;
+        this.requiredLevelsForUnlock = requiredLevelsForUnlock;
     }
 
     public abstract String getWorldName();
