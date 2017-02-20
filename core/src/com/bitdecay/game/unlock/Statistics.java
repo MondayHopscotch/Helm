@@ -55,7 +55,8 @@ public class Statistics {
             }
             System.out.println("Adding '" + count + "' to stat '" + statName.preferenceID + "'");
             ((LiveCountStat)stat).count += count;
-            save();
+            stat.save(preferences);
+            preferences.flush();
         }
     }
 
@@ -68,7 +69,8 @@ public class Statistics {
             }
             System.out.println("Adding '" + time + "' to stat '" + statName.preferenceID + "'");
             ((LiveTimeStat)stat).amount += time;
-            save();
+            stat.save(preferences);
+            preferences.flush();
         }
     }
 

@@ -14,6 +14,7 @@ import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.ScoreMenu;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.SoundMode;
+import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelInstance;
 import com.bitdecay.game.world.LevelWorld;
@@ -123,6 +124,10 @@ public class GameScreen implements Screen, GamePilot {
         System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
         int levelScore = score.total();
         System.out.println("SCORE: " + levelScore);
+        if (currentLevel.getHighScore() == GamePrefs.SCORE_NOT_SET) {
+            // first time beating the level!
+            Helm.stats.count(StatName.LEVELS_COMPLETED, 1);
+        }
         score.newHighScore = currentLevel.maybeSetNewHighScore(levelScore);
         score.newBestTime = currentLevel.maybeSetNewBestTime(score.timeTaken);
         scoreMenu.setScore(score);

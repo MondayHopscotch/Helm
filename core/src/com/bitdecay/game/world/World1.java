@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Json;
 public class World1 extends LevelWorld {
 
     public World1() {
-        super(2);
+        super(0);
         Json json = new Json();
 
         addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/easy/level_easy1.json")));

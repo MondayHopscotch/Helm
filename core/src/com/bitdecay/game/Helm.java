@@ -25,6 +25,8 @@ public class Helm extends Game {
     @Override
     public void create() {
         Helm.prefs = Gdx.app.getPreferences("helm-pref");
+        checkUpdateClears();
+
         assets = new AssetManager();
         SFXLibrary.loadAllAsync(assets);
         MusicLibrary.loadAllAsync(assets);
@@ -39,6 +41,16 @@ public class Helm extends Game {
         stats.init(Helm.prefs);
 
         setScreen(new TitleScreen(this));
+    }
+
+    private void checkUpdateClears() {
+        String update0dot4 = "clear_required_0.4";
+        if (Helm.prefs.getBoolean(update0dot4, true)) {
+            System.out.println("Clearing prefs for '" + update0dot4 + "'");
+            Helm.prefs.clear();
+            Helm.prefs.putBoolean(update0dot4, false);
+            Helm.prefs.flush();
+        }
     }
 
     private void loadSkinSync(AssetManager assets) {

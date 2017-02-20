@@ -8,9 +8,11 @@ import com.bitdecay.game.prefs.GamePrefs;
  */
 public abstract class LevelWorld {
     public Array<LevelInstance> levels;
+    public final int requiredLevelsForUnlock;
 
-    protected LevelWorld(int levelCount) {
-        levels = new Array<>(levelCount);
+    protected LevelWorld(int requiredLevelsForUnlock) {
+        levels = new Array<>();
+        this.requiredLevelsForUnlock = requiredLevelsForUnlock;
     }
 
     public abstract String getWorldName();
@@ -22,7 +24,10 @@ public abstract class LevelWorld {
     public int getHighScore() {
         int total = 0;
         for (LevelInstance levelInst : levels) {
-            total += levelInst.getHighScore();
+            int score = levelInst.getHighScore();
+            if (score != GamePrefs.SCORE_NOT_SET) {
+                total += score;
+            }
         }
         return total;
     }

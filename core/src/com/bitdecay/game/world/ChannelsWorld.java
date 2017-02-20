@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Json;
 public class ChannelsWorld extends LevelWorld {
 
     public ChannelsWorld() {
-        super(2);
+        super(5);
         Json json = new Json();
 
         addLevelInstance(json.fromJson(LevelDefinition.class, Gdx.files.internal("level/medium/choke_point.json")));

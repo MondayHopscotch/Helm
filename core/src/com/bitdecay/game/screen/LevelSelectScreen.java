@@ -36,19 +36,22 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         int totalHighScore = 0;
         float totalBestTime = 0;
 
-        boolean allLevelsTimed = true;
+        boolean allLevelsCompleted = true;
         for (LevelInstance level : world.levels) {
             buildLevelRow(level, levelTable);
-            totalHighScore += level.getHighScore();
+            int score = level.getHighScore();
+            if (score != GamePrefs.SCORE_NOT_SET) {
+                totalHighScore += score;
+            }
 
             if (level.getBestTime() == GamePrefs.TIME_NOT_SET) {
-                allLevelsTimed = false;
+                allLevelsCompleted = false;
             } else {
                 totalBestTime += level.getBestTime();
             }
         }
 
-        if (!allLevelsTimed) {
+        if (!allLevelsCompleted) {
             totalBestTime = GamePrefs.TIME_NOT_SET;
         }
 
@@ -110,7 +113,12 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
         int levelHighScore = level.getHighScore();
 
-        Label levelScoreLabel = new Label(Integer.toString(levelHighScore), skin);
+        int score = levelHighScore;
+        if (score == GamePrefs.SCORE_NOT_SET) {
+            score = 0;
+        }
+
+        Label levelScoreLabel = new Label(Integer.toString(score), skin);
         levelScoreLabel.setAlignment(Align.right);
         levelScoreLabel.setFontScale(game.fontScale);
 

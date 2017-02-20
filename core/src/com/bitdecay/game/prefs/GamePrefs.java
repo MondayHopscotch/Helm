@@ -4,9 +4,14 @@ package com.bitdecay.game.prefs;
  * Created by Monday on 1/4/2017.
  */
 public class GamePrefs {
+
+    public static final String LEVELS_COMPLETED = "levelsCompleted";
+
     public static final String HIGH_SCORE = "highScore";
     public static final String BEST_TIME = "bestTime";
-    public static float TIME_NOT_SET = Float.POSITIVE_INFINITY;
+
+    public static final int SCORE_NOT_SET = Integer.MIN_VALUE;
+    public static final float TIME_NOT_SET = Float.POSITIVE_INFINITY;
 
     public static final String USE_JOYSTICK_STEERING = "useDynamicSteeringControls";
 

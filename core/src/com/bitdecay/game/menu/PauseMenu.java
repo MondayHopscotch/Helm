@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.Helm;
+import com.bitdecay.game.unlock.StatName;
 
 /**
  * Created by Monday on 1/5/2017.
@@ -52,6 +54,7 @@ public class PauseMenu {
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Helm.stats.count(StatName.ABANDONS, 1);
                 pilot.returnToMenus();
             }
         });

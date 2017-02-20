@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.time.TimerUtils;
+import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.ChannelsWorld;
 import com.bitdecay.game.world.GravityWorld;
 import com.bitdecay.game.world.IslandsWorld;
@@ -48,8 +49,14 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
         boolean allLevelsTimed = true;
 
+        int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID);
+
         for (LevelWorld world : worlds) {
-            buildWorldRow(world, worldTable);
+            if (levelsCompleted >= world.requiredLevelsForUnlock) {
+                buildWorldRow(world, worldTable);
+            } else {
+                // build some kind of "<x> more to unlock" row
+            }
             totalHighScore += world.getHighScore();
 
             if (world.getBestTime() == GamePrefs.TIME_NOT_SET) {
