@@ -4,6 +4,7 @@ import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.component.CrashComponent;
+import com.bitdecay.game.component.TimerComponent;
 import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.entities.ExplosionEntity;
@@ -27,6 +28,9 @@ public class CrashSystem extends AbstractIteratingGameSystem {
         pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_CRASH);
         pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_EXPLODE);
 
+        TimerComponent timer = entity.getComponent(TimerComponent.class);
+        Helm.stats.roll(StatName.FLIGHT_TIME, timer.secondsElapsed);
+
         TransformComponent transformComponent = entity.getComponent(TransformComponent.class);
 
         CrashComponent crash = entity.getComponent(CrashComponent.class);
@@ -37,7 +41,6 @@ public class CrashSystem extends AbstractIteratingGameSystem {
                 break;
             case LANDING_PLATFORM:
                 Helm.stats.count(StatName.LANDING_PLAT_CRASHES, 1);
-
                 break;
             case LEVEL_BOUNDARY:
                 Helm.stats.count(StatName.OOB_CRASHES, 1);
@@ -58,7 +61,8 @@ public class CrashSystem extends AbstractIteratingGameSystem {
     public boolean canActOn(GameEntity entity) {
         return entity.hasComponents(
                 CrashComponent.class,
-                TransformComponent.class
+                TransformComponent.class,
+                TimerComponent.class
         );
     }
 }
