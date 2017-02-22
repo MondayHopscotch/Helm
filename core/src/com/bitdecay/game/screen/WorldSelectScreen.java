@@ -52,7 +52,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID);
 
         for (LevelWorld world : worlds) {
-            if (levelsCompleted >= world.requiredLevelsForUnlock) {
+            if (Helm.debug || levelsCompleted >= world.requiredLevelsForUnlock) {
                 buildWorldRow(world, worldTable);
             } else {
                 // build some kind of "<x> more to unlock" row
