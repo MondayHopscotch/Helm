@@ -1,5 +1,6 @@
 package com.bitdecay.game.screen;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -52,11 +53,6 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID);
 
         for (LevelWorld world : worlds) {
-            if (Helm.debug || levelsCompleted >= world.requiredLevelsForUnlock) {
-                buildWorldRow(world, worldTable);
-            } else {
-                // build some kind of "<x> more to unlock" row
-            }
             totalHighScore += world.getHighScore();
 
             if (world.getBestTime() == GamePrefs.TIME_NOT_SET) {
@@ -64,6 +60,17 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             } else {
                 totalBestTime += world.getBestTime();
             }
+
+            if (levelsCompleted >= world.requiredLevelsForUnlock) {
+                buildWorldRow(world, worldTable);
+                worldTable.row().padTop(game.fontScale * 10);
+            } else {
+                // build some kind of "<x> more to unlock" row
+                buildHintedUnlockRow(world, worldTable, levelsCompleted);
+                worldTable.row().padTop(game.fontScale * 10);
+                break;
+            }
+
         }
 
         if (!allLevelsTimed) {
@@ -145,7 +152,18 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         table.add(worldNameLabel);
         table.add(worldScoreLabel);
         table.add(worldTimeLabel);
-        table.row().padTop(game.fontScale * 10);
         return worldHighScore;
+    }
+
+    public void buildHintedUnlockRow(LevelWorld world, Table worldTable, int levelsCompleted) {
+        int left = world.requiredLevelsForUnlock - levelsCompleted;
+        String remainingText = "Beat " + left + " more " + (left > 1 ? "levels" : "level") + " to unlock next world";
+
+        Label leftTillUnlockLabel = new Label(remainingText, skin);
+        leftTillUnlockLabel.setColor(Color.GRAY);
+        leftTillUnlockLabel.setAlignment(Align.center);
+        leftTillUnlockLabel.setFontScale(game.fontScale);
+
+        worldTable.add(leftTillUnlockLabel).colspan(4);
     }
 }
