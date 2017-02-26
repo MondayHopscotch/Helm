@@ -95,7 +95,7 @@ public class TitleScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
 //                game.setScreen(new CreditsScreen(game));
-                game.setScreen(new GameScreen(game, ReplayUtils.loadReplay("replay_Introduction_1488137071721")));
+                game.setScreen(new GameScreen(game, ReplayUtils.loadReplay("replay")));
             }
         });
         creditLabel.setFontScale(game.fontScale * 1.8f);

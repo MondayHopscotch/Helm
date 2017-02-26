@@ -38,7 +38,7 @@ public class JsonUtils {
         if (json == null) {
             initJson();
         }
-        return json.toJson(inputReplay);
+        return json.prettyPrint(inputReplay);
     }
 
     public static InputReplay unmarshalReplay(FileHandle replayHandle) {

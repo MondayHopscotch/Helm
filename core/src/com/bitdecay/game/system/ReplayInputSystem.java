@@ -26,23 +26,30 @@ public class ReplayInputSystem extends AbstractIteratingGameSystem {
 
         InputRecord inputRecord = replay.input.inputRecords.get(replay.nextInput);
 
-        if (levelPlayer.getTick() == inputRecord.tick) {
+        int tick = levelPlayer.getTick();
+        if (tick == inputRecord.tick) {
             // do stuff
-            if (inputRecord.angle!= Float.NEGATIVE_INFINITY && entity.hasComponent(SteeringControlComponent.class)) {
+            if (inputRecord.angle != Float.NEGATIVE_INFINITY) {
                 SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
                 steering.angle = inputRecord.angle;
+                System.out.println("REPLAY: TICK " + tick + " Setting angle: " + inputRecord.angle);
             }
 
-            if (entity.hasComponent(BoostControlComponent.class)) {
-                BoostControlComponent boost = entity.getComponent(BoostControlComponent.class);
-                boost.pressed = inputRecord.boosting;
-            }
+            BoostControlComponent boost = entity.getComponent(BoostControlComponent.class);
+            boost.pressed = inputRecord.boosting;
+            System.out.println("REPLAY: TICK " + tick + " Setting boost: " + inputRecord.boosting);
+
             replay.nextInput++;
         }
     }
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(ReplayActiveComponent.class);
+        return entity.hasComponents(
+                ReplayActiveComponent.class,
+                SteeringControlComponent.class,
+                BoostControlComponent.class,
+                BoostControlComponent.class
+        );
     }
 }

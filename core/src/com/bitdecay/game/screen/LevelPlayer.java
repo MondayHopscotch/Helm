@@ -62,6 +62,7 @@ public class LevelPlayer {
     int tick = 0;
     InputReplay inputReplay = new InputReplay();
     boolean resetQueued = false;
+    boolean captureActive = false;
 
     float recordingAngle = Float.NEGATIVE_INFINITY;
     boolean lastRecordedBoost = false;
@@ -156,14 +157,16 @@ public class LevelPlayer {
         ReplayInputSystem replayInputSystem = new ReplayInputSystem(pilot);
 
         addGameplaySystem(cameraSystem);
+
         addGameplaySystem(replayInputSystem);
         addGameplaySystem(boosterInputSystem);
         addGameplaySystem(boostSystem);
+        addGameplaySystem(steeringInputSystem);
+        addGameplaySystem(steeringSystem);
+
         addGameplaySystem(startSystem);
         addGameplaySystem(gravityFinderSystem);
         addGameplaySystem(gravityApplicationSystem);
-        addGameplaySystem(steeringInputSystem);
-        addGameplaySystem(steeringSystem);
         addGameplaySystem(movementSystem);
         addGameplaySystem(collisionAlignmentSystem);
         addGameplaySystem(collisionSystem);
@@ -238,6 +241,8 @@ public class LevelPlayer {
     }
 
     protected void resetLevel(LevelDefinition levelDef) {
+        resetQueued = true;
+
         allEntities.clear();
 
         for (LineSegment line : levelDef.levelLines) {
@@ -302,17 +307,14 @@ public class LevelPlayer {
     public void update(float delta) {
         deltaRemainder += delta;
         while (deltaRemainder > DELTA_STEP) {
-            tick(delta);
+            tick(DELTA_STEP);
             deltaRemainder -= DELTA_STEP;
         }
     }
 
     protected void tick(float delta) {
-        if (resetQueued) {
-            tick = 0;
-            inputReplay.reset();
-            resetQueued = false;
-        }
+        handleTickCount();
+
         for (GameSystem system : gameSystems) {
             system.act(allEntities, delta);
         }
@@ -326,7 +328,17 @@ public class LevelPlayer {
         pendingRemoves.clear();
 
         maybeRecordInput();
-        tick++;
+    }
+
+    private void handleTickCount() {
+        if (resetQueued) {
+            tick = 0;
+            inputReplay.reset();
+            resetQueued = false;
+        }
+        if (captureActive) {
+            tick++;
+        }
     }
 
     private void maybeRecordInput() {
@@ -334,10 +346,13 @@ public class LevelPlayer {
             InputRecord newRecord = new InputRecord(tick);
             if (recordingAngle != Float.NEGATIVE_INFINITY) {
                 newRecord.angle = recordingAngle;
+                System.out.println("TICK " + tick + " New angle '" + recordingAngle + "'");
                 recordingAngle = Float.NEGATIVE_INFINITY;
             }
             if (lastRecordedBoost != recordingBoost) {
                 newRecord.boosting = recordingBoost;
+                System.out.println("TICK " + tick + " New boost '" + recordingBoost + "'");
+
                 lastRecordedBoost = recordingBoost;
             }
             inputReplay.inputRecords.add(newRecord);
@@ -383,6 +398,7 @@ public class LevelPlayer {
 
     public void beginInputReplayCapture() {
         resetQueued = true;
+        captureActive = true;
     }
 
     public int getTick() {

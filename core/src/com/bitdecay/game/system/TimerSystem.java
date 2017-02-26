@@ -2,6 +2,7 @@ package com.bitdecay.game.system;
 
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.component.TimerComponent;
 
 /**
@@ -21,7 +22,11 @@ public class TimerSystem extends AbstractIteratingGameSystem {
     public void actOnSingle(GameEntity entity, float delta) {
         TimerComponent timer = entity.getComponent(TimerComponent.class);
         timer.secondsElapsed += delta;
-        pilot.setTime(timer.secondsElapsed);
+        if (Helm.debug) {
+            pilot.setTime(levelPlayer.getTick());
+        } else {
+            pilot.setTime(timer.secondsElapsed);
+        }
     }
 
     @Override

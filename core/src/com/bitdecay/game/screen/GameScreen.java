@@ -167,7 +167,6 @@ public class GameScreen implements Screen, GamePilot {
 //        String replayName = "replay_" + currentLevel.levelDef.name + "_" + System.currentTimeMillis();
         String replayName = "replay";
         ReplayUtils.saveReplay(replayName, levelPlayer.inputReplay);
-        ReplayUtils.loadReplay(replayName);
         System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
         int levelScore = score.total();
         System.out.println("SCORE: " + levelScore);
@@ -185,7 +184,11 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void returnToMenus() {
-        game.setScreen(new LevelSelectScreen(game, activeWorld));
+        if (activeWorld == null) {
+            game.setScreen(new TitleScreen(game));
+        } else {
+            game.setScreen(new LevelSelectScreen(game, activeWorld));
+        }
     }
 
     @Override
