@@ -29,6 +29,8 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
 
     Vector2 deltaVector = new Vector2();
 
+    float tempAngle = 0;
+
     private Vector2 simpleSteeringStartVector = new Vector2();
 
     public SteeringInputSystem(GamePilot pilot) {
@@ -50,6 +52,9 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
             control.sensitivity = joystickSensitivity;
         }
         control.endPoint = null;
+
+        // track our angle for recording purposes
+        tempAngle = control.angle;
 
         for (ActiveTouch touch : tracker.activeTouches) {
             if (control.activeArea.contains(touch.startingLocation)) {
@@ -81,7 +86,12 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
                         }
                     }
                 }
+                break;
             }
+        }
+
+        if (tempAngle != control.angle) {
+            levelPlayer.recordNewAngle(control.angle);
         }
     }
 

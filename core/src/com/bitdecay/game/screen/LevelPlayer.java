@@ -15,6 +15,8 @@ import com.bitdecay.game.entities.GravityWellEntity;
 import com.bitdecay.game.entities.LandingPlatformEntity;
 import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
+import com.bitdecay.game.input.InputRecord;
+import com.bitdecay.game.input.InputReplay;
 import com.bitdecay.game.system.BoostSystem;
 import com.bitdecay.game.system.BoosterInputSystem;
 import com.bitdecay.game.system.GravityApplicationSystem;
@@ -53,6 +55,13 @@ public class LevelPlayer {
 
     public static final float DELTA_STEP = 1/60f;
     float deltaRemainder;
+
+    int tick = 0;
+
+    InputReplay inputReplay = new InputReplay();
+    float recordingAngle = Float.NEGATIVE_INFINITY;
+    boolean lastRecordedBoost = false;
+    boolean recordingBoost = lastRecordedBoost;
 
     private static final int BASE_CAM_BUFFER = 500;
     FollowOrthoCamera gameCam;
@@ -202,6 +211,9 @@ public class LevelPlayer {
     }
 
     public void loadLevel(LevelDefinition levelDef) {
+        tick = 0;
+        inputReplay.reset();
+
         allEntities.clear();
 
         for (LineSegment line : levelDef.levelLines) {
@@ -270,18 +282,40 @@ public class LevelPlayer {
     public void update(float delta) {
         deltaRemainder += delta;
         while (deltaRemainder > DELTA_STEP) {
+            tick(delta);
             deltaRemainder -= DELTA_STEP;
-            for (GameSystem system : gameSystems) {
-                system.act(allEntities, delta);
+        }
+    }
+
+    protected void tick(float delta) {
+        tick++;
+        for (GameSystem system : gameSystems) {
+            system.act(allEntities, delta);
+        }
+        scaleCamBuffer();
+        gameCam.update(delta);
+
+        allEntities.addAll(pendingAdds);
+        allEntities.removeAll(pendingRemoves, true);
+
+        pendingAdds.clear();
+        pendingRemoves.clear();
+
+        maybeRecordInput();
+    }
+
+    private void maybeRecordInput() {
+        if (recordingAngle != Float.NEGATIVE_INFINITY || lastRecordedBoost != recordingBoost) {
+            InputRecord newRecord = new InputRecord(tick);
+            if (recordingAngle != Float.NEGATIVE_INFINITY) {
+                newRecord.angle = recordingAngle;
+                recordingAngle = Float.NEGATIVE_INFINITY;
             }
-            scaleCamBuffer();
-            gameCam.update(delta);
-
-            allEntities.addAll(pendingAdds);
-            allEntities.removeAll(pendingRemoves, true);
-
-            pendingAdds.clear();
-            pendingRemoves.clear();
+            if (lastRecordedBoost != recordingBoost) {
+                newRecord.boosting = recordingBoost;
+                lastRecordedBoost = recordingBoost;
+            }
+            inputReplay.inputRecords.add(newRecord);
         }
     }
 
@@ -312,5 +346,13 @@ public class LevelPlayer {
 
     public void removeEntity(GameEntity entity) {
         pendingRemoves.add(entity);
+    }
+
+    public void recordNewAngle(float angle) {
+        recordingAngle = angle;
+    }
+
+    public void recordNewBoostChange(boolean pressed) {
+        recordingBoost = pressed;
     }
 }

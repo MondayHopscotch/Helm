@@ -5,10 +5,15 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.input.InputRecord;
 import com.bitdecay.game.menu.Overlay;
 import com.bitdecay.game.menu.PauseMenu;
+import com.bitdecay.game.persist.ReplayUtils;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.ScoreMenu;
@@ -121,6 +126,9 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void finishLevel(LandingScore score) {
+        String replayName = "replay_" + currentLevel.levelDef.name + "_" + System.currentTimeMillis();
+        ReplayUtils.saveReplay(replayName, levelPlayer.inputReplay);
+        ReplayUtils.loadReplay(replayName);
         System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
         int levelScore = score.total();
         System.out.println("SCORE: " + levelScore);
