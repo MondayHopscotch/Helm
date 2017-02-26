@@ -1,8 +1,7 @@
 package com.bitdecay.game.desktop.editor.file;
 
-import com.badlogic.gdx.utils.Json;
+import com.bitdecay.game.persist.JsonUtils;
 import com.bitdecay.game.world.LevelDefinition;
-import com.bitdecay.game.world.LineSegment;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,15 +14,8 @@ public class FileUtils {
 
     private static String lastTouchedDirectory = ".";
 
-    public static Json json;
-
     public static String saveLevelToFile(LevelDefinition levelDef) {
-        if (json == null) {
-            json = new Json();
-            json.setElementType(LevelDefinition.class, "levelLines", LineSegment.class);
-        }
-        String out = json.toJson(levelDef);
-        return saveToFile(out);
+        return saveToFile(JsonUtils.marshalLevel(levelDef));
     }
 
     public static String saveToFile(String json) {
@@ -57,15 +49,11 @@ public class FileUtils {
     }
 
     public static LevelDefinition loadLevelFromFile() {
-        if (json == null) {
-            json = new Json();
-            json.setElementType(LevelDefinition.class, "levelLines", LineSegment.class);
-        }
         String asJson = loadFile();
         if (asJson == null) {
             return null;
         } else {
-            return json.fromJson(LevelDefinition.class, asJson);
+            return JsonUtils.unmarshalLevel(asJson);
         }
     }
 

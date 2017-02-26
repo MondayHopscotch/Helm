@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.bitdecay.game.persist.ReplayUtils;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.Version;
@@ -93,7 +94,8 @@ public class TitleScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
-                game.setScreen(new CreditsScreen(game));
+//                game.setScreen(new CreditsScreen(game));
+                game.setScreen(new GameScreen(game, ReplayUtils.loadReplay("replay_Introduction_1488137071721")));
             }
         });
         creditLabel.setFontScale(game.fontScale * 1.8f);

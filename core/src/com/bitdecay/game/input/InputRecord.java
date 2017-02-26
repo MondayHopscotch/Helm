@@ -6,8 +6,12 @@ package com.bitdecay.game.input;
 
 public class InputRecord {
     public int tick;
-    public float angle;
+    public float angle = Float.NEGATIVE_INFINITY;
     public boolean boosting;
+
+    public InputRecord() {
+        // Here for JSON
+    }
 
     public InputRecord(int tick) {
         this.tick = tick;

@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.input.InputRecord;
+import com.bitdecay.game.input.InputReplay;
 import com.bitdecay.game.menu.Overlay;
 import com.bitdecay.game.menu.PauseMenu;
 import com.bitdecay.game.persist.ReplayUtils;
@@ -34,6 +35,7 @@ public class GameScreen implements Screen, GamePilot {
 
     private LevelWorld activeWorld;
     private LevelInstance currentLevel;
+    private InputReplay currentReplay;
 
     private boolean reloadQueued;
 
@@ -44,18 +46,37 @@ public class GameScreen implements Screen, GamePilot {
 
     private InputMultiplexer combinedGameInput;
 
+    private enum PlayMode {
+        PLAY_MODE,
+        REPLAY_MODE
+    }
+
+    private PlayMode currentMode;
+
     public GameScreen(Helm game, LevelWorld world, LevelInstance level) {
         this.game = game;
 
+        currentMode = PlayMode.PLAY_MODE;
+
         levelPlayer = new LevelPlayer(this);
-
         initMenus();
-
         combinedGameInput = new InputMultiplexer(pauseMenu.stage, levelPlayer.getInput());
 
         currentLevel = level;
         activeWorld = world;
 
+        requestRestartLevel();
+    }
+
+    public GameScreen(Helm game, InputReplay replay) {
+        this.game = game;
+
+        currentMode = PlayMode.REPLAY_MODE;
+
+        levelPlayer = new LevelPlayer(this);
+        initMenus();
+        combinedGameInput = new InputMultiplexer(pauseMenu.stage, levelPlayer.getInput());
+        currentReplay = replay;
         requestRestartLevel();
     }
 
@@ -67,6 +88,12 @@ public class GameScreen implements Screen, GamePilot {
 
     private void setLevel(LevelDefinition level) {
         levelPlayer.loadLevel(level);
+        Gdx.input.setInputProcessor(combinedGameInput);
+        scoreMenu.visible = false;
+    }
+
+    private void setReplay(InputReplay replay) {
+        levelPlayer.loadReplay(replay);
         Gdx.input.setInputProcessor(combinedGameInput);
         scoreMenu.visible = false;
     }
@@ -126,7 +153,19 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void finishLevel(LandingScore score) {
-        String replayName = "replay_" + currentLevel.levelDef.name + "_" + System.currentTimeMillis();
+        switch(currentMode){
+            case PLAY_MODE:
+                scoreRun(score);
+                break;
+            case REPLAY_MODE:
+                game.setScreen(new TitleScreen(game));
+                break;
+        }
+    }
+
+    private void scoreRun(LandingScore score) {
+//        String replayName = "replay_" + currentLevel.levelDef.name + "_" + System.currentTimeMillis();
+        String replayName = "replay";
         ReplayUtils.saveReplay(replayName, levelPlayer.inputReplay);
         ReplayUtils.loadReplay(replayName);
         System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
@@ -184,7 +223,14 @@ public class GameScreen implements Screen, GamePilot {
         levelPlayer.render(delta);
 
         if (reloadQueued) {
-            setLevel(currentLevel.levelDef);
+            switch(currentMode) {
+                case PLAY_MODE:
+                    setLevel(currentLevel.levelDef);
+                    break;
+                case REPLAY_MODE:
+                    setReplay(currentReplay);
+                    break;
+            }
             reloadQueued = false;
         }
 

@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.camera.FollowOrthoCamera;
+import com.bitdecay.game.component.PlayerActiveComponent;
+import com.bitdecay.game.component.ReplayActiveComponent;
 import com.bitdecay.game.entities.FocusPointEntity;
 import com.bitdecay.game.entities.GravityWellEntity;
 import com.bitdecay.game.entities.LandingPlatformEntity;
@@ -35,6 +37,7 @@ import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
 import com.bitdecay.game.system.ProximityRemovalSystem;
 import com.bitdecay.game.system.RemoveComponentSystem;
+import com.bitdecay.game.system.ReplayInputSystem;
 import com.bitdecay.game.system.TimerSystem;
 import com.bitdecay.game.system.render.DebugFocusPointSystem;
 import com.bitdecay.game.system.render.RenderBodySystem;
@@ -57,8 +60,9 @@ public class LevelPlayer {
     float deltaRemainder;
 
     int tick = 0;
-
     InputReplay inputReplay = new InputReplay();
+    boolean resetQueued = false;
+
     float recordingAngle = Float.NEGATIVE_INFINITY;
     boolean lastRecordedBoost = false;
     boolean recordingBoost = lastRecordedBoost;
@@ -149,7 +153,10 @@ public class LevelPlayer {
 
         TimerSystem timerSystem = new TimerSystem(pilot);
 
+        ReplayInputSystem replayInputSystem = new ReplayInputSystem(pilot);
+
         addGameplaySystem(cameraSystem);
+        addGameplaySystem(replayInputSystem);
         addGameplaySystem(boosterInputSystem);
         addGameplaySystem(boostSystem);
         addGameplaySystem(startSystem);
@@ -211,9 +218,26 @@ public class LevelPlayer {
     }
 
     public void loadLevel(LevelDefinition levelDef) {
-        tick = 0;
-        inputReplay.reset();
+        inputReplay.levelDef = levelDef;
 
+        resetLevel(levelDef);
+
+        ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
+        ship.addComponent(new PlayerActiveComponent());
+        printMatchingGameSystems(ship);
+        allEntities.add(ship);
+    }
+
+    public void loadReplay(InputReplay replay) {
+        resetLevel(replay.levelDef);
+
+        ShipEntity ship = new ShipEntity(replay.levelDef.startPosition, replay.levelDef.startingFuel);
+        ship.addComponent(new ReplayActiveComponent(replay));
+        printMatchingGameSystems(ship);
+        allEntities.add(ship);
+    }
+
+    protected void resetLevel(LevelDefinition levelDef) {
         allEntities.clear();
 
         for (LineSegment line : levelDef.levelLines) {
@@ -234,10 +258,6 @@ public class LevelPlayer {
             FocusPointEntity focusPoint = new FocusPointEntity(focus);
             allEntities.add(focusPoint);
         }
-
-        ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
-        printMatchingGameSystems(ship);
-        allEntities.add(ship);
 
         resetAllButInputSystems();
 
@@ -288,7 +308,11 @@ public class LevelPlayer {
     }
 
     protected void tick(float delta) {
-        tick++;
+        if (resetQueued) {
+            tick = 0;
+            inputReplay.reset();
+            resetQueued = false;
+        }
         for (GameSystem system : gameSystems) {
             system.act(allEntities, delta);
         }
@@ -302,6 +326,7 @@ public class LevelPlayer {
         pendingRemoves.clear();
 
         maybeRecordInput();
+        tick++;
     }
 
     private void maybeRecordInput() {
@@ -354,5 +379,13 @@ public class LevelPlayer {
 
     public void recordNewBoostChange(boolean pressed) {
         recordingBoost = pressed;
+    }
+
+    public void beginInputReplayCapture() {
+        resetQueued = true;
+    }
+
+    public int getTick() {
+        return tick;
     }
 }

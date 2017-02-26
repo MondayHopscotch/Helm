@@ -2,8 +2,6 @@ package com.bitdecay.game.persist;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
 import com.bitdecay.game.input.InputReplay;
 
 /**
@@ -13,17 +11,13 @@ import com.bitdecay.game.input.InputReplay;
 public class ReplayUtils {
 
     public static void saveReplay(String name, InputReplay inputReplay) {
-        Json json = new Json();
-        json.setOutputType(JsonWriter.OutputType.minimal);
-        String replay = json.toJson(inputReplay);
+        String marshaled = JsonUtils.marshalReplay(inputReplay);
         FileHandle replayFile = Gdx.files.local(name);
-        replayFile.writeString(replay, false);
+        replayFile.writeString(marshaled, false);
     }
 
-    public static void loadReplay(String replayName) {
+    public static InputReplay loadReplay(String replayName) {
         FileHandle replayFile = Gdx.files.local(replayName);
-        Json json = new Json();
-        json.setOutputType(JsonWriter.OutputType.minimal);
-        json.fromJson(InputReplay.class, replayFile);
+        return JsonUtils.unmarshalReplay(replayFile);
     }
 }

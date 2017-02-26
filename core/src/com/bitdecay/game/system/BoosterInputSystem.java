@@ -3,6 +3,7 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.InputProcessor;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.component.PlayerActiveComponent;
 import com.bitdecay.game.component.control.BoostControlComponent;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
@@ -37,7 +38,10 @@ public class BoosterInputSystem extends AbstractIteratingGameSystem implements I
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(BoostControlComponent.class);
+        return entity.hasComponents(
+                BoostControlComponent.class,
+                PlayerActiveComponent.class
+        );
     }
 
     @Override
@@ -67,6 +71,7 @@ public class BoosterInputSystem extends AbstractIteratingGameSystem implements I
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
+
     @Override
     public boolean scrolled(int amount) {
         return false;

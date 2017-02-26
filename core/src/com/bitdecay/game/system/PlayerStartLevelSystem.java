@@ -39,7 +39,6 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
-
         BoostControlComponent boostInput = entity.getComponent(BoostControlComponent.class);
 
         boolean launchTouchFound = false;
@@ -51,6 +50,7 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
         }
 
         if (launchTouchFound) {
+            levelPlayer.beginInputReplayCapture();
             entity.removeComponent(ShipLaunchComponent.class);
 
             // reset player input so the ship doesn't start pointing some weird direction
