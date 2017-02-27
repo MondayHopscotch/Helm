@@ -1,5 +1,6 @@
 {
   worldName: "The Basics",
+  requiredLevelsForUnlock: 0,
   levelList: [
     "level/easy/level_easy1.json",
     "level/easy/level_easy2.json",

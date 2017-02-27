@@ -1,5 +1,6 @@
 {
   worldName: "Extreme",
+  requiredLevelsForUnlock: 10,
   levelList: [
     "level/extreme/level_hard2.json",
     "level/extreme/level_hard1_focus.json",

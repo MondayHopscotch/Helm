@@ -1,5 +1,6 @@
 {
   worldName: "Channels",
+  requiredLevelsForUnlock: 5,
   levelList: [
     "level/medium/choke_point.json",
     "level/medium/pegleg.json"

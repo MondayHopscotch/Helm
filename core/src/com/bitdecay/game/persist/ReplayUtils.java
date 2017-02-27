@@ -10,6 +10,8 @@ import com.bitdecay.game.input.InputReplay;
 
 public class ReplayUtils {
 
+    public static final String REPLAY_DIR = "replays";
+
     public static void saveReplay(String name, InputReplay inputReplay) {
         String marshaled = JsonUtils.marshal(inputReplay);
         FileHandle replayFile = Gdx.files.local("replays\\" + name);

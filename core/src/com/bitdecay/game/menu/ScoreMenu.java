@@ -184,6 +184,9 @@ public class ScoreMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 pilot.saveLastReplay();
+                saveReplayButton.getLabel().setText("Replay Saved");
+                saveReplayButton.removeListener(this);
+                saveReplayButton.setDisabled(true);
             }
         });
         saveReplayButton.align(Align.center);

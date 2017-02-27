@@ -1,5 +1,6 @@
 {
   worldName: "Islands",
+  requiredLevelsForUnlock: 4,
   levelList: [
     "level/islands/islands_1.json",
   ]

@@ -100,7 +100,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
     private WorldInstance buildWorldInstance(FileHandle worldFile) {
         WorldDefinition worldDef = JsonUtils.unmarshal(WorldDefinition.class, worldFile);
-        WorldInstance worldInstance = new WorldInstance(worldDef.levelList.size);
+        WorldInstance worldInstance = new WorldInstance(worldDef.requiredLevelsForUnlock);
         worldInstance.name = worldDef.worldName;
         for (String levelPath : worldDef.levelList) {
             worldInstance.addLevelInstance(JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal(levelPath)));
