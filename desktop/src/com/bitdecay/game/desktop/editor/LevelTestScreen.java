@@ -88,7 +88,7 @@ public class LevelTestScreen implements Screen, GamePilot {
     }
 
     @Override
-    public void returnToMenus() {
+    public void returnToMenus(boolean isQuit) {
         editor.showEditor();
 
     }
