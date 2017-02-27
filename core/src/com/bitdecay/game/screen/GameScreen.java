@@ -148,6 +148,13 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     @Override
+    public void saveLastReplay() {
+        String replayName = currentLevel.levelDef.name + "_" + System.currentTimeMillis();
+        System.out.println("Saving replay: " + replayName);
+        ReplayUtils.saveReplay(replayName, levelPlayer.inputReplay);
+    }
+
+    @Override
     public void finishLevel(LandingScore score) {
         switch(currentMode){
             case PLAY_MODE:
@@ -161,8 +168,7 @@ public class GameScreen implements Screen, GamePilot {
 
     private void scoreRun(LandingScore score) {
 //        String replayName = "replay_" + currentLevel.levelDef.name + "_" + System.currentTimeMillis();
-        String replayName = "replay";
-        ReplayUtils.saveReplay(replayName, levelPlayer.inputReplay);
+        levelPlayer.stopReplayCapture();
         System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
         int levelScore = score.total();
         System.out.println("SCORE: " + levelScore);

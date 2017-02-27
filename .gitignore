@@ -76,4 +76,4 @@ Thumbs.db
 *.apk
 
 ## Game files
-*replay_*
+android/assets/replays/*

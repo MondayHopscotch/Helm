@@ -77,7 +77,7 @@ public class TitleScreen implements Screen {
                 game.setScreen(new OptionsScreen(game));
             }
         });
-        optionsLabel.setFontScale(game.fontScale * 1.8f);
+        optionsLabel.setFontScale(game.fontScale * 1.2f);
 
         Label statsLabel = new Label("Stats", skin);
         statsLabel.addListener(new ClickListener() {
@@ -87,18 +87,27 @@ public class TitleScreen implements Screen {
                 game.setScreen(new StatsScreen(game));
             }
         });
-        statsLabel.setFontScale(game.fontScale * 1.8f);
+        statsLabel.setFontScale(game.fontScale * 1.2f);
+
+        Label replayLabel = new Label("Replays", skin);
+        replayLabel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                finishLoadingAssets();
+                game.setScreen(new ReplaySelectScreen(game));
+            }
+        });
+        replayLabel.setFontScale(game.fontScale * 1.2f);
 
         Label creditLabel = new Label("Credits", skin);
         creditLabel.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
-//                game.setScreen(new CreditsScreen(game));
-                game.setScreen(new GameScreen(game, ReplayUtils.loadReplay("replay")));
+                game.setScreen(new CreditsScreen(game));
             }
         });
-        creditLabel.setFontScale(game.fontScale * 1.8f);
+        creditLabel.setFontScale(game.fontScale * 1.2f);
 
 
         mainMenu.add(startLabel);
@@ -106,6 +115,8 @@ public class TitleScreen implements Screen {
         mainMenu.add(optionsLabel);
         mainMenu.row();
         mainMenu.add(statsLabel);
+        mainMenu.row();
+        mainMenu.add(replayLabel);
         mainMenu.row();
         mainMenu.add(creditLabel);
 

@@ -12,7 +12,7 @@ public class ReplayUtils {
 
     public static void saveReplay(String name, InputReplay inputReplay) {
         String marshaled = JsonUtils.marshal(inputReplay);
-        FileHandle replayFile = Gdx.files.local(name);
+        FileHandle replayFile = Gdx.files.local("replays\\" + name);
         replayFile.writeString(marshaled, false);
     }
 

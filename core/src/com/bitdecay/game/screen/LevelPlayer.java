@@ -405,6 +405,10 @@ public class LevelPlayer {
         captureActive = true;
     }
 
+    public void stopReplayCapture() {
+        captureActive = false;
+    }
+
     public int getTick() {
         return tick;
     }
