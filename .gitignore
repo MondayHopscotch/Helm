@@ -74,3 +74,6 @@ Thumbs.db
 
 ## Built files
 *.apk
+
+## Game files
+android/assets/replays/*

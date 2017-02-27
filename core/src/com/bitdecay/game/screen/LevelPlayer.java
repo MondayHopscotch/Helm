@@ -9,12 +9,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.camera.FollowOrthoCamera;
+import com.bitdecay.game.component.PlayerActiveComponent;
+import com.bitdecay.game.component.ReplayActiveComponent;
 import com.bitdecay.game.entities.FocusPointEntity;
 import com.bitdecay.game.entities.GravityWellEntity;
 import com.bitdecay.game.entities.LandingPlatformEntity;
 import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
+import com.bitdecay.game.input.InputRecord;
+import com.bitdecay.game.input.InputReplay;
 import com.bitdecay.game.system.BoostSystem;
 import com.bitdecay.game.system.BoosterInputSystem;
 import com.bitdecay.game.system.GravityApplicationSystem;
@@ -33,6 +38,7 @@ import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
 import com.bitdecay.game.system.ProximityRemovalSystem;
 import com.bitdecay.game.system.RemoveComponentSystem;
+import com.bitdecay.game.system.ReplayInputSystem;
 import com.bitdecay.game.system.TimerSystem;
 import com.bitdecay.game.system.render.DebugFocusPointSystem;
 import com.bitdecay.game.system.render.RenderBodySystem;
@@ -53,6 +59,15 @@ public class LevelPlayer {
 
     public static final float DELTA_STEP = 1/60f;
     float deltaRemainder;
+
+    int tick = 0;
+    InputReplay inputReplay = new InputReplay();
+    boolean resetQueued = false;
+    boolean captureActive = false;
+
+    float recordingAngle = Float.NEGATIVE_INFINITY;
+    boolean lastRecordedBoost = false;
+    boolean boostToggled = lastRecordedBoost;
 
     private static final int BASE_CAM_BUFFER = 500;
     FollowOrthoCamera gameCam;
@@ -140,14 +155,19 @@ public class LevelPlayer {
 
         TimerSystem timerSystem = new TimerSystem(pilot);
 
+        ReplayInputSystem replayInputSystem = new ReplayInputSystem(pilot);
+
         addGameplaySystem(cameraSystem);
+
+        addGameplaySystem(replayInputSystem);
         addGameplaySystem(boosterInputSystem);
         addGameplaySystem(boostSystem);
+        addGameplaySystem(steeringInputSystem);
+        addGameplaySystem(steeringSystem);
+
         addGameplaySystem(startSystem);
         addGameplaySystem(gravityFinderSystem);
         addGameplaySystem(gravityApplicationSystem);
-        addGameplaySystem(steeringInputSystem);
-        addGameplaySystem(steeringSystem);
         addGameplaySystem(movementSystem);
         addGameplaySystem(collisionAlignmentSystem);
         addGameplaySystem(collisionSystem);
@@ -202,6 +222,28 @@ public class LevelPlayer {
     }
 
     public void loadLevel(LevelDefinition levelDef) {
+        inputReplay.levelDef = levelDef;
+
+        resetLevel(levelDef);
+
+        ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
+        ship.addComponent(new PlayerActiveComponent());
+        printMatchingGameSystems(ship);
+        allEntities.add(ship);
+    }
+
+    public void loadReplay(InputReplay replay) {
+        resetLevel(replay.levelDef);
+
+        ShipEntity ship = new ShipEntity(replay.levelDef.startPosition, replay.levelDef.startingFuel);
+        ship.addComponent(new ReplayActiveComponent(replay));
+        printMatchingGameSystems(ship);
+        allEntities.add(ship);
+    }
+
+    protected void resetLevel(LevelDefinition levelDef) {
+        resetQueued = true;
+
         allEntities.clear();
 
         for (LineSegment line : levelDef.levelLines) {
@@ -222,10 +264,6 @@ public class LevelPlayer {
             FocusPointEntity focusPoint = new FocusPointEntity(focus);
             allEntities.add(focusPoint);
         }
-
-        ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
-        printMatchingGameSystems(ship);
-        allEntities.add(ship);
 
         resetAllButInputSystems();
 
@@ -270,18 +308,58 @@ public class LevelPlayer {
     public void update(float delta) {
         deltaRemainder += delta;
         while (deltaRemainder > DELTA_STEP) {
+            tick(DELTA_STEP);
             deltaRemainder -= DELTA_STEP;
-            for (GameSystem system : gameSystems) {
-                system.act(allEntities, delta);
+        }
+    }
+
+    protected void tick(float delta) {
+        handleTickCount();
+
+        for (GameSystem system : gameSystems) {
+            system.act(allEntities, delta);
+        }
+        scaleCamBuffer();
+        gameCam.update(delta);
+
+        allEntities.addAll(pendingAdds);
+        allEntities.removeAll(pendingRemoves, true);
+
+        pendingAdds.clear();
+        pendingRemoves.clear();
+
+        maybeRecordInput();
+    }
+
+    private void handleTickCount() {
+        if (resetQueued) {
+            tick = 0;
+            inputReplay.reset();
+            resetQueued = false;
+        }
+        if (captureActive) {
+            tick++;
+        }
+    }
+
+    private void maybeRecordInput() {
+        if (recordingAngle != Float.NEGATIVE_INFINITY || boostToggled) {
+            InputRecord newRecord = new InputRecord(tick);
+            if (recordingAngle != Float.NEGATIVE_INFINITY) {
+                newRecord.angle = recordingAngle;
+                if (Helm.debug) {
+                    System.out.println("TICK " + tick + " New angle '" + recordingAngle + "'");
+                }
+                recordingAngle = Float.NEGATIVE_INFINITY;
             }
-            scaleCamBuffer();
-            gameCam.update(delta);
-
-            allEntities.addAll(pendingAdds);
-            allEntities.removeAll(pendingRemoves, true);
-
-            pendingAdds.clear();
-            pendingRemoves.clear();
+            if (boostToggled) {
+                newRecord.boostToggled = true;
+                if (Helm.debug) {
+                    System.out.println("TICK " + tick + " Boost Toggled");
+                }
+                boostToggled = false;
+            }
+            inputReplay.inputRecords.add(newRecord);
         }
     }
 
@@ -312,5 +390,26 @@ public class LevelPlayer {
 
     public void removeEntity(GameEntity entity) {
         pendingRemoves.add(entity);
+    }
+
+    public void recordNewAngle(float angle) {
+        recordingAngle = angle;
+    }
+
+    public void recordNewBoostToggle() {
+        boostToggled = true;
+    }
+
+    public void beginInputReplayCapture() {
+        resetQueued = true;
+        captureActive = true;
+    }
+
+    public void stopReplayCapture() {
+        captureActive = false;
+    }
+
+    public int getTick() {
+        return tick;
     }
 }

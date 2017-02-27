@@ -83,7 +83,12 @@ public class LevelTestScreen implements Screen, GamePilot {
     }
 
     @Override
-    public void returnToMenus() {
+    public void saveLastReplay() {
+
+    }
+
+    @Override
+    public void returnToMenus(boolean isQuit) {
         editor.showEditor();
 
     }

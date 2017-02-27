@@ -16,7 +16,7 @@ public interface GamePilot {
 
     void finishLevel(LandingScore score);
 
-    void returnToMenus();
+    void returnToMenus(boolean isQuit);
 
     Helm getHelm();
 
@@ -25,4 +25,6 @@ public interface GamePilot {
     void setTime(float secondsElapsed);
 
     boolean isDebug();
+
+    void saveLastReplay();
 }

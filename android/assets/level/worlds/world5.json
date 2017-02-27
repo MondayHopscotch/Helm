@@ -1,0 +1,11 @@
+{
+  worldName: "Black Holes",
+  requiredLevelsForUnlock: 6,
+  levelList: [
+    "level/gravity/easy_grav.json",
+    "level/gravity/tough_cookies.json",
+    "level/gravity/conveyor.json",
+    "level/gravity/shake_n_bake.json",
+    "level/gravity/needle.json"
+  ]
+}

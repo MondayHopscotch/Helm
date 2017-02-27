@@ -3,6 +3,8 @@ package com.bitdecay.game.system;
 import com.badlogic.gdx.InputProcessor;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.component.BoosterComponent;
+import com.bitdecay.game.component.PlayerActiveComponent;
 import com.bitdecay.game.component.control.BoostControlComponent;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
@@ -14,6 +16,8 @@ public class BoosterInputSystem extends AbstractIteratingGameSystem implements I
 
     TouchTracker tracker = new TouchTracker(5);
 
+    boolean pressTrack = false;
+
     public BoosterInputSystem(GamePilot pilot) {
         super(pilot);
     }
@@ -21,17 +25,25 @@ public class BoosterInputSystem extends AbstractIteratingGameSystem implements I
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
         BoostControlComponent button = entity.getComponent(BoostControlComponent.class);
+        pressTrack = button.pressed;
         button.pressed = false;
         for (ActiveTouch touch : tracker.activeTouches) {
             if (button.activeArea.contains(touch.currentLocation)) {
                 button.pressed = true;
             }
         }
+        if (pressTrack != button.pressed) {
+            levelPlayer.recordNewBoostToggle();
+        }
     }
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(BoostControlComponent.class);
+        return entity.hasComponents(
+                BoosterComponent.class,
+                BoostControlComponent.class,
+                PlayerActiveComponent.class
+        );
     }
 
     @Override
@@ -61,6 +73,7 @@ public class BoosterInputSystem extends AbstractIteratingGameSystem implements I
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
+
     @Override
     public boolean scrolled(int amount) {
         return false;

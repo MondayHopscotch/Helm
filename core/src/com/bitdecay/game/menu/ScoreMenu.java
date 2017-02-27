@@ -25,6 +25,7 @@ import com.bitdecay.game.time.TimerUtils;
 public class ScoreMenu {
 
     private static final String NEXT_TEXT = "Return to Level Select";
+    private static final String SAVE_REPLAY_TEXT = "Save Replay";
 
     public final Stage stage;
     private final Skin skin;
@@ -54,6 +55,7 @@ public class ScoreMenu {
     private Label totalScoreScore;
 
     private final TextButton nextButton;
+    private final TextButton saveReplayButton;
 
     public ScoreMenu(final GamePilot pilot) {
         this.pilot = pilot;
@@ -168,13 +170,29 @@ public class ScoreMenu {
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                pilot.returnToMenus();
+                pilot.returnToMenus(false);
             }
         });
         nextButton.align(Align.center);
         nextButton.setOrigin(Align.center);
 
         nextTable.add(nextButton);
+
+        saveReplayButton = new TextButton(SAVE_REPLAY_TEXT, skin);
+        saveReplayButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
+        saveReplayButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                pilot.saveLastReplay();
+                saveReplayButton.getLabel().setText("Replay Saved");
+                saveReplayButton.removeListener(this);
+                saveReplayButton.setDisabled(true);
+            }
+        });
+        saveReplayButton.align(Align.center);
+        saveReplayButton.setOrigin(Align.center);
+
+        nextTable.add(saveReplayButton).padLeft(pilot.getHelm().fontScale * 5);
 
         mainTable.add(scoreTable);
         mainTable.row();
@@ -257,7 +275,7 @@ public class ScoreMenu {
             baseScoreSequence.addAction(Actions.delay(1f));
 
         }
-        baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, nextButton)));
+        baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, nextButton, saveReplayButton)));
 
         stage.addAction(baseScoreSequence);
 
@@ -304,5 +322,6 @@ public class ScoreMenu {
         totalTimeLabel.setVisible(false);
         totalTimeValue.setVisible(false);
         nextButton.setVisible(false);
+        saveReplayButton.setVisible(false);
     }
 }

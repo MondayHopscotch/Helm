@@ -7,8 +7,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.input.InputReplay;
 import com.bitdecay.game.menu.Overlay;
 import com.bitdecay.game.menu.PauseMenu;
+import com.bitdecay.game.persist.ReplayUtils;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.ScoreMenu;
@@ -17,7 +19,7 @@ import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelInstance;
-import com.bitdecay.game.world.LevelWorld;
+import com.bitdecay.game.world.WorldInstance;
 
 /**
  * Created by Monday on 12/15/2016.
@@ -27,8 +29,9 @@ public class GameScreen implements Screen, GamePilot {
 
     LevelPlayer levelPlayer;
 
-    private LevelWorld activeWorld;
+    private WorldInstance activeWorld;
     private LevelInstance currentLevel;
+    private InputReplay currentReplay;
 
     private boolean reloadQueued;
 
@@ -39,18 +42,37 @@ public class GameScreen implements Screen, GamePilot {
 
     private InputMultiplexer combinedGameInput;
 
-    public GameScreen(Helm game, LevelWorld world, LevelInstance level) {
+    private enum PlayMode {
+        PLAY_MODE,
+        REPLAY_MODE
+    }
+
+    private PlayMode currentMode;
+
+    public GameScreen(Helm game, WorldInstance world, LevelInstance level) {
         this.game = game;
 
+        currentMode = PlayMode.PLAY_MODE;
+
         levelPlayer = new LevelPlayer(this);
-
         initMenus();
-
         combinedGameInput = new InputMultiplexer(pauseMenu.stage, levelPlayer.getInput());
 
         currentLevel = level;
         activeWorld = world;
 
+        requestRestartLevel();
+    }
+
+    public GameScreen(Helm game, InputReplay replay) {
+        this.game = game;
+
+        currentMode = PlayMode.REPLAY_MODE;
+
+        levelPlayer = new LevelPlayer(this);
+        initMenus();
+        combinedGameInput = new InputMultiplexer(pauseMenu.stage, levelPlayer.getInput());
+        currentReplay = replay;
         requestRestartLevel();
     }
 
@@ -62,6 +84,12 @@ public class GameScreen implements Screen, GamePilot {
 
     private void setLevel(LevelDefinition level) {
         levelPlayer.loadLevel(level);
+        Gdx.input.setInputProcessor(combinedGameInput);
+        scoreMenu.visible = false;
+    }
+
+    private void setReplay(InputReplay replay) {
+        levelPlayer.loadReplay(replay);
         Gdx.input.setInputProcessor(combinedGameInput);
         scoreMenu.visible = false;
     }
@@ -120,7 +148,27 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     @Override
+    public void saveLastReplay() {
+        String replayName = currentLevel.levelDef.name + "_" + System.currentTimeMillis();
+        System.out.println("Saving replay: " + replayName);
+        ReplayUtils.saveReplay(replayName, levelPlayer.inputReplay);
+    }
+
+    @Override
     public void finishLevel(LandingScore score) {
+        switch(currentMode){
+            case PLAY_MODE:
+                scoreRun(score);
+                break;
+            case REPLAY_MODE:
+                game.setScreen(new TitleScreen(game));
+                break;
+        }
+    }
+
+    private void scoreRun(LandingScore score) {
+//        String replayName = "replay_" + currentLevel.levelDef.name + "_" + System.currentTimeMillis();
+        levelPlayer.stopReplayCapture();
         System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
         int levelScore = score.total();
         System.out.println("SCORE: " + levelScore);
@@ -137,8 +185,16 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     @Override
-    public void returnToMenus() {
-        game.setScreen(new LevelSelectScreen(game, activeWorld));
+    public void returnToMenus(boolean isQuit) {
+        if (activeWorld == null) {
+            // we are in a replay (probably want to have a more explicit way of handling  this
+            game.setScreen(new TitleScreen(game));
+        } else {
+            if (isQuit) {
+                Helm.stats.count(StatName.ABANDONS, 1);
+            }
+            game.setScreen(new LevelSelectScreen(game, activeWorld));
+        }
     }
 
     @Override
@@ -176,7 +232,14 @@ public class GameScreen implements Screen, GamePilot {
         levelPlayer.render(delta);
 
         if (reloadQueued) {
-            setLevel(currentLevel.levelDef);
+            switch(currentMode) {
+                case PLAY_MODE:
+                    setLevel(currentLevel.levelDef);
+                    break;
+                case REPLAY_MODE:
+                    setReplay(currentReplay);
+                    break;
+            }
             reloadQueued = false;
         }
 

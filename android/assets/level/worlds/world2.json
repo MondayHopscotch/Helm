@@ -1,0 +1,9 @@
+{
+  worldName: "Caves",
+  requiredLevelsForUnlock: 2,
+  levelList: [
+    "level/medium/level_medium1.json",
+    "level/medium/level_medium2.json",
+    "level/medium/level_medium3.json"
+  ]
+}

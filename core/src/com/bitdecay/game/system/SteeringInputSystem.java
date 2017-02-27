@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.component.PlayerActiveComponent;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.component.control.SteeringControlComponent;
@@ -29,6 +30,8 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
 
     Vector2 deltaVector = new Vector2();
 
+    float tempAngle = 0;
+
     private Vector2 simpleSteeringStartVector = new Vector2();
 
     public SteeringInputSystem(GamePilot pilot) {
@@ -50,6 +53,9 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
             control.sensitivity = joystickSensitivity;
         }
         control.endPoint = null;
+
+        // track our angle for recording purposes
+        tempAngle = control.angle;
 
         for (ActiveTouch touch : tracker.activeTouches) {
             if (control.activeArea.contains(touch.startingLocation)) {
@@ -81,7 +87,12 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
                         }
                     }
                 }
+                break;
             }
+        }
+
+        if (tempAngle != control.angle) {
+            levelPlayer.recordNewAngle(control.angle);
         }
     }
 
@@ -110,7 +121,10 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(SteeringControlComponent.class);
+        return entity.hasComponents(
+                SteeringControlComponent.class,
+                PlayerActiveComponent.class
+        );
     }
 
     @Override

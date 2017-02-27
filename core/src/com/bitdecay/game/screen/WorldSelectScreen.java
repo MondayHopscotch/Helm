@@ -1,5 +1,8 @@
 package com.bitdecay.game.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -7,17 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.persist.JsonUtils;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.unlock.StatName;
-import com.bitdecay.game.world.ChannelsWorld;
-import com.bitdecay.game.world.GravityWorld;
-import com.bitdecay.game.world.IslandsWorld;
-import com.bitdecay.game.world.LevelWorld;
-import com.bitdecay.game.world.World1;
-import com.bitdecay.game.world.World2;
-import com.bitdecay.game.world.ExtremeWorld;
+import com.bitdecay.game.world.LevelDefinition;
+import com.bitdecay.game.world.WorldDefinition;
+import com.bitdecay.game.world.WorldInstance;
 
 /**
  * Created by Monday on 1/10/2017.
@@ -35,14 +36,12 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         itemTable.columnDefaults(2).width(game.fontScale * 50);
         itemTable.columnDefaults(3).width(game.fontScale * 50);
 
-        LevelWorld[] worlds = new LevelWorld[] {
-                new World1(),
-                new World2(),
-                new IslandsWorld(),
-                new ChannelsWorld(),
-                new GravityWorld(),
-                new ExtremeWorld(),
-        };
+        Array<WorldInstance> worlds = new Array<>();
+
+        FileHandle worldDirectory = Gdx.files.internal("level/worlds/");
+        for (FileHandle worldFile : worldDirectory.list()) {
+            worlds.add(buildWorldInstance(worldFile));
+        }
 
         int totalHighScore = 0;
         float totalBestTime = 0;
@@ -51,12 +50,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
         int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID);
 
-        for (LevelWorld world : worlds) {
-            if (levelsCompleted >= world.requiredLevelsForUnlock) {
-                buildWorldRow(world, worldTable);
-            } else {
-                // build some kind of "<x> more to unlock" row
-            }
+        for (WorldInstance world : worlds) {
             totalHighScore += world.getHighScore();
 
             if (world.getBestTime() == GamePrefs.TIME_NOT_SET) {
@@ -64,6 +58,17 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             } else {
                 totalBestTime += world.getBestTime();
             }
+
+            if (levelsCompleted >= world.requiredLevelsForUnlock) {
+                buildWorldRow(world, worldTable);
+                worldTable.row().padTop(game.fontScale * 10);
+            } else {
+                // build some kind of "<x> more to unlock" row
+                buildHintedUnlockRow(world, worldTable, levelsCompleted);
+                worldTable.row().padTop(game.fontScale * 10);
+                break;
+            }
+
         }
 
         if (!allLevelsTimed) {
@@ -93,6 +98,16 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         worldTable.add(totalBestTimeValue);
     }
 
+    private WorldInstance buildWorldInstance(FileHandle worldFile) {
+        WorldDefinition worldDef = JsonUtils.unmarshal(WorldDefinition.class, worldFile);
+        WorldInstance worldInstance = new WorldInstance(worldDef.requiredLevelsForUnlock);
+        worldInstance.name = worldDef.worldName;
+        for (String levelPath : worldDef.levelList) {
+            worldInstance.addLevelInstance(JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal(levelPath)));
+        }
+        return worldInstance;
+    }
+
     @Override
     public Actor getReturnButton() {
         TextButton returnButton = new TextButton("Return to Title Screen", skin);
@@ -108,7 +123,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         return returnButton;
     }
 
-    private int buildWorldRow(final LevelWorld world, Table table) {
+    private int buildWorldRow(final WorldInstance world, Table table) {
         ClickListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -145,7 +160,18 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         table.add(worldNameLabel);
         table.add(worldScoreLabel);
         table.add(worldTimeLabel);
-        table.row().padTop(game.fontScale * 10);
         return worldHighScore;
+    }
+
+    public void buildHintedUnlockRow(WorldInstance world, Table worldTable, int levelsCompleted) {
+        int left = world.requiredLevelsForUnlock - levelsCompleted;
+        String remainingText = "Beat " + left + " more " + (left > 1 ? "levels" : "level") + " to unlock next world";
+
+        Label leftTillUnlockLabel = new Label(remainingText, skin);
+        leftTillUnlockLabel.setColor(Color.GRAY);
+        leftTillUnlockLabel.setAlignment(Align.center);
+        leftTillUnlockLabel.setFontScale(game.fontScale);
+
+        worldTable.add(leftTillUnlockLabel).colspan(4);
     }
 }
