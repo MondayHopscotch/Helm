@@ -5,12 +5,8 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.input.InputRecord;
 import com.bitdecay.game.input.InputReplay;
 import com.bitdecay.game.menu.Overlay;
 import com.bitdecay.game.menu.PauseMenu;
@@ -23,7 +19,7 @@ import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelInstance;
-import com.bitdecay.game.world.LevelWorld;
+import com.bitdecay.game.world.WorldInstance;
 
 /**
  * Created by Monday on 12/15/2016.
@@ -33,7 +29,7 @@ public class GameScreen implements Screen, GamePilot {
 
     LevelPlayer levelPlayer;
 
-    private LevelWorld activeWorld;
+    private WorldInstance activeWorld;
     private LevelInstance currentLevel;
     private InputReplay currentReplay;
 
@@ -53,7 +49,7 @@ public class GameScreen implements Screen, GamePilot {
 
     private PlayMode currentMode;
 
-    public GameScreen(Helm game, LevelWorld world, LevelInstance level) {
+    public GameScreen(Helm game, WorldInstance world, LevelInstance level) {
         this.game = game;
 
         currentMode = PlayMode.PLAY_MODE;

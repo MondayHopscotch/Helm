@@ -15,7 +15,7 @@ public class FileUtils {
     private static String lastTouchedDirectory = ".";
 
     public static String saveLevelToFile(LevelDefinition levelDef) {
-        return saveToFile(JsonUtils.marshalLevel(levelDef));
+        return saveToFile(JsonUtils.marshal(levelDef));
     }
 
     public static String saveToFile(String json) {
@@ -53,7 +53,7 @@ public class FileUtils {
         if (asJson == null) {
             return null;
         } else {
-            return JsonUtils.unmarshalLevel(asJson);
+            return JsonUtils.unmarshal(LevelDefinition.class, asJson);
         }
     }
 

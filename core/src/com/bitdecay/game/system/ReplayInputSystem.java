@@ -12,6 +12,7 @@ import com.bitdecay.game.input.InputRecord;
  */
 
 public class ReplayInputSystem extends AbstractIteratingGameSystem {
+
     public ReplayInputSystem(GamePilot pilot) {
         super(pilot);
     }
@@ -36,8 +37,10 @@ public class ReplayInputSystem extends AbstractIteratingGameSystem {
             }
 
             BoostControlComponent boost = entity.getComponent(BoostControlComponent.class);
-            boost.pressed = inputRecord.boosting;
-            System.out.println("REPLAY: TICK " + tick + " Setting boost: " + inputRecord.boosting);
+            if (inputRecord.boostToggled) {
+                boost.pressed = !boost.pressed;
+            }
+            System.out.println("REPLAY: TICK " + tick + " Setting boost: " + boost.pressed);
 
             replay.nextInput++;
         }

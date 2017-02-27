@@ -11,13 +11,13 @@ import com.bitdecay.game.input.InputReplay;
 public class ReplayUtils {
 
     public static void saveReplay(String name, InputReplay inputReplay) {
-        String marshaled = JsonUtils.marshalReplay(inputReplay);
+        String marshaled = JsonUtils.marshal(inputReplay);
         FileHandle replayFile = Gdx.files.local(name);
         replayFile.writeString(marshaled, false);
     }
 
     public static InputReplay loadReplay(String replayName) {
         FileHandle replayFile = Gdx.files.local(replayName);
-        return JsonUtils.unmarshalReplay(replayFile);
+        return JsonUtils.unmarshal(InputReplay.class, replayFile);
     }
 }

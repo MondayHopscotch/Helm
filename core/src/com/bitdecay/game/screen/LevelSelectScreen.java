@@ -11,7 +11,7 @@ import com.bitdecay.game.Helm;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.world.LevelInstance;
-import com.bitdecay.game.world.LevelWorld;
+import com.bitdecay.game.world.WorldInstance;
 
 /**
  * Created by Monday on 2/9/2017.
@@ -19,9 +19,9 @@ import com.bitdecay.game.world.LevelWorld;
 
 public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
-    private final LevelWorld world;
+    private final WorldInstance world;
 
-    public LevelSelectScreen(final Helm game, final LevelWorld world) {
+    public LevelSelectScreen(final Helm game, final WorldInstance world) {
         super(game);
         this.world = world;
         build();

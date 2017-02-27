@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.camera.FollowOrthoCamera;
 import com.bitdecay.game.component.PlayerActiveComponent;
 import com.bitdecay.game.component.ReplayActiveComponent;
@@ -66,7 +67,7 @@ public class LevelPlayer {
 
     float recordingAngle = Float.NEGATIVE_INFINITY;
     boolean lastRecordedBoost = false;
-    boolean recordingBoost = lastRecordedBoost;
+    boolean boostToggled = lastRecordedBoost;
 
     private static final int BASE_CAM_BUFFER = 500;
     FollowOrthoCamera gameCam;
@@ -342,18 +343,21 @@ public class LevelPlayer {
     }
 
     private void maybeRecordInput() {
-        if (recordingAngle != Float.NEGATIVE_INFINITY || lastRecordedBoost != recordingBoost) {
+        if (recordingAngle != Float.NEGATIVE_INFINITY || boostToggled) {
             InputRecord newRecord = new InputRecord(tick);
             if (recordingAngle != Float.NEGATIVE_INFINITY) {
                 newRecord.angle = recordingAngle;
-                System.out.println("TICK " + tick + " New angle '" + recordingAngle + "'");
+                if (Helm.debug) {
+                    System.out.println("TICK " + tick + " New angle '" + recordingAngle + "'");
+                }
                 recordingAngle = Float.NEGATIVE_INFINITY;
             }
-            if (lastRecordedBoost != recordingBoost) {
-                newRecord.boosting = recordingBoost;
-                System.out.println("TICK " + tick + " New boost '" + recordingBoost + "'");
-
-                lastRecordedBoost = recordingBoost;
+            if (boostToggled) {
+                newRecord.boostToggled = true;
+                if (Helm.debug) {
+                    System.out.println("TICK " + tick + " Boost Toggled");
+                }
+                boostToggled = false;
             }
             inputReplay.inputRecords.add(newRecord);
         }
@@ -392,8 +396,8 @@ public class LevelPlayer {
         recordingAngle = angle;
     }
 
-    public void recordNewBoostChange(boolean pressed) {
-        recordingBoost = pressed;
+    public void recordNewBoostToggle() {
+        boostToggled = true;
     }
 
     public void beginInputReplayCapture() {

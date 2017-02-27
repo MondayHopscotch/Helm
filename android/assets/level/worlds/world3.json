@@ -1,0 +1,6 @@
+{
+  worldName: "Islands",
+  levelList: [
+    "level/islands/islands_1.json",
+  ]
+}

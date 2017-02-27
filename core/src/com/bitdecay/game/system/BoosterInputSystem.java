@@ -33,7 +33,7 @@ public class BoosterInputSystem extends AbstractIteratingGameSystem implements I
             }
         }
         if (pressTrack != button.pressed) {
-            levelPlayer.recordNewBoostChange(button.pressed);
+            levelPlayer.recordNewBoostToggle();
         }
     }
 

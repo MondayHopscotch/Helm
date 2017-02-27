@@ -22,33 +22,4 @@ public class InputReplay {
     public void reset() {
         inputRecords.clear();
     }
-
-//    @Override
-//    public void write(Json json) {
-//        json.writeObjectStart("levelDef");
-//        json.writeValue(JsonUtils.marshalLevel(levelDef));
-//        json.writeObjectEnd();
-//        json.writeArrayStart("inputs");
-//        for (InputRecord inputRecord : inputRecords) {
-//            json.writeValue(inputRecord.tick);
-//            json.writeValue(inputRecord.angle);
-//            json.writeValue(inputRecord.boosting);
-//        }
-//        json.writeArrayEnd();
-//    }
-//
-//    @Override
-//    public void read(Json json, JsonValue jsonData) {
-//        levelDef = JsonUtils.unmarshalLevel(jsonData.get("levelDef").asString());
-//        String[] inputs = jsonData.get("inputs").asStringArray();
-//        for (int index = 0; index < inputs.length;) {
-//            addNewInputRecord(inputs[index], inputs[index+1], inputs[index+2]);
-//            index += 3;
-//        }
-//
-//    }
-
-//    private void addNewInputRecord(String tick, String angle, String boost) {
-//        inputRecords.add(new InputRecord(Integer.parseInt(tick), Float.parseFloat(angle), Boolean.parseBoolean(boost)));
-//    }
 }

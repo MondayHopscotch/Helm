@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 import com.bitdecay.game.input.InputReplay;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
+import com.bitdecay.game.world.WorldDefinition;
 
 /**
  * Created by Monday on 2/26/2017.
@@ -20,31 +21,24 @@ public class JsonUtils {
         json.setElementType(LevelDefinition.class, "levelLines", LineSegment.class);
     }
 
-    public static String marshalLevel(LevelDefinition levelDef) {
+    public static String marshal(Object object) {
         if (json == null) {
             initJson();
         }
-        return json.toJson(levelDef);
+        return json.toJson(object);
     }
 
-    public static LevelDefinition unmarshalLevel(String asJson) {
+    public static <T> T unmarshal(Class<T> clazz, FileHandle file) {
         if (json == null) {
             initJson();
         }
-        return json.fromJson(LevelDefinition.class, asJson);
+        return json.fromJson(clazz, file);
     }
 
-    public static String marshalReplay(InputReplay inputReplay) {
+    public static <T> T unmarshal(Class<T> clazz, String asJson) {
         if (json == null) {
             initJson();
         }
-        return json.prettyPrint(inputReplay);
-    }
-
-    public static InputReplay unmarshalReplay(FileHandle replayHandle) {
-        if (json == null) {
-            initJson();
-        }
-        return json.fromJson(InputReplay.class, replayHandle);
+        return json.fromJson(clazz, asJson);
     }
 }

@@ -6,16 +6,20 @@ import com.bitdecay.game.prefs.GamePrefs;
 /**
  * Created by Monday on 12/23/2016.
  */
-public abstract class LevelWorld {
+public class WorldInstance {
     public Array<LevelInstance> levels;
     public final int requiredLevelsForUnlock;
 
-    protected LevelWorld(int requiredLevelsForUnlock) {
+    public String name;
+
+    public WorldInstance(int requiredLevelsForUnlock) {
         levels = new Array<>();
         this.requiredLevelsForUnlock = requiredLevelsForUnlock;
     }
 
-    public abstract String getWorldName();
+    public String getWorldName() {
+        return name;
+    }
 
     public void addLevelInstance(LevelDefinition levelDef) {
         levels.add(new LevelInstance(levelDef));
