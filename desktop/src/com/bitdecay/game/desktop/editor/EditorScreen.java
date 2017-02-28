@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.desktop.editor.file.FileUtils;
 import com.bitdecay.game.desktop.editor.mode.DeleteFocusMouseMode;
-import com.bitdecay.game.desktop.editor.mode.DeleteGravityWellMouseMode;
+import com.bitdecay.game.desktop.editor.mode.DeleteGravityObjectMouseMode;
 import com.bitdecay.game.desktop.editor.mode.DeleteSegmentMouseMode;
 import com.bitdecay.game.desktop.editor.mode.FocusPointMouseMode;
 import com.bitdecay.game.desktop.editor.mode.GravityWellMouseMode;
@@ -92,9 +92,9 @@ public class EditorScreen extends InputAdapter implements Screen {
         addTool(OptionsMode.ADD_FOCUS, new FocusPointMouseMode(builder));
         addTool(OptionsMode.REMOVE_FOCUS, new DeleteFocusMouseMode(builder));
         addTool(OptionsMode.ADD_GRAV_WELL, new GravityWellMouseMode(builder));
-        addTool(OptionsMode.REMOVE_GRAV_WELL, new DeleteGravityWellMouseMode(builder));
+        addTool(OptionsMode.REMOVE_GRAV_WELL, new DeleteGravityObjectMouseMode(builder));
         addTool(OptionsMode.ADD_REPULSION_FIELD, new RepulsionFieldMouseMode(builder));
-        addTool(OptionsMode.REMOVE_REPULSION_FIELD, new RepulsionFieldMouseMode(builder));
+        addTool(OptionsMode.REMOVE_REPULSION_FIELD, new DeleteGravityObjectMouseMode(builder));
     }
 
     private void addTool(OptionsMode option, MouseMode mode) {
