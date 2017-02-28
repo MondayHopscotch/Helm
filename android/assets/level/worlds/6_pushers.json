@@ -1,0 +1,7 @@
+{
+  worldName: "Pushers",
+  requiredLevelsForUnlock: 10,
+  levelList: [
+    "level/repel/slingshot.json"
+  ]
+}
