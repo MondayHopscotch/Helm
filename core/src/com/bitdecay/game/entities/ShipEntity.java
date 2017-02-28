@@ -1,7 +1,6 @@
 package com.bitdecay.game.entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
@@ -19,6 +18,7 @@ import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.ShipLaunchComponent;
 import com.bitdecay.game.math.Geom;
+import com.bitdecay.game.world.GameColors;
 
 /**
  * Created by Monday on 12/12/2016.
@@ -42,6 +42,6 @@ public class ShipEntity extends GameEntity {
 
         addComponent(new ProximityComponent(0, null, true));
         addComponent(new CameraFollowComponent());
-        addComponent(new RenderColorComponent(Color.WHITE));
+        addComponent(new RenderColorComponent(GameColors.SHIP_BODY));
     }
 }

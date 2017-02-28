@@ -16,6 +16,7 @@ public class LevelBuilder {
 
     public ArrayList<LineSegment> lines = new ArrayList<>();
     public ArrayList<Circle> gravityWells = new ArrayList<>();
+    public ArrayList<Circle> repulsionFields = new ArrayList<>();
     public ArrayList<Circle> focusPoints = new ArrayList<>();
     public Rectangle landingPlat;
     public Vector2 startPoint;
@@ -65,6 +66,14 @@ public class LevelBuilder {
         gravityWells.remove(well);
     }
 
+    public void addRepulsionField(Vector2 position, float size) {
+        repulsionFields.add(new Circle(position, size));
+    }
+
+    public void removeRepulsionField(Circle field) {
+        repulsionFields.remove(field);
+    }
+
     public void addFocusPoint(Vector2 startPoint, float radius) {
         focusPoints.add(new Circle(startPoint, radius));
     }
@@ -82,6 +91,11 @@ public class LevelBuilder {
         gravityWells.clear();
         for (Circle gravityWell : level.gravityWells) {
             gravityWells.add(gravityWell);
+        }
+
+        repulsionFields.clear();
+        for (Circle repulsionField : level.repulsionFields) {
+            repulsionFields.add(repulsionField);
         }
 
         focusPoints.clear();
@@ -115,6 +129,10 @@ public class LevelBuilder {
             level.gravityWells.add(gravityWell);
         }
 
+        level.repulsionFields = new Array<>(repulsionFields.size());
+        for (Circle repulsionField : repulsionFields) {
+            level.repulsionFields.add(repulsionField);
+        }
 
         for (Circle focalPoint : focusPoints) {
             level.focusPoints.add(focalPoint);

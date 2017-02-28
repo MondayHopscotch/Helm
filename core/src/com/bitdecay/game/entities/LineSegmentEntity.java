@@ -1,6 +1,5 @@
 package com.bitdecay.game.entities;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.collision.CollisionDirection;
@@ -11,6 +10,7 @@ import com.bitdecay.game.component.BodyDefComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.collide.GeometryComponentFactory;
 import com.bitdecay.game.math.Geom;
+import com.bitdecay.game.world.GameColors;
 import com.bitdecay.game.world.LineSegment;
 
 /**
@@ -27,6 +27,6 @@ public class LineSegmentEntity extends GameEntity {
         addComponent(new CollisionKindComponent(CollisionKind.WALL));
 
         addComponent(new TransformComponent(midpoint, Geom.NO_ROTATION));
-        addComponent(new RenderColorComponent(Color.RED));
+        addComponent(new RenderColorComponent(GameColors.LEVEL_SEGMENT));
     }
 }

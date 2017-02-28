@@ -17,9 +17,9 @@ import com.bitdecay.game.math.Geom;
 
 public class GravityWellEntity extends GameEntity {
 
-    public GravityWellEntity(Circle well) {
+    public GravityWellEntity(Circle well, boolean repels) {
         addComponent(new TransformComponent(new Vector2(well.x, well.y), Geom.NO_ROTATION));
-        addComponent(new GravityProducerComponent(well.radius));
+        addComponent(new GravityProducerComponent(well.radius, repels));
         addComponent(GeometryComponentFactory.getCircleGeomComponent(well.radius, CollisionDirection.DELIVERS));
         addComponent(new CollisionKindComponent(CollisionKind.GRAVITY_WELL));
     }

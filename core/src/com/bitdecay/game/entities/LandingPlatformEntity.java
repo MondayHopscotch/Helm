@@ -1,6 +1,5 @@
 package com.bitdecay.game.entities;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
@@ -13,6 +12,7 @@ import com.bitdecay.game.component.RenderColorComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.collide.GeometryComponentFactory;
 import com.bitdecay.game.math.Geom;
+import com.bitdecay.game.world.GameColors;
 
 /**
  * Created by Monday on 12/14/2016.
@@ -31,7 +31,7 @@ public class LandingPlatformEntity extends GameEntity {
         addComponent(new CollisionKindComponent(CollisionKind.LANDING_PLATFORM));
 
         addComponent(new TransformComponent(center, Geom.NO_ROTATION));
-        addComponent(new RenderColorComponent(Color.GREEN));
+        addComponent(new RenderColorComponent(GameColors.LANDING_PLATFORM));
         addComponent(new CameraFollowComponent());
     }
 }

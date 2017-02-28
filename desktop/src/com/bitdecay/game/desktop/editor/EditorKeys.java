@@ -26,6 +26,8 @@ public enum EditorKeys {
     REMOVE_FOCUS("Remove Focal Point", false, Input.Keys.NUM_6),
     ADD_GRAV_WELL("Add Gravity Well", false, Input.Keys.NUM_7),
     REMOVE_GRAV_WELL("Remove Gravity Well", false, Input.Keys.NUM_8),
+    ADD_REPULSION_FIELD("Add Repulsion Field", false, Input.Keys.R),
+    REMOVE_REPULSION_FIELD("Remove Repulsion Field", true, Input.Keys.SHIFT_LEFT, Input.Keys.R),
 
     SET_FUEL("Set Fuel Level", false, Input.Keys.F),
 

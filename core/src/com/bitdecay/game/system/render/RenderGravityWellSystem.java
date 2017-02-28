@@ -1,12 +1,12 @@
 package com.bitdecay.game.system.render;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.GravityProducerComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
+import com.bitdecay.game.world.GameColors;
 
 /**
  * Created by Monday on 2/18/2017.
@@ -25,8 +25,30 @@ public class RenderGravityWellSystem extends AbstractIteratingGameSystem {
         GravityProducerComponent gravity = entity.getComponent(GravityProducerComponent.class);
         TransformComponent transform = entity.getComponent(TransformComponent.class);
 
-        renderer.setColor(Color.PURPLE);
+        maybeResetInner(gravity);
+
+        if (gravity.repels) {
+            renderer.setColor(GameColors.REPULSION_FIELD);
+        } else {
+            renderer.setColor(GameColors.GRAVITY_WELL);
+        }
         renderer.circle(transform.position.x, transform.position.y, gravity.size);
+
+        float animSize;
+        for (int i = 0; i < gravity.ringCount; i++) {
+            animSize = gravity.inner - i * (gravity.size / gravity.ringCount);
+            if (gravity.repels) {
+                animSize = gravity.size - animSize;
+            }
+            renderer.circle(transform.position.x, transform.position.y, animSize);
+        }
+        gravity.inner -= gravity.animateSpeed * gravity.size * delta;
+    }
+
+    protected void maybeResetInner(GravityProducerComponent gravity) {
+        if (gravity.inner <= gravity.size - (gravity.size / gravity.ringCount)) {
+            gravity.inner = gravity.size;
+        }
     }
 
     @Override

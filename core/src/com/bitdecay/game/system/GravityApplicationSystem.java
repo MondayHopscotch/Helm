@@ -56,7 +56,7 @@ public class GravityApplicationSystem extends AbstractIteratingGameSystem {
 
             workingDirection.nor();
 
-            gravityScalar = calculateGravityStrength(sourceGravity.size, distance);
+            gravityScalar = calculateGravityStrength(sourceGravity, distance);
             cumulativeGravity.add(workingDirection.scl(gravityScalar));
         }
 
@@ -71,10 +71,15 @@ public class GravityApplicationSystem extends AbstractIteratingGameSystem {
         velocity.currentVelocity.add(cumulativeGravity.scl(delta));
     }
 
-    private float calculateGravityStrength(float size, float distance) {
+    private float calculateGravityStrength(GravityProducerComponent producer, float distance) {
         // we modify the distance to get the surface of the black hole to be a little stronger
+        float size = producer.size;
         distance -= (size * SOURCE_GRAV_MODIFIER);
-        return (float) ((size * GRAVITY_DENSITY) / (Math.pow(distance, GRAVITY_DECAY_POWER)));
+        float strength = (float) ((size * GRAVITY_DENSITY) / (Math.pow(distance, GRAVITY_DECAY_POWER)));
+        if (producer.repels) {
+            strength *= -1;
+        }
+        return strength;
     }
 
     @Override

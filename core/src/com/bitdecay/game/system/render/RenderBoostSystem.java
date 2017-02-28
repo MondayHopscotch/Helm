@@ -1,15 +1,13 @@
 package com.bitdecay.game.system.render;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.component.BodyDefComponent;
 import com.bitdecay.game.component.BoosterComponent;
-import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
+import com.bitdecay.game.world.GameColors;
 
 /**
  * Created by Monday on 12/17/2016.
@@ -33,7 +31,7 @@ public class RenderBoostSystem extends AbstractIteratingGameSystem {
             float[] translated = Geom.rotatePoints(boostJetPoints, transform.angle);
             translated = Geom.translatePoints(translated, transform.position);
 
-            renderer.setColor(Color.FIREBRICK);
+            renderer.setColor(GameColors.BOOST);
             renderer.polygon(translated);
         }
     }
