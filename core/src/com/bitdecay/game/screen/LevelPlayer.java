@@ -256,7 +256,12 @@ public class LevelPlayer {
         }
 
         for (Circle well: levelDef.gravityWells) {
-            GravityWellEntity gravityWell = new GravityWellEntity(well);
+            GravityWellEntity gravityWell = new GravityWellEntity(well, false);
+            allEntities.add(gravityWell);
+        }
+
+        for (Circle field: levelDef.repulsionFields) {
+            GravityWellEntity gravityWell = new GravityWellEntity(field, true);
             allEntities.add(gravityWell);
         }
 

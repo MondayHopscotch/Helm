@@ -25,8 +25,30 @@ public class RenderGravityWellSystem extends AbstractIteratingGameSystem {
         GravityProducerComponent gravity = entity.getComponent(GravityProducerComponent.class);
         TransformComponent transform = entity.getComponent(TransformComponent.class);
 
-        renderer.setColor(Color.PURPLE);
+        maybeResetInner(gravity);
+
+        if (gravity.repels) {
+            renderer.setColor(Color.TAN);
+        } else {
+            renderer.setColor(Color.PURPLE);
+        }
         renderer.circle(transform.position.x, transform.position.y, gravity.size);
+
+        float animSize;
+        for (int i = 0; i < gravity.ringCount; i++) {
+            animSize = gravity.inner - i * (gravity.size / gravity.ringCount);
+            if (gravity.repels) {
+                animSize = gravity.size - animSize;
+            }
+            renderer.circle(transform.position.x, transform.position.y, animSize);
+        }
+        gravity.inner -= gravity.animateSpeed * gravity.size * delta;
+    }
+
+    protected void maybeResetInner(GravityProducerComponent gravity) {
+        if (gravity.inner <= gravity.size - (gravity.size / gravity.ringCount)) {
+            gravity.inner = gravity.size;
+        }
     }
 
     @Override

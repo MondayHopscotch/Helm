@@ -11,6 +11,8 @@ public enum OptionsMode {
     REMOVE_FOCUS("Remove Focal Point", EditorKeys.REMOVE_FOCUS),
     ADD_GRAV_WELL("Add Gravity Well", EditorKeys.ADD_GRAV_WELL),
     REMOVE_GRAV_WELL("Remove Gravity Well", EditorKeys.REMOVE_GRAV_WELL),
+    ADD_REPULSION_FIELD("Add Repulsion Field", EditorKeys.ADD_REPULSION_FIELD),
+    REMOVE_REPULSION_FIELD("Remove Repulsion Field", EditorKeys.REMOVE_REPULSION_FIELD),
 
     SET_NAME("Set Level Name", EditorKeys.SET_NAME),
 

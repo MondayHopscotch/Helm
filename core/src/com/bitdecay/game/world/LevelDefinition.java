@@ -15,6 +15,7 @@ public class LevelDefinition {
 
     public Array<LineSegment> levelLines = new Array<>();
     public Array<Circle> gravityWells = new Array<>();
+    public Array<Circle> repulsionFields = new Array<>();
     public Rectangle finishPlatform = new Rectangle();
 
     public Vector2 startPosition = new Vector2();

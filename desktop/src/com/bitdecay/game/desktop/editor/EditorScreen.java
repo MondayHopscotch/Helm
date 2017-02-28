@@ -28,6 +28,7 @@ import com.bitdecay.game.desktop.editor.mode.LandingPlatMouseMode;
 import com.bitdecay.game.desktop.editor.mode.LineSegmentMouseMode;
 import com.bitdecay.game.desktop.editor.mode.MouseMode;
 import com.bitdecay.game.desktop.editor.mode.NoOpMouseMode;
+import com.bitdecay.game.desktop.editor.mode.RepulsionFieldMouseMode;
 import com.bitdecay.game.desktop.editor.mode.StartPointMouseMode;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.world.LevelDefinition;
@@ -92,6 +93,8 @@ public class EditorScreen extends InputAdapter implements Screen {
         addTool(OptionsMode.REMOVE_FOCUS, new DeleteFocusMouseMode(builder));
         addTool(OptionsMode.ADD_GRAV_WELL, new GravityWellMouseMode(builder));
         addTool(OptionsMode.REMOVE_GRAV_WELL, new DeleteGravityWellMouseMode(builder));
+        addTool(OptionsMode.ADD_REPULSION_FIELD, new RepulsionFieldMouseMode(builder));
+        addTool(OptionsMode.REMOVE_REPULSION_FIELD, new RepulsionFieldMouseMode(builder));
     }
 
     private void addTool(OptionsMode option, MouseMode mode) {
@@ -199,6 +202,13 @@ public class EditorScreen extends InputAdapter implements Screen {
         if (builder.gravityWells != null) {
             for (Circle well : builder.gravityWells) {
                 shaper.circle(well.x, well.y, well.radius);
+            }
+        }
+
+        shaper.setColor(Color.TAN);
+        if (builder.repulsionFields != null) {
+            for (Circle field : builder.repulsionFields) {
+                shaper.circle(field.x, field.y, field.radius);
             }
         }
     }
