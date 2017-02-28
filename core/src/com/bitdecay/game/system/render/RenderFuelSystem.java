@@ -1,6 +1,5 @@
 package com.bitdecay.game.system.render;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
@@ -9,6 +8,7 @@ import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
+import com.bitdecay.game.world.GameColors;
 
 /**
  * Created by Monday on 12/19/2016.
@@ -61,7 +61,7 @@ public class RenderFuelSystem extends AbstractIteratingGameSystem {
         fuelPoints = Geom.rotatePoints(fuelPoints, transform.angle);
         fuelPoints = Geom.translatePoints(fuelPoints, transform.position);
 
-        renderer.setColor(Color.MAGENTA);
+        renderer.setColor(GameColors.FUEL_METER);
         renderer.polygon(fuelPoints);
     }
 

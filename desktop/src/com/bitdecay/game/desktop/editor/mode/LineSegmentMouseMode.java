@@ -1,11 +1,11 @@
 package com.bitdecay.game.desktop.editor.mode;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.desktop.editor.LevelBuilder;
 import com.bitdecay.game.desktop.editor.MouseButton;
 import com.bitdecay.game.math.Geom;
+import com.bitdecay.game.world.GameColors;
 
 public class LineSegmentMouseMode extends com.bitdecay.game.desktop.editor.mode.BaseMouseMode {
     public LineSegmentMouseMode(LevelBuilder builder) {
@@ -34,7 +34,7 @@ public class LineSegmentMouseMode extends com.bitdecay.game.desktop.editor.mode.
     @Override
     public void render(ShapeRenderer shaper) {
         if (startPoint != null && endPoint != null) {
-            shaper.setColor(Color.RED);
+            shaper.setColor(GameColors.LEVEL_SEGMENT);
             shaper.line(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
         }
     }
