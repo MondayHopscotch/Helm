@@ -27,29 +27,47 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
     }
 
     @Override
+    public String getTitle() {
+        return "Replays";
+    }
+
+    @Override
     public void populateRows(Table table) {
         FileHandle replayDir = Gdx.files.local(ReplayUtils.REPLAY_DIR);
         for (final FileHandle replayFile : replayDir.list()) {
             final InputReplay replay = JsonUtils.unmarshal(InputReplay.class, replayFile);
 
-            ClickListener listener = new ClickListener() {
+            ClickListener watchListener = new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     game.setScreen(new GameScreen(game, replay));
                 }
             };
 
+            ClickListener deleteListener = new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    ReplayUtils.deleteReplay(replayFile);
+                    game.setScreen(new ReplaySelectScreen(game));
+                }
+            };
+
             TextButton watchButton = new TextButton("Watch", skin);
             watchButton.getLabel().setFontScale(game.fontScale);
-            watchButton.addListener(listener);
+            watchButton.addListener(watchListener);
 
             Label nameLabel = new Label(replayFile.name(), skin);
             nameLabel.setAlignment(Align.center);
             nameLabel.setFontScale(game.fontScale);
-            nameLabel.addListener(listener);
+            nameLabel.addListener(watchListener);
+
+            TextButton deleteButton = new TextButton("Delete", skin);
+            deleteButton.getLabel().setFontScale(game.fontScale);
+            deleteButton.addListener(deleteListener);
 
             table.add(watchButton).expand(false, false).padRight(game.fontScale * 10);
             table.add(nameLabel);
+            table.add(deleteButton).expand(false, false).padLeft(game.fontScale * 10);
             table.row().padTop(game.fontScale * 10);
         }
     }

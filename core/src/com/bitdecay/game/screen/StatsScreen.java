@@ -22,6 +22,11 @@ public class StatsScreen extends AbstractScrollingItemScreen {
     }
 
     @Override
+    public String getTitle() {
+        return "Pilot Stats";
+    }
+
+    @Override
     public void populateRows(Table table) {
         itemTable.columnDefaults(0).expandX();
         itemTable.columnDefaults(1).width(game.fontScale * 50);

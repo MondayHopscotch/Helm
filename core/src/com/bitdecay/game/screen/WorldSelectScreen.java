@@ -31,6 +31,11 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
     }
 
     @Override
+    public String getTitle() {
+        return "World Select";
+    }
+
+    @Override
     public void populateRows(Table worldTable) {
         itemTable.columnDefaults(1).expandX();
         itemTable.columnDefaults(2).width(game.fontScale * 50);
