@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.utils.StringBuilder;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.input.InputReplay;
 import com.bitdecay.game.menu.Overlay;
@@ -16,10 +18,14 @@ import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.ScoreMenu;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.SoundMode;
+import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelInstance;
 import com.bitdecay.game.world.WorldInstance;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * Created by Monday on 12/15/2016.
@@ -149,7 +155,7 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void saveLastReplay() {
-        String replayName = currentLevel.levelDef.name + "_" + System.currentTimeMillis();
+        String replayName = TimerUtils.getDateAsString() + " - " + currentLevel.levelDef.name;
         System.out.println("Saving replay: " + replayName);
         ReplayUtils.saveReplay(replayName, levelPlayer.inputReplay);
     }
@@ -167,7 +173,6 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     private void scoreRun(LandingScore score) {
-//        String replayName = "replay_" + currentLevel.levelDef.name + "_" + System.currentTimeMillis();
         levelPlayer.stopReplayCapture();
         System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
         int levelScore = score.total();

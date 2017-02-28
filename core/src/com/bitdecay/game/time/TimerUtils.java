@@ -1,9 +1,15 @@
 package com.bitdecay.game.time;
 
+import com.badlogic.gdx.utils.TimeUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Monday on 1/15/2017.
  */
 public class TimerUtils {
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
 
     public static String getFormattedTime(float timeInSeconds) {
         int secondsAsInt = (int) timeInSeconds;
@@ -20,5 +26,9 @@ public class TimerUtils {
         } else {
             return String.format("%02d.%03d", seconds, fractional);
         }
+    }
+
+    public static String getDateAsString() {
+        return dateFormat.format(new Date(TimeUtils.millis()));
     }
 }

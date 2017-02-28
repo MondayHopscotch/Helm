@@ -18,8 +18,7 @@ public class ReplayUtils {
         replayFile.writeString(marshaled, false);
     }
 
-    public static InputReplay loadReplay(String replayName) {
-        FileHandle replayFile = Gdx.files.local(replayName);
-        return JsonUtils.unmarshal(InputReplay.class, replayFile);
+    public static void deleteReplay(FileHandle replayFile) {
+        replayFile.delete();
     }
 }
