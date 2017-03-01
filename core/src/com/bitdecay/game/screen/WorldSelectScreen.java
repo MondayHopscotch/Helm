@@ -48,13 +48,32 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             worlds.add(buildWorldInstance(worldFile));
         }
 
+        int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID);
+
+        boolean allWorldsUnlocked = true;
+        for (WorldInstance world : worlds) {
+            if (levelsCompleted >= world.requiredLevelsForUnlock) {
+                buildWorldRow(world, worldTable);
+                worldTable.row().padTop(game.fontScale * 10);
+            } else {
+                allWorldsUnlocked = false;
+                buildHintedUnlockRow(world, worldTable, levelsCompleted);
+                worldTable.row().padTop(game.fontScale * 10);
+                break;
+            }
+
+        }
+
+        if (allWorldsUnlocked) {
+            addTotalsRow(worldTable, worlds);
+        }
+    }
+
+    protected void addTotalsRow(Table worldTable, Array<WorldInstance> worlds) {
         int totalHighScore = 0;
         float totalBestTime = 0;
 
         boolean allLevelsTimed = true;
-
-        int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID);
-
         for (WorldInstance world : worlds) {
             totalHighScore += world.getHighScore();
 
@@ -63,17 +82,6 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             } else {
                 totalBestTime += world.getBestTime();
             }
-
-            if (levelsCompleted >= world.requiredLevelsForUnlock) {
-                buildWorldRow(world, worldTable);
-                worldTable.row().padTop(game.fontScale * 10);
-            } else {
-                // build some kind of "<x> more to unlock" row
-                buildHintedUnlockRow(world, worldTable, levelsCompleted);
-                worldTable.row().padTop(game.fontScale * 10);
-                break;
-            }
-
         }
 
         if (!allLevelsTimed) {
@@ -170,7 +178,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
     public void buildHintedUnlockRow(WorldInstance world, Table worldTable, int levelsCompleted) {
         int left = world.requiredLevelsForUnlock - levelsCompleted;
-        String remainingText = "Beat " + left + " more " + (left > 1 ? "levels" : "level") + " to unlock next world";
+        String remainingText = "Beat " + left + " more " + (left > 1 ? "levels" : "level") + " to unlock '" + world.getWorldName() + "'";
 
         Label leftTillUnlockLabel = new Label(remainingText, skin);
         leftTillUnlockLabel.setColor(Color.GRAY);

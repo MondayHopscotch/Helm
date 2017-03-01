@@ -4,9 +4,6 @@ package com.bitdecay.game.prefs;
  * Created by Monday on 1/4/2017.
  */
 public class GamePrefs {
-
-    public static final String LEVELS_COMPLETED = "levelsCompleted";
-
     public static final String HIGH_SCORE = "highScore";
     public static final String BEST_TIME = "bestTime";
 
@@ -25,6 +22,6 @@ public class GamePrefs {
     // See usages for understanding this number. It's used in multiple ways
     public static final String SENSITIVITY = "steeringSensitivity";
     public static final int SENSITIVITY_MIN = -100;
-    public static final int SENSITIVITY_MAX = 100;
+    public static final int SENSITIVITY_MAX = 200;
     public static final int SENSITIVITY_DEFAULT = 0;
 }
