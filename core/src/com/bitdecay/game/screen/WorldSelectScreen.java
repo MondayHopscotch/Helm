@@ -43,7 +43,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
         Array<WorldInstance> worlds = new Array<>();
 
-        FileHandle worldDirectory = Gdx.files.internal("level/worlds/");
+        FileHandle worldDirectory = Gdx.files.internal("level/world_defs/");
         for (FileHandle worldFile : worldDirectory.list()) {
             worlds.add(buildWorldInstance(worldFile));
         }

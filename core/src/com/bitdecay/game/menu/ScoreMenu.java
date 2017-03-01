@@ -29,7 +29,11 @@ public class ScoreMenu {
 
     public final Stage stage;
     private final Skin skin;
+
     public boolean visible = false;
+    public boolean allowSave;
+
+
     private GamePilot pilot;
 
     private Label landingSpeedLabel;
@@ -275,7 +279,12 @@ public class ScoreMenu {
             baseScoreSequence.addAction(Actions.delay(1f));
 
         }
-        baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, nextButton, saveReplayButton)));
+
+        baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, nextButton)));
+
+        if (allowSave) {
+            baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(null, saveReplayButton)));
+        }
 
         stage.addAction(baseScoreSequence);
 
@@ -298,7 +307,9 @@ public class ScoreMenu {
         return new Runnable() {
             @Override
             public void run() {
-                pilot.doSound(SoundMode.PLAY, sfxName);
+                if (sfxName != null) {
+                    pilot.doSound(SoundMode.PLAY, sfxName);
+                }
                 for (Actor actor : actors) {
                     actor.setVisible(true);
                 }

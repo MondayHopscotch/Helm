@@ -167,7 +167,7 @@ public class GameScreen implements Screen, GamePilot {
                 scoreRun(score);
                 break;
             case REPLAY_MODE:
-                game.setScreen(new TitleScreen(game));
+                showScoreMenu(score, false);
                 break;
         }
     }
@@ -183,8 +183,13 @@ public class GameScreen implements Screen, GamePilot {
         }
         score.newHighScore = currentLevel.maybeSetNewHighScore(levelScore);
         score.newBestTime = currentLevel.maybeSetNewBestTime(score.timeTaken);
-        scoreMenu.setScore(score);
+        showScoreMenu(score, true);
+    }
+
+    private void showScoreMenu(LandingScore score, boolean allowSave) {
+        scoreMenu.allowSave = allowSave;
         scoreMenu.visible = true;
+        scoreMenu.setScore(score);
         Gdx.input.setInputProcessor(scoreMenu.stage);
         levelPlayer.resetInputSystems();
     }
