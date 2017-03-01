@@ -25,6 +25,6 @@ public class GamePrefs {
     // See usages for understanding this number. It's used in multiple ways
     public static final String SENSITIVITY = "steeringSensitivity";
     public static final int SENSITIVITY_MIN = -100;
-    public static final int SENSITIVITY_MAX = 100;
+    public static final int SENSITIVITY_MAX = 200;
     public static final int SENSITIVITY_DEFAULT = 0;
 }
