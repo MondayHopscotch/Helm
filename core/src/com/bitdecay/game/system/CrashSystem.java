@@ -29,7 +29,7 @@ public class CrashSystem extends AbstractIteratingGameSystem {
         pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_EXPLODE);
 
         TimerComponent timer = entity.getComponent(TimerComponent.class);
-        Helm.stats.roll(StatName.FLIGHT_TIME, timer.secondsElapsed);
+        levelPlayer.rollStat(StatName.FLIGHT_TIME, timer.secondsElapsed);
 
         TransformComponent transformComponent = entity.getComponent(TransformComponent.class);
 
@@ -37,16 +37,16 @@ public class CrashSystem extends AbstractIteratingGameSystem {
 
         switch (crash.with) {
             case WALL:
-                Helm.stats.count(StatName.WALL_CRASHES, 1);
+                levelPlayer.countStat(StatName.WALL_CRASHES, 1);
                 break;
             case LANDING_PLATFORM:
-                Helm.stats.count(StatName.LANDING_PLAT_CRASHES, 1);
+                levelPlayer.countStat(StatName.LANDING_PLAT_CRASHES, 1);
                 break;
             case LEVEL_BOUNDARY:
-                Helm.stats.count(StatName.OOB_CRASHES, 1);
+                levelPlayer.countStat(StatName.OOB_CRASHES, 1);
                 break;
             case GRAVITY_WELL:
-                Helm.stats.count(StatName.GRAV_WELL_CRASHES, 1);
+                levelPlayer.countStat(StatName.GRAV_WELL_CRASHES, 1);
                 break;
             default:
                 // do nothing

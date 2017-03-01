@@ -70,7 +70,7 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
 
             entity.addComponent(new DelayedAddComponent(boosterDelay, collisionDelay, steeringDelay));
             pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_LAUNCH);
-            Helm.stats.count(StatName.LAUNCHES, 1);
+            levelPlayer.countStat(StatName.LAUNCHES, 1);
         }
     }
 

@@ -20,7 +20,7 @@ public class LevelTestScreen implements Screen, GamePilot {
 
     public LevelTestScreen(HelmEditor editor) {
         this.editor = editor;
-        levelPlayer = new LevelPlayer(this);
+        levelPlayer = new LevelPlayer(this, false);
     }
 
     @Override

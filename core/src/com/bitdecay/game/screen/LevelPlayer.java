@@ -49,6 +49,7 @@ import com.bitdecay.game.system.SteeringInputSystem;
 import com.bitdecay.game.system.SteeringSystem;
 import com.bitdecay.game.system.render.RenderGravityWellSystem;
 import com.bitdecay.game.system.render.RenderSteeringSystem;
+import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
 
@@ -61,7 +62,7 @@ public class LevelPlayer {
     float deltaRemainder;
 
     int tick = 0;
-    InputReplay inputReplay = new InputReplay();
+    InputReplay recordedInput = new InputReplay();
     boolean resetQueued = false;
     boolean captureActive = false;
 
@@ -73,6 +74,8 @@ public class LevelPlayer {
     FollowOrthoCamera gameCam;
 
     private GamePilot pilot;
+    private boolean isReplay;
+
     OrthographicCamera screenCam;
 
     ShapeRenderer shapeRenderer;
@@ -95,8 +98,9 @@ public class LevelPlayer {
     private PlayerBoundarySystem playerBoundarySystem;
 
 
-    public LevelPlayer(GamePilot pilot) {
+    public LevelPlayer(GamePilot pilot, boolean isReplay) {
         this.pilot = pilot;
+        this.isReplay = isReplay;
 
         screenCam = new OrthographicCamera(1920, 1080);
         screenCam.translate(screenCam.viewportWidth / 2, screenCam.viewportHeight / 2);
@@ -222,7 +226,7 @@ public class LevelPlayer {
     }
 
     public void loadLevel(LevelDefinition levelDef) {
-        inputReplay.levelDef = levelDef;
+        recordedInput.levelDef = levelDef;
 
         resetLevel(levelDef);
 
@@ -339,7 +343,7 @@ public class LevelPlayer {
     private void handleTickCount() {
         if (resetQueued) {
             tick = 0;
-            inputReplay.reset();
+            recordedInput.reset();
             resetQueued = false;
         }
         if (captureActive) {
@@ -348,6 +352,11 @@ public class LevelPlayer {
     }
 
     private void maybeRecordInput() {
+        if (isReplay) {
+            // don't need to record when we are playing a replay file
+            return;
+        }
+
         if (recordingAngle != Float.NEGATIVE_INFINITY || boostToggled) {
             InputRecord newRecord = new InputRecord(tick);
             if (recordingAngle != Float.NEGATIVE_INFINITY) {
@@ -364,7 +373,7 @@ public class LevelPlayer {
                 }
                 boostToggled = false;
             }
-            inputReplay.inputRecords.add(newRecord);
+            recordedInput.inputRecords.add(newRecord);
         }
     }
 
@@ -416,5 +425,17 @@ public class LevelPlayer {
 
     public int getTick() {
         return tick;
+    }
+
+    public void countStat(StatName statName, int amount) {
+        if (!isReplay) {
+            Helm.stats.count(statName, amount);
+        }
+    }
+
+    public void rollStat(StatName statName, float amount) {
+        if (!isReplay) {
+            Helm.stats.roll(statName, amount);
+        }
     }
 }

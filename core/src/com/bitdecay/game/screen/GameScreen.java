@@ -6,8 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.utils.StringBuilder;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.input.InputReplay;
 import com.bitdecay.game.menu.Overlay;
@@ -23,9 +21,6 @@ import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelInstance;
 import com.bitdecay.game.world.WorldInstance;
-
-import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created by Monday on 12/15/2016.
@@ -60,12 +55,15 @@ public class GameScreen implements Screen, GamePilot {
 
         currentMode = PlayMode.PLAY_MODE;
 
-        levelPlayer = new LevelPlayer(this);
+        levelPlayer = new LevelPlayer(this, false);
         initMenus();
         combinedGameInput = new InputMultiplexer(pauseMenu.stage, levelPlayer.getInput());
 
         currentLevel = level;
         activeWorld = world;
+        currentReplay = null;
+
+
 
         requestRestartLevel();
     }
@@ -75,10 +73,12 @@ public class GameScreen implements Screen, GamePilot {
 
         currentMode = PlayMode.REPLAY_MODE;
 
-        levelPlayer = new LevelPlayer(this);
+        levelPlayer = new LevelPlayer(this, true);
         initMenus();
         combinedGameInput = new InputMultiplexer(pauseMenu.stage, levelPlayer.getInput());
         currentReplay = replay;
+        currentLevel = null;
+        activeWorld = null;
         requestRestartLevel();
     }
 
@@ -157,7 +157,7 @@ public class GameScreen implements Screen, GamePilot {
     public void saveLastReplay() {
         String replayName = TimerUtils.getDateAsString() + " - " + currentLevel.levelDef.name;
         System.out.println("Saving replay: " + replayName);
-        ReplayUtils.saveReplay(replayName, levelPlayer.inputReplay);
+        ReplayUtils.saveReplay(replayName, levelPlayer.recordedInput);
     }
 
     @Override

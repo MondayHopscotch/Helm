@@ -102,8 +102,8 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
         score.timeTaken = timer.secondsElapsed;
 
-        Helm.stats.count(StatName.LANDINGS, 1);
-        Helm.stats.roll(StatName.FLIGHT_TIME, timer.secondsElapsed);
+        levelPlayer.countStat(StatName.LANDINGS, 1);
+        levelPlayer.rollStat(StatName.FLIGHT_TIME, timer.secondsElapsed);
         pilot.finishLevel(score);
     }
 
