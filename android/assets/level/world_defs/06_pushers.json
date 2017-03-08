@@ -4,6 +4,8 @@
   levelList: [
     "level/repel/slingshot.json",
     "level/repel/railgun.json",
+    "level/repel/inchworm.json",
+    "level/repel/whiplash.json",
     "level/repel/needles_revenge.json"
   ]
 }

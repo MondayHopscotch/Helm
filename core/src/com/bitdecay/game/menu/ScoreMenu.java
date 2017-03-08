@@ -268,7 +268,7 @@ public class ScoreMenu {
                     totalTimeLabel,
                     totalTimeValue
             )));
-            baseScoreSequence.addAction(Actions.delay(2f));
+            baseScoreSequence.addAction(Actions.delay(1f));
         } else {
             baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL,
                     totalScoreLabel,

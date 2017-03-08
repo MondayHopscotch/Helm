@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.input.InputReplay;
 import com.bitdecay.game.menu.Overlay;
@@ -42,6 +44,8 @@ public class GameScreen implements Screen, GamePilot {
     private Overlay overlay;
 
     private InputMultiplexer combinedGameInput;
+
+    private Array<Long> debugFrameTimes;
 
     private enum PlayMode {
         PLAY_MODE,
@@ -235,8 +239,27 @@ public class GameScreen implements Screen, GamePilot {
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        long startTime = TimeUtils.millis();
         if (!paused) {
             levelPlayer.update(delta);
+            if (Helm.debug) {
+                if (debugFrameTimes == null) {
+                    debugFrameTimes = new Array<>(120);
+                }
+                debugFrameTimes.add(TimeUtils.millis() - startTime);
+                if (debugFrameTimes.size >= 120) {
+                    long totalTime = 0;
+                    for (Long frameTime : debugFrameTimes) {
+                        totalTime += frameTime;
+                    }
+
+                    double average = 1.0 * totalTime / debugFrameTimes.size;
+                    System.out.println("Average frame time: " + average);
+                    debugFrameTimes.clear();
+                }
+
+
+            }
         }
 
         levelPlayer.render(delta);
