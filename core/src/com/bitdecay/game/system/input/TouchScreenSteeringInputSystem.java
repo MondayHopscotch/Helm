@@ -1,7 +1,6 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.input;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
@@ -12,11 +11,12 @@ import com.bitdecay.game.Helm;
 import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
+import com.bitdecay.game.system.input.AbstractInputSystem;
 
 /**
  * Created by Monday on 12/16/2016.
  */
-public class SteeringInputSystem extends AbstractIteratingGameSystem implements InputProcessor {
+public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
 
     private static final int REFERENCE_SCREEN_WIDTH = 1920;
     private static final int REFERENCE_SCREEN_HEIGHT = 1080;
@@ -34,7 +34,7 @@ public class SteeringInputSystem extends AbstractIteratingGameSystem implements 
 
     private Vector2 simpleSteeringStartVector = new Vector2();
 
-    public SteeringInputSystem(GamePilot pilot) {
+    public TouchScreenSteeringInputSystem(GamePilot pilot) {
         super(pilot);
     }
 

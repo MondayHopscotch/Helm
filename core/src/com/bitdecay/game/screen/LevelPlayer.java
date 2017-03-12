@@ -20,9 +20,11 @@ import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
 import com.bitdecay.game.input.InputRecord;
 import com.bitdecay.game.input.InputReplay;
+import com.bitdecay.game.system.input.AbstractInputSystem;
 import com.bitdecay.game.system.BoostSystem;
-import com.bitdecay.game.system.BoosterInputSystem;
+import com.bitdecay.game.system.input.TouchScreenBoosterInputSystem;
 import com.bitdecay.game.system.GravityApplicationSystem;
+import com.bitdecay.game.system.input.InputSystemFactory;
 import com.bitdecay.game.system.ProximityFocusSystem;
 import com.bitdecay.game.system.CameraUpdateSystem;
 import com.bitdecay.game.system.CollisionAlignmentSystem;
@@ -38,20 +40,22 @@ import com.bitdecay.game.system.PlayerCollisionHandlerSystem;
 import com.bitdecay.game.system.PlayerStartLevelSystem;
 import com.bitdecay.game.system.ProximityRemovalSystem;
 import com.bitdecay.game.system.RemoveComponentSystem;
-import com.bitdecay.game.system.ReplayInputSystem;
+import com.bitdecay.game.system.input.ReplayInputSystem;
 import com.bitdecay.game.system.TimerSystem;
 import com.bitdecay.game.system.render.DebugFocusPointSystem;
 import com.bitdecay.game.system.render.RenderBodySystem;
 import com.bitdecay.game.system.render.RenderBoostSystem;
 import com.bitdecay.game.system.render.RenderExplosionSystem;
 import com.bitdecay.game.system.render.RenderFuelSystem;
-import com.bitdecay.game.system.SteeringInputSystem;
+import com.bitdecay.game.system.input.TouchScreenSteeringInputSystem;
 import com.bitdecay.game.system.SteeringSystem;
 import com.bitdecay.game.system.render.RenderGravityWellSystem;
 import com.bitdecay.game.system.render.RenderSteeringSystem;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
+
+import java.util.List;
 
 /**
  * Created by Monday on 12/18/2016.
@@ -120,15 +124,14 @@ public class LevelPlayer {
     }
 
     private void initSystems() {
-        BoosterInputSystem boosterInputSystem = new BoosterInputSystem(pilot);
-        inputSystems.add(boosterInputSystem);
-        inputMux.addProcessor(boosterInputSystem);
+        List<AbstractInputSystem> inputSystems = InputSystemFactory.getInputSystems(pilot);
+        for (AbstractInputSystem inputSystem : inputSystems) {
+            this.inputSystems.add(inputSystem);
+            inputMux.addProcessor(inputSystem);
+            addGameplaySystem(inputSystem);
+        }
 
         BoostSystem boostSystem = new BoostSystem(pilot);
-
-        SteeringInputSystem steeringInputSystem = new SteeringInputSystem(pilot);
-        inputSystems.add(steeringInputSystem);
-        inputMux.addProcessor(steeringInputSystem);
 
         SteeringSystem steeringSystem = new SteeringSystem(pilot);
 
@@ -164,9 +167,7 @@ public class LevelPlayer {
         addGameplaySystem(cameraSystem);
 
         addGameplaySystem(replayInputSystem);
-        addGameplaySystem(boosterInputSystem);
         addGameplaySystem(boostSystem);
-        addGameplaySystem(steeringInputSystem);
         addGameplaySystem(steeringSystem);
 
         addGameplaySystem(startSystem);
