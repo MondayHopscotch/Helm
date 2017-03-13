@@ -1,5 +1,6 @@
 package com.bitdecay.game.math;
 
+import com.badlogic.gdx.math.GeometryUtils;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -32,6 +33,16 @@ public class Geom {
         Vector2[] newPoints = new Vector2[points.length];
         for (int i = 0; i < points.length; i++) {
             newPoints[i] = getRotatedPoint(points[i].x, points[i].y, angle, Vector2.Zero);
+        }
+        return newPoints;
+    }
+
+    public static float[]rotatePoints(float[] points, float angle, Vector2 origin) {
+        float[] newPoints = new float[points.length];
+        for (int i = 0; i < points.length; i += 2) {
+            Vector2 rotated = getRotatedPoint(points[i], points[i + 1], angle, origin);
+            newPoints[i] = rotated.x;
+            newPoints[i + 1] = rotated.y;
         }
         return newPoints;
     }
@@ -80,11 +91,12 @@ public class Geom {
         return rotated;
     }
 
-    public static float[] rectangleToFloatPoints(Rectangle shape) {
-        return new float[]{shape.x, shape.y,
+    public static float[] rectangleToFloatPoints(Rectangle shape, float rotation) {
+        float[] points = new float[]{shape.x, shape.y,
                 shape.x + shape.width, shape.y,
                 shape.x + shape.width, shape.y + shape.height,
                 shape.x, shape.y + shape.height};
+        return rotatePoints(points, rotation, new Vector2(shape.x, shape.y));
     }
 
     public static float[] translatePoints(float[] points, Vector2 translation) {

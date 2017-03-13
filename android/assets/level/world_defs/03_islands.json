@@ -3,5 +3,9 @@
   requiredLevelsForUnlock: 4,
   levelList: [
     "level/islands/islands_1.json",
+    "level/rotated/tilted.json",
+    "level/rotated/spider.json",
+    "level/rotated/muerto.json",
+    "level/rotated/peanut.json",
   ]
 }

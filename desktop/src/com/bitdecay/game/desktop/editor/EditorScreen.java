@@ -189,7 +189,7 @@ public class EditorScreen extends InputAdapter implements Screen {
 
         shaper.setColor(Color.GREEN);
         if (builder.landingPlat != null) {
-            shaper.rect(builder.landingPlat.x, builder.landingPlat.y, 0, 0, builder.landingPlat.width, builder.landingPlat.height, 1, 1, builder.landingPlatRotation);
+            shaper.rect(builder.landingPlat.x, builder.landingPlat.y, 0, 0, builder.landingPlat.width, builder.landingPlat.height, 1, 1, builder.landingPlatRotationInDegrees);
         }
 
         shaper.setColor(Color.PINK);

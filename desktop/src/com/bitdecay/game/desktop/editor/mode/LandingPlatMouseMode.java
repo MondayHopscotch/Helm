@@ -38,7 +38,7 @@ public class LandingPlatMouseMode extends com.bitdecay.game.desktop.editor.mode.
     @Override
     public void mouseUpLogic(Vector2 point, MouseButton button) {
         endPoint = Geom.snap(point, 25);
-        if (startPoint.x != endPoint.x && startPoint.y != endPoint.y) {
+        if (startPoint.x != endPoint.x || startPoint.y != endPoint.y) {
             builder.setLandingPlatform(workingRect, rotation);
         }
     }

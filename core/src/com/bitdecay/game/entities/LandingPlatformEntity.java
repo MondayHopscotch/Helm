@@ -20,17 +20,16 @@ import com.bitdecay.game.world.GameColors;
 public class LandingPlatformEntity extends GameEntity {
 
     public LandingPlatformEntity(Rectangle shape, float rotation) {
-        Vector2 center = shape.getCenter(new Vector2());
         Rectangle copy = new Rectangle(shape);
-        copy.x -= center.x;
-        copy.y -= center.y;
+        copy.x -= shape.x;
+        copy.y -= shape.y;
 
-        float[] geomPoints = Geom.rectangleToFloatPoints(copy);
+    float[] geomPoints = Geom.rectangleToFloatPoints(copy, 0);
         addComponent(new BodyDefComponent(geomPoints));
         addComponent(GeometryComponentFactory.getPolygonGeomComponent(geomPoints, CollisionDirection.DELIVERS));
         addComponent(new CollisionKindComponent(CollisionKind.LANDING_PLATFORM));
 
-        addComponent(new TransformComponent(center, rotation));
+        addComponent(new TransformComponent(new Vector2(shape.x, shape.y), rotation));
         addComponent(new RenderColorComponent(GameColors.LANDING_PLATFORM));
         addComponent(new CameraFollowComponent());
     }
