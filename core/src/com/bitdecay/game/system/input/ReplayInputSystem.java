@@ -1,4 +1,4 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.input;
 
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
@@ -6,6 +6,7 @@ import com.bitdecay.game.component.ReplayActiveComponent;
 import com.bitdecay.game.component.control.BoostControlComponent;
 import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.input.InputRecord;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 /**
  * Created by Monday on 2/26/2017.

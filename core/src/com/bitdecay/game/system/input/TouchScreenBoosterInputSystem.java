@@ -1,6 +1,5 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.input;
 
-import com.badlogic.gdx.InputProcessor;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.BoosterComponent;
@@ -8,17 +7,18 @@ import com.bitdecay.game.component.PlayerActiveComponent;
 import com.bitdecay.game.component.control.BoostControlComponent;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
+import com.bitdecay.game.system.input.AbstractInputSystem;
 
 /**
  * Created by Monday on 12/8/2016.
  */
-public class BoosterInputSystem extends AbstractIteratingGameSystem implements InputProcessor {
+public class TouchScreenBoosterInputSystem extends AbstractInputSystem {
 
     TouchTracker tracker = new TouchTracker(5);
 
     boolean pressTrack = false;
 
-    public BoosterInputSystem(GamePilot pilot) {
+    public TouchScreenBoosterInputSystem(GamePilot pilot) {
         super(pilot);
     }
 
