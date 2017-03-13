@@ -19,6 +19,7 @@ public class LevelBuilder {
     public ArrayList<Circle> repulsionFields = new ArrayList<>();
     public ArrayList<Circle> focusPoints = new ArrayList<>();
     public Rectangle landingPlat;
+    public float landingPlatRotationInDegrees;
     public Vector2 startPoint;
     public int startingFuel = 300;
     public String name = "";
@@ -27,8 +28,9 @@ public class LevelBuilder {
         startPoint = new Vector2(point);
     }
 
-    public void setLandingPlatform(Vector2 startPoint, Vector2 endPoint) {
-        landingPlat = new Rectangle(startPoint.x, startPoint.y, endPoint.x - startPoint.x, endPoint.y - startPoint.y);
+    public void setLandingPlatform(Rectangle rectangle, float rotation) {
+        landingPlat = new Rectangle(rectangle);
+        landingPlatRotationInDegrees = rotation;
         if (landingPlat.width < 0) {
             landingPlat.x += landingPlat.width;
             landingPlat.width *= -1;
@@ -108,6 +110,7 @@ public class LevelBuilder {
         startingFuel = level.startingFuel;
 
         landingPlat = level.finishPlatform;
+        landingPlatRotationInDegrees = level.finishPlatformRotation;
 
         name = level.name;
     }
@@ -140,6 +143,7 @@ public class LevelBuilder {
 
         level.startPosition = new Vector2(startPoint);
         level.finishPlatform = new Rectangle(landingPlat);
+        level.finishPlatformRotation = landingPlatRotationInDegrees;
 
         level.startingFuel = startingFuel;
 

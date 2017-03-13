@@ -37,7 +37,7 @@ public class PlayerCollisionHandlerSystem extends AbstractIteratingGameSystem {
         // i.e. restart the level / play death screen if it is a wall
         //      show score and move to next level if successfully landed on platform
         if (CollisionKind.LANDING_PLATFORM.equals(collided.with)) {
-            entity.addComponent(new RateLandingComponent(playerGeom, collided.delivererGeometry));
+            entity.addComponent(new RateLandingComponent(collided.geom, playerGeom, collided.delivererGeometry));
 //        } else if (CollisionKind.WALL.equals(collided.with)) {
         } else {
             entity.addComponent(new CrashComponent(collided.with));

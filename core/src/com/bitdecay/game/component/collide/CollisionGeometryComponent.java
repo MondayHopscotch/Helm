@@ -1,5 +1,6 @@
 package com.bitdecay.game.component.collide;
 
+import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.collision.CollisionDirection;
 import com.bitdecay.game.component.GameComponent;
 

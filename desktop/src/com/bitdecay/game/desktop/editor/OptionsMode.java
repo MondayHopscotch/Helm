@@ -5,6 +5,7 @@ public enum OptionsMode {
     DRAW_LINE("Draw Line", EditorKeys.LINE_MODE),
     DELETE_LINE("Delete Line", EditorKeys.DELETE_LINE),
     DRAW_LANDING("Draw Landing", EditorKeys.LANDING_MODE),
+    ROTATE_LANDING("Rotate Landing", EditorKeys.ROTATE_LANDING),
     PLACE_START("Place Start", EditorKeys.START_MODE),
     SET_FUEL("Set Fuel", EditorKeys.SET_FUEL),
     ADD_FOCUS("Add Focal Point", EditorKeys.ADD_FOCUS),

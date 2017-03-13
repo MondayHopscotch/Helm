@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.GameEntity;
@@ -256,7 +257,7 @@ public class LevelPlayer {
         }
 
         if (levelDef.finishPlatform.area() > 0) {
-            LandingPlatformEntity plat = new LandingPlatformEntity(levelDef.finishPlatform);
+            LandingPlatformEntity plat = new LandingPlatformEntity(levelDef.finishPlatform, levelDef.finishPlatformRotation * MathUtils.degreesToRadians);
             allEntities.add(plat);
         }
 
