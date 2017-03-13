@@ -21,6 +21,7 @@ public enum EditorKeys {
     LINE_MODE("Draw Line", false, Input.Keys.NUM_1),
     DELETE_LINE("Delete Line", false, Input.Keys.NUM_2),
     LANDING_MODE("Draw Landing", false, Input.Keys.NUM_3),
+    ROTATE_LANDING("Rotate Landing", true, Input.Keys.SHIFT_LEFT, Input.Keys.NUM_3),
     START_MODE("Place Start", false, Input.Keys.NUM_4),
     ADD_FOCUS("Add Focal Point", false, Input.Keys.NUM_5),
     REMOVE_FOCUS("Remove Focal Point", false, Input.Keys.NUM_6),

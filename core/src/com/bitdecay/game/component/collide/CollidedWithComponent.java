@@ -8,10 +8,12 @@ import com.bitdecay.game.component.GameComponent;
  */
 public class CollidedWithComponent extends GameComponent {
 
+    public CollisionGeometryComponent geom;
     public CollisionKind with;
     public float[] delivererGeometry;
 
-    public CollidedWithComponent(CollisionKind kind, float[] delivererGeometry) {
+    public CollidedWithComponent(CollisionGeometryComponent geom, CollisionKind kind, float[] delivererGeometry) {
+        this.geom = geom;
         this.with = kind;
         this.delivererGeometry = delivererGeometry;
     }

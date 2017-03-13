@@ -256,7 +256,7 @@ public class LevelPlayer {
         }
 
         if (levelDef.finishPlatform.area() > 0) {
-            LandingPlatformEntity plat = new LandingPlatformEntity(levelDef.finishPlatform);
+            LandingPlatformEntity plat = new LandingPlatformEntity(levelDef.finishPlatform, levelDef.finishPlatformRotation);
             allEntities.add(plat);
         }
 

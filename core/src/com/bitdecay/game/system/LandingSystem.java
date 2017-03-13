@@ -1,6 +1,7 @@
 package com.bitdecay.game.system;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.Helm;
@@ -54,21 +55,25 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         TransformComponent transform = entity.getComponent(TransformComponent.class);
 
         // check landing and either pass/fail
-        float radsAwayFromStraightUp = Math.abs(transform.angle - Geom.ROTATION_UP);
 
-        float minBodyY = Geom.getMinY(landing.playerGeom);
-        float maxPlatY = Geom.getMaxY(landing.landingGeometry);
-        float yDifference = maxPlatY - minBodyY;
+        // our relative 'up' from the perspective of the landing platform
+        float landingPlatformNormal = landing.geom.rotation + Geom.ROTATION_UP;
+        float radsAwayFromStraightUp = Math.abs(transform.angle - landingPlatformNormal);
+
+        Vector2 normalVector = new Vector2(0, 1).rotateRad(landing.geom.rotation).nor();
+        float minBodyReference = Geom.getMinAlongVector(landing.playerGeom, normalVector);
+        float maxPlatformReference = Geom.getMaxAlongVector(landing.landingGeometry, normalVector);
+        float surfaceDifference = maxPlatformReference - minBodyReference;
 
         System.out.println("LANDING VECTOR: " + velocity.currentVelocity);
         System.out.println("LANDING ANGLE: " + radsAwayFromStraightUp);
-        System.out.println("LANDING Y-DIFFERENCE: " + yDifference);
+        System.out.println("LANDING SURFACE DIFFERENCE: " + surfaceDifference);
 
         // velocity checks
-        if (Math.abs(velocity.currentVelocity.y) > MAX_LANDING_SPEED ||
-                velocity.currentVelocity.y > 0) {
+        float impactSpeed = velocity.currentVelocity.dot(normalVector);
+        if (Math.abs(impactSpeed) > MAX_LANDING_SPEED || impactSpeed > 0) {
             entity.addComponent(new CrashComponent(CollisionKind.LANDING_PLATFORM));
-            System.out.println("LANDED TO0 HARD: " + velocity.currentVelocity);
+            System.out.println("LANDED TO0 HARD: " + velocity.currentVelocity + " impactVelocify: " + impactSpeed);
             return;
         }
 
@@ -80,11 +85,11 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         }
 
         // positional checks
-        if (yDifference > 5) {
+        if (surfaceDifference > 5) {
             // TODO: Tune this value. This represents how far into the platform the player can be to still count
             // as hitting it from the top
             entity.addComponent(new CrashComponent(CollisionKind.LANDING_PLATFORM));
-            System.out.println("LANDED FROM WRONG SIDE OF PLAT. Y-Difference: " + (maxPlatY - minBodyY));
+            System.out.println("LANDED FROM WRONG SIDE OF PLAT. Surface Difference: " + surfaceDifference);
             return;
         }
 
@@ -95,7 +100,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
         LandingScore score = new LandingScore();
         score.angleScore = rateAngle(radsAwayFromStraightUp);
-        score.speedScore = rateSpeed(velocity);
+        score.speedScore = rateSpeed(impactSpeed);
         score.accuracyScore = rateAccuracy(transform, landing);
         score.fuelLeft = fuel.fuelRemaining / fuel.maxFuel;
         score.fuelScore = rateFuelRemaining(fuel);
@@ -125,12 +130,13 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         }
     }
 
-    private int rateSpeed(VelocityComponent velocity) {
-        System.out.println("Landing Velocity: " + velocity.currentVelocity.y);
-        if (velocity.currentVelocity.len() > MAX_LANDING_SPEED_FOR_SCORE) {
+    private int rateSpeed(float impactSpeed) {
+        float absImpactSpeed = Math.abs(impactSpeed);
+        System.out.println("Landing Velocity: " + impactSpeed);
+        if (absImpactSpeed > MAX_LANDING_SPEED_FOR_SCORE) {
             return 0;
         } else {
-            float scalar = (MAX_LANDING_SPEED_FOR_SCORE - velocity.currentVelocity.len()) / MAX_LANDING_SPEED_FOR_SCORE;
+            float scalar = (MAX_LANDING_SPEED_FOR_SCORE - absImpactSpeed) / MAX_LANDING_SPEED_FOR_SCORE;
 
             //a zero-speed landing is impossible, so make a full scalar doable
             scalar = Math.min(scalar + LANDING_SPEED_MERCY, 1);
@@ -139,24 +145,25 @@ public class LandingSystem extends AbstractIteratingGameSystem {
     }
 
     private int rateAccuracy(TransformComponent transform, RateLandingComponent landing) {
-        float shipX = transform.position.x;
-        float middleLandingX = Float.NEGATIVE_INFINITY;
+        Vector2 surfaceVector = new Vector2(1, 0).rotateRad(landing.geom.rotation).nor();
+        float shipCenter = surfaceVector.dot(transform.position);
+        float platformMiddle = Float.NEGATIVE_INFINITY;
 
-        float minX = Float.POSITIVE_INFINITY;
-        float maxX = Float.NEGATIVE_INFINITY;
+        float platformMin = Float.POSITIVE_INFINITY;
+        float platformMax = Float.NEGATIVE_INFINITY;
 
-        for (int i = 0; i < landing.landingGeometry.length; i += 2) {
-            minX = Math.min(minX, landing.landingGeometry[i]);
-            maxX = Math.max(maxX, landing.landingGeometry[i]);
+        for (int i = 1; i < landing.landingGeometry.length; i += 2) {
+            platformMin = Math.min(platformMin, surfaceVector.dot(landing.landingGeometry[i-1], landing.landingGeometry[i]));
+            platformMax = Math.max(platformMax, surfaceVector.dot(landing.landingGeometry[i-1], landing.landingGeometry[i]));
         }
 
-        System.out.println("MinX: " + minX + "   MaxX: " + maxX);
-        System.out.println("shipX: " + shipX);
+        System.out.println("PlatformMin: " + platformMin + "   PlatformMax: " + platformMax);
+        System.out.println("shipCenter: " + shipCenter);
 
-        middleLandingX = (minX + maxX) / 2;
+        platformMiddle = (platformMin + platformMax) / 2;
 
-        float maxDistanceToScore = (maxX - minX) / 2;
-        float landingDistance = Math.abs(shipX - middleLandingX);
+        float maxDistanceToScore = (platformMax - platformMin) / 2;
+        float landingDistance = Math.abs(shipCenter - platformMiddle);
 
         // can only be at most half the distance from the center
         float scalar = (maxDistanceToScore - landingDistance) / maxDistanceToScore;

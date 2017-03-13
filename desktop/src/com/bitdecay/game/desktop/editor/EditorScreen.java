@@ -88,6 +88,7 @@ public class EditorScreen extends InputAdapter implements Screen {
         addTool(OptionsMode.DRAW_LINE, new LineSegmentMouseMode(builder));
         addTool(OptionsMode.DELETE_LINE, new DeleteSegmentMouseMode(builder));
         addTool(OptionsMode.DRAW_LANDING, new LandingPlatMouseMode(builder));
+//        addTool(OptionsMode.ROTATE_LANDING, new RotateLandingMouseMode(builder));
         addTool(OptionsMode.PLACE_START, new StartPointMouseMode(builder));
         addTool(OptionsMode.ADD_FOCUS, new FocusPointMouseMode(builder));
         addTool(OptionsMode.REMOVE_FOCUS, new DeleteFocusMouseMode(builder));
@@ -188,7 +189,7 @@ public class EditorScreen extends InputAdapter implements Screen {
 
         shaper.setColor(Color.GREEN);
         if (builder.landingPlat != null) {
-            shaper.rect(builder.landingPlat.x, builder.landingPlat.y, builder.landingPlat.width, builder.landingPlat.height);
+            shaper.rect(builder.landingPlat.x, builder.landingPlat.y, 0, 0, builder.landingPlat.width, builder.landingPlat.height, 1, 1, builder.landingPlatRotation);
         }
 
         shaper.setColor(Color.PINK);

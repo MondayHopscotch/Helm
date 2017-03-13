@@ -120,6 +120,22 @@ public class Geom {
        return translatePoints(rotatePoints(points, transform.angle), transform.position);
     }
 
+    public static float getMinAlongVector(float[] points, Vector2 referenceVector) {
+        float min = Float.POSITIVE_INFINITY;
+        for (int i = 1; i < points.length; i += 2) {
+            min = Math.min(min, referenceVector.dot(points[i-1], points[i]));
+        }
+        return min;
+    }
+
+    public static float getMaxAlongVector(float[] points, Vector2 referenceVector) {
+        float max = Float.NEGATIVE_INFINITY;
+        for (int i = 1; i < points.length; i += 2) {
+            max = Math.max(max, referenceVector.dot(points[i-1], points[i]));
+        }
+        return max;
+    }
+
     public static float getMinY(float[] points) {
         float minY = Float.POSITIVE_INFINITY;
         for (int i = 1; i < points.length; i += 2) {

@@ -65,10 +65,10 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
                             geom2.colliding = true;
                             if (CollisionDirection.RECEIVES.equals(geom1.direction) &&
                                     CollisionDirection.DELIVERS.equals(geom2.direction)) {
-                                entity1.addComponent(new CollidedWithComponent(kind2.kind, collider.getGeom2WorkingSet()));
+                                entity1.addComponent(new CollidedWithComponent(geom2, kind2.kind, collider.getGeom2WorkingSet()));
                             } else if (CollisionDirection.DELIVERS.equals(geom1.direction) &&
                                     CollisionDirection.RECEIVES.equals(geom2.direction)) {
-                                entity2.addComponent(new CollidedWithComponent(kind1.kind, collider.getGeom1WorkingSet()));
+                                entity2.addComponent(new CollidedWithComponent(geom1, kind1.kind, collider.getGeom1WorkingSet()));
                             }
                     }
                 }
