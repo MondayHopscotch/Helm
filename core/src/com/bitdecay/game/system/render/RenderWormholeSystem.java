@@ -32,7 +32,9 @@ public class RenderWormholeSystem extends AbstractIteratingGameSystem {
         renderer.setColor(Color.TAN);
 
         renderer.circle(transformComponent.position.x, transformComponent.position.y, collisionRadius);
+        renderer.circle(transformComponent.position.x, transformComponent.position.y, collisionRadius+50);
         renderer.circle(exitLocationComponent.position.x, exitLocationComponent.position.y, collisionRadius);
+        renderer.circle(exitLocationComponent.position.x, exitLocationComponent.position.y, collisionRadius+50);
     }
 
     @Override
