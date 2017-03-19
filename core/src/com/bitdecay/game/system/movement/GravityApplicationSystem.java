@@ -1,4 +1,4 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.movement;
 
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
@@ -7,6 +7,7 @@ import com.bitdecay.game.component.GravityAffectedComponent;
 import com.bitdecay.game.component.GravityProducerComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.VelocityComponent;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 import java.util.Iterator;
 

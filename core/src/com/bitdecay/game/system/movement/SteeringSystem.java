@@ -1,10 +1,11 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.movement;
 
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.SteeringComponent;
 import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.component.TransformComponent;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 /**
  * Created by Monday on 12/12/2016.

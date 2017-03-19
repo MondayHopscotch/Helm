@@ -1,9 +1,10 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.util;
 
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.DelayedAddComponent;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 /**
  * Created by Monday on 12/16/2016.

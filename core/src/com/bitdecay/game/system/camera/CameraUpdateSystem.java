@@ -1,4 +1,4 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.camera;
 
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
@@ -6,6 +6,7 @@ import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.camera.FollowOrthoCamera;
 import com.bitdecay.game.component.CameraFollowComponent;
 import com.bitdecay.game.component.TransformComponent;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 /**
  * Created by Monday on 12/14/2016.

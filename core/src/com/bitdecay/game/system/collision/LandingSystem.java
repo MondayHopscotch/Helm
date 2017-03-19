@@ -1,4 +1,4 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.collision;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -18,6 +18,7 @@ import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SoundMode;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 import com.bitdecay.game.unlock.StatName;
 
 /**

@@ -1,4 +1,4 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.collision;
 
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
@@ -15,6 +15,7 @@ import com.bitdecay.game.component.collide.CollidedWithComponent;
 import com.bitdecay.game.component.collide.CollisionGeometryComponent;
 import com.bitdecay.game.component.collide.CollisionKindComponent;
 import com.bitdecay.game.math.Geom;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
