@@ -1,4 +1,4 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.collision;
 
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
@@ -11,6 +11,7 @@ import com.bitdecay.game.entities.ExplosionEntity;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 import com.bitdecay.game.unlock.StatName;
 
 /**

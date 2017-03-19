@@ -1,4 +1,4 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.collision;
 
 import com.badlogic.gdx.math.GeometryUtils;
 import com.bitdecay.game.GameEntity;
@@ -13,6 +13,7 @@ import com.bitdecay.game.component.RenderColorComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.math.Geom;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 /**
  * Created by Monday on 12/14/2016.

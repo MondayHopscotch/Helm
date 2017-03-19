@@ -1,8 +1,9 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.util;
 
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.ForcedRemoveComponent;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 /**
  * Created by Monday on 1/12/2017.

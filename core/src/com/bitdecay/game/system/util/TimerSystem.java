@@ -1,9 +1,10 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.util;
 
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.component.TimerComponent;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 /**
  * Created by Monday on 1/9/2017.

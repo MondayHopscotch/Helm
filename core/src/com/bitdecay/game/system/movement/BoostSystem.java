@@ -1,4 +1,4 @@
-package com.bitdecay.game.system;
+package com.bitdecay.game.system.movement;
 
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
@@ -11,6 +11,7 @@ import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SoundMode;
+import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 /**
  * Created by Monday on 12/14/2016.
