@@ -19,8 +19,10 @@ import com.bitdecay.game.entities.GravityWellEntity;
 import com.bitdecay.game.entities.LandingPlatformEntity;
 import com.bitdecay.game.entities.LineSegmentEntity;
 import com.bitdecay.game.entities.ShipEntity;
+import com.bitdecay.game.entities.WormholeEntity;
 import com.bitdecay.game.input.InputRecord;
 import com.bitdecay.game.input.InputReplay;
+import com.bitdecay.game.system.collision.WormholeCollisionHandlerSystem;
 import com.bitdecay.game.system.input.AbstractInputSystem;
 import com.bitdecay.game.system.movement.BoostSystem;
 import com.bitdecay.game.system.movement.GravityApplicationSystem;
@@ -30,6 +32,7 @@ import com.bitdecay.game.system.camera.CameraUpdateSystem;
 import com.bitdecay.game.system.collision.CollisionAlignmentSystem;
 import com.bitdecay.game.system.collision.CollisionSystem;
 import com.bitdecay.game.system.collision.CrashSystem;
+import com.bitdecay.game.system.render.RenderWormholeSystem;
 import com.bitdecay.game.system.util.DelayedAddSystem;
 import com.bitdecay.game.system.GameSystem;
 import com.bitdecay.game.system.movement.GravityFinderSystem;
@@ -53,6 +56,7 @@ import com.bitdecay.game.system.render.RenderSteeringSystem;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
+import com.bitdecay.game.world.WormholePair;
 
 import java.util.List;
 
@@ -149,6 +153,8 @@ public class LevelPlayer {
         CollisionAlignmentSystem collisionAlignmentSystem = new CollisionAlignmentSystem(pilot);
         CollisionSystem collisionSystem = new CollisionSystem(pilot);
         PlayerCollisionHandlerSystem playerCollisionSystem = new PlayerCollisionHandlerSystem(pilot);
+        WormholeCollisionHandlerSystem wormholeCollisionHandlerSystem = new WormholeCollisionHandlerSystem(pilot);
+
         ProximityRemovalSystem proximityRemovalSystem = new ProximityRemovalSystem(pilot);
         ProximityFocusSystem cameraProximitySystem = new ProximityFocusSystem(pilot);
 
@@ -178,6 +184,8 @@ public class LevelPlayer {
         addGameplaySystem(collisionAlignmentSystem);
         addGameplaySystem(collisionSystem);
         addGameplaySystem(playerCollisionSystem);
+        addGameplaySystem(wormholeCollisionHandlerSystem);
+
         addGameplaySystem(proximityRemovalSystem);
         addGameplaySystem(cameraProximitySystem);
         addGameplaySystem(delaySystem);
@@ -192,12 +200,14 @@ public class LevelPlayer {
         RenderFuelSystem renderFuelSystem = new RenderFuelSystem(pilot, shapeRenderer);
         RenderExplosionSystem renderExplosionSystem = new RenderExplosionSystem(pilot, shapeRenderer);
         RenderGravityWellSystem renderGravityWellSystem = new RenderGravityWellSystem(pilot, shapeRenderer);
+        RenderWormholeSystem renderWormholeSystem = new RenderWormholeSystem(pilot, shapeRenderer);
 
         gameRenderSystems.add(renderBoostSystem);
         gameRenderSystems.add(renderBodySystem);
         gameRenderSystems.add(renderFuelSystem);
         gameRenderSystems.add(renderExplosionSystem);
         gameRenderSystems.add(renderGravityWellSystem);
+        gameRenderSystems.add(renderWormholeSystem);
 
         RenderSteeringSystem renderSteeringSystem = new RenderSteeringSystem(pilot, screenCam, shapeRenderer);
         screenRenderSystems.add(renderSteeringSystem);
@@ -269,6 +279,13 @@ public class LevelPlayer {
         for (Circle field: levelDef.repulsionFields) {
             GravityWellEntity gravityWell = new GravityWellEntity(field, true);
             allEntities.add(gravityWell);
+        }
+
+        levelDef.teleporters.add(new WormholePair(new Circle(0, 0, 100), new Circle(3000, 500, 100)));
+
+        for (WormholePair telePair: levelDef.teleporters) {
+            WormholeEntity wormhole = new WormholeEntity(telePair);
+            allEntities.add(wormhole);
         }
 
         for (Circle focus: levelDef.focusPoints) {

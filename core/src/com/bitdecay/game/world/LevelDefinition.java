@@ -4,8 +4,6 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
 import com.bitdecay.game.math.Geom;
 
 /**
@@ -17,6 +15,7 @@ public class LevelDefinition {
     public Array<LineSegment> levelLines = new Array<>();
     public Array<Circle> gravityWells = new Array<>();
     public Array<Circle> repulsionFields = new Array<>();
+    public Array<WormholePair> teleporters = new Array<>();
     public Rectangle finishPlatform = new Rectangle();
     public float finishPlatformRotation = Geom.NO_ROTATION;
 

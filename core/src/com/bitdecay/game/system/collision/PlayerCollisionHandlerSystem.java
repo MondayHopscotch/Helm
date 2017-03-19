@@ -27,7 +27,6 @@ public class PlayerCollisionHandlerSystem extends AbstractIteratingGameSystem {
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
         CollidedWithComponent collided = entity.getComponent(CollidedWithComponent.class);
-        entity.removeComponent(CollidedWithComponent.class);
 
         TransformComponent transform = entity.getComponent(TransformComponent.class);
         BodyDefComponent bodyDef = entity.getComponent(BodyDefComponent.class);
@@ -37,11 +36,18 @@ public class PlayerCollisionHandlerSystem extends AbstractIteratingGameSystem {
         // Will need to specially handle various kinds of collisions here.
         // i.e. restart the level / play death screen if it is a wall
         //      show score and move to next level if successfully landed on platform
-        if (CollisionKind.LANDING_PLATFORM.equals(collided.with)) {
-            entity.addComponent(new RateLandingComponent(collided.geom, playerGeom, collided.delivererGeometry));
-//        } else if (CollisionKind.WALL.equals(collided.with)) {
-        } else {
-            entity.addComponent(new CrashComponent(collided.with));
+        switch(collided.with) {
+
+            case LANDING_PLATFORM:
+                entity.addComponent(new RateLandingComponent(collided.geom, playerGeom, collided.delivererGeometry));
+                entity.removeComponent(CollidedWithComponent.class);
+                break;
+            case WORMHOLE:
+                // other systems handle this case
+                break;
+            default:
+                entity.addComponent(new CrashComponent(collided.with));
+                entity.removeComponent(CollidedWithComponent.class);
         }
     }
 

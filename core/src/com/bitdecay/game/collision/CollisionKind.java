@@ -8,5 +8,6 @@ public enum CollisionKind {
     LANDING_PLATFORM,
     PLAYER,
     LEVEL_BOUNDARY,
-    GRAVITY_WELL
+    GRAVITY_WELL,
+    WORMHOLE
 }
