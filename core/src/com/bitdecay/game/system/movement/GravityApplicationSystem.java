@@ -39,7 +39,7 @@ public class GravityApplicationSystem extends AbstractIteratingGameSystem {
         VelocityComponent velocity = entity.getComponent(VelocityComponent.class);
         GravityAffectedComponent gravity = entity.getComponent(GravityAffectedComponent.class);
 
-        Vector2 cumulativeGravity = workingGravityVector.set(GravityFinderSystem.universalGravity).add(gravity.worldGravityModifier);
+        Vector2 cumulativeGravity = workingGravityVector.set(levelPlayer.universalGravity).add(gravity.worldGravityModifier);
 
         GameEntity sourceEntity;
         GravityProducerComponent sourceGravity;

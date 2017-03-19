@@ -15,8 +15,6 @@ import com.bitdecay.game.system.AbstractIteratingGameSystem;
  */
 public class GravityFinderSystem extends AbstractIteratingGameSystem {
 
-    public static final float WORLD_GRAVITY_STRENGTH = -10;
-    public static Vector2 universalGravity = new Vector2(0, WORLD_GRAVITY_STRENGTH);
 
     public static Array<GameEntity> foundGravitySources = new Array<>(10);
 

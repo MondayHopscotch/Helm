@@ -100,6 +100,8 @@ public class LevelPlayer {
     private final InputMultiplexer inputMux;
     private PlayerBoundarySystem playerBoundarySystem;
 
+    public Vector2 universalGravity = new Vector2();
+
 
     public LevelPlayer(GamePilot pilot, boolean isReplay) {
         this.pilot = pilot;
@@ -273,6 +275,8 @@ public class LevelPlayer {
             FocusPointEntity focusPoint = new FocusPointEntity(focus);
             allEntities.add(focusPoint);
         }
+
+        universalGravity.set(0, levelDef.gravity);
 
         resetAllButInputSystems();
 
