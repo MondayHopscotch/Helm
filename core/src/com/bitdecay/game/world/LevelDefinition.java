@@ -25,7 +25,7 @@ public class LevelDefinition {
     public Array<Circle> focusPoints = new Array<>();
     public int startingFuel = 300;
 
-    public float gravity = -10;
+    public Vector2 gravity = new Vector2(0, -10);
 
     public LevelDefinition() {
         // Here for JSON

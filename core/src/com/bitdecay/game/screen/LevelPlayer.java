@@ -276,7 +276,7 @@ public class LevelPlayer {
             allEntities.add(focusPoint);
         }
 
-        universalGravity.set(0, levelDef.gravity);
+        universalGravity.set(levelDef.gravity);
 
         resetAllButInputSystems();
 
