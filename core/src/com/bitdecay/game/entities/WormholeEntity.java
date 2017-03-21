@@ -5,6 +5,7 @@ import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.collision.CollisionDirection;
 import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.TransformComponent;
+import com.bitdecay.game.component.WormholeComponent;
 import com.bitdecay.game.component.collide.CollisionKindComponent;
 import com.bitdecay.game.component.collide.GeometryComponentFactory;
 import com.bitdecay.game.math.Geom;
@@ -22,5 +23,6 @@ public class WormholeEntity extends GameEntity {
         addComponent(GeometryComponentFactory.getCircleGeomComponent(pair.entrance.radius, CollisionDirection.DELIVERS));
         addComponent(new CollisionKindComponent(CollisionKind.WORMHOLE));
         addComponent(new SecondLocationComponent(new Vector2(pair.exit.x, pair.exit.y)));
+        addComponent(new WormholeComponent(pair.entrance.radius + 75, pair.exit.radius + 25));
     }
 }
