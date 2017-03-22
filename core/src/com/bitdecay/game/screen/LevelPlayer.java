@@ -281,7 +281,6 @@ public class LevelPlayer {
             allEntities.add(gravityWell);
         }
 
-
         for (WormholePair pair: levelDef.wormholes) {
             WormholeEntity wormhole = new WormholeEntity(pair);
             allEntities.add(wormhole);
