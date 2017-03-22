@@ -20,6 +20,8 @@ import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.WorldDefinition;
 import com.bitdecay.game.world.WorldInstance;
 
+import static com.bitdecay.game.persist.JsonUtils.json;
+
 /**
  * Created by Monday on 1/10/2017.
  */
@@ -43,9 +45,10 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
         Array<WorldInstance> worlds = new Array<>();
 
-        FileHandle worldDirectory = Gdx.files.internal("level/world_defs/");
-        for (FileHandle worldFile : worldDirectory.list()) {
-            worlds.add(buildWorldInstance(worldFile));
+        FileHandle worldDirectory = Gdx.files.internal("level/world_defs/worldOrder.json");
+        String[] worldsInOrder = JsonUtils.unmarshal(String[].class, worldDirectory);
+        for (String worldFile : worldsInOrder) {
+            worlds.add(buildWorldInstance(Gdx.files.internal("level/world_defs/" + worldFile)));
         }
 
         int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID);
