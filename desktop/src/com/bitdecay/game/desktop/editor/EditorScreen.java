@@ -22,6 +22,7 @@ import com.bitdecay.game.desktop.editor.file.FileUtils;
 import com.bitdecay.game.desktop.editor.mode.DeleteFocusMouseMode;
 import com.bitdecay.game.desktop.editor.mode.DeleteGravityObjectMouseMode;
 import com.bitdecay.game.desktop.editor.mode.DeleteSegmentMouseMode;
+import com.bitdecay.game.desktop.editor.mode.DeleteWormholeMouseMode;
 import com.bitdecay.game.desktop.editor.mode.FocusPointMouseMode;
 import com.bitdecay.game.desktop.editor.mode.GravityWellMouseMode;
 import com.bitdecay.game.desktop.editor.mode.LandingPlatMouseMode;
@@ -30,9 +31,11 @@ import com.bitdecay.game.desktop.editor.mode.MouseMode;
 import com.bitdecay.game.desktop.editor.mode.NoOpMouseMode;
 import com.bitdecay.game.desktop.editor.mode.RepulsionFieldMouseMode;
 import com.bitdecay.game.desktop.editor.mode.StartPointMouseMode;
+import com.bitdecay.game.desktop.editor.mode.WormholeMouseMode;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
+import com.bitdecay.game.world.WormholePair;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -88,7 +91,6 @@ public class EditorScreen extends InputAdapter implements Screen {
         addTool(OptionsMode.DRAW_LINE, new LineSegmentMouseMode(builder));
         addTool(OptionsMode.DELETE_LINE, new DeleteSegmentMouseMode(builder));
         addTool(OptionsMode.DRAW_LANDING, new LandingPlatMouseMode(builder));
-//        addTool(OptionsMode.ROTATE_LANDING, new RotateLandingMouseMode(builder));
         addTool(OptionsMode.PLACE_START, new StartPointMouseMode(builder));
         addTool(OptionsMode.ADD_FOCUS, new FocusPointMouseMode(builder));
         addTool(OptionsMode.REMOVE_FOCUS, new DeleteFocusMouseMode(builder));
@@ -96,6 +98,8 @@ public class EditorScreen extends InputAdapter implements Screen {
         addTool(OptionsMode.REMOVE_GRAV_WELL, new DeleteGravityObjectMouseMode(builder));
         addTool(OptionsMode.ADD_REPULSION_FIELD, new RepulsionFieldMouseMode(builder));
         addTool(OptionsMode.REMOVE_REPULSION_FIELD, new DeleteGravityObjectMouseMode(builder));
+        addTool(OptionsMode.ADD_WORMHOLE, new WormholeMouseMode(builder));
+        addTool(OptionsMode.REMOVE_WORMHOLE, new DeleteWormholeMouseMode(builder));
     }
 
     private void addTool(OptionsMode option, MouseMode mode) {
@@ -203,6 +207,17 @@ public class EditorScreen extends InputAdapter implements Screen {
         if (builder.gravityWells != null) {
             for (Circle well : builder.gravityWells) {
                 shaper.circle(well.x, well.y, well.radius);
+            }
+        }
+
+        shaper.setColor(Color.TAN);
+        if (builder.wormholes != null) {
+            for (WormholePair well : builder.wormholes) {
+                shaper.circle(well.entrance.x, well.entrance.y, well.entrance.radius);
+                shaper.line(well.entrance.x, well.entrance.y - 20, well.entrance.x, well.entrance.y + 20);
+                shaper.circle(well.exit.x, well.exit.y, well.exit.radius);
+                shaper.circle(well.exit.x, well.exit.y, 20);
+                shaper.line(well.entrance.x, well.entrance.y, well.exit.x, well.exit.y);
             }
         }
 

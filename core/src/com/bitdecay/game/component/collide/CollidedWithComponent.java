@@ -1,5 +1,6 @@
 package com.bitdecay.game.component.collide;
 
+import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.GameComponent;
 
@@ -8,11 +9,13 @@ import com.bitdecay.game.component.GameComponent;
  */
 public class CollidedWithComponent extends GameComponent {
 
+    public GameEntity entity;
     public CollisionGeometryComponent geom;
     public CollisionKind with;
     public float[] delivererGeometry;
 
-    public CollidedWithComponent(CollisionGeometryComponent geom, CollisionKind kind, float[] delivererGeometry) {
+    public CollidedWithComponent(GameEntity entity, CollisionGeometryComponent geom, CollisionKind kind, float[] delivererGeometry) {
+        this.entity = entity;
         this.geom = geom;
         this.with = kind;
         this.delivererGeometry = delivererGeometry;

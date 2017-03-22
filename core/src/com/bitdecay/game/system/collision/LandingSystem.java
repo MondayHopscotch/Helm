@@ -10,6 +10,7 @@ import com.bitdecay.game.component.BoosterComponent;
 import com.bitdecay.game.component.CrashComponent;
 import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.RateLandingComponent;
+import com.bitdecay.game.component.collide.CollidedWithComponent;
 import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.component.TimerComponent;
 import com.bitdecay.game.component.TransformComponent;
@@ -116,7 +117,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
     private int rateFuelRemaining(FuelComponent fuel) {
         System.out.println("Fuel: " + fuel.fuelRemaining + "/" + fuel.maxFuel);
         // higher starting fuel and higher burn rate have higher reward for remaining fuel
-        return (int) ( (fuel.maxFuel * fuel.burnRate) * (fuel.fuelRemaining / fuel.maxFuel));
+        return (int) ((fuel.maxFuel * fuel.burnRate) * (fuel.fuelRemaining / fuel.maxFuel));
     }
 
     private int rateAngle(float radsAwayFromStraightUp) {
@@ -141,7 +142,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
             //a zero-speed landing is impossible, so make a full scalar doable
             scalar = Math.min(scalar + LANDING_SPEED_MERCY, 1);
-            return (int)(LandingScore.MAX_SPEED_SCORE * scalar);
+            return (int) (LandingScore.MAX_SPEED_SCORE * scalar);
         }
     }
 
@@ -154,8 +155,8 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         float platformMax = Float.NEGATIVE_INFINITY;
 
         for (int i = 1; i < landing.landingGeometry.length; i += 2) {
-            platformMin = Math.min(platformMin, surfaceVector.dot(landing.landingGeometry[i-1], landing.landingGeometry[i]));
-            platformMax = Math.max(platformMax, surfaceVector.dot(landing.landingGeometry[i-1], landing.landingGeometry[i]));
+            platformMin = Math.min(platformMin, surfaceVector.dot(landing.landingGeometry[i - 1], landing.landingGeometry[i]));
+            platformMax = Math.max(platformMax, surfaceVector.dot(landing.landingGeometry[i - 1], landing.landingGeometry[i]));
         }
 
         System.out.println("PlatformMin: " + platformMin + "   PlatformMax: " + platformMax);
@@ -175,10 +176,12 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(RateLandingComponent.class) &&
-                entity.hasComponent(VelocityComponent.class) &&
-                entity.hasComponent(TransformComponent.class) &&
-                entity.hasComponent(FuelComponent.class) &&
-                entity.hasComponent(TimerComponent.class);
+        return entity.hasComponents(
+                RateLandingComponent.class,
+                VelocityComponent.class,
+                TransformComponent.class,
+                FuelComponent.class,
+                TimerComponent.class
+        );
     }
 }

@@ -14,6 +14,8 @@ public enum OptionsMode {
     REMOVE_GRAV_WELL("Remove Gravity Well", EditorKeys.REMOVE_GRAV_WELL),
     ADD_REPULSION_FIELD("Add Repulsion Field", EditorKeys.ADD_REPULSION_FIELD),
     REMOVE_REPULSION_FIELD("Remove Repulsion Field", EditorKeys.REMOVE_REPULSION_FIELD),
+    ADD_WORMHOLE("Add Wormhole", EditorKeys.ADD_WORMHOLE),
+    REMOVE_WORMHOLE("Remove Wormhole", EditorKeys.REMOVE_WORMHOLE),
 
     SET_NAME("Set Level Name", EditorKeys.SET_NAME),
 
