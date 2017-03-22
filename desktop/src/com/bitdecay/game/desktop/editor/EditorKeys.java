@@ -29,6 +29,8 @@ public enum EditorKeys {
     REMOVE_GRAV_WELL("Remove Gravity Well", false, Input.Keys.NUM_8),
     ADD_REPULSION_FIELD("Add Repulsion Field", false, Input.Keys.R),
     REMOVE_REPULSION_FIELD("Remove Repulsion Field", true, Input.Keys.SHIFT_LEFT, Input.Keys.R),
+    ADD_WORMHOLE("Add Wormhole", false, Input.Keys.W),
+    REMOVE_WORMHOLE("Remove Wormhole", true, Input.Keys.SHIFT_LEFT, Input.Keys.W),
 
     SET_FUEL("Set Fuel Level", false, Input.Keys.F),
 

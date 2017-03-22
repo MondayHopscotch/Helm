@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
+import com.bitdecay.game.world.WormholePair;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ public class LevelBuilder {
 
     public ArrayList<LineSegment> lines = new ArrayList<>();
     public ArrayList<Circle> gravityWells = new ArrayList<>();
+    public ArrayList<WormholePair> wormholes = new ArrayList<>();
     public ArrayList<Circle> repulsionFields = new ArrayList<>();
     public ArrayList<Circle> focusPoints = new ArrayList<>();
     public Rectangle landingPlat;
@@ -68,6 +70,14 @@ public class LevelBuilder {
         gravityWells.remove(well);
     }
 
+    public void addWormhole(Circle entrance, Circle exit) {
+        wormholes.add(new WormholePair(entrance, exit));
+    }
+
+    public void removeWormhole(WormholePair pair) {
+        wormholes.remove(pair);
+    }
+
     public void addRepulsionField(Vector2 position, float size) {
         repulsionFields.add(new Circle(position, size));
     }
@@ -93,6 +103,11 @@ public class LevelBuilder {
         gravityWells.clear();
         for (Circle gravityWell : level.gravityWells) {
             gravityWells.add(gravityWell);
+        }
+
+        wormholes.clear();
+        for (WormholePair wormhole : level.wormholes) {
+            wormholes.add(wormhole);
         }
 
         repulsionFields.clear();
@@ -135,6 +150,11 @@ public class LevelBuilder {
         level.repulsionFields = new Array<>(repulsionFields.size());
         for (Circle repulsionField : repulsionFields) {
             level.repulsionFields.add(repulsionField);
+        }
+
+        level.wormholes = new Array<>(wormholes.size());
+        for (WormholePair wormhole : wormholes) {
+            level.wormholes.add(wormhole);
         }
 
         for (Circle focalPoint : focusPoints) {

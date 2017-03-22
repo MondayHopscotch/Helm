@@ -15,7 +15,7 @@ public class LevelDefinition {
     public Array<LineSegment> levelLines = new Array<>();
     public Array<Circle> gravityWells = new Array<>();
     public Array<Circle> repulsionFields = new Array<>();
-    public Array<WormholePair> teleporters = new Array<>();
+    public Array<WormholePair> wormholes = new Array<>();
     public Rectangle finishPlatform = new Rectangle();
     public float finishPlatformRotation = Geom.NO_ROTATION;
 
