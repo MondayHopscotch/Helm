@@ -2,6 +2,9 @@
   worldName: "Wormholes",
   requiredLevelsForUnlock: 10,
   levelList: [
-    "level/wormhole/blink.json"
+    "level/wormhole/blink.json",
+    "level/wormhole/two_bean.json",
+    "level/wormhole/galaxy.json",
+    "level/wormhole/quick_change.json"
   ]
 }
