@@ -21,6 +21,9 @@ public class Geom {
 
     public static final int DATA_POINTS_FOR_LINE = 4;
 
+    public static float distance(Vector2 point1, Vector2 point2) {
+        return point1.cpy().sub(point2).len();
+    }
 
     /**
      * Rotates a list of points by the given angle around the origin.

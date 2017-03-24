@@ -33,7 +33,7 @@ public class ShipEntity extends GameEntity {
         addComponent(new SteeringControlComponent(new Rectangle(0, 0, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight())));
 
         float[] geomPoints = new float[]{-100, 50, 100, 0, -100, -50};
-        addComponent(GeometryComponentFactory.getPolygonGeomComponent(geomPoints, CollisionDirection.RECEIVES));
+        addComponent(GeometryComponentFactory.getPolygonGeomComponent(geomPoints, CollisionDirection.BOTH));
         addComponent(new PlayerCollisionComponent());
 
         addComponent(new BodyDefComponent(geomPoints));

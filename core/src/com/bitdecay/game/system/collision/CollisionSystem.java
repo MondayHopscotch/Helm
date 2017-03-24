@@ -1,8 +1,5 @@
 package com.bitdecay.game.system.collision;
 
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.collision.Collider;
@@ -14,7 +11,6 @@ import com.bitdecay.game.collision.SolidToSolidCollider;
 import com.bitdecay.game.component.collide.CollidedWithComponent;
 import com.bitdecay.game.component.collide.CollisionGeometryComponent;
 import com.bitdecay.game.component.collide.CollisionKindComponent;
-import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
 
 import java.util.ArrayList;
@@ -27,7 +23,7 @@ import java.util.Map;
  */
 public class CollisionSystem extends AbstractIteratingGameSystem {
 
-    Map<CollisionDirection, List<GameEntity>> allCollisionEntities = new HashMap<>();
+    Map<Integer, List<GameEntity>> allCollisionEntities = new HashMap<>();
 
     public CollisionSystem(GamePilot pilot) {
         super(pilot);
@@ -37,7 +33,7 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
 
     @Override
     public void before() {
-        for (Map.Entry<CollisionDirection, List<GameEntity>> collisionKind : allCollisionEntities.entrySet()) {
+        for (Map.Entry<Integer, List<GameEntity>> collisionKind : allCollisionEntities.entrySet()) {
             collisionKind.getValue().clear();
         }
 
@@ -54,8 +50,6 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
             for (GameEntity entity2 : allCollisionEntities.get(CollisionDirection.DELIVERS)) {
                 if (entity1 != entity2) {
                     CollisionGeometryComponent geom1 = entity1.getComponent(CollisionGeometryComponent.class);
-                    CollisionKindComponent kind1 = entity1.getComponent(CollisionKindComponent.class);
-
                     CollisionGeometryComponent geom2 = entity2.getComponent(CollisionGeometryComponent.class);
                     CollisionKindComponent kind2 = entity2.getComponent(CollisionKindComponent.class);
 
@@ -65,7 +59,6 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
                         geom1.colliding = true;
                         geom2.colliding = true;
                         entity1.addComponent(new CollidedWithComponent(entity2, geom2, kind2.kind, collider.getGeom2WorkingSet()));
-                        entity2.addComponent(new CollidedWithComponent(entity1, geom1, kind1.kind, collider.getGeom1WorkingSet()));
                     }
                 }
             }
@@ -78,11 +71,17 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
         if (length1 > 4) {
             if (length2 == 1) {
                 // poly vs circle
-                return new SolidToCircleCollider(geom1, geom2);
+                return new SolidToCircleCollider(geom1, geom2, false);
             } else if (length2 == 4) {
                 return new SolidToLineCollider(geom1, geom2);
             } else {
                 return new SolidToSolidCollider(geom1, geom2);
+            }
+        }
+
+        if (length1 == 1) {
+            if (length2 > 4) {
+                return new SolidToCircleCollider(geom2, geom1, true);
             }
         }
         // I think we can get away with ignoring all other collisions.
@@ -93,10 +92,12 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
     public void actOnSingle(GameEntity entity, float delta) {
         CollisionGeometryComponent geom = entity.getComponent(CollisionGeometryComponent.class);
         geom.colliding = false;
-        if (!allCollisionEntities.containsKey(geom.direction)) {
-            allCollisionEntities.put(geom.direction, new ArrayList<GameEntity>());
+        if ((geom.direction & CollisionDirection.RECEIVES) == CollisionDirection.RECEIVES) {
+            allCollisionEntities.get(CollisionDirection.RECEIVES).add(entity);
         }
-        allCollisionEntities.get(geom.direction).add(entity);
+        if ((geom.direction & CollisionDirection.DELIVERS) == CollisionDirection.DELIVERS) {
+            allCollisionEntities.get(CollisionDirection.DELIVERS).add(entity);
+        }
     }
 
     @Override

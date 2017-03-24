@@ -20,7 +20,7 @@ public class WormholeEntity extends GameEntity {
 
     public WormholeEntity(WormholePair pair) {
         addComponent(new TransformComponent(new Vector2(pair.entrance.x, pair.entrance.y), Geom.NO_ROTATION));
-        addComponent(GeometryComponentFactory.getCircleGeomComponent(pair.entrance.radius, CollisionDirection.DELIVERS));
+        addComponent(GeometryComponentFactory.getCircleGeomComponent(pair.entrance.radius, CollisionDirection.RECEIVES));
         addComponent(new CollisionKindComponent(CollisionKind.WORMHOLE));
         addComponent(new SecondLocationComponent(new Vector2(pair.exit.x, pair.exit.y)));
         addComponent(new WormholeComponent(pair.entrance.radius + 75, pair.exit.radius + 25));
