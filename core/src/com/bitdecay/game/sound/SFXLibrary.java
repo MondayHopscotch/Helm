@@ -14,6 +14,8 @@ public class SFXLibrary {
     public static final String SHIP_CRASH = SFX_DIR + "CrashHigh.ogg";
     public static final String SHIP_EXPLODE = SFX_DIR + "Explosion.ogg";
 
+    public static final String SHIP_WARP = SFX_DIR + "Warp.ogg";
+
     public static final String LABEL_DISPLAY = SFX_DIR + "LabelDisplay.ogg";
     public static final String SCORE_POP = SFX_DIR + "ScorePop.ogg";
     public static final String HIGH_SCORE_BEAT = SFX_DIR + "HighScoreBeat.ogg";
@@ -23,6 +25,7 @@ public class SFXLibrary {
             SHIP_LAUNCH,
             SHIP_CRASH,
             SHIP_EXPLODE,
+            SHIP_WARP,
             LABEL_DISPLAY,
             SCORE_POP,
             HIGH_SCORE_BEAT,

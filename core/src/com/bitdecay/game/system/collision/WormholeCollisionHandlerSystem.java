@@ -10,6 +10,8 @@ import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.collide.CollidedWithComponent;
 import com.bitdecay.game.component.collide.CollisionGeometryComponent;
 import com.bitdecay.game.math.Geom;
+import com.bitdecay.game.sound.SFXLibrary;
+import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
 import com.bitdecay.game.system.util.SecondLocationComponent;
 import com.bitdecay.game.world.WormholePair;
@@ -44,6 +46,7 @@ public class WormholeCollisionHandlerSystem extends AbstractIteratingGameSystem 
             if (hitter.hasComponents(TransformComponent.class)) {
                 TransformComponent hitterTransform = hitter.getComponent(TransformComponent.class);
                 hitterTransform.position.set(secondLocationComponent.position);
+                pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_WARP);
             }
         }
     }
