@@ -17,9 +17,9 @@ public class CollisionGeometryComponent extends GameComponent {
 
     public boolean colliding;
 
-    public CollisionDirection direction;
+    public int direction;
 
-    public CollisionGeometryComponent(float[] geomPoints, CollisionDirection direction) {
+    public CollisionGeometryComponent(float[] geomPoints, int direction) {
         originalGeom = new float[geomPoints.length];
         System.arraycopy(geomPoints, 0, originalGeom, 0, geomPoints.length);
         this.direction = direction;

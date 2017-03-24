@@ -9,15 +9,15 @@ import com.bitdecay.game.collision.CollisionDirection;
 
 public class GeometryComponentFactory {
 
-    public static CollisionGeometryComponent getCircleGeomComponent(float radius, CollisionDirection direction) {
+    public static CollisionGeometryComponent getCircleGeomComponent(float radius, int direction) {
         return new CollisionGeometryComponent(new float[]{radius}, direction);
     }
 
-    public static CollisionGeometryComponent getLineGeomComponent(Vector2 start, Vector2 end, CollisionDirection direction) {
+    public static CollisionGeometryComponent getLineGeomComponent(Vector2 start, Vector2 end, int direction) {
         return new CollisionGeometryComponent(new float[]{start.x, start.y, end.x, end.y}, direction);
     }
 
-    public static CollisionGeometryComponent getPolygonGeomComponent(float[] geomPoints, CollisionDirection direction) {
+    public static CollisionGeometryComponent getPolygonGeomComponent(float[] geomPoints, int direction) {
         return new CollisionGeometryComponent(geomPoints, direction);
     }
 }

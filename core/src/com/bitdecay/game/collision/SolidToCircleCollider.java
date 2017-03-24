@@ -9,8 +9,12 @@ import com.bitdecay.game.component.collide.CollisionGeometryComponent;
  */
 
 public class SolidToCircleCollider extends Collider {
-    public SolidToCircleCollider(CollisionGeometryComponent geom1, CollisionGeometryComponent geom2) {
+
+    private boolean flippedInputs;
+
+    public SolidToCircleCollider(CollisionGeometryComponent geom1, CollisionGeometryComponent geom2, boolean flippedInputs) {
         super(geom1, geom2);
+        this.flippedInputs = flippedInputs;
     }
 
     @Override
@@ -31,5 +35,23 @@ public class SolidToCircleCollider extends Collider {
             }
         }
         return false;
+    }
+
+    @Override
+    public float[] getGeom1WorkingSet() {
+        if (flippedInputs) {
+            return super.getGeom2WorkingSet();
+        } else {
+            return super.getGeom1WorkingSet();
+        }
+    }
+
+    @Override
+    public float[] getGeom2WorkingSet() {
+        if (flippedInputs) {
+            return super.getGeom1WorkingSet();
+        } else {
+            return super.getGeom2WorkingSet();
+        }
     }
 }

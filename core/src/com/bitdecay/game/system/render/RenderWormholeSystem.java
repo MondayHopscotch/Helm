@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.WormholeComponent;
 import com.bitdecay.game.component.collide.CollisionGeometryComponent;
@@ -33,9 +34,7 @@ public class RenderWormholeSystem extends AbstractIteratingGameSystem {
 
         maybeResetSizes(wormhole);
 
-        float collisionRadius = collisionGeom.originalGeom[0];
-
-        renderer.setColor(Color.TAN);
+        renderer.setColor(Color.DARK_GRAY);
 
         drawWormhole(transform.position, wormhole, wormhole.inSize, wormhole.inner, true);
         drawWormhole(exitLocationComponent.position, wormhole, wormhole.outSize, wormhole.inner * (wormhole.outSize / wormhole.inSize), false);
@@ -44,6 +43,11 @@ public class RenderWormholeSystem extends AbstractIteratingGameSystem {
         wormhole.inner -= change;
         wormhole.angle += change;
 
+        if (Helm.debug) {
+            float collisionRadius = collisionGeom.originalGeom[0];
+            renderer.setColor(Color.PINK);
+            renderer.circle(transform.position.x, transform.position.y, collisionRadius);
+        }
     }
 
     protected void drawWormhole(Vector2 position, WormholeComponent wormhole, float radius, float workingRadius, boolean in) {
