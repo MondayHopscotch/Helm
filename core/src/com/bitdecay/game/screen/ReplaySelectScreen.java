@@ -37,6 +37,16 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
         for (final FileHandle replayFile : replayDir.list()) {
             final InputReplay replay = JsonUtils.unmarshal(InputReplay.class, replayFile);
 
+            TextButton watchButton = new TextButton("Watch", skin);
+            watchButton.getLabel().setFontScale(game.fontScale);
+
+            Label nameLabel = new Label(replayFile.name(), skin);
+            nameLabel.setAlignment(Align.center);
+            nameLabel.setFontScale(game.fontScale);
+
+
+            final TextButton deleteButton = new TextButton(" Delete ", skin);
+            deleteButton.getLabel().setFontScale(game.fontScale);
             ClickListener watchListener = new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -55,25 +65,15 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
             ClickListener firstDeleteListener = new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    event.getTarget().clearListeners();
-                    ((Label)event.getTarget()).setText("Confirm");
+                    deleteButton.clearListeners();
+                    deleteButton.getLabel().setText("Confirm");
                     event.getTarget().addListener(confirmListener);
                 }
             };
-
-
-            TextButton watchButton = new TextButton("Watch", skin);
-            watchButton.getLabel().setFontScale(game.fontScale);
-            watchButton.addListener(watchListener);
-
-            Label nameLabel = new Label(replayFile.name(), skin);
-            nameLabel.setAlignment(Align.center);
-            nameLabel.setFontScale(game.fontScale);
-            nameLabel.addListener(watchListener);
-
-            TextButton deleteButton = new TextButton(" Delete ", skin);
-            deleteButton.getLabel().setFontScale(game.fontScale);
             deleteButton.addListener(firstDeleteListener);
+
+            watchButton.addListener(watchListener);
+            nameLabel.addListener(watchListener);
 
             table.add(watchButton).expand(false, false).padRight(game.fontScale * 10);
             table.add(nameLabel);
