@@ -171,7 +171,7 @@ public class GameScreen implements Screen, GamePilot {
                 scoreRun(score);
                 break;
             case REPLAY_MODE:
-                showScoreMenu(score, false);
+                showScoreMenu(score, true);
                 break;
         }
     }
@@ -187,11 +187,11 @@ public class GameScreen implements Screen, GamePilot {
         }
         score.newHighScore = currentLevel.maybeSetNewHighScore(levelScore);
         score.newBestTime = currentLevel.maybeSetNewBestTime(score.timeTaken);
-        showScoreMenu(score, true);
+        showScoreMenu(score, false);
     }
 
-    private void showScoreMenu(LandingScore score, boolean allowSave) {
-        scoreMenu.allowSave = allowSave;
+    private void showScoreMenu(LandingScore score, boolean isReplay) {
+        scoreMenu.rebuildNextTable(isReplay);
         scoreMenu.visible = true;
         scoreMenu.setScore(score);
         Gdx.input.setInputProcessor(scoreMenu.stage);
@@ -202,7 +202,7 @@ public class GameScreen implements Screen, GamePilot {
     public void returnToMenus(boolean isQuit) {
         if (activeWorld == null) {
             // we are in a replay (probably want to have a more explicit way of handling  this
-            game.setScreen(new TitleScreen(game));
+            game.setScreen(new ReplaySelectScreen(game));
         } else {
             if (isQuit) {
                 Helm.stats.count(StatName.ABANDONS, 1);

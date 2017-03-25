@@ -19,6 +19,7 @@ public class HelmEditor extends Game {
 
     @Override
     public void create() {
+        Helm.debug = true;
         Helm.prefs = Gdx.app.getPreferences("test-prefs");
         Helm.stats = new Statistics(); // doesn't need to load anything
         editorScreen = new EditorScreen(this);
