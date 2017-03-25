@@ -44,13 +44,23 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
                 }
             };
 
-            ClickListener deleteListener = new ClickListener() {
+            final ClickListener confirmListener = new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     ReplayUtils.deleteReplay(replayFile);
                     game.setScreen(new ReplaySelectScreen(game));
                 }
             };
+
+            ClickListener firstDeleteListener = new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    event.getTarget().clearListeners();
+                    ((Label)event.getTarget()).setText("Confirm");
+                    event.getTarget().addListener(confirmListener);
+                }
+            };
+
 
             TextButton watchButton = new TextButton("Watch", skin);
             watchButton.getLabel().setFontScale(game.fontScale);
@@ -61,9 +71,9 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
             nameLabel.setFontScale(game.fontScale);
             nameLabel.addListener(watchListener);
 
-            TextButton deleteButton = new TextButton("Delete", skin);
+            TextButton deleteButton = new TextButton(" Delete ", skin);
             deleteButton.getLabel().setFontScale(game.fontScale);
-            deleteButton.addListener(deleteListener);
+            deleteButton.addListener(firstDeleteListener);
 
             table.add(watchButton).expand(false, false).padRight(game.fontScale * 10);
             table.add(nameLabel);
