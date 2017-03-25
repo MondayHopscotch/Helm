@@ -24,15 +24,15 @@ import com.bitdecay.game.time.TimerUtils;
  */
 public class ScoreMenu {
 
-    private static final String NEXT_TEXT = "Return to Level Select";
+    private static final String RETURN_TO_LEVEL_SELECT = "Level Select";
+    private static final String RETURN_TO_REPLAY = "Done";
     private static final String SAVE_REPLAY_TEXT = "Save Replay";
+    private static final String PLAY_AGAIN = "Play Again";
 
     public final Stage stage;
     private final Skin skin;
 
     public boolean visible = false;
-    public boolean allowSave;
-
 
     private GamePilot pilot;
 
@@ -58,8 +58,10 @@ public class ScoreMenu {
     private Label totalScoreLabel;
     private Label totalScoreScore;
 
+    private final Table nextTable;
     private final TextButton nextButton;
     private final TextButton saveReplayButton;
+    private final TextButton playAgainButton;
 
     public ScoreMenu(final GamePilot pilot) {
         this.pilot = pilot;
@@ -166,24 +168,19 @@ public class ScoreMenu {
         scoreTable.add(totalTimeValue).growX();
         scoreTable.row();
 
-        Table nextTable = new Table();
+        nextTable = new Table();
         nextTable.align(Align.center);
         nextTable.setOrigin(Align.center);
-        nextButton = new TextButton(NEXT_TEXT, skin);
+
+        nextButton = new TextButton(RETURN_TO_LEVEL_SELECT, skin);
         nextButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
-        nextButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                pilot.returnToMenus(false);
-            }
-        });
         nextButton.align(Align.center);
         nextButton.setOrigin(Align.center);
 
-        nextTable.add(nextButton);
-
         saveReplayButton = new TextButton(SAVE_REPLAY_TEXT, skin);
         saveReplayButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
+        saveReplayButton.align(Align.center);
+        saveReplayButton.setOrigin(Align.center);
         saveReplayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -193,10 +190,19 @@ public class ScoreMenu {
                 saveReplayButton.setDisabled(true);
             }
         });
-        saveReplayButton.align(Align.center);
-        saveReplayButton.setOrigin(Align.center);
 
-        nextTable.add(saveReplayButton).padLeft(pilot.getHelm().fontScale * 5);
+        playAgainButton = new TextButton(PLAY_AGAIN, skin);
+        playAgainButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
+        playAgainButton.align(Align.center);
+        playAgainButton.setOrigin(Align.center);
+        playAgainButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                pilot.requestRestartLevel();
+            }
+        });
+
+        rebuildNextTable(false);
 
         mainTable.add(scoreTable);
         mainTable.row();
@@ -204,6 +210,30 @@ public class ScoreMenu {
 
         stage.addActor(mainTable);
 
+    }
+
+    public void rebuildNextTable(final boolean isReplay) {
+        nextTable.clear();
+        nextButton.clearListeners();
+        if (isReplay) {
+            nextButton.getLabel().setText(RETURN_TO_REPLAY);
+        } else {
+            nextButton.getLabel().setText(RETURN_TO_LEVEL_SELECT);
+        }
+        nextButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                pilot.returnToMenus(!isReplay);
+            }
+        });
+
+        nextTable.add(nextButton);
+
+        if (!isReplay) {
+            // if we aren't watching a replay, let them save it
+            nextTable.add(playAgainButton).padLeft(pilot.getHelm().fontScale * 5);
+            nextTable.add(saveReplayButton).padLeft(pilot.getHelm().fontScale * 5);
+        }
     }
 
     private String getLeftPaddedString(String input) {
@@ -280,11 +310,7 @@ public class ScoreMenu {
 
         }
 
-        baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, nextButton)));
-
-        if (allowSave) {
-            baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(null, saveReplayButton)));
-        }
+        baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, nextButton, playAgainButton, saveReplayButton)));
 
         stage.addAction(baseScoreSequence);
 
@@ -333,6 +359,7 @@ public class ScoreMenu {
         totalTimeLabel.setVisible(false);
         totalTimeValue.setVisible(false);
         nextButton.setVisible(false);
+        playAgainButton.setVisible(false);
         saveReplayButton.setVisible(false);
     }
 }
