@@ -14,6 +14,7 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onCreate(savedInstanceState);
 		InputSystemFactory.setInputSystems(TouchScreenBoosterInputSystem.class, TouchScreenSteeringInputSystem.class);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+		config.useWakelock = true;
 		initialize(new Helm(), config);
 	}
 }
