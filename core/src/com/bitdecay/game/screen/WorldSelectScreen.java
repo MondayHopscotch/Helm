@@ -19,6 +19,7 @@ import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.WorldDefinition;
 import com.bitdecay.game.world.WorldInstance;
+import com.bitdecay.game.world.WorldOrderMarker;
 
 import static com.bitdecay.game.persist.JsonUtils.json;
 
@@ -46,9 +47,9 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         Array<WorldInstance> worlds = new Array<>();
 
         FileHandle worldDirectory = Gdx.files.internal("level/world_defs/worldOrder.json");
-        String[] worldsInOrder = JsonUtils.unmarshal(String[].class, worldDirectory);
-        for (String worldFile : worldsInOrder) {
-            worlds.add(buildWorldInstance(Gdx.files.internal("level/world_defs/" + worldFile)));
+        WorldOrderMarker[] worldsInOrder = JsonUtils.unmarshal(WorldOrderMarker[].class, worldDirectory);
+        for (WorldOrderMarker worldMarker : worldsInOrder) {
+            worlds.add(buildWorldInstance(worldMarker));
         }
 
         int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID);
@@ -114,9 +115,10 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         worldTable.add(totalBestTimeValue);
     }
 
-    private WorldInstance buildWorldInstance(FileHandle worldFile) {
+    private WorldInstance buildWorldInstance(WorldOrderMarker marker) {
+        FileHandle worldFile = Gdx.files.internal("level/world_defs/" + marker.worldFile);
         WorldDefinition worldDef = JsonUtils.unmarshal(WorldDefinition.class, worldFile);
-        WorldInstance worldInstance = new WorldInstance(worldDef.requiredLevelsForUnlock);
+        WorldInstance worldInstance = new WorldInstance(marker.requiredLevelsForUnlock);
         worldInstance.name = worldDef.worldName;
         for (String levelPath : worldDef.levelList) {
             worldInstance.addLevelInstance(JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal(levelPath)));

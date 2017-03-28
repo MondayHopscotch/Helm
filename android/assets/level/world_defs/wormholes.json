@@ -1,6 +1,5 @@
 {
   worldName: "Wormholes",
-  requiredLevelsForUnlock: 10,
   levelList: [
     "level/wormhole/blink.json",
     "level/wormhole/two_bean.json",

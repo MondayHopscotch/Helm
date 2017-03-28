@@ -1,10 +1,34 @@
 [
-  "basics.json",
-  "caves.json",
-  "islands.json",
-  "channels.json",
-  "black_hole.json",
-  "pushers.json",
-  "wormholes.json",
-  "extreme.json"
+  {
+    worldFile: "basics.json",
+    requiredLevelsForUnlock: 0
+  },
+  {
+    worldFile:   "caves.json",
+    requiredLevelsForUnlock: 2,
+  },
+  {
+    worldFile: "islands.json",
+    requiredLevelsForUnlock: 4
+  },
+  {
+    worldFile: "channels.json",
+    requiredLevelsForUnlock: 9
+  },
+  {
+    worldFile: "black_hole.json",
+    requiredLevelsForUnlock: 10
+  },
+  {
+    worldFile: "pushers.json",
+    requiredLevelsForUnlock: 16
+  },
+  {
+    worldFile: "wormholes.json",
+    requiredLevelsForUnlock: 20
+  },
+  {
+    worldFile: "extreme.json",
+    requiredLevelsForUnlock: 23
+  }
 ]
