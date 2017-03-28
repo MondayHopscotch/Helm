@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.Array;
 public class WorldDefinition {
     public String worldName;
     public Array<String> levelList;
-    public int requiredLevelsForUnlock;
 
     public WorldDefinition() {
         // here for JSON

@@ -1,6 +1,5 @@
 {
   worldName: "Black Holes",
-  requiredLevelsForUnlock: 6,
   levelList: [
     "level/gravity/easy_grav.json",
     "level/gravity/tough_cookies.json",
