@@ -1,0 +1,9 @@
+{
+  worldName: "Dev Test",
+  levelList: [
+    "level/erik/closeQuarters.json",
+    "level/erik/limpy.json",
+    "level/erik/magneto.json",
+    "level/erik/mirror1.json"
+  ]
+}

@@ -1,5 +1,9 @@
 [
   {
+    worldFile: "test_world.json",
+    requiredLevelsForUnlock: 0
+  },
+  {
     worldFile: "basics.json",
     requiredLevelsForUnlock: 0
   },
