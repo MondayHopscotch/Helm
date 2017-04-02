@@ -11,7 +11,6 @@ import com.bitdecay.game.Helm;
 import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
-import com.bitdecay.game.system.input.AbstractInputSystem;
 
 /**
  * Created by Monday on 12/16/2016.
@@ -46,10 +45,10 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
 
         int prefSensitivity = Helm.prefs.getInteger(GamePrefs.SENSITIVITY, GamePrefs.SENSITIVITY_DEFAULT);
 
-        int joystickSensitivity = BASE_JOYSTICK_SENSITIVITY - prefSensitivity;
+        int joystickSensitivity = BASE_JOYSTICK_SENSITIVITY;
 
         if (joystickSteering) {
-            setSimpleSteeringStartPoint(control);
+            setJoystickSteeringStartPoint(control);
             control.sensitivity = joystickSensitivity;
         }
         control.endPoint = null;
@@ -61,7 +60,7 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
             if (control.activeArea.contains(touch.startingLocation)) {
 
                 if (joystickSteering) {
-                    updateSimpleControls(control, touch);
+                    updateJoystickControls(control, touch);
                     float deltaX = control.endPoint.x - control.startPoint.x;
                     float deltaY = control.endPoint.y - control.startPoint.y;
                     Vector2 touchVector = new Vector2(deltaX, deltaY);
@@ -109,13 +108,13 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
         deltaVector.y = (1f / (intersection + linearity)) * deltaVector.y * (Math.abs(deltaVector.y) + linearity);
     }
 
-    private void setSimpleSteeringStartPoint(SteeringControlComponent control) {
+    private void setJoystickSteeringStartPoint(SteeringControlComponent control) {
         float height_ratio = Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_HEIGHT, GamePrefs.SIMPLE_STEERING_HEIGHT_DEFAULT);
         float width_ratio = Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_WIDTH, GamePrefs.SIMPLE_STEERING_WIDTH_DEFAULT);
         control.startPoint = control.activeArea.getSize(simpleSteeringStartVector).scl(width_ratio, height_ratio);
     }
 
-    private void updateSimpleControls(SteeringControlComponent control, ActiveTouch touch) {
+    private void updateJoystickControls(SteeringControlComponent control, ActiveTouch touch) {
         control.endPoint = touch.currentLocation;
     }
 

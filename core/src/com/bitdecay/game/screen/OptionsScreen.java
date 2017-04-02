@@ -129,6 +129,10 @@ public class OptionsScreen implements Screen {
 
     private void updateSteeringSettingVisibility() {
         boolean usingJoystickSteering = joystickSteeringInput.isChecked();
+
+        steeringSensitivityInput.setVisible(!usingJoystickSteering);
+        steeringSensitivityLabel.setVisible(!usingJoystickSteering);
+        
         steeringPositionXLabel.setVisible(usingJoystickSteering);
         steeringXInput.setVisible(usingJoystickSteering);
         steeringPositionYLabel.setVisible(usingJoystickSteering);
