@@ -1,15 +1,11 @@
 [
   {
-    worldFile: "test_world.json",
-    requiredLevelsForUnlock: 0
-  },
-  {
     worldFile: "basics.json",
     requiredLevelsForUnlock: 0
   },
   {
     worldFile:   "caves.json",
-    requiredLevelsForUnlock: 2,
+    requiredLevelsForUnlock: 2
   },
   {
     worldFile: "islands.json",
@@ -34,5 +30,9 @@
   {
     worldFile: "extreme.json",
     requiredLevelsForUnlock: 23
+  },
+  {
+    worldFile: "guest_world.json",
+    requiredLevelsForUnlock: 30
   }
 ]
