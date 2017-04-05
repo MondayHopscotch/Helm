@@ -75,15 +75,14 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
                     scaleBasedOnScreenSize(deltaVector);
                     accelerate(deltaVector, sensitivity, BASE_INTERSECTION);
                     control.angle -= deltaVector.x / sensitivity;
+                }
+                if (control.angle != SteeringControlComponent.ANGLE_NOT_SET) {
+                    while (control.angle > MathUtils.PI2) {
+                        control.angle -= MathUtils.PI2;
+                    }
 
-                    if (control.angle != SteeringControlComponent.ANGLE_NOT_SET) {
-                        while (control.angle > MathUtils.PI2) {
-                            control.angle -= MathUtils.PI2;
-                        }
-
-                        while (control.angle < 0) {
-                            control.angle += MathUtils.PI2;
-                        }
+                    while (control.angle < 0) {
+                        control.angle += MathUtils.PI2;
                     }
                 }
                 break;
