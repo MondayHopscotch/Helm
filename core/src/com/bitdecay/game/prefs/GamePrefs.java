@@ -13,13 +13,13 @@ public class GamePrefs {
     public static final String USE_LEFT_HANDED_CONTROLS = "leftHandedControls";
     public static final boolean USE_LEFT_HANDED_CONTROLS_DEFAULT = false;
 
-    public static final String USE_JOYSTICK_STEERING = "useDynamicSteeringControls";
+    public static final String USE_JOYSTICK_STEERING = "useJoystickSteeringControls";
     public static final boolean USE_JOYSTICK_STEERING_DEFAULT = false;
 
-    public static final String JOYSTICK_STEERING_WIDTH = "simpleSteeringWidthRatio";
+    public static final String JOYSTICK_STEERING_WIDTH = "joystickSteeringWidthRatio";
     public static final float JOYSTICK_STEERING_WIDTH_DEFAULT = 0.5f;
 
-    public static final String JOYSTICK_STEERING_HEIGHT = "simpleSteeringHeightRatio";
+    public static final String JOYSTICK_STEERING_HEIGHT = "joystickSteeringHeightRatio";
     public static final float JOYSTICK_STEERING_HEIGHT_DEFAULT = 0.5f;
 
     public static final float JOYSTICK_STEERING_MAX = 0.9f;

@@ -42,7 +42,6 @@ public class OptionsScreen implements Screen {
     private List<Runnable> closingActions = new ArrayList<>();
     private final Table prefsTable;
 
-
     public OptionsScreen(final Helm game) {
         this.game = game;
 
@@ -127,7 +126,6 @@ public class OptionsScreen implements Screen {
         settingInput.setValue(Helm.prefs.getInteger(settingName, defaultValue));
         setSliderKnobHeight(settingInput);
 
-
         addToOptions(settingName, settingLabel, settingInput);
 
         closingActions.add(new Runnable() {
@@ -170,7 +168,6 @@ public class OptionsScreen implements Screen {
         prefsTable.add(settingInput).width(300);
         prefsTable.row();
     }
-
 
     private void updateSteeringSettingVisibility() {
         boolean usingJoystickSteering = ((CheckBox) inputMap.get(GamePrefs.USE_JOYSTICK_STEERING)).isChecked();
