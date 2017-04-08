@@ -2,9 +2,12 @@ package com.bitdecay.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -16,6 +19,12 @@ import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.prefs.GamePrefs;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by Monday on 1/4/2017.
  */
@@ -25,16 +34,14 @@ public class OptionsScreen implements Screen {
 
     Stage stage;
     Skin skin;
-    private final CheckBox joystickSteeringInput;
-    private final Slider steeringXInput;
-    private final Slider steeringYInput;
-    private final Label steeringPositionYLabel;
-    private final Label steeringPositionXLabel;
-
-    private final Label steeringSensitivityLabel;
-    private final Slider steeringSensitivityInput;
-
     private float baseFontScale;
+
+    private Map<String, Actor> labelMap = new HashMap<>();
+    private Map<String, Actor> inputMap = new HashMap<>();
+
+    private List<Runnable> closingActions = new ArrayList<>();
+    private final Table prefsTable;
+
 
     public OptionsScreen(final Helm game) {
         this.game = game;
@@ -47,66 +54,23 @@ public class OptionsScreen implements Screen {
         Table mainTable = new Table();
         mainTable.setFillParent(true);
 
-        Table prefsTable = new Table();
+        prefsTable = new Table();
         prefsTable.align(Align.left);
         prefsTable.pad(200);
 
-        steeringSensitivityLabel = new Label("Sensitivity", skin);
-        steeringSensitivityLabel.setFontScale(baseFontScale);
-        steeringSensitivityInput = new Slider(GamePrefs.SENSITIVITY_MIN, GamePrefs.SENSITIVITY_MAX, 1, false, skin);
-        steeringSensitivityInput.setAnimateDuration(0.1f);
-        steeringSensitivityInput.setValue(Helm.prefs.getInteger(GamePrefs.SENSITIVITY, GamePrefs.SENSITIVITY_DEFAULT));
+        generateSliderIntSetting("Steering Sensitivity", GamePrefs.SENSITIVITY, GamePrefs.SENSITIVITY_DEFAULT, GamePrefs.SENSITIVITY_MIN, GamePrefs.SENSITIVITY_MAX);
+        generateCheckBoxSetting("Use Joystick Steering", GamePrefs.USE_JOYSTICK_STEERING, GamePrefs.USE_JOYSTICK_STEERING_DEFAULT);
 
-        Label joystickSteeringLabel = new Label("Use Joystick Steering", skin);
-        joystickSteeringLabel.setFontScale(baseFontScale);
-        joystickSteeringInput = new CheckBox(null, skin);
-        joystickSteeringInput.setChecked(Helm.prefs.getBoolean(GamePrefs.USE_JOYSTICK_STEERING, GamePrefs.USE_JOYSTICK_STEERING_DEFAULT));
-        // this isn't a font, but we can scale it the same
-        joystickSteeringInput.getImage().scaleBy(game.fontScale);
-        joystickSteeringInput.align(Align.bottomLeft);
-        joystickSteeringInput.setOrigin(Align.bottomLeft);
-
-        joystickSteeringInput.addListener(new ClickListener() {
+        inputMap.get(GamePrefs.USE_JOYSTICK_STEERING).addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 updateSteeringSettingVisibility();
             }
         });
 
-        steeringPositionXLabel = new Label("Steering Joystick X", skin);
-        steeringPositionXLabel.setFontScale(baseFontScale);
-        steeringXInput = new Slider(.1f, .5f, .05f, false, skin);
-        steeringXInput.setAnimateDuration(0.1f);
-        // this affects all slider knobs
-
-        int screenHeight = Gdx.graphics.getHeight();
-        steeringXInput.getStyle().knob.setMinHeight(screenHeight / 25);
-        steeringXInput.setValue(Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_WIDTH, GamePrefs.SIMPLE_STEERING_WIDTH_DEFAULT));
-
-        steeringPositionYLabel = new Label("Steering Joystick Y", skin);
-        steeringPositionYLabel.setFontScale(baseFontScale);
-        steeringYInput = new Slider(.1f, .5f, .05f, false, skin);
-        steeringYInput.setAnimateDuration(0.1f);
-        steeringYInput.setValue(Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_HEIGHT, GamePrefs.SIMPLE_STEERING_HEIGHT_DEFAULT));
-
-        prefsTable.add(steeringSensitivityLabel).align(Align.left);
-        prefsTable.add(steeringSensitivityInput).width(300);
-        prefsTable.row();
-
-        prefsTable.add(joystickSteeringLabel).align(Align.left).expandX();
-        prefsTable.add(joystickSteeringInput).size(
-                joystickSteeringInput.getImage().getWidth() * joystickSteeringInput.getImage().getScaleX(),
-                joystickSteeringInput.getImage().getHeight() * joystickSteeringInput.getImage().getScaleY()).align(Align.center);
-        prefsTable.row();
-
-        prefsTable.add(steeringPositionXLabel).align(Align.left);
-        prefsTable.add(steeringXInput).width(300);
-        prefsTable.row();
-
-        prefsTable.add(steeringPositionYLabel).align(Align.left);
-        prefsTable.add(steeringYInput).width(300);
-        prefsTable.row();
-
+        generateSliderFloatSetting("Steering Joystick X", GamePrefs.JOYSTICK_STEERING_WIDTH, GamePrefs.JOYSTICK_STEERING_WIDTH_DEFAULT, GamePrefs.JOYSTICK_STEERING_MIN, GamePrefs.JOYSTICK_STEERING_MAX);
+        generateSliderFloatSetting("Steering Joystick Y", GamePrefs.JOYSTICK_STEERING_HEIGHT, GamePrefs.JOYSTICK_STEERING_HEIGHT_DEFAULT, GamePrefs.JOYSTICK_STEERING_MIN, GamePrefs.JOYSTICK_STEERING_MAX);
+        generateCheckBoxSetting("Use Lefty Controls", GamePrefs.USE_LEFT_HANDED_CONTROLS, GamePrefs.USE_LEFT_HANDED_CONTROLS_DEFAULT);
 
         TextButton doneLabel = new TextButton("Save", skin);
         doneLabel.getLabel().setFontScale(baseFontScale * 1.5f);
@@ -124,19 +88,116 @@ public class OptionsScreen implements Screen {
 
         stage.addActor(mainTable);
 
+        // call this to make sure our settings are appearing correctly right after opening the screen
         updateSteeringSettingVisibility();
     }
 
-    private void updateSteeringSettingVisibility() {
-        boolean usingJoystickSteering = joystickSteeringInput.isChecked();
+    private void generateCheckBoxSetting(String displayName, final String settingName, boolean defaultValue) {
+        Label settingLabel = new Label(displayName, skin);
+        settingLabel.setFontScale(baseFontScale);
+        final CheckBox settingInput = new CheckBox(null, skin);
+        settingInput.setChecked(Helm.prefs.getBoolean(settingName, defaultValue));
+        // this isn't a font, but we can scale it the same
+        settingInput.getImage().scaleBy(game.fontScale);
+        settingInput.align(Align.bottomLeft);
+        settingInput.setOrigin(Align.bottomLeft);
 
-        steeringSensitivityInput.setVisible(!usingJoystickSteering);
-        steeringSensitivityLabel.setVisible(!usingJoystickSteering);
-        
-        steeringPositionXLabel.setVisible(usingJoystickSteering);
-        steeringXInput.setVisible(usingJoystickSteering);
-        steeringPositionYLabel.setVisible(usingJoystickSteering);
-        steeringYInput.setVisible(usingJoystickSteering);
+        prefsTable.add(settingLabel).align(Align.left).expandX();
+        prefsTable.add(settingInput).size(
+                settingInput.getImage().getWidth() * settingInput.getImage().getScaleX(),
+                settingInput.getImage().getHeight() * settingInput.getImage().getScaleY()).align(Align.center);
+        prefsTable.row();
+
+        labelMap.put(settingName, settingLabel);
+        inputMap.put(settingName, settingInput);
+
+        closingActions.add(new Runnable() {
+            @Override
+            public void run() {
+                Helm.prefs.putBoolean(settingName, settingInput.isChecked());
+            }
+        });
+    }
+
+    private void generateSliderIntSetting(String displayName, final String settingName, int defaultValue, int minValue, int maxValue) {
+        Label settingLabel = new Label(displayName, skin);
+        settingLabel.setFontScale(baseFontScale);
+        final Slider settingInput = new Slider(minValue, maxValue, 1, false, skin);
+        settingInput.setAnimateDuration(0.1f);
+        settingInput.setValue(Helm.prefs.getInteger(settingName, defaultValue));
+        setSliderKnobHeight(settingInput);
+
+
+        addToOptions(settingName, settingLabel, settingInput);
+
+        closingActions.add(new Runnable() {
+            @Override
+            public void run() {
+                Helm.prefs.putInteger(settingName, (int) settingInput.getValue());
+            }
+        });
+    }
+
+    private void generateSliderFloatSetting(String displayName, final String settingName, float defaultValue, float minValue, float maxValue) {
+        Label settingLabel = new Label(displayName, skin);
+        settingLabel.setFontScale(baseFontScale);
+        final Slider settingInput = new Slider(minValue, maxValue, .05f, false, skin);
+        settingInput.setAnimateDuration(0.1f);
+        settingInput.setValue(Helm.prefs.getFloat(settingName, defaultValue));
+
+        setSliderKnobHeight(settingInput);
+        addToOptions(settingName, settingLabel, settingInput);
+
+        closingActions.add(new Runnable() {
+            @Override
+            public void run() {
+                Helm.prefs.putFloat(settingName, settingInput.getValue());
+            }
+        });
+    }
+
+    private void setSliderKnobHeight(Slider settingInput) {
+        // this affects all slider knobs
+        int screenHeight = Gdx.graphics.getHeight();
+        settingInput.getStyle().knob.setMinHeight(screenHeight / 15);
+    }
+
+    private void addToOptions(String settingName, Label settingLabel, Slider settingInput) {
+        labelMap.put(settingName, settingLabel);
+        inputMap.put(settingName, settingInput);
+
+        prefsTable.add(settingLabel).align(Align.left);
+        prefsTable.add(settingInput).width(300);
+        prefsTable.row();
+    }
+
+
+    private void updateSteeringSettingVisibility() {
+        boolean usingJoystickSteering = ((CheckBox) inputMap.get(GamePrefs.USE_JOYSTICK_STEERING)).isChecked();
+
+        if (usingJoystickSteering) {
+            disableSetting(GamePrefs.SENSITIVITY);
+            enableSetting(GamePrefs.JOYSTICK_STEERING_WIDTH);
+            enableSetting(GamePrefs.JOYSTICK_STEERING_HEIGHT);
+        } else {
+            enableSetting(GamePrefs.SENSITIVITY);
+            disableSetting(GamePrefs.JOYSTICK_STEERING_WIDTH);
+            disableSetting(GamePrefs.JOYSTICK_STEERING_HEIGHT);
+        }
+    }
+
+    private void enableSetting(String settingName) {
+        labelMap.get(settingName).setTouchable(Touchable.enabled);
+        inputMap.get(settingName).setTouchable(Touchable.enabled);
+        labelMap.get(settingName).setColor(Color.WHITE);
+        inputMap.get(settingName).setColor(Color.WHITE);
+    }
+
+    private void disableSetting(String settingName) {
+        labelMap.get(settingName).setTouchable(Touchable.disabled);
+        inputMap.get(settingName).setTouchable(Touchable.disabled);
+        labelMap.get(settingName).setColor(Color.DARK_GRAY);
+        inputMap.get(settingName).setColor(Color.DARK_GRAY);
     }
 
     @Override
@@ -169,10 +230,9 @@ public class OptionsScreen implements Screen {
 
     @Override
     public void hide() {
-        Helm.prefs.putInteger(GamePrefs.SENSITIVITY, (int) steeringSensitivityInput.getValue());
-        Helm.prefs.putBoolean(GamePrefs.USE_JOYSTICK_STEERING, joystickSteeringInput.isChecked());
-        Helm.prefs.putFloat(GamePrefs.SIMPLE_STEERING_WIDTH, steeringXInput.getValue());
-        Helm.prefs.putFloat(GamePrefs.SIMPLE_STEERING_HEIGHT, steeringYInput.getValue());
+        for (Runnable closingAction : closingActions) {
+            closingAction.run();
+        }
         Helm.prefs.flush();
     }
 

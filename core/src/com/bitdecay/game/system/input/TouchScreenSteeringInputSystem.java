@@ -31,7 +31,7 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
 
     float tempAngle = 0;
 
-    private Vector2 simpleSteeringStartVector = new Vector2();
+    private Vector2 joystickSteeringStartVector = new Vector2();
 
     public TouchScreenSteeringInputSystem(GamePilot pilot) {
         super(pilot);
@@ -108,9 +108,9 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
     }
 
     private void setJoystickSteeringStartPoint(SteeringControlComponent control) {
-        float height_ratio = Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_HEIGHT, GamePrefs.SIMPLE_STEERING_HEIGHT_DEFAULT);
-        float width_ratio = Helm.prefs.getFloat(GamePrefs.SIMPLE_STEERING_WIDTH, GamePrefs.SIMPLE_STEERING_WIDTH_DEFAULT);
-        control.startPoint = control.activeArea.getSize(simpleSteeringStartVector).scl(width_ratio, height_ratio);
+        float height_ratio = Helm.prefs.getFloat(GamePrefs.JOYSTICK_STEERING_HEIGHT, GamePrefs.JOYSTICK_STEERING_HEIGHT_DEFAULT);
+        float width_ratio = Helm.prefs.getFloat(GamePrefs.JOYSTICK_STEERING_WIDTH, GamePrefs.JOYSTICK_STEERING_WIDTH_DEFAULT);
+        control.startPoint = control.activeArea.getSize(joystickSteeringStartVector).scl(width_ratio, height_ratio).add(control.activeArea.x, 0);
     }
 
     private void updateJoystickControls(SteeringControlComponent control, ActiveTouch touch) {

@@ -1,5 +1,6 @@
 package com.bitdecay.game.component.control;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.bitdecay.game.component.GameComponent;
 
@@ -10,7 +11,10 @@ public class BoostControlComponent extends GameComponent {
     public Rectangle activeArea;
     public boolean pressed;
 
-    public BoostControlComponent(Rectangle area) {
-        activeArea = area;
+    public BoostControlComponent(boolean leftHandedControls) {
+        activeArea = new Rectangle(Gdx.graphics.getWidth()/2, 0, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight());
+        if (leftHandedControls) {
+            activeArea.setX(0);
+        }
     }
 }
