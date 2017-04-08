@@ -1,9 +1,8 @@
 package com.bitdecay.game.entities;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.collision.CollisionDirection;
 import com.bitdecay.game.component.collide.GeometryComponentFactory;
 import com.bitdecay.game.component.control.BoostControlComponent;
@@ -18,6 +17,7 @@ import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.ShipLaunchComponent;
 import com.bitdecay.game.math.Geom;
+import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.world.GameColors;
 
 /**
@@ -29,8 +29,10 @@ public class ShipEntity extends GameEntity {
         addComponent(new ShipLaunchComponent(1.5f));
         addComponent(new FuelComponent(startingFuel));
 
-        addComponent(new BoostControlComponent(new Rectangle(Gdx.graphics.getWidth()/2, 0, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight())));
-        addComponent(new SteeringControlComponent(new Rectangle(0, 0, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight())));
+        boolean lefty = Helm.prefs.getBoolean(GamePrefs.USE_LEFT_HANDED_CONTROLS, GamePrefs.USE_LEFT_HANDED_CONTROLS_DEFAULT);
+
+        addComponent(new BoostControlComponent(lefty));
+        addComponent(new SteeringControlComponent(lefty));
 
         float[] geomPoints = new float[]{-100, 50, 100, 0, -100, -50};
         addComponent(GeometryComponentFactory.getPolygonGeomComponent(geomPoints, CollisionDirection.BOTH));
