@@ -29,7 +29,7 @@ public class WorldInstance {
     public MedalUtils.LevelRating getBestScoreMedal() {
         MedalUtils.LevelRating lowestRating = MedalUtils.LevelRating.DEV;
         for (LevelInstance levelInst : levels) {
-            MedalUtils.LevelRating levelRank = MedalUtils.getScoreRank(levelInst);
+            MedalUtils.LevelRating levelRank = MedalUtils.getScoreRank(levelInst, levelInst.getHighScore());
             if (levelRank.ordinal() < lowestRating.ordinal()) {
                 lowestRating = levelRank;
             }
@@ -40,7 +40,7 @@ public class WorldInstance {
     public MedalUtils.LevelRating getBestTimeMedal() {
         MedalUtils.LevelRating lowestRating = MedalUtils.LevelRating.DEV;
         for (LevelInstance levelInst : levels) {
-            MedalUtils.LevelRating levelRank = MedalUtils.getTimeRank(levelInst);
+            MedalUtils.LevelRating levelRank = MedalUtils.getTimeRank(levelInst, levelInst.getBestTime());
             if (levelRank.ordinal() < lowestRating.ordinal()) {
                 lowestRating = levelRank;
             }

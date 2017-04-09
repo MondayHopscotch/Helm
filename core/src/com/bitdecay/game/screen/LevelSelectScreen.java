@@ -152,12 +152,12 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
     }
 
     private void addScoreMedal(Table table, LevelInstance level) {
-        Image medalImage = MedalUtils.getIconForScore(level);
+        Image medalImage = MedalUtils.getIconForHighScore(level);
         table.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
     }
 
     private void addTimeMedal(Table table, LevelInstance level) {
-        Image medalImage = MedalUtils.getIconForTime(level);
+        Image medalImage = MedalUtils.getIconForBestTime(level);
         table.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
     }
 }

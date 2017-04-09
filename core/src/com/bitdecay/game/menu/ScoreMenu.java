@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -18,6 +19,7 @@ import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.time.TimerUtils;
+import com.bitdecay.game.world.LevelInstance;
 
 /**
  * Created by Monday on 12/17/2016.
@@ -54,9 +56,11 @@ public class ScoreMenu {
 
     private Label totalTimeLabel;
     private Label totalTimeValue;
+    private Image totalTimeMedal;
 
     private Label totalScoreLabel;
     private Label totalScoreScore;
+    private Image totalScoreMedal;
 
     private final Table nextTable;
     private final TextButton nextButton;
@@ -76,6 +80,7 @@ public class ScoreMenu {
         Table scoreTable = new Table();
         scoreTable.align(Align.center);
         scoreTable.setOrigin(Align.center);
+        scoreTable.columnDefaults(2).width(MedalUtils.imageSize);
 
         landingSpeedLabel = new Label(getLeftPaddedString("Landing Speed:"), skin);
         landingSpeedLabel.setFontScale(pilot.getHelm().fontScale);
@@ -151,8 +156,11 @@ public class ScoreMenu {
         totalScoreScore.setAlignment(Align.right);
         totalScoreScore.setOrigin(Align.right);
 
+        totalScoreMedal = MedalUtils.getRankImage(MedalUtils.LevelRating.UNRANKED);
+
         scoreTable.add(totalScoreLabel).padRight(100);
         scoreTable.add(totalScoreScore).growX();
+        scoreTable.add(totalScoreMedal).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
         scoreTable.row();
 
         totalTimeLabel = new Label(getLeftPaddedString("Total Time:"), skin);
@@ -164,8 +172,12 @@ public class ScoreMenu {
         totalTimeValue.setAlignment(Align.right);
         totalTimeValue.setOrigin(Align.right);
 
+        totalTimeMedal = MedalUtils.getRankImage(MedalUtils.LevelRating.UNRANKED);
+
         scoreTable.add(totalTimeLabel).padRight(100);
         scoreTable.add(totalTimeValue).growX();
+        Image medalImage = MedalUtils.getRankImage(MedalUtils.LevelRating.UNRANKED);
+        scoreTable.add(totalTimeMedal).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
         scoreTable.row();
 
         nextTable = new Table();
@@ -248,7 +260,7 @@ public class ScoreMenu {
         }
     }
 
-    public void setScore(LandingScore score) {
+    public void setScore(LevelInstance currentLevel, LandingScore score) {
         SequenceAction baseScoreSequence = Actions.sequence(
                 Actions.run(new Runnable() {
                     @Override
@@ -295,16 +307,20 @@ public class ScoreMenu {
             baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.HIGH_SCORE_BEAT,
                     totalScoreLabel,
                     totalScoreScore,
+                    totalScoreMedal,
                     totalTimeLabel,
-                    totalTimeValue
+                    totalTimeValue,
+                    totalTimeMedal
             )));
             baseScoreSequence.addAction(Actions.delay(1f));
         } else {
             baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL,
                     totalScoreLabel,
                     totalScoreScore,
+                    totalScoreMedal,
                     totalTimeLabel,
-                    totalTimeValue
+                    totalTimeValue,
+                    totalTimeMedal
             )));
             baseScoreSequence.addAction(Actions.delay(1f));
 
@@ -321,7 +337,9 @@ public class ScoreMenu {
         fuelScoreScore.setText(getLeftPaddedString(Integer.toString(score.fuelScore)));
 
         totalTimeValue.setText(TimerUtils.getFormattedTime(score.timeTaken));
+        totalTimeMedal.setDrawable(MedalUtils.getIconForBestTime(currentLevel, score.timeTaken).getDrawable());
         totalScoreScore.setText(getLeftPaddedString(Integer.toString(score.total())));
+        totalScoreMedal.setDrawable(MedalUtils.getIconForScore(currentLevel, score.total()).getDrawable());
     }
 
     private Runnable getShowActorsRunnable(final Actor... actors) {
@@ -356,7 +374,9 @@ public class ScoreMenu {
         fuelScoreScore.setVisible(false);
         totalScoreLabel.setVisible(false);
         totalScoreScore.setVisible(false);
+        totalScoreMedal.setVisible(false);
         totalTimeLabel.setVisible(false);
+        totalTimeMedal.setVisible(false);
         totalTimeValue.setVisible(false);
         nextButton.setVisible(false);
         playAgainButton.setVisible(false);

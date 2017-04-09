@@ -33,40 +33,49 @@ public class MedalUtils {
         imageSize = (int) (game.fontScale * 16);
     }
 
-    public static Image getIconForScore(LevelInstance level) {
-        LevelRating rank = getScoreRank(level);
+    public static Image getIconForHighScore(LevelInstance level) {
+        LevelRating rank = getScoreRank(level, level.getHighScore());
         return getRankImage(rank);
     }
 
-    public static Image getIconForTime(LevelInstance level) {
-        LevelRating rank = getTimeRank(level);
+    public static Image getIconForScore(LevelInstance level, int score) {
+        LevelRating rank = getScoreRank(level, score);
         return getRankImage(rank);
     }
 
-    public static LevelRating getScoreRank(LevelInstance level) {
-        int highScore = level.getHighScore();
-        if (highScore > level.levelDef.devScore) {
+    public static Image getIconForBestTime(LevelInstance level) {
+        LevelRating rank = getTimeRank(level, level.getBestTime());
+        return getRankImage(rank);
+    }
+
+    public static Image getIconForBestTime(LevelInstance level, float time) {
+        LevelRating rank = getTimeRank(level, time);
+        return getRankImage(rank);
+    }
+
+
+    public static LevelRating getScoreRank(LevelInstance level, int score) {
+        if (score > level.levelDef.devScore) {
             return LevelRating.DEV;
-        } else if (highScore > level.levelDef.goldScore) {
+        } else if (score > level.levelDef.goldScore) {
             return LevelRating.GOLD;
-        } else if (highScore > level.levelDef.silverScore) {
+        } else if (score > level.levelDef.silverScore) {
             return LevelRating.SILVER;
-        } else if (highScore > level.levelDef.bronzeScore) {
+        } else if (score > level.levelDef.bronzeScore) {
             return LevelRating.BRONZE;
         } else {
             return LevelRating.UNRANKED;
         }
     }
 
-    public static LevelRating getTimeRank(LevelInstance level) {
-        float bestTime = level.getBestTime();
-        if (bestTime < level.levelDef.devTime) {
+    public static LevelRating getTimeRank(LevelInstance level, float time) {
+        if (time < level.levelDef.devTime) {
             return LevelRating.DEV;
-        } else if (bestTime < level.levelDef.goldTime) {
+        } else if (time < level.levelDef.goldTime) {
             return LevelRating.GOLD;
-        } else if (bestTime < level.levelDef.silverTime) {
+        } else if (time < level.levelDef.silverTime) {
             return LevelRating.SILVER;
-        } else if (bestTime < level.levelDef.bronzeTime) {
+        } else if (time < level.levelDef.bronzeTime) {
             return LevelRating.BRONZE;
         } else {
             return LevelRating.UNRANKED;
