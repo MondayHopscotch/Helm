@@ -1,7 +1,10 @@
 package com.bitdecay.game.screen;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -21,9 +24,18 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
     private final WorldInstance world;
 
+    private TextureRegion bronzeMedalImg;
+    private TextureRegion silverMedalImg;
+    private TextureRegion goldMedalImg;
+
     public LevelSelectScreen(final Helm game, final WorldInstance world) {
         super(game);
         this.world = world;
+
+        bronzeMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("bronze_medal");
+        silverMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("silver_medal");
+        goldMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("gold_medal");
+
         build();
     }
 
@@ -138,7 +150,15 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
         table.add(goButton).expand(false, false);
         table.add(levelNameLabel);
+        if (levelHighScore > 7000) {
+            table.add(new Image(goldMedalImg)).align(Align.right).size(32, 32).expand(false, false).fill(false);
+        } else if (levelHighScore > 5000) {
+            table.add(new Image(silverMedalImg)).align(Align.right).size(32, 32).expand(false, false).fill(false);
+        } else if (levelHighScore > 0) {
+            table.add(new Image(bronzeMedalImg)).align(Align.right).size(32, 32).expand(false, false).fill(false);
+        }
         table.add(levelScoreLabel);
+        table.add(new Image(silverMedalImg)).align(Align.right).size(32, 32).expand(false, false).fill(false);
         table.add(levelTimeLabel);
         table.row().padTop(game.fontScale * 10);
         return levelHighScore;
