@@ -1,6 +1,7 @@
 package com.bitdecay.game.world;
 
 import com.badlogic.gdx.utils.Array;
+import com.bitdecay.game.menu.MedalUtils;
 import com.bitdecay.game.prefs.GamePrefs;
 
 /**
@@ -23,6 +24,28 @@ public class WorldInstance {
 
     public void addLevelInstance(LevelDefinition levelDef) {
         levels.add(new LevelInstance(levelDef));
+    }
+
+    public MedalUtils.LevelRating getBestScoreMedal() {
+        MedalUtils.LevelRating lowestRating = MedalUtils.LevelRating.DEV;
+        for (LevelInstance levelInst : levels) {
+            MedalUtils.LevelRating levelRank = MedalUtils.getScoreRank(levelInst);
+            if (levelRank.ordinal() < lowestRating.ordinal()) {
+                lowestRating = levelRank;
+            }
+        }
+        return lowestRating;
+    }
+
+    public MedalUtils.LevelRating getBestTimeMedal() {
+        MedalUtils.LevelRating lowestRating = MedalUtils.LevelRating.DEV;
+        for (LevelInstance levelInst : levels) {
+            MedalUtils.LevelRating levelRank = MedalUtils.getTimeRank(levelInst);
+            if (levelRank.ordinal() < lowestRating.ordinal()) {
+                lowestRating = levelRank;
+            }
+        }
+        return lowestRating;
     }
 
     public int getHighScore() {

@@ -26,6 +26,16 @@ public class LevelBuilder {
     public int startingFuel = 300;
     public String name = "";
 
+    public int devScore = Integer.MAX_VALUE;
+    public int goldScore = 0;
+    public int silverScore = 0;
+    public int bronzeScore = 0;
+
+    public float devTime = 0f;
+    public float goldTime = 0f;
+    public float silverTime = 0f;
+    public float bronzeTime = 0f;
+
     public void setStartPoint(Vector2 point) {
         startPoint = new Vector2(point);
     }
@@ -128,6 +138,16 @@ public class LevelBuilder {
         landingPlatRotationInDegrees = level.finishPlatformRotation;
 
         name = level.name;
+
+        devScore = level.devScore;
+        goldScore = level.goldScore;
+        silverScore = level.silverScore;
+        bronzeScore = level.bronzeScore;
+
+        devTime = level.devTime;
+        goldTime = level.goldTime;
+        silverTime = level.silverTime;
+        bronzeTime = level.bronzeTime;
     }
 
     public boolean isLevelValid() {
@@ -137,6 +157,17 @@ public class LevelBuilder {
     public LevelDefinition build() {
         LevelDefinition level = new LevelDefinition();
         level.name = name;
+
+        level.devScore = devScore;
+        level.goldScore = goldScore;
+        level.silverScore = silverScore;
+        level.bronzeScore = bronzeScore;
+
+        level.devTime = devTime;
+        level.goldTime = goldTime;
+        level.silverTime = silverTime;
+        level.bronzeTime = bronzeTime;
+
         level.levelLines = new Array<>(lines.size());
         for (LineSegment line : lines) {
             level.levelLines.add(line);

@@ -26,6 +26,16 @@ public class LevelDefinition {
 
     public Vector2 gravity = new Vector2(0, -10);
 
+    public int devScore = Integer.MAX_VALUE;
+    public int goldScore = 50000;
+    public int silverScore = 30000;
+    public int bronzeScore = 10000;
+
+    public float devTime = 0f;
+    public float goldTime = 5.0f;
+    public float silverTime = 8f;
+    public float bronzeTime = 10f;
+
     public LevelDefinition() {
         // Here for JSON
     }

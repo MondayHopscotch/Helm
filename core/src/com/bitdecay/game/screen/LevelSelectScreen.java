@@ -1,7 +1,5 @@
 package com.bitdecay.game.screen;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -11,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.menu.MedalUtils;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.world.LevelInstance;
@@ -23,21 +22,10 @@ import com.bitdecay.game.world.WorldInstance;
 public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
     private final WorldInstance world;
-    private final int imageSize;
-
-    private TextureRegion bronzeMedalImg;
-    private TextureRegion silverMedalImg;
-    private TextureRegion goldMedalImg;
 
     public LevelSelectScreen(final Helm game, final WorldInstance world) {
         super(game);
         this.world = world;
-
-        imageSize = (int) (game.fontScale * 16);
-
-        bronzeMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("bronze_medal");
-        silverMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("silver_medal");
-        goldMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("gold_medal");
 
         build();
     }
@@ -51,7 +39,9 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
     public void populateRows(Table levelTable) {
         itemTable.columnDefaults(1).expandX();
         itemTable.columnDefaults(2).width(game.fontScale * 50);
-        itemTable.columnDefaults(3).width(game.fontScale * 50);
+        itemTable.columnDefaults(3).width(MedalUtils.imageSize);
+        itemTable.columnDefaults(4).width(game.fontScale * 50);
+        itemTable.columnDefaults(5).width(MedalUtils.imageSize);
 
         int totalHighScore = 0;
         float totalBestTime = 0;
@@ -95,7 +85,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
         levelTable.add(totalHighScoreLabel).colspan(2).align(Align.right);
         levelTable.add(totalHighScoreValue);
-        levelTable.add(totalBestTimeValue);
+        levelTable.add(totalBestTimeValue).colspan(2).align(Align.right);
     }
 
     @Override
@@ -153,17 +143,21 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
         table.add(goButton).expand(false, false);
         table.add(levelNameLabel);
-        if (levelHighScore > 7000) {
-            table.add(new Image(goldMedalImg)).align(Align.right).size(imageSize, imageSize).expand(false, false).fill(false);
-        } else if (levelHighScore > 5000) {
-            table.add(new Image(silverMedalImg)).align(Align.right).size(imageSize, imageSize).expand(false, false).fill(false);
-        } else if (levelHighScore > 0) {
-            table.add(new Image(bronzeMedalImg)).align(Align.right).size(imageSize, imageSize).expand(false, false).fill(false);
-        }
         table.add(levelScoreLabel);
-        table.add(new Image(silverMedalImg)).align(Align.right).size(imageSize, imageSize).expand(false, false).fill(false);
-        table.add(levelTimeLabel);
+        addScoreMedal(table, level);
+        table.add(levelTimeLabel).padLeft(MedalUtils.imageSize / 2);
+        addTimeMedal(table, level);
         table.row().padTop(game.fontScale * 10);
         return levelHighScore;
+    }
+
+    private void addScoreMedal(Table table, LevelInstance level) {
+        Image medalImage = MedalUtils.getIconForScore(level);
+        table.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
+    }
+
+    private void addTimeMedal(Table table, LevelInstance level) {
+        Image medalImage = MedalUtils.getIconForTime(level);
+        table.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
     }
 }

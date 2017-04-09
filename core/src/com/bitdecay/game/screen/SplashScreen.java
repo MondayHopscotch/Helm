@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.menu.MedalUtils;
 
 /**
  * Created by Monday on 4/8/2017.
@@ -134,6 +135,7 @@ public class SplashScreen implements Screen {
         if (helm.assets.update() && !transitioningAway) {
             if (bitDecaySplash.getActions().size == 0) {
                 transitioningAway = true;
+                initCaches();
                 nextScreen();
             }
         }
@@ -142,6 +144,10 @@ public class SplashScreen implements Screen {
 
         stage.act();
         stage.draw();
+    }
+
+    private void initCaches() {
+        MedalUtils.init(helm);
     }
 
     @Override

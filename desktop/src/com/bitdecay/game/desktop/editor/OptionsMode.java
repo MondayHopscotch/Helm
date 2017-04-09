@@ -8,6 +8,7 @@ public enum OptionsMode {
     ROTATE_LANDING("Rotate Landing", EditorKeys.ROTATE_LANDING),
     PLACE_START("Place Start", EditorKeys.START_MODE),
     SET_FUEL("Set Fuel", EditorKeys.SET_FUEL),
+    SET_MEDALS("Set Medalist Scores", EditorKeys.SET_MEDALS),
     ADD_FOCUS("Add Focal Point", EditorKeys.ADD_FOCUS),
     REMOVE_FOCUS("Remove Focal Point", EditorKeys.REMOVE_FOCUS),
     ADD_GRAV_WELL("Add Gravity Well", EditorKeys.ADD_GRAV_WELL),

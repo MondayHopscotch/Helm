@@ -3,8 +3,10 @@ package com.bitdecay.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.menu.MedalUtils;
 import com.bitdecay.game.persist.JsonUtils;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.time.TimerUtils;
@@ -42,7 +45,9 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
     public void populateRows(Table worldTable) {
         itemTable.columnDefaults(1).expandX();
         itemTable.columnDefaults(2).width(game.fontScale * 50);
-        itemTable.columnDefaults(3).width(game.fontScale * 50);
+        itemTable.columnDefaults(3).width(MedalUtils.imageSize);
+        itemTable.columnDefaults(4).width(game.fontScale * 50);
+        itemTable.columnDefaults(5).width(MedalUtils.imageSize);
 
         Array<WorldInstance> worlds = new Array<>();
 
@@ -177,8 +182,20 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         table.add(goButton).expand(false, false);
         table.add(worldNameLabel);
         table.add(worldScoreLabel);
+        addScoreMedal(table, world);
         table.add(worldTimeLabel);
+        addTimeMedal(table, world);
         return worldHighScore;
+    }
+
+    private void addScoreMedal(Table table, WorldInstance world) {
+        Image medalImage = MedalUtils.getRankImage(world.getBestScoreMedal());
+        table.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
+    }
+
+    private void addTimeMedal(Table table, WorldInstance world) {
+        Image medalImage = MedalUtils.getRankImage(world.getBestTimeMedal());
+        table.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
     }
 
     public void buildHintedUnlockRow(WorldInstance world, Table worldTable, int levelsCompleted) {
@@ -190,6 +207,6 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         leftTillUnlockLabel.setAlignment(Align.center);
         leftTillUnlockLabel.setFontScale(game.fontScale);
 
-        worldTable.add(leftTillUnlockLabel).colspan(4);
+        worldTable.add(leftTillUnlockLabel).colspan(6);
     }
 }
