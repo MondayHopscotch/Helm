@@ -6,6 +6,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.bitdecay.game.screen.SplashScreen;
 import com.bitdecay.game.screen.TitleScreen;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
@@ -30,6 +31,7 @@ public class Helm extends Game {
         SFXLibrary.loadAllAsync(assets);
         MusicLibrary.loadAllAsync(assets);
         loadSkinSync(assets);
+        loadImageAtlases(assets);
         skin = new Skin(Gdx.files.internal("skin/skin.json"), assets.get("skin/ui.atlas", TextureAtlas.class));
 
         skin.getFont("defaultFont").setUseIntegerPositions(true);
@@ -39,7 +41,11 @@ public class Helm extends Game {
         stats = new Statistics();
         stats.init(Helm.prefs);
 
-        setScreen(new TitleScreen(this));
+        setScreen(new SplashScreen(this));
+    }
+
+    private void loadImageAtlases(AssetManager assets) {
+        assets.load("img/medals.atlas", TextureAtlas.class);
     }
 
     private void checkUpdateClears() {

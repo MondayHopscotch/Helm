@@ -35,7 +35,7 @@ public class TitleScreen implements Screen {
     public TitleScreen(Helm game) {
         this.game = game;
         batch = new SpriteBatch();
-        backgroundImage = new Texture(Gdx.files.internal("img/TitleScreen.png"));
+        backgroundImage = new Texture(Gdx.files.internal("splash/TitleScreen.png"));
 
         stage = new Stage();
         skin = game.skin;

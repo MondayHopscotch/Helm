@@ -1,0 +1,27 @@
+
+medals.png
+size: 128,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bronze_medal
+  rotate: false
+  xy: 1, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+gold_medal
+  rotate: false
+  xy: 35, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+silver_medal
+  rotate: false
+  xy: 69, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
