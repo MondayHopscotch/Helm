@@ -23,6 +23,7 @@ import com.bitdecay.game.world.WorldInstance;
 public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
     private final WorldInstance world;
+    private final int imageSize;
 
     private TextureRegion bronzeMedalImg;
     private TextureRegion silverMedalImg;
@@ -31,6 +32,8 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
     public LevelSelectScreen(final Helm game, final WorldInstance world) {
         super(game);
         this.world = world;
+
+        imageSize = (int) (game.fontScale * 16);
 
         bronzeMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("bronze_medal");
         silverMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("silver_medal");
@@ -151,14 +154,14 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         table.add(goButton).expand(false, false);
         table.add(levelNameLabel);
         if (levelHighScore > 7000) {
-            table.add(new Image(goldMedalImg)).align(Align.right).size(32, 32).expand(false, false).fill(false);
+            table.add(new Image(goldMedalImg)).align(Align.right).size(imageSize, imageSize).expand(false, false).fill(false);
         } else if (levelHighScore > 5000) {
-            table.add(new Image(silverMedalImg)).align(Align.right).size(32, 32).expand(false, false).fill(false);
+            table.add(new Image(silverMedalImg)).align(Align.right).size(imageSize, imageSize).expand(false, false).fill(false);
         } else if (levelHighScore > 0) {
-            table.add(new Image(bronzeMedalImg)).align(Align.right).size(32, 32).expand(false, false).fill(false);
+            table.add(new Image(bronzeMedalImg)).align(Align.right).size(imageSize, imageSize).expand(false, false).fill(false);
         }
         table.add(levelScoreLabel);
-        table.add(new Image(silverMedalImg)).align(Align.right).size(32, 32).expand(false, false).fill(false);
+        table.add(new Image(silverMedalImg)).align(Align.right).size(imageSize, imageSize).expand(false, false).fill(false);
         table.add(levelTimeLabel);
         table.row().padTop(game.fontScale * 10);
         return levelHighScore;
