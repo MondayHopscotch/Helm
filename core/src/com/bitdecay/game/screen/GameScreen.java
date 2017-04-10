@@ -193,7 +193,11 @@ public class GameScreen implements Screen, GamePilot {
     private void showScoreMenu(LandingScore score, boolean isReplay) {
         scoreMenu.rebuildNextTable(isReplay);
         scoreMenu.visible = true;
-        scoreMenu.setScore(currentLevel, score);
+        if (PlayMode.REPLAY_MODE.equals(currentMode)) {
+            scoreMenu.setScore(new LevelInstance(currentReplay.levelDef), score);
+        } else {
+            scoreMenu.setScore(currentLevel, score);
+        }
         Gdx.input.setInputProcessor(scoreMenu.stage);
         levelPlayer.resetInputSystems();
     }
