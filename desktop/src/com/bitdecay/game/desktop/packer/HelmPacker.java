@@ -12,6 +12,10 @@ import java.io.FileFilter;
 
 public class HelmPacker {
 
+    public static void main(String[] args) {
+        HelmPacker.packAllTextures("../../resources/img", "img");
+    }
+
     private static final FileFilter directoryFilter = new FileFilter() {
         @Override
         public boolean accept(File pathname) {

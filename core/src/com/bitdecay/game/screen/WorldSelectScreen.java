@@ -117,7 +117,9 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
         worldTable.add(totalHighScoreLabel).colspan(2).align(Align.right);
         worldTable.add(totalHighScoreValue);
+        worldTable.add(MedalUtils.getRankImage(MedalUtils.LevelRating.UNRANKED));
         worldTable.add(totalBestTimeValue);
+        worldTable.add(MedalUtils.getRankImage(MedalUtils.LevelRating.UNRANKED));
     }
 
     private WorldInstance buildWorldInstance(WorldOrderMarker marker) {

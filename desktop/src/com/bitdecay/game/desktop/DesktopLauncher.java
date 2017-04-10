@@ -12,7 +12,6 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		if (arg.length > 0) {
 			Helm.debug = true;
-			HelmPacker.packAllTextures("../../resources/img", "img");
 		}
 		InputSystemFactory.setInputSystems(DesktopBoosterInputSystem.class, DesktopSteeringInputSystem.class);
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

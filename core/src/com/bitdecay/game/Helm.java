@@ -10,6 +10,8 @@ import com.bitdecay.game.screen.SplashScreen;
 import com.bitdecay.game.screen.TitleScreen;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
+import com.bitdecay.game.unlock.LiveStat;
+import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.unlock.Statistics;
 
 public class Helm extends Game {
@@ -25,6 +27,8 @@ public class Helm extends Game {
     @Override
     public void create() {
         Helm.prefs = Gdx.app.getPreferences("helm-pref");
+        stats = new Statistics();
+        stats.init(Helm.prefs);
         checkUpdateClears();
 
         assets = new AssetManager();
@@ -36,10 +40,7 @@ public class Helm extends Game {
 
         skin.getFont("defaultFont").setUseIntegerPositions(true);
         // super arbitrary number to try to get fonts to scale nicely for different screens
-        fontScale = (int)(Gdx.graphics.getWidth() / 300f);
-
-        stats = new Statistics();
-        stats.init(Helm.prefs);
+        fontScale = (int) (Gdx.graphics.getWidth() / 300f);
 
         setScreen(new SplashScreen(this));
     }
@@ -49,11 +50,28 @@ public class Helm extends Game {
     }
 
     private void checkUpdateClears() {
-        String update0dot4 = "clear_required_0.4";
-        if (Helm.prefs.getBoolean(update0dot4, true)) {
-            System.out.println("Clearing prefs for '" + update0dot4 + "'");
+        String[] updatesRequiringClear = new String[]{
+                "clear_required_0.4",
+                "clear_required_0.6",
+        };
+
+        boolean prefClearRequired = false;
+
+        for (String updateSetting : updatesRequiringClear) {
+            if (Helm.prefs.getBoolean(updateSetting, true)) {
+                System.out.println("Clearing prefs for '" + updateSetting + "'");
+                prefClearRequired = true;
+            }
+        }
+
+        if (prefClearRequired) {
+            // preserve our play time
+            LiveStat flightTime = Helm.stats.getLiveStat(StatName.FLIGHT_TIME);
             Helm.prefs.clear();
-            Helm.prefs.putBoolean(update0dot4, false);
+            flightTime.save(Helm.prefs);
+            for (String updateSetting : updatesRequiringClear) {
+                Helm.prefs.putBoolean(updateSetting, false);
+            }
             Helm.prefs.flush();
         }
     }

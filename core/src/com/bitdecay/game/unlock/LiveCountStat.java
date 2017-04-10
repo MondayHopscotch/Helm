@@ -26,6 +26,11 @@ public class LiveCountStat extends LiveStat {
     }
 
     @Override
+    public boolean hasSetValue(Preferences preferences) {
+        return Integer.MIN_VALUE != preferences.getInteger(statName.preferenceID, Integer.MIN_VALUE);
+    }
+
+    @Override
     public String format() {
         return Integer.toString(count);
     }

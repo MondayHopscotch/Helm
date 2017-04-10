@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.unlock.LiveStat;
+import com.bitdecay.game.unlock.StatDisplayType;
 import com.bitdecay.game.unlock.StatName;
 
 /**
@@ -32,21 +34,30 @@ public class StatsScreen extends AbstractScrollingItemScreen {
         itemTable.columnDefaults(1).width(game.fontScale * 50);
         for (StatName statName : StatName.values()) {
             buildStatRow(statName, table);
-            table.row().padTop(game.fontScale * 10);
         }
     }
 
     private void buildStatRow(StatName statName, Table table) {
+        LiveStat liveStat = Helm.stats.getLiveStat(statName);
+        if (statName.displayType.equals(StatDisplayType.HIDE)) {
+            return;
+        }
+        if (statName.displayType.equals(StatDisplayType.ONLY_SHOW_WHEN_PRESENT)) {
+            if (!liveStat.hasSetValue(game.prefs)) {
+                return;
+            }
+        }
         Label statNameLabel = new Label(statName.displayName, skin);
         statNameLabel.setAlignment(Align.center);
         statNameLabel.setFontScale(game.fontScale);
 
-        Label statValueLabel = new Label(Helm.stats.getLiveStat(statName).format(), skin);
+        Label statValueLabel = new Label(liveStat.format(), skin);
         statValueLabel.setAlignment(Align.center);
         statValueLabel.setFontScale(game.fontScale);
 
         table.add(statNameLabel);
         table.add(statValueLabel);
+        table.row().padTop(game.fontScale * 10);
     }
 
     @Override

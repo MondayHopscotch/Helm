@@ -35,7 +35,7 @@ public class SplashScreen implements Screen {
     private final String[] loadingSayings = new String[] {
             "Preparing cockpit",
             "Cleaning windshield",
-            "Fueling the ship",
+            "Fueling ship",
             "Checking turn signals"
     };
 

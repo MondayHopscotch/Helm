@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelInstance;
 
 /**
@@ -14,21 +15,34 @@ public class MedalUtils {
     private static TextureRegion bronzeMedalImg;
     private static TextureRegion silverMedalImg;
     private static TextureRegion goldMedalImg;
+    private static TextureRegion devMedalImg;
 
     public static int imageSize;
 
     public enum LevelRating {
-        UNRANKED,
-        BRONZE,
-        SILVER,
-        GOLD,
-        DEV
+        UNRANKED(StatName.NO_STAT),
+        BRONZE(StatName.BRONZE_MEDALS),
+        SILVER(StatName.SILVER_MEDALS),
+        GOLD(StatName.GOLD_MEDALS),
+        DEV(StatName.DEV_MEDALS);
+
+
+        private StatName statName;
+
+        LevelRating(StatName statName) {
+            this.statName = statName;
+        }
+
+        public StatName statName() {
+            return statName;
+        }
     }
 
     public static void init(Helm game) {
         bronzeMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("bronze_medal");
         silverMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("silver_medal");
         goldMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("gold_medal");
+        devMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("dev_medal");
 
         imageSize = (int) (game.fontScale * 16);
     }
@@ -55,13 +69,13 @@ public class MedalUtils {
 
 
     public static LevelRating getScoreRank(LevelInstance level, int score) {
-        if (score > level.levelDef.devScore) {
+        if (score >= level.levelDef.devScore) {
             return LevelRating.DEV;
-        } else if (score > level.levelDef.goldScore) {
+        } else if (score >= level.levelDef.goldScore) {
             return LevelRating.GOLD;
-        } else if (score > level.levelDef.silverScore) {
+        } else if (score >= level.levelDef.silverScore) {
             return LevelRating.SILVER;
-        } else if (score > level.levelDef.bronzeScore) {
+        } else if (score >= level.levelDef.bronzeScore) {
             return LevelRating.BRONZE;
         } else {
             return LevelRating.UNRANKED;
@@ -69,13 +83,13 @@ public class MedalUtils {
     }
 
     public static LevelRating getTimeRank(LevelInstance level, float time) {
-        if (time < level.levelDef.devTime) {
+        if (time <= level.levelDef.devTime) {
             return LevelRating.DEV;
-        } else if (time < level.levelDef.goldTime) {
+        } else if (time <= level.levelDef.goldTime) {
             return LevelRating.GOLD;
-        } else if (time < level.levelDef.silverTime) {
+        } else if (time <= level.levelDef.silverTime) {
             return LevelRating.SILVER;
-        } else if (time < level.levelDef.bronzeTime) {
+        } else if (time <= level.levelDef.bronzeTime) {
             return LevelRating.BRONZE;
         } else {
             return LevelRating.UNRANKED;
@@ -91,9 +105,9 @@ public class MedalUtils {
             case SILVER:
                 return new Image(silverMedalImg);
             case GOLD:
-                new Image(goldMedalImg);
-            case DEV:
                 return new Image(goldMedalImg);
+            case DEV:
+                return new Image(devMedalImg);
             default:
                 return new Image();
         }

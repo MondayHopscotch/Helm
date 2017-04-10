@@ -19,5 +19,7 @@ public abstract class LiveStat {
 
     public abstract void save(Preferences preferences);
 
+    public abstract boolean hasSetValue(Preferences preferences);
+
     public abstract String format();
 }

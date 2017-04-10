@@ -235,7 +235,7 @@ public class ScoreMenu {
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                pilot.returnToMenus(!isReplay);
+                pilot.returnToMenus(false);
             }
         });
 

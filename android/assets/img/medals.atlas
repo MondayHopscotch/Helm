@@ -1,6 +1,6 @@
 
 medals.png
-size: 128,64
+size: 256,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -11,16 +11,23 @@ bronze_medal
   orig: 32, 32
   offset: 0, 0
   index: -1
-gold_medal
+dev_medal
   rotate: false
   xy: 35, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-silver_medal
+gold_medal
   rotate: false
   xy: 69, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+silver_medal
+  rotate: false
+  xy: 103, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
