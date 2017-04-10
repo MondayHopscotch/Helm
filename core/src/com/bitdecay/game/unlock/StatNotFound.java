@@ -22,6 +22,11 @@ public class StatNotFound extends LiveStat {
     }
 
     @Override
+    public boolean hasSetValue(Preferences preferences) {
+        return false;
+    }
+
+    @Override
     public String format() {
         return "Stat '" + statName.preferenceID + "' not found";
     }

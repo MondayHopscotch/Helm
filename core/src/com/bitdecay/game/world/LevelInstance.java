@@ -1,6 +1,7 @@
 package com.bitdecay.game.world;
 
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.menu.MedalUtils;
 import com.bitdecay.game.prefs.GamePrefs;
 
 /**
@@ -22,6 +23,14 @@ public class LevelInstance {
         int oldHighScore = getHighScore();
 
         if (newScore > oldHighScore) {
+            MedalUtils.LevelRating oldRating = MedalUtils.getScoreRank(this, oldHighScore);
+            MedalUtils.LevelRating newRating = MedalUtils.getScoreRank(this, newScore);
+            if (!newRating.equals(oldRating)) {
+                // remove our old medal
+                Helm.stats.count(oldRating.statName(), -1);
+                Helm.stats.count(newRating.statName(), 1);
+            }
+
             saveHighScore(newScore);
             System.out.println("Saving new high score for " + levelDef.name + ": " + newScore);
             return true;
@@ -38,6 +47,14 @@ public class LevelInstance {
         float oldBestTime = getBestTime();
 
         if (newTime < oldBestTime) {
+            MedalUtils.LevelRating oldRating = MedalUtils.getTimeRank(this, oldBestTime);
+            MedalUtils.LevelRating newRating = MedalUtils.getTimeRank(this, newTime);
+            if (!newRating.equals(oldRating)) {
+                // remove our old medal
+                Helm.stats.count(oldRating.statName(), -1);
+                Helm.stats.count(newRating.statName(), 1);
+            }
+
             saveBestTime(newTime);
             System.out.println("Saving new best time for " + levelDef.name + ": " + newTime);
             return true;

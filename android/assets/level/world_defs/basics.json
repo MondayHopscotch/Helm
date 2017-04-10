@@ -3,6 +3,7 @@
   levelList: [
     "level/easy/level_easy1.json",
     "level/easy/level_easy2.json",
-    "level/easy/level_easy3.json"
+    "level/easy/level_easy3.json",
+    "level/easy/climber.json"
   ]
 }

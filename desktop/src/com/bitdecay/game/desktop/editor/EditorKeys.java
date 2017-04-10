@@ -33,6 +33,7 @@ public enum EditorKeys {
     REMOVE_WORMHOLE("Remove Wormhole", true, Input.Keys.SHIFT_LEFT, Input.Keys.W),
 
     SET_FUEL("Set Fuel Level", false, Input.Keys.F),
+    SET_MEDALS("Set Medalist Scores", false, Input.Keys.M),
 
     SET_NAME("Set Level Name", false, Input.Keys.N),
 

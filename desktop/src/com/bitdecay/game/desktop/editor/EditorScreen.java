@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
  * Created by Monday on 1/1/2017.
@@ -316,6 +317,8 @@ public class EditorScreen extends InputAdapter implements Screen {
             maybeLoad();
         } else if (OptionsMode.SET_FUEL.equals(mode)) {
             maybeSetFuel();
+        } else if (OptionsMode.SET_MEDALS.equals(mode)) {
+            maybeSetMedalScores();
         } else if (OptionsMode.SET_NAME.equals(mode)) {
             maybeSetName();
         } else {
@@ -359,6 +362,81 @@ public class EditorScreen extends InputAdapter implements Screen {
                 builder.startingFuel = startingFuel;
             } catch (NumberFormatException e) {
                 System.out.println("Cannot parse '" + result + "' as an integer");
+            }
+        }
+    }
+
+    private void maybeSetMedalScores() {
+        JTextField bronzeScore = new JTextField();
+        JTextField silverScore = new JTextField();
+        JTextField goldScore = new JTextField();
+        JTextField devScore = new JTextField();
+
+        JTextField bronzeTime = new JTextField();
+        JTextField silverTime = new JTextField();
+        JTextField goldTime = new JTextField();
+        JTextField devTime = new JTextField();
+        Object[] message = {
+                "Bronze Score: (Currently: " + builder.bronzeScore + ")", bronzeScore,
+                "Silver Score: (Currently: " + builder.silverScore + ")", silverScore,
+                "Gold Score: (Currently: " + builder.goldScore + ")", goldScore,
+                "Dev Score: (Currently: " + builder.devScore + ")", devScore,
+                "Bronze Time: (Currently: " + builder.bronzeTime + ")", bronzeTime,
+                "Silver Time: (Currently: " + builder.silverTime + ")", silverTime,
+                "Gold Time: (Currently: " + builder.goldTime + ")", goldTime,
+                "Dev Time: (Currently: " + builder.devTime + ")", devTime
+        };
+        int option = JOptionPane.showConfirmDialog(null, message, "Enter all your values", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION)
+        {
+            try {
+                int bScoreTxt = Integer.parseInt(bronzeScore.getText());
+                builder.bronzeScore = bScoreTxt;
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot parse '" + bronzeScore.getText() + "' as an integer");
+            }
+            try {
+                int sScoreTxt = Integer.parseInt(silverScore.getText());
+                builder.silverScore = sScoreTxt;
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot parse '" + silverScore.getText() + "' as an integer");
+            }
+            try {
+                int gScoreTxt = Integer.parseInt(goldScore.getText());
+                builder.goldScore = gScoreTxt;
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot parse '" + goldScore.getText() + "' as an integer");
+            }
+            try {
+                int dScoreTxt = Integer.parseInt(devScore.getText());
+                builder.devScore = dScoreTxt;
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot parse '" + devScore.getText() + "' as an integer");
+            }
+
+            try {
+                float bTimeTxt = Float.parseFloat(bronzeTime.getText());
+                builder.bronzeTime = bTimeTxt;
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot parse '" + bronzeTime.getText() + "' as an float");
+            }
+            try {
+                float sTimeTxt = Float.parseFloat(silverTime.getText());
+                builder.silverTime = sTimeTxt;
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot parse '" + silverTime.getText() + "' as an float");
+            }
+            try {
+                float gTimeTxt = Float.parseFloat(goldTime.getText());
+                builder.goldTime = gTimeTxt;
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot parse '" + goldTime.getText() + "' as an float");
+            }
+            try {
+                float dTimeTxt = Float.parseFloat(devTime.getText());
+                builder.devTime = dTimeTxt;
+            } catch (NumberFormatException e) {
+                System.out.println("Cannot parse '" + devTime.getText() + "' as an float");
             }
         }
     }

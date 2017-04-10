@@ -27,6 +27,11 @@ public class LiveTimeStat extends LiveStat {
     }
 
     @Override
+    public boolean hasSetValue(Preferences preferences) {
+        return Float.NEGATIVE_INFINITY != preferences.getFloat(statName.preferenceID, Float.NEGATIVE_INFINITY);
+    }
+
+    @Override
     public String format() {
         return TimerUtils.getFormattedTime(amount);
     }

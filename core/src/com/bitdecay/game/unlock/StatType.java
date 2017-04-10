@@ -7,4 +7,5 @@ package com.bitdecay.game.unlock;
 public enum StatType {
     COUNT,
     TIME,
+    NONE,
 }
