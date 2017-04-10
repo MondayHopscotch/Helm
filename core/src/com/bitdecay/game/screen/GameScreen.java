@@ -22,6 +22,7 @@ import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelInstance;
+import com.bitdecay.game.world.ReadOnlyLevelInstance;
 import com.bitdecay.game.world.WorldInstance;
 
 /**
@@ -194,7 +195,7 @@ public class GameScreen implements Screen, GamePilot {
         scoreMenu.rebuildNextTable(isReplay);
         scoreMenu.visible = true;
         if (PlayMode.REPLAY_MODE.equals(currentMode)) {
-            scoreMenu.setScore(new LevelInstance(currentReplay.levelDef), score);
+            scoreMenu.setScore(new ReadOnlyLevelInstance(currentReplay.levelDef), score);
         } else {
             scoreMenu.setScore(currentLevel, score);
         }

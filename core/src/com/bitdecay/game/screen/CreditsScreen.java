@@ -2,67 +2,71 @@ package com.bitdecay.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.credits.CreditsData;
+import com.bitdecay.game.persist.JsonUtils;
 
 public class CreditsScreen implements Screen {
-
-    private static String SPACE_AFTER_TITLE = "\n\n\n";
-    private static String SPACE_AFTER_NAME = "\n\n";
-
     private Helm game;
     private Stage stage = new Stage();
 
-    private Label lblTitle;
-    private Label lblCredits;
+    private final Skin skin;
 
 
     public CreditsScreen(final Helm game) {
         this.game = game;
 
-        Skin skin = game.skin;
+        stage.setDebugAll(Helm.debug);
 
-        lblTitle = new Label("Credits", skin);
-        lblTitle.setFontScale(game.fontScale * 1.5f);
-        lblTitle.setFillParent(true);
-        lblTitle.setAlignment(Align.topLeft);
-        lblTitle.setColor(Color.SKY);
+        skin = game.skin;
 
-        lblCredits = new Label("Programming and Design: " + SPACE_AFTER_TITLE +
-                "Logan Moore" + SPACE_AFTER_TITLE +
-                "All sounds created using BFXR" + SPACE_AFTER_TITLE +
-                "Music:" + SPACE_AFTER_TITLE +
-                "None yet" + SPACE_AFTER_NAME,
-                skin);
-        lblCredits.setFontScale(game.fontScale);
-        lblCredits.setFillParent(true);
-        lblCredits.setAlignment(Align.top);
-        lblCredits.setColor(Color.WHITE);
+        FileHandle creditsFile = Gdx.files.internal("credits.json");
 
-        stage.addActor(lblTitle);
-        stage.addActor(lblCredits);
+        CreditsData[] loadedCredits = JsonUtils.unmarshal(CreditsData[].class, creditsFile);
 
+        Table creditsTable = new Table();
+        creditsTable.setFillParent(true);
+        creditsTable.setWidth(Gdx.graphics.getWidth() * .75f);
+
+        for (CreditsData loadedCredit : loadedCredits) {
+            addCreditSection(creditsTable, loadedCredit);
+        }
+
+        stage.addActor(creditsTable);
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private void addCreditSection(Table creditsTable, CreditsData credit) {
+        Label sectionHeader = new Label(credit.sectionTitle, skin);
+        sectionHeader.setFontScale(game.fontScale * 1.2f);
+        sectionHeader.setAlignment(Align.left);
+        sectionHeader.setOrigin(Align.left);
+
+        creditsTable.add(sectionHeader).align(Align.left);
+        creditsTable.row();
+
+        for (String creditLine : credit.creditLines) {
+            Label lineLabel = new Label(creditLine, skin);
+            lineLabel.setFontScale(game.fontScale);
+            lineLabel.setAlignment(Align.right);
+            lineLabel.setOrigin(Align.right);
+
+            creditsTable.add(lineLabel).align(Align.right);
+            creditsTable.row().width(Gdx.graphics.getWidth() * .75f);
+        }
     }
 
     @Override
     public void show() {
-        lblCredits.addAction(Actions.sequence(
-                Actions.moveBy(0, -Gdx.graphics.getHeight()),
-                Actions.moveBy(0, lblCredits.getHeight() * lblCredits.getFontScaleY() + Gdx.graphics.getHeight(), 30),
-                Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        nextScreen();
-                    }
-                })
-        ));
     }
 
     @Override
