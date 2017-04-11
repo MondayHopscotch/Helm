@@ -27,7 +27,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         super(game);
         this.world = world;
 
-        build();
+        build(false);
     }
 
     @Override

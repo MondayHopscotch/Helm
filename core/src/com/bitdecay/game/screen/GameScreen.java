@@ -22,6 +22,7 @@ import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelInstance;
+import com.bitdecay.game.world.ReadOnlyLevelInstance;
 import com.bitdecay.game.world.WorldInstance;
 
 /**
@@ -45,7 +46,8 @@ public class GameScreen implements Screen, GamePilot {
 
     private InputMultiplexer combinedGameInput;
 
-    private Array<Long> debugFrameTimes;
+    private Array<Long> updateFrameTimes;
+    private Array<Long> renderFrameTimes;
 
     private enum PlayMode {
         PLAY_MODE,
@@ -194,7 +196,7 @@ public class GameScreen implements Screen, GamePilot {
         scoreMenu.rebuildNextTable(isReplay);
         scoreMenu.visible = true;
         if (PlayMode.REPLAY_MODE.equals(currentMode)) {
-            scoreMenu.setScore(new LevelInstance(currentReplay.levelDef), score);
+            scoreMenu.setScore(new ReadOnlyLevelInstance(currentReplay.levelDef), score);
         } else {
             scoreMenu.setScore(currentLevel, score);
         }
@@ -247,26 +249,41 @@ public class GameScreen implements Screen, GamePilot {
         if (!paused) {
             levelPlayer.update(delta);
             if (Helm.debug) {
-                if (debugFrameTimes == null) {
-                    debugFrameTimes = new Array<>(120);
+                if (updateFrameTimes == null) {
+                    updateFrameTimes = new Array<>(120);
                 }
-                debugFrameTimes.add(TimeUtils.millis() - startTime);
-                if (debugFrameTimes.size >= 120) {
+                updateFrameTimes.add(TimeUtils.millis() - startTime);
+                if (updateFrameTimes.size >= 120) {
                     long totalTime = 0;
-                    for (Long frameTime : debugFrameTimes) {
+                    for (Long frameTime : updateFrameTimes) {
                         totalTime += frameTime;
                     }
 
-                    double average = 1.0 * totalTime / debugFrameTimes.size;
-                    System.out.println("Average frame time: " + average);
-                    debugFrameTimes.clear();
+                    double average = 1.0 * totalTime / updateFrameTimes.size;
+                    System.out.println("Average update time: " + average);
+                    updateFrameTimes.clear();
                 }
-
-
             }
         }
 
+        startTime = TimeUtils.millis();
         levelPlayer.render(delta);
+        if (Helm.debug) {
+            if (renderFrameTimes == null) {
+                renderFrameTimes = new Array<>(120);
+            }
+            renderFrameTimes.add(TimeUtils.millis() - startTime);
+            if (renderFrameTimes.size >= 120) {
+                long totalTime = 0;
+                for (Long frameTime : renderFrameTimes) {
+                    totalTime += frameTime;
+                }
+
+                double average = 1.0 * totalTime / renderFrameTimes.size;
+                System.out.println("Average render time: " + average);
+                renderFrameTimes.clear();
+            }
+        }
 
         if (reloadQueued) {
             switch(currentMode) {

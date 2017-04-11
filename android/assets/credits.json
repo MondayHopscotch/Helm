@@ -1,0 +1,34 @@
+[
+    {
+        sectionTitle: A Game By
+        creditLines: [
+          bitDecay Games 2017
+        ]
+    },
+	{
+		sectionTitle: Programming and Design
+		creditLines: [
+			Logan Moore
+		]
+	},
+    {
+      sectionTitle: Level Design
+      creditLines: [
+        Logan Moore
+        "Erik \"NandemoGuy\" Meredith"
+      ]
+    },
+	{
+		sectionTitle: Sound Effects
+		creditLines: [
+			Logan Moore
+			BFXR (www.bfxr.net)
+		]
+	},
+	{
+		sectionTitle: Music
+		creditLines: [
+			None as of yet
+		]
+	}
+]

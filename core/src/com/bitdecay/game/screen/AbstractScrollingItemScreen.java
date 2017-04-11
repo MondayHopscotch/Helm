@@ -24,6 +24,9 @@ public abstract class AbstractScrollingItemScreen implements Screen {
     private Table titleTable;
     protected final Table itemTable;
     private Table returnTable;
+    private final ScrollPane scroll;
+
+    private boolean requestAutoScrollToBottom = false;
 
     public AbstractScrollingItemScreen(final Helm game) {
         this.game = game;
@@ -39,7 +42,7 @@ public abstract class AbstractScrollingItemScreen implements Screen {
 
         Table mainTable = new Table();
 
-        ScrollPane scroll = new ScrollPane(mainTable, skin);
+        scroll = new ScrollPane(mainTable, skin);
 
         itemTable = new Table();
         mainTable.add(itemTable).width(Gdx.graphics.getWidth() * 0.8f).padTop(game.fontScale * 10).padBottom(game.fontScale * 30);
@@ -62,7 +65,8 @@ public abstract class AbstractScrollingItemScreen implements Screen {
         container.add(returnTable).expandX().fillX();
     }
 
-    protected void build() {
+    protected void build(boolean autoScrollToBottom) {
+        requestAutoScrollToBottom = autoScrollToBottom;
         Label titleLabel = new Label(getTitle(), skin);
         titleLabel.setFontScale(game.fontScale * 2);
         titleLabel.setAlignment(Align.topLeft);
@@ -89,6 +93,11 @@ public abstract class AbstractScrollingItemScreen implements Screen {
 
         stage.act();
         stage.draw();
+
+        if (requestAutoScrollToBottom) {
+            requestAutoScrollToBottom = false;
+            scroll.setScrollPercentY(1);
+        }
     }
 
     @Override

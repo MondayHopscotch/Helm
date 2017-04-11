@@ -23,7 +23,7 @@ import sun.font.TextLabel;
 public class ReplaySelectScreen extends AbstractScrollingItemScreen {
     public ReplaySelectScreen(Helm game) {
         super(game);
-        build();
+        build(false);
     }
 
     @Override
