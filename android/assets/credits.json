@@ -1,4 +1,10 @@
 [
+    {
+        sectionTitle: A Game By
+        creditLines: [
+          bitDecay Games
+        ]
+    },
 	{
 		sectionTitle: Programming and Design
 		creditLines: [
@@ -9,7 +15,7 @@
 		sectionTitle: Sound Effects
 		creditLines: [
 			Logan Moore
-			BFXR
+			BFXR (www.bfxr.net)
 		]
 	},
 	{

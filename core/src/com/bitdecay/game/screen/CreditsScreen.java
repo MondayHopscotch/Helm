@@ -5,11 +5,15 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.credits.CreditsData;
@@ -33,6 +37,13 @@ public class CreditsScreen implements Screen {
 
         CreditsData[] loadedCredits = JsonUtils.unmarshal(CreditsData[].class, creditsFile);
 
+        Table container = new Table();
+        container.setFillParent(true);
+
+        Label creditTitle = new Label("Credits", skin);
+        creditTitle.setColor(Color.GRAY);
+        creditTitle.setFontScale(game.fontScale * 1.5f);
+
         Table creditsTable = new Table();
         creditsTable.setFillParent(true);
         creditsTable.setWidth(Gdx.graphics.getWidth() * .75f);
@@ -41,7 +52,33 @@ public class CreditsScreen implements Screen {
             addCreditSection(creditsTable, loadedCredit);
         }
 
-        stage.addActor(creditsTable);
+        ScrollPane scroll = new ScrollPane(creditsTable, skin);
+
+        Table returnTable = new Table();
+        returnTable.align(Align.bottomRight);
+        returnTable.setOrigin(Align.bottomRight);
+
+        TextButton returnButton = new TextButton("Return to Title Screen", skin);
+        returnButton.getLabel().setFontScale(game.fontScale);
+        returnButton.align(Align.bottomRight);
+        returnButton.setOrigin(Align.bottomRight);
+        returnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new TitleScreen(game));
+            }
+        });
+
+        returnTable.add(returnButton).padRight(game.fontScale).padBottom(game.fontScale);
+
+        stage.addActor(container);
+
+        container.add(creditTitle).expandX().fillX();
+        container.row();
+        container.add(scroll).expand().fill();
+        container.row();
+        container.add(returnTable).expandX().fillX();
+
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -77,10 +114,6 @@ public class CreditsScreen implements Screen {
 
         stage.act();
         stage.draw();
-
-        if (Gdx.input.isTouched()) {
-            nextScreen();
-        }
     }
 
     public void nextScreen(){
