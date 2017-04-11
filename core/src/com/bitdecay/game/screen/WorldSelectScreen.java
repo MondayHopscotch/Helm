@@ -33,7 +33,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
     public WorldSelectScreen(final Helm game) {
         super(game);
-        build();
+        build(true);
     }
 
     @Override
@@ -117,9 +117,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
         worldTable.add(totalHighScoreLabel).colspan(2).align(Align.right);
         worldTable.add(totalHighScoreValue);
-        worldTable.add(MedalUtils.getRankImage(MedalUtils.LevelRating.UNRANKED));
-        worldTable.add(totalBestTimeValue);
-        worldTable.add(MedalUtils.getRankImage(MedalUtils.LevelRating.UNRANKED));
+        worldTable.add(totalBestTimeValue).colspan(2).align(Align.right);
     }
 
     private WorldInstance buildWorldInstance(WorldOrderMarker marker) {
@@ -185,7 +183,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         table.add(worldNameLabel);
         table.add(worldScoreLabel);
         addScoreMedal(table, world);
-        table.add(worldTimeLabel);
+        table.add(worldTimeLabel).padLeft(MedalUtils.imageSize / 2);
         addTimeMedal(table, world);
         return worldHighScore;
     }

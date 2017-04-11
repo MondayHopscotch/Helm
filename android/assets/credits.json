@@ -2,7 +2,7 @@
     {
         sectionTitle: A Game By
         creditLines: [
-          bitDecay Games
+          bitDecay Games 2017
         ]
     },
 	{
@@ -11,6 +11,13 @@
 			Logan Moore
 		]
 	},
+    {
+      sectionTitle: Level Design
+      creditLines: [
+        Logan Moore
+        "Erik \"NandemoGuy\" Meredith"
+      ]
+    },
 	{
 		sectionTitle: Sound Effects
 		creditLines: [

@@ -20,7 +20,7 @@ public class StatsScreen extends AbstractScrollingItemScreen {
 
     public StatsScreen(Helm game) {
         super(game);
-        build();
+        build(false);
     }
 
     @Override
