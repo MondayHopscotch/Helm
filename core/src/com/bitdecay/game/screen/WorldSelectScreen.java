@@ -37,6 +37,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         if (instance == null) {
             instance = new WorldSelectScreen(game);
         }
+        instance.build(false);
         return instance;
     }
 

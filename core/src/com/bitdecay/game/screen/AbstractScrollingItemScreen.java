@@ -71,8 +71,11 @@ public abstract class AbstractScrollingItemScreen implements Screen {
         titleLabel.setFontScale(game.fontScale * 2);
         titleLabel.setAlignment(Align.topLeft);
         titleLabel.setOrigin(Align.topLeft);
+        titleTable.clear();
         titleTable.add(titleLabel).padLeft(game.fontScale);
+        itemTable.clear();
         populateRows(itemTable);
+        returnTable.clear();
         returnTable.add(getReturnButton()).padRight(game.fontScale).padBottom(game.fontScale);
     }
 
