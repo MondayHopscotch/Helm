@@ -51,6 +51,13 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
                 if (entity1 != entity2) {
                     CollisionGeometryComponent geom1 = entity1.getComponent(CollisionGeometryComponent.class);
                     CollisionGeometryComponent geom2 = entity2.getComponent(CollisionGeometryComponent.class);
+
+                    if ((geom1.direction & CollisionDirection.PLAYER) == 0 && (geom2.direction & CollisionDirection.PLAYER) == 0) {
+                        // if neither is a player-collision, we can just drop it since the player will be involved in all
+                        // collisions of interest
+                        continue;
+                    }
+
                     CollisionKindComponent kind2 = entity2.getComponent(CollisionKindComponent.class);
 
                     Collider collider = getCollider(geom1, geom2);
