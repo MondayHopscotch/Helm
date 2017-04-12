@@ -31,6 +31,15 @@ import static com.bitdecay.game.persist.JsonUtils.json;
  */
 public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
+    private static WorldSelectScreen instance;
+
+    public static WorldSelectScreen get(Helm game) {
+        if (instance == null) {
+            instance = new WorldSelectScreen(game);
+        }
+        return instance;
+    }
+
     public WorldSelectScreen(final Helm game) {
         super(game);
         build(true);

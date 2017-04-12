@@ -97,7 +97,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new WorldSelectScreen(game));
+                game.setScreen(WorldSelectScreen.get(game));
             }
         });
         return returnButton;

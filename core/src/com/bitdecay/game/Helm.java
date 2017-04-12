@@ -3,6 +3,7 @@ package com.bitdecay.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,6 +14,9 @@ import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.unlock.LiveStat;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.unlock.Statistics;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Helm extends Game {
     public static boolean debug;

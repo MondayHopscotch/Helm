@@ -64,7 +64,7 @@ public class TitleScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
-                game.setScreen(new WorldSelectScreen(game));
+                game.setScreen(WorldSelectScreen.get(game));
             }
         });
         startLabel.setFontScale(game.fontScale * 1.8f);
