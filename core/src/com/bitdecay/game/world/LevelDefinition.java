@@ -27,9 +27,9 @@ public class LevelDefinition {
     public Vector2 gravity = new Vector2(0, -10);
 
     public int devScore = Integer.MAX_VALUE;
-    public int goldScore = 3000;
-    public int silverScore = 2000;
-    public int bronzeScore = 1000;
+    public int goldScore = 22000;
+    public int silverScore = 15000;
+    public int bronzeScore = 8000;
 
     public float devTime = 0f;
     public float goldTime = 18f;
