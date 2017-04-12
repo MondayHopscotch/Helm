@@ -83,13 +83,19 @@ public class MedalUtils {
     }
 
     public static LevelRating getTimeRank(LevelInstance level, float time) {
-        if (time <= level.levelDef.devTime) {
+        // we do this so that float precision doesn't mess with us.
+        int userTime = (int) (time * 1000);
+        int devTime = (int) (level.levelDef.devTime * 1000);
+        int goldTime = (int) (level.levelDef.goldTime * 1000);
+        int silverTime = (int) (level.levelDef.silverTime * 1000);
+        int bronzeTime = (int) (level.levelDef.bronzeTime * 1000);
+        if (userTime <= devTime) {
             return LevelRating.DEV;
-        } else if (time <= level.levelDef.goldTime) {
+        } else if (userTime <= goldTime) {
             return LevelRating.GOLD;
-        } else if (time <= level.levelDef.silverTime) {
+        } else if (userTime <= silverTime) {
             return LevelRating.SILVER;
-        } else if (time <= level.levelDef.bronzeTime) {
+        } else if (userTime <= bronzeTime) {
             return LevelRating.BRONZE;
         } else {
             return LevelRating.UNRANKED;
