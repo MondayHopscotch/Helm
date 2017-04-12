@@ -117,11 +117,11 @@ public abstract class AbstractScrollingItemScreen implements Screen {
 
     @Override
     public void hide() {
-        stage.dispose();
+
     }
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 }
