@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.game.desktop.editor.EditorScreen;
 import com.bitdecay.game.desktop.editor.LevelBuilder;
 import com.bitdecay.game.desktop.editor.MouseButton;
 import com.bitdecay.game.math.Geom;
@@ -14,7 +15,7 @@ import com.bitdecay.game.math.Geom;
  */
 public class LandingPlatMouseMode extends com.bitdecay.game.desktop.editor.mode.BaseMouseMode {
 
-    float platformThickness = 32;
+    float platformThickness = EditorScreen.cellSize * 2;
 
     Rectangle workingRect = new Rectangle();
     float rotation = Geom.NO_ROTATION;
@@ -25,19 +26,19 @@ public class LandingPlatMouseMode extends com.bitdecay.game.desktop.editor.mode.
 
     @Override
     public void mouseDown(Vector2 point, MouseButton button) {
-        startPoint = Geom.snap(point, 25);
+        startPoint = Geom.snap(point, EditorScreen.cellSize);
     }
 
     @Override
     public void mouseDragged(Vector2 point) {
         super.mouseDragged(point);
-        endPoint = Geom.snap(point, 25);
+        endPoint = Geom.snap(point, EditorScreen.cellSize);
         calculateRectangle(startPoint, endPoint);
     }
 
     @Override
     public void mouseUpLogic(Vector2 point, MouseButton button) {
-        endPoint = Geom.snap(point, 25);
+        endPoint = Geom.snap(point, EditorScreen.cellSize);
         if (startPoint.x != endPoint.x || startPoint.y != endPoint.y) {
             builder.setLandingPlatform(workingRect, rotation);
         }
