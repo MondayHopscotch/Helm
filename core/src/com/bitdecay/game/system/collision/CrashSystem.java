@@ -2,12 +2,11 @@ package com.bitdecay.game.system.collision;
 
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.Helm;
 import com.bitdecay.game.component.CrashComponent;
 import com.bitdecay.game.component.TimerComponent;
 import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.component.TransformComponent;
-import com.bitdecay.game.entities.ExplosionEntity;
+import com.bitdecay.game.entities.PlayerExplosionEntity;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
@@ -53,8 +52,8 @@ public class CrashSystem extends AbstractIteratingGameSystem {
                 // do nothing
         }
 
-        ExplosionEntity explosionEntity = new ExplosionEntity(transformComponent.position);
-        levelPlayer.addEntity(explosionEntity);
+        PlayerExplosionEntity playerExplosionEntity = new PlayerExplosionEntity(transformComponent.position);
+        levelPlayer.addEntity(playerExplosionEntity);
         levelPlayer.removeEntity(entity);
     }
 

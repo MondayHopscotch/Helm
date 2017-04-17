@@ -32,7 +32,9 @@ public class RenderExplosionSystem extends AbstractIteratingGameSystem {
         float angleStep = MathUtils.PI2 / explosion.spreadCount;
         Vector2 singleBoomPos = new Vector2(explosion.distance, 0);
 
-        renderer.setColor(GameColors.EXPLOSION);
+        singleBoomPos.set(Geom.rotateSinglePoint(singleBoomPos, explosion.rotationalOffset));
+
+        renderer.setColor(explosion.color);
         for (int i = 0; i < explosion.spreadCount; i++) {
             singleBoomPos.set(Geom.rotateSinglePoint(singleBoomPos, angleStep));
             renderer.circle(transform.position.x + singleBoomPos.x, transform.position.y + singleBoomPos.y, explosion.particleSize);
@@ -40,10 +42,6 @@ public class RenderExplosionSystem extends AbstractIteratingGameSystem {
 
         explosion.distance += explosion.speed;
         explosion.particleSize -= explosion.decay;
-
-        if (explosion.particleSize <= 0) {
-            pilot.requestRestartLevel();
-        }
     }
 
     @Override

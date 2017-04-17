@@ -4,8 +4,10 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.Helm;
 import com.bitdecay.game.collision.CollisionKind;
+import com.bitdecay.game.component.BodyDefComponent;
+import com.bitdecay.game.component.ExplosionComponent;
+import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.control.BoostControlComponent;
 import com.bitdecay.game.component.BoosterComponent;
 import com.bitdecay.game.component.collide.CollisionKindComponent;
@@ -15,6 +17,7 @@ import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.component.TimerComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.component.ShipLaunchComponent;
+import com.bitdecay.game.entities.LaunchSmokeEntity;
 import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
 import com.bitdecay.game.sound.SFXLibrary;
@@ -64,6 +67,13 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
             TimerComponent timer = new TimerComponent();
             entity.addComponent(timer);
 
+            TransformComponent transform = entity.getComponent(TransformComponent.class);
+
+            LaunchSmokeEntity launchExplosion = new LaunchSmokeEntity(transform.position.cpy().add(0, -100));
+            ExplosionComponent explosion = launchExplosion.getComponent(ExplosionComponent.class);
+            explosion.spreadCount = 2;
+            levelPlayer.addEntity(launchExplosion);
+
             DelayedAddComponent.DelayedAdd boosterDelay = new DelayedAddComponent.DelayedAdd(new BoosterComponent(PLAYER_BOOST_STRENGTH), PLAYER_CONTROL_DELAY);
             DelayedAddComponent.DelayedAdd collisionDelay = new DelayedAddComponent.DelayedAdd(new CollisionKindComponent(CollisionKind.PLAYER), PLAYER_CONTROL_DELAY);
             DelayedAddComponent.DelayedAdd steeringDelay = new DelayedAddComponent.DelayedAdd(new SteeringComponent(), PLAYER_CONTROL_DELAY / 2);
@@ -78,7 +88,9 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
     public boolean canActOn(GameEntity entity) {
         return entity.hasComponent(ShipLaunchComponent.class) &&
                 entity.hasComponent(SteeringControlComponent.class) &&
-                entity.hasComponent(BoostControlComponent.class);
+                entity.hasComponent(BoostControlComponent.class) &&
+                entity.hasComponent(TransformComponent.class) &&
+                entity.hasComponent(BodyDefComponent.class);
     }
 
     @Override

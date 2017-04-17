@@ -22,6 +22,7 @@ import com.bitdecay.game.entities.ShipEntity;
 import com.bitdecay.game.entities.WormholeEntity;
 import com.bitdecay.game.input.InputRecord;
 import com.bitdecay.game.input.InputReplay;
+import com.bitdecay.game.system.ResolvePlayerExplosionSystem;
 import com.bitdecay.game.system.collision.WormholeCollisionHandlerSystem;
 import com.bitdecay.game.system.input.AbstractInputSystem;
 import com.bitdecay.game.system.movement.BoostSystem;
@@ -167,6 +168,8 @@ public class LevelPlayer {
 
         CrashSystem crashSystem = new CrashSystem(pilot);
 
+        ResolvePlayerExplosionSystem resolveExplosionSystem = new ResolvePlayerExplosionSystem(pilot);
+
         TimerSystem timerSystem = new TimerSystem(pilot);
 
         ReplayInputSystem replayInputSystem = new ReplayInputSystem(pilot);
@@ -193,6 +196,7 @@ public class LevelPlayer {
         addGameplaySystem(playerBoundarySystem);
         addGameplaySystem(crashSystem);
         addGameplaySystem(landingSystem);
+        addGameplaySystem(resolveExplosionSystem);
         addGameplaySystem(timerSystem);
 
         RenderBodySystem renderBodySystem = new RenderBodySystem(pilot, shapeRenderer);
