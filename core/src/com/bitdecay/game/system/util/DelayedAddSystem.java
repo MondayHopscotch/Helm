@@ -28,9 +28,6 @@ public class DelayedAddSystem extends AbstractIteratingGameSystem {
                 entity.addComponent(singleDelay.component);
             }
         }
-        if (delayedAdd.delays.items.length <= 0) {
-            entity.removeComponent(DelayedAddComponent.class);
-        }
     }
 
     @Override

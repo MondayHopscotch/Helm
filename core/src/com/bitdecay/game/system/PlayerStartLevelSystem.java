@@ -74,11 +74,18 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
             explosion.spreadCount = 2;
             levelPlayer.addEntity(launchExplosion);
 
+
             DelayedAddComponent.DelayedAdd boosterDelay = new DelayedAddComponent.DelayedAdd(new BoosterComponent(PLAYER_BOOST_STRENGTH), PLAYER_CONTROL_DELAY);
             DelayedAddComponent.DelayedAdd collisionDelay = new DelayedAddComponent.DelayedAdd(new CollisionKindComponent(CollisionKind.PLAYER), PLAYER_CONTROL_DELAY);
             DelayedAddComponent.DelayedAdd steeringDelay = new DelayedAddComponent.DelayedAdd(new SteeringComponent(), PLAYER_CONTROL_DELAY / 2);
 
+            DelayedAddComponent delayedAddComponent = entity.getComponent(DelayedAddComponent.class);
+            delayedAddComponent.delays.add(boosterDelay);
+            delayedAddComponent.delays.add(collisionDelay);
+            delayedAddComponent.delays.add(steeringDelay);
+
             entity.addComponent(new DelayedAddComponent(boosterDelay, collisionDelay, steeringDelay));
+
             pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_LAUNCH);
             levelPlayer.countStat(StatName.LAUNCHES, 1);
         }
@@ -86,11 +93,12 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
 
     @Override
     public boolean canActOn(GameEntity entity) {
-        return entity.hasComponent(ShipLaunchComponent.class) &&
-                entity.hasComponent(SteeringControlComponent.class) &&
-                entity.hasComponent(BoostControlComponent.class) &&
-                entity.hasComponent(TransformComponent.class) &&
-                entity.hasComponent(BodyDefComponent.class);
+        return entity.hasComponents(ShipLaunchComponent.class,
+                SteeringControlComponent.class,
+                BoostControlComponent.class,
+                TransformComponent.class,
+                BodyDefComponent.class,
+                DelayedAddComponent.class);
     }
 
     @Override

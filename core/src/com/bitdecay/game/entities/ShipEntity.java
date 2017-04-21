@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.collision.CollisionDirection;
+import com.bitdecay.game.component.DelayedAddComponent;
 import com.bitdecay.game.component.collide.GeometryComponentFactory;
 import com.bitdecay.game.component.control.BoostControlComponent;
 import com.bitdecay.game.component.CameraFollowComponent;
@@ -45,5 +46,7 @@ public class ShipEntity extends GameEntity {
         addComponent(new ProximityComponent(0, null, true));
         addComponent(new CameraFollowComponent());
         addComponent(new RenderColorComponent(GameColors.SHIP_BODY));
+
+        addComponent(new DelayedAddComponent());
     }
 }
