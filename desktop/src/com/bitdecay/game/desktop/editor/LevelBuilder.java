@@ -36,6 +36,10 @@ public class LevelBuilder {
     public float silverTime = 0f;
     public float bronzeTime = 0f;
 
+    public LevelBuilder() {
+        setLevel(new LevelDefinition());
+    }
+
     public void setStartPoint(Vector2 point) {
         startPoint = new Vector2(point);
     }
