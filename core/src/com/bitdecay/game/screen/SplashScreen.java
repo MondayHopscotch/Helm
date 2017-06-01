@@ -70,7 +70,6 @@ public class SplashScreen implements Screen {
 
     @Override
     public void show() {
-
         loadingText.addAction(
                 Actions.sequence(
                         Actions.alpha(0),

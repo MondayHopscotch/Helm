@@ -7,16 +7,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.ObjectSet;
 import com.bitdecay.game.screen.SplashScreen;
-import com.bitdecay.game.screen.TitleScreen;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.unlock.LiveStat;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.unlock.Statistics;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Helm extends Game {
     public static boolean debug;
@@ -27,6 +24,9 @@ public class Helm extends Game {
     public AssetManager assets;
     public Skin skin;
     public float fontScale = 1;
+
+    // this is a screen cache so we can properly dispose things when our game closes
+    private ObjectSet<Screen> screens = new ObjectSet<>();
 
     @Override
     public void create() {
@@ -86,8 +86,20 @@ public class Helm extends Game {
     }
 
     @Override
+    public void setScreen(Screen screen) {
+        super.setScreen(screen);
+        screens.add(screen);
+    }
+
+    @Override
     public void dispose() {
         super.dispose();
+
+        for (Screen screen : screens.iterator()) {
+            screen.dispose();
+        }
+        screens.clear();
+
         assets.dispose();
         if (Helm.prefs != null) {
             Helm.prefs.flush();

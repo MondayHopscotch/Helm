@@ -220,4 +220,11 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
         worldTable.add(leftTillUnlockLabel).colspan(6);
     }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        // if we dispose the screen, create a new instance next time we need it
+        instance = null;
+    }
 }
