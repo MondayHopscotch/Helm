@@ -17,6 +17,7 @@ import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.ScoreMenu;
 import com.bitdecay.game.scoring.LandingScore;
+import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.unlock.StatName;
@@ -224,8 +225,11 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void togglePause() {
-        System.out.println("PAUSE");
         paused = !paused;
+        if (paused) {
+            // since the player boost is a 'music' we have to pause it when the player pauses the game
+            doMusic(SoundMode.PAUSE, MusicLibrary.SHIP_BOOST);
+        }
     }
 
     @Override
