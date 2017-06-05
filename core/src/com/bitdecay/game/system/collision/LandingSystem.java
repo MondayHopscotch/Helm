@@ -35,6 +35,8 @@ public class LandingSystem extends AbstractIteratingGameSystem {
     public static final float MAX_LANDING_ANGLE_FOR_SCORE = MathUtils.PI / 15;
     public static final float LANDING_ANGLE_MERCY = .02f;
 
+    public static final float LANDING_ACCURACY_MERCY = .05f;
+
     public LandingSystem(GamePilot pilot) {
         super(pilot);
     }
@@ -110,6 +112,12 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         score.timeTaken = timer.secondsElapsed;
 
         levelPlayer.countStat(StatName.LANDINGS, 1);
+        if (score.isLandingPerfect()) {
+            levelPlayer.countStat(StatName.PERFECT_LANDINGS, 1);
+        }
+        if (score.fuelLeft == 0) {
+            levelPlayer.countStat(StatName.ZERO_FUEL_LANDINGS, 1);
+        }
         levelPlayer.rollStat(StatName.FLIGHT_TIME, timer.secondsElapsed);
         pilot.finishLevel(score);
     }
@@ -169,7 +177,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
         // can only be at most half the distance from the center
         float scalar = (maxDistanceToScore - landingDistance) / maxDistanceToScore;
-        scalar = Math.min(1, scalar);
+        scalar = Math.min(scalar + LANDING_ACCURACY_MERCY, 1);
         scalar = Math.max(0, scalar);
         return (int) (LandingScore.MAX_ACCURACY_SCORE * scalar);
     }

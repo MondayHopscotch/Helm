@@ -77,3 +77,5 @@ Thumbs.db
 
 ## Game files
 android/assets/replays/*
+## generated texture atlas files
+android/assets/img/*

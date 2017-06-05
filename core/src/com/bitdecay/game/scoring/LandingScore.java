@@ -21,4 +21,10 @@ public class LandingScore {
     public int total() {
         return angleScore + speedScore + accuracyScore + fuelScore;
     }
+
+    public boolean isLandingPerfect() {
+        return angleScore == MAX_ANGLE_SCORE &&
+                speedScore == MAX_SPEED_SCORE &&
+                accuracyScore == MAX_ACCURACY_SCORE;
+    }
 }
