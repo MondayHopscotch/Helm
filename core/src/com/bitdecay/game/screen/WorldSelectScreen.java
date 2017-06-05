@@ -100,6 +100,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             if (world.getBestTime() == GamePrefs.TIME_NOT_SET) {
                 allLevelsTimed = false;
             } else {
+
                 totalBestTime += world.getBestTime();
             }
         }

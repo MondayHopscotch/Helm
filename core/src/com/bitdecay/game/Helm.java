@@ -50,7 +50,7 @@ public class Helm extends Game {
     }
 
     private void loadImageAtlases(AssetManager assets) {
-        assets.load("img/medals.atlas", TextureAtlas.class);
+        assets.load("img/icons.atlas", TextureAtlas.class);
     }
 
     private void checkUpdateClears() {

@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.menu.IconUtils;
 import com.bitdecay.game.menu.MedalUtils;
 
 /**
@@ -147,6 +148,7 @@ public class SplashScreen implements Screen {
 
     private void initCaches() {
         MedalUtils.init(helm);
+        IconUtils.init(helm);
     }
 
     @Override

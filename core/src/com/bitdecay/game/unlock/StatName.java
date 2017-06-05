@@ -9,7 +9,8 @@ public enum StatName {
     LEVELS_COMPLETED("Levels Completed", "levelsCompleted", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
 
     LAUNCHES("Launches", "playerLaunches", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
-    LANDINGS("Successful Landings", "landings", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
+    LANDINGS("Total Landings", "landings", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
+    PERFECT_LANDINGS("Perfect Landings", "perfectLandings", StatType.COUNT, StatDisplayType.ONLY_SHOW_WHEN_PRESENT),
 
     DEV_MEDALS("Developer Medals", "developerMedalCount", StatType.COUNT, StatDisplayType.ONLY_SHOW_WHEN_PRESENT),
     GOLD_MEDALS("Gold Medals", "goldMedalCount", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),

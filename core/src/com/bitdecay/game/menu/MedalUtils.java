@@ -39,10 +39,10 @@ public class MedalUtils {
     }
 
     public static void init(Helm game) {
-        bronzeMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("bronze_medal");
-        silverMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("silver_medal");
-        goldMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("gold_medal");
-        devMedalImg = game.assets.get("img/medals.atlas", TextureAtlas.class).findRegion("dev_medal");
+        bronzeMedalImg = game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("bronze_medal");
+        silverMedalImg = game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("silver_medal");
+        goldMedalImg = game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("gold_medal");
+        devMedalImg = game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("dev_medal");
 
         imageSize = (int) (game.fontScale * 16);
     }

@@ -40,12 +40,15 @@ public class ScoreMenu {
 
     private Label landingSpeedLabel;
     private Label landingSpeedScore;
+    private Image landingSpeedIcon;
 
     private Label landingAngleLabel;
     private Label landingAngleScore;
+    private Image landingAngleIcon;
 
     private Label landingAccuracyLabel;
     private Label landingAccuracyScore;
+    private Image landingAccuracyIcon;
 
     private Label fuelLeftLabel;
 
@@ -91,8 +94,12 @@ public class ScoreMenu {
         landingSpeedScore.setAlignment(Align.right);
         landingSpeedScore.setOrigin(Align.right);
 
+        landingSpeedIcon = IconUtils.getEmptyIcon();
+
         scoreTable.add(landingSpeedLabel).padRight(100);
         scoreTable.add(landingSpeedScore).growX();
+        // these icons should be the same size as the medals
+        scoreTable.add(landingSpeedIcon).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
         scoreTable.row();
 
         landingAngleLabel = new Label(getLeftPaddedString("Landing Angle:"), skin);
@@ -104,8 +111,12 @@ public class ScoreMenu {
         landingAngleScore.setAlignment(Align.right);
         landingAngleScore.setOrigin(Align.right);
 
+        landingAngleIcon = IconUtils.getEmptyIcon();
+
         scoreTable.add(landingAngleLabel).padRight(100);
         scoreTable.add(landingAngleScore).growX();
+        // these icons should be the same size as the medals
+        scoreTable.add(landingAngleIcon).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
         scoreTable.row();
 
         landingAccuracyLabel = new Label(getLeftPaddedString("Landing Accuracy:"), skin);
@@ -117,8 +128,12 @@ public class ScoreMenu {
         landingAccuracyScore.setAlignment(Align.right);
         landingAccuracyScore.setOrigin(Align.right);
 
+        landingAccuracyIcon = IconUtils.getEmptyIcon();
+
         scoreTable.add(landingAccuracyLabel).padRight(100);
         scoreTable.add(landingAccuracyScore).growX();
+        // these icons should be the same size as the medals
+        scoreTable.add(landingAccuracyIcon).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
         scoreTable.row();
 
         fuelLeftLabel = new Label(getLeftPaddedString("Fuel Remaining:"), skin);
@@ -176,7 +191,6 @@ public class ScoreMenu {
 
         scoreTable.add(totalTimeLabel).padRight(100);
         scoreTable.add(totalTimeValue).growX();
-        Image medalImage = MedalUtils.getRankImage(MedalUtils.LevelRating.UNRANKED);
         scoreTable.add(totalTimeMedal).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
         scoreTable.row();
 
@@ -279,11 +293,11 @@ public class ScoreMenu {
                 Actions.delay(.1f),
                 Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, fuelScoreLabel)),
                 Actions.delay(.5f),
-                Actions.run(getShowActorsRunnable(landingSpeedScore)),
+                Actions.run(getShowActorsRunnable(landingSpeedScore, landingSpeedIcon)),
                 Actions.delay(.5f),
-                Actions.run(getShowActorsRunnable(landingAngleScore)),
+                Actions.run(getShowActorsRunnable(landingAngleScore, landingAngleIcon)),
                 Actions.delay(.5f),
-                Actions.run(getShowActorsRunnable(landingAccuracyScore)),
+                Actions.run(getShowActorsRunnable(landingAccuracyScore, landingAccuracyIcon)),
                 Actions.delay(.5f),
                 Actions.run(getShowActorsRunnable(fuelLeftPercent)),
                 Actions.delay(.5f),
@@ -331,8 +345,14 @@ public class ScoreMenu {
         stage.addAction(baseScoreSequence);
 
         landingSpeedScore.setText(getLeftPaddedString(Integer.toString(score.speedScore)));
+        landingSpeedIcon.setDrawable((score.speedScore == LandingScore.MAX_SPEED_SCORE ? IconUtils.getPerfectIcon() : IconUtils.getEmptyIcon()).getDrawable());
+
         landingAngleScore.setText(getLeftPaddedString(Integer.toString(score.angleScore)));
+        landingAngleIcon.setDrawable((score.angleScore == LandingScore.MAX_ANGLE_SCORE ? IconUtils.getPerfectIcon() : IconUtils.getEmptyIcon()).getDrawable());
+
         landingAccuracyScore.setText(getLeftPaddedString(Integer.toString(score.accuracyScore)));
+        landingAccuracyIcon.setDrawable((score.accuracyScore == LandingScore.MAX_ANGLE_SCORE ? IconUtils.getPerfectIcon() : IconUtils.getEmptyIcon()).getDrawable());
+
         fuelLeftPercent.setText(getLeftPaddedString(String.format("%.2f%%", score.fuelLeft * 100)));
         fuelScoreScore.setText(getLeftPaddedString(Integer.toString(score.fuelScore)));
 
@@ -364,10 +384,13 @@ public class ScoreMenu {
     private void setAllInvisible() {
         landingSpeedLabel.setVisible(false);
         landingSpeedScore.setVisible(false);
+        landingSpeedIcon.setVisible(false);
         landingAngleLabel.setVisible(false);
         landingAngleScore.setVisible(false);
+        landingAngleIcon.setVisible(false);
         landingAccuracyLabel.setVisible(false);
         landingAccuracyScore.setVisible(false);
+        landingAccuracyIcon.setVisible(false);
         fuelLeftLabel.setVisible(false);
         fuelLeftPercent.setVisible(false);
         fuelScoreLabel.setVisible(false);
