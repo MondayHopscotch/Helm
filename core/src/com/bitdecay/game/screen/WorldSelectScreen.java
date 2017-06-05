@@ -64,6 +64,12 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
         FileHandle worldDirectory = Gdx.files.internal("level/world_defs/worldOrder.json");
         WorldOrderMarker[] worldsInOrder = JsonUtils.unmarshal(WorldOrderMarker[].class, worldDirectory);
+        if (Helm.debug) {
+            WorldOrderMarker testWorld = new WorldOrderMarker();
+            testWorld.worldFile = "testWorld.json";
+            testWorld.requiredLevelsForUnlock = 0;
+            worlds.add(buildWorldInstance(testWorld));
+        }
         for (WorldOrderMarker worldMarker : worldsInOrder) {
             worlds.add(buildWorldInstance(worldMarker));
         }

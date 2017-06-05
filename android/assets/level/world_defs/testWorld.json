@@ -1,0 +1,6 @@
+{
+  worldName: "Test Levels",
+  levelList: [
+    "level/testLevels/landingTest.json",
+  ]
+}

@@ -115,6 +115,9 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         if (score.isLandingPerfect()) {
             levelPlayer.countStat(StatName.PERFECT_LANDINGS, 1);
         }
+        if (score.fuelLeft == 0) {
+            levelPlayer.countStat(StatName.ZERO_FUEL_LANDINGS, 1);
+        }
         levelPlayer.rollStat(StatName.FLIGHT_TIME, timer.secondsElapsed);
         pilot.finishLevel(score);
     }
