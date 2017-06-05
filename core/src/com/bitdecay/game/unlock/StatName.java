@@ -10,8 +10,8 @@ public enum StatName {
 
     LAUNCHES("Launches", "playerLaunches", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
     LANDINGS("Total Landings", "landings", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
-    PERFECT_LANDINGS("Perfect Landings", "perfectLandings", StatType.COUNT, StatDisplayType.ONLY_SHOW_WHEN_PRESENT),
-    ZERO_FUEL_LANDINGS("Zero Fuel Landings", "zeroFuelLandings", StatType.COUNT, StatDisplayType.ONLY_SHOW_WHEN_PRESENT),
+    PERFECT_LANDINGS("Perfect Landings", "perfectLandings", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
+    ZERO_FUEL_LANDINGS("Zero Fuel Landings", "zeroFuelLandings", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
 
     DEV_MEDALS("Developer Medals", "developerMedalCount", StatType.COUNT, StatDisplayType.ONLY_SHOW_WHEN_PRESENT),
     GOLD_MEDALS("Gold Medals", "goldMedalCount", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
