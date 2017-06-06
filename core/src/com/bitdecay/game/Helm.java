@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.ObjectSet;
 import com.bitdecay.game.screen.SplashScreen;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
+import com.bitdecay.game.system.render.GamePalette;
 import com.bitdecay.game.unlock.LiveStat;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.unlock.Statistics;
@@ -27,6 +28,8 @@ public class Helm extends Game {
 
     // this is a screen cache so we can properly dispose things when our game closes
     private ObjectSet<Screen> screens = new ObjectSet<>();
+
+    public GamePalette palette;
 
     @Override
     public void create() {
