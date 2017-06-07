@@ -7,7 +7,7 @@ import com.bitdecay.game.system.render.GamePalette;
  */
 
 public enum PaletteList {
-    STANDARD("Standard", new StandardPalette(), 0),
+    STANDARD("Helm", new StandardPalette(), 0),
     GUACAMOLE("Guacamole", new GuacamolePalette(), 100000);
 
     public final String name;
