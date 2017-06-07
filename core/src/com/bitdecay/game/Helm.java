@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.screen.SplashScreen;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
@@ -15,6 +16,7 @@ import com.bitdecay.game.system.render.GamePalette;
 import com.bitdecay.game.unlock.LiveStat;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.unlock.Statistics;
+import com.bitdecay.game.unlock.palette.PaletteList;
 
 public class Helm extends Game {
     public static boolean debug;
@@ -37,6 +39,8 @@ public class Helm extends Game {
         stats = new Statistics();
         stats.init(Helm.prefs);
         checkUpdateClears();
+
+        palette = PaletteList.valueOf(Helm.prefs.getString(GamePrefs.CHOSEN_PALETTE, PaletteList.STANDARD.name())).palette;
 
         assets = new AssetManager();
         SFXLibrary.loadAllAsync(assets);

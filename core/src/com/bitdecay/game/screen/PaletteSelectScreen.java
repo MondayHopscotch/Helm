@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
+import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.unlock.palette.PaletteList;
 
 /**
@@ -34,6 +35,7 @@ public class PaletteSelectScreen extends AbstractScrollingItemScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.palette = paletteInfo.palette;
+                Helm.prefs.putString(GamePrefs.CHOSEN_PALETTE, paletteInfo.name());
             }
         };
 

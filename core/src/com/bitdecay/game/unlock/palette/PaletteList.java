@@ -19,5 +19,4 @@ public enum PaletteList {
         this.pointsForUnlock = pointsForUnlock;
         this.palette = palette;
     }
-
 }
