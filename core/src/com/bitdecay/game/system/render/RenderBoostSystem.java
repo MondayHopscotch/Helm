@@ -7,7 +7,7 @@ import com.bitdecay.game.component.BoosterComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
-import com.bitdecay.game.world.GameColors;
+import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 12/17/2016.
@@ -31,7 +31,7 @@ public class RenderBoostSystem extends AbstractIteratingGameSystem {
             float[] translated = Geom.rotatePoints(boostJetPoints, transform.angle);
             translated = Geom.translatePoints(translated, transform.position);
 
-            renderer.setColor(GameColors.BOOST);
+            renderer.setColor(pilot.getHelm().palette.get(GameColors.BOOST));
             renderer.polygon(translated);
         }
     }

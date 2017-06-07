@@ -19,7 +19,7 @@ import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.ShipLaunchComponent;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.prefs.GamePrefs;
-import com.bitdecay.game.world.GameColors;
+import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 12/12/2016.

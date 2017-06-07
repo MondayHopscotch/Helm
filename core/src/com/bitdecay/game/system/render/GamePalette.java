@@ -1,8 +1,9 @@
 package com.bitdecay.game.system.render;
 
 import com.badlogic.gdx.graphics.Color;
-import com.bitdecay.game.world.GameColors;
+import com.bitdecay.game.unlock.palette.GameColors;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Map;
  */
 
 public class GamePalette {
-    public Map<GameColors, Color> colors;
+    public Map<GameColors, Color> colors = new HashMap<>();
 
     public GamePalette() {
         // Here for JSON

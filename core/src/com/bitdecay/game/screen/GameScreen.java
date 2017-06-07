@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -21,6 +22,7 @@ import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.unlock.StatName;
+import com.bitdecay.game.unlock.palette.GameColors;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelInstance;
 import com.bitdecay.game.world.ReadOnlyLevelInstance;
@@ -247,6 +249,8 @@ public class GameScreen implements Screen, GamePilot {
         if (delta > .5f) {
             delta = .5f;
         }
+        Color clearColor = getHelm().palette.get(GameColors.BACKGROUND);
+        Gdx.gl.glClearColor(clearColor.r, clearColor.g, clearColor.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         long startTime = TimeUtils.millis();

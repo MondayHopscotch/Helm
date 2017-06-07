@@ -6,7 +6,7 @@ import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.component.GravityProducerComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
-import com.bitdecay.game.world.GameColors;
+import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 2/18/2017.
@@ -28,9 +28,9 @@ public class RenderGravityWellSystem extends AbstractIteratingGameSystem {
         maybeResetInner(gravity);
 
         if (gravity.repels) {
-            renderer.setColor(GameColors.REPULSION_FIELD);
+            renderer.setColor(pilot.getHelm().palette.get(GameColors.REPULSION_FIELD));
         } else {
-            renderer.setColor(GameColors.GRAVITY_WELL);
+            renderer.setColor(pilot.getHelm().palette.get(GameColors.GRAVITY_WELL));
         }
         renderer.circle(transform.position.x, transform.position.y, gravity.size);
 
