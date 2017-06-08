@@ -68,7 +68,7 @@ public class PaletteSelectScreen extends AbstractScrollingItemScreen {
     }
 
     private void buildUnlockedPalette(final PaletteList paletteInfo, Table table, boolean currentPalette) {
-        final Image checkMark = IconUtils.getPerfectIcon();
+        final Image checkMark = IconUtils.getCheckMarkIcon();
 
         ClickListener listener = new ClickListener() {
             @Override

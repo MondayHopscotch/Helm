@@ -16,7 +16,7 @@ public class IconUtils {
 
     public static void init(Helm helm) {
         perfectIcon = helm.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("perfect_icon");
-        perfectIcon = helm.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("checkmark_icon");
+        checkMarkIcon = helm.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("checkmark_icon");
     }
 
     public static Image getPerfectIcon() {
