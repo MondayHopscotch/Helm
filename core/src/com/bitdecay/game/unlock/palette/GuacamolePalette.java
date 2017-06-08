@@ -17,6 +17,6 @@ public class GuacamolePalette extends GamePalette {
         colors.put(GameColors.GRAVITY_WELL, Color.RED);
         colors.put(GameColors.BOOST, Color.GOLD);
         colors.put(GameColors.LANDING_PLATFORM, Color.OLIVE);
-        colors.put(GameColors.BACKGROUND, Color.BROWN);
+        colors.put(GameColors.BACKGROUND, Color.BROWN.mul(0.25f));
     }
 }

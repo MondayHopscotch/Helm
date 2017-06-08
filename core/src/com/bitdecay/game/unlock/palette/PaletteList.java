@@ -8,7 +8,8 @@ import com.bitdecay.game.system.render.GamePalette;
 
 public enum PaletteList {
     STANDARD("Helm", new StandardPalette(), 0),
-    GUACAMOLE("Guacamole", new GuacamolePalette(), 100000);
+    GUACAMOLE("Guacamole", new GuacamolePalette(), 100000),
+    WHITEOUT("Whiteout", new WhiteoutPalette(), 200000);
 
     public final String name;
     public final int pointsForUnlock;

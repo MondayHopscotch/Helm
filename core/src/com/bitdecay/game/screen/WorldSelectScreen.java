@@ -23,6 +23,7 @@ import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.WorldDefinition;
 import com.bitdecay.game.world.WorldInstance;
 import com.bitdecay.game.world.WorldOrderMarker;
+import com.bitdecay.game.world.WorldUtils;
 
 import static com.bitdecay.game.persist.JsonUtils.json;
 
@@ -60,21 +61,16 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         itemTable.columnDefaults(4).width(game.fontScale * 50);
         itemTable.columnDefaults(5).width(MedalUtils.imageSize);
 
-        Array<WorldInstance> worlds = new Array<>();
+        Array<WorldInstance> worlds = WorldUtils.getWorlds();
 
-        FileHandle worldDirectory = Gdx.files.internal("level/world_defs/worldOrder.json");
-        WorldOrderMarker[] worldsInOrder = JsonUtils.unmarshal(WorldOrderMarker[].class, worldDirectory);
+        int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID);
+
         if (Helm.debug) {
             WorldOrderMarker testWorld = new WorldOrderMarker();
             testWorld.worldFile = "testWorld.json";
             testWorld.requiredLevelsForUnlock = 0;
-            worlds.add(buildWorldInstance(testWorld));
+            worlds.add(WorldUtils.buildWorldInstance(testWorld));
         }
-        for (WorldOrderMarker worldMarker : worldsInOrder) {
-            worlds.add(buildWorldInstance(worldMarker));
-        }
-
-        int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID);
 
         boolean allWorldsUnlocked = true;
         for (WorldInstance world : worlds) {
@@ -136,17 +132,6 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         worldTable.add(totalHighScoreLabel).colspan(2).align(Align.right);
         worldTable.add(totalHighScoreValue);
         worldTable.add(totalBestTimeValue).colspan(2).align(Align.right);
-    }
-
-    private WorldInstance buildWorldInstance(WorldOrderMarker marker) {
-        FileHandle worldFile = Gdx.files.internal("level/world_defs/" + marker.worldFile);
-        WorldDefinition worldDef = JsonUtils.unmarshal(WorldDefinition.class, worldFile);
-        WorldInstance worldInstance = new WorldInstance(marker.requiredLevelsForUnlock);
-        worldInstance.name = worldDef.worldName;
-        for (String levelPath : worldDef.levelList) {
-            worldInstance.addLevelInstance(JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal(levelPath)));
-        }
-        return worldInstance;
     }
 
     @Override
