@@ -59,7 +59,7 @@ public class PaletteSelectScreen extends AbstractScrollingItemScreen {
             if (totalHighScore >= palette.pointsForUnlock) {
                 buildUnlockedPalette(palette, mainTable, game.palette == palette.palette);
             } else {
-                buildLockedPalette(palette, mainTable);
+                buildLockedPalette(palette, mainTable, totalHighScore);
                 return;
             }
             mainTable.row().padTop(game.fontScale * 10);
@@ -87,30 +87,33 @@ public class PaletteSelectScreen extends AbstractScrollingItemScreen {
         table.add(paletteNameLabel).expand();
         addBlankCell(table);
 
+        Table colorSampleTable = new Table();
         Pixmap pixmap = getPixmap(paletteInfo.palette.get(GameColors.BACKGROUND));
         Image backgroundColorImage = new Image(new Texture(pixmap));
         backgroundColorImage.setSize(MedalUtils.imageSize, MedalUtils.imageSize); // just stealing this out of convenience
-        table.add(backgroundColorImage);
+        colorSampleTable.add(backgroundColorImage);
 
         pixmap = getPixmap(paletteInfo.palette.get(GameColors.LEVEL_SEGMENT));
         Image levelColorImage = new Image(new Texture(pixmap));
         levelColorImage.setSize(MedalUtils.imageSize, MedalUtils.imageSize); // just stealing this out of convenience
-        table.add(levelColorImage);
+        colorSampleTable.add(levelColorImage);
 
         pixmap = getPixmap(paletteInfo.palette.get(GameColors.LANDING_PLATFORM));
         Image landingColorImage = new Image(new Texture(pixmap));
         landingColorImage.setSize(MedalUtils.imageSize, MedalUtils.imageSize); // just stealing this out of convenience
-        table.add(landingColorImage);
+        colorSampleTable.add(landingColorImage);
 
         pixmap = getPixmap(paletteInfo.palette.get(GameColors.FUEL_METER));
         Image fuelColorImage = new Image(new Texture(pixmap));
         fuelColorImage.setSize(MedalUtils.imageSize, MedalUtils.imageSize); // just stealing this out of convenience
-        table.add(fuelColorImage);
+        colorSampleTable.add(fuelColorImage);
 
         pixmap = getPixmap(paletteInfo.palette.get(GameColors.SHIP_BODY));
         Image shipColorImage = new Image(new Texture(pixmap));
         shipColorImage.setSize(MedalUtils.imageSize, MedalUtils.imageSize); // just stealing this out of convenience
-        table.add(shipColorImage);
+        colorSampleTable.add(shipColorImage);
+
+        table.add(colorSampleTable);
 
         addBlankCell(table);
         table.add(checkMark).size(MedalUtils.imageSize, MedalUtils.imageSize);
@@ -122,11 +125,16 @@ public class PaletteSelectScreen extends AbstractScrollingItemScreen {
         }
     }
 
-    private void buildLockedPalette(PaletteList paletteInfo, Table table) {
+    private void buildLockedPalette(PaletteList paletteInfo, Table table, int currentPoints) {
         addBlankCell(table);
         Label paletteNameLabel = getNameLabel(paletteInfo);
         paletteNameLabel.setColor(Color.GRAY);
         table.add(paletteNameLabel).expand();
+        Label unlockHintLabel = new Label(Integer.toString(currentPoints) + " points to go", skin);
+        unlockHintLabel.setColor(Color.GRAY);
+        unlockHintLabel.setAlignment(Align.center);
+        unlockHintLabel.setFontScale(game.fontScale);
+        table.add(unlockHintLabel).colspan(4); // have this take up the rest of the table
     }
 
     private Label getNameLabel(PaletteList paletteInfo) {
