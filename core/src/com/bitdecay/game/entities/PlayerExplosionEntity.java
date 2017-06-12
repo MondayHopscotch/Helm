@@ -7,7 +7,7 @@ import com.bitdecay.game.component.ExplosionComponent;
 import com.bitdecay.game.component.PartOfPlayerComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.math.Geom;
-import com.bitdecay.game.world.GameColors;
+import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 2/16/2017.

@@ -1,14 +1,14 @@
 package com.bitdecay.game.component;
 
-import com.badlogic.gdx.graphics.Color;
+import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 12/14/2016.
  */
 public class RenderColorComponent extends GameComponent {
-    public Color color;
+    public GameColors color;
 
-    public RenderColorComponent(Color color) {
+    public RenderColorComponent(GameColors color) {
         this.color = color;
     }
 }

@@ -1,13 +1,14 @@
 package com.bitdecay.game.component;
 
 import com.badlogic.gdx.graphics.Color;
+import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 2/16/2017.
  */
 public class ExplosionComponent extends GameComponent {
 
-    public Color color = Color.YELLOW;
+    public GameColors color = GameColors.EXPLOSION;
 
     public float distance = 0;
 
@@ -20,7 +21,7 @@ public class ExplosionComponent extends GameComponent {
     // offset rotation to start explosion particles
     public float rotationalOffset = 0;
 
-    public ExplosionComponent(Color color) {
+    public ExplosionComponent(GameColors color) {
         this.color = color;
     }
 }

@@ -12,7 +12,7 @@ import com.bitdecay.game.component.RenderColorComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.collide.GeometryComponentFactory;
 import com.bitdecay.game.math.Geom;
-import com.bitdecay.game.world.GameColors;
+import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 12/14/2016.

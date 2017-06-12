@@ -30,7 +30,7 @@ public class RenderBodySystem extends AbstractIteratingGameSystem {
 
         float[] transformed = Geom.transformPoints(body.bodyPoints, transform);
 
-        renderer.setColor(color.color);
+        renderer.setColor(pilot.getHelm().palette.get(color.color));
         if (transformed.length > Geom.DATA_POINTS_FOR_LINE) {
             renderer.polygon(transformed);
         } else {

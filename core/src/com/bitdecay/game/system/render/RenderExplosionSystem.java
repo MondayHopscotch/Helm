@@ -1,6 +1,5 @@
 package com.bitdecay.game.system.render;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -10,7 +9,6 @@ import com.bitdecay.game.component.ExplosionComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
-import com.bitdecay.game.world.GameColors;
 
 /**
  * Created by Monday on 2/16/2017.
@@ -34,7 +32,7 @@ public class RenderExplosionSystem extends AbstractIteratingGameSystem {
 
         singleBoomPos.set(Geom.rotateSinglePoint(singleBoomPos, explosion.rotationalOffset));
 
-        renderer.setColor(explosion.color);
+        renderer.setColor(pilot.getHelm().palette.get(explosion.color));
         for (int i = 0; i < explosion.spreadCount; i++) {
             singleBoomPos.set(Geom.rotateSinglePoint(singleBoomPos, angleStep));
             renderer.circle(transform.position.x + singleBoomPos.x, transform.position.y + singleBoomPos.y, explosion.particleSize);

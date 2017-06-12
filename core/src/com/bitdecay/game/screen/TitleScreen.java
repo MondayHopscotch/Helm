@@ -69,6 +69,17 @@ public class TitleScreen implements Screen {
         });
         startLabel.setFontScale(game.fontScale * 1.8f);
 
+        Label paletteLabel = new Label("Palette", skin);
+        paletteLabel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                finishLoadingAssets();
+                game.setScreen(new PaletteSelectScreen(game));
+            }
+        });
+        paletteLabel.setFontScale(game.fontScale * 1.2f);
+
+
         Label optionsLabel = new Label("Options", skin);
         optionsLabel.addListener(new ClickListener() {
             @Override
@@ -112,6 +123,8 @@ public class TitleScreen implements Screen {
 
         mainMenu.add(startLabel);
         mainMenu.row();
+        mainMenu.add(paletteLabel);
+        mainMenu.row();
         mainMenu.add(optionsLabel);
         mainMenu.row();
         mainMenu.add(statsLabel);
@@ -147,6 +160,7 @@ public class TitleScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.assets.update();

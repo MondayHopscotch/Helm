@@ -4,6 +4,8 @@ package com.bitdecay.game.prefs;
  * Created by Monday on 1/4/2017.
  */
 public class GamePrefs {
+    public static final String CHOSEN_PALETTE = "chosenPalette";
+
     public static final String HIGH_SCORE = "highScore";
     public static final String BEST_TIME = "bestTime";
 

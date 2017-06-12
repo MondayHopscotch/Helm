@@ -10,7 +10,7 @@ import com.bitdecay.game.component.BodyDefComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.collide.GeometryComponentFactory;
 import com.bitdecay.game.math.Geom;
-import com.bitdecay.game.world.GameColors;
+import com.bitdecay.game.unlock.palette.GameColors;
 import com.bitdecay.game.world.LineSegment;
 
 /**

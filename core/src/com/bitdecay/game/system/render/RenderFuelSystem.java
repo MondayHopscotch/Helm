@@ -8,7 +8,7 @@ import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
-import com.bitdecay.game.world.GameColors;
+import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 12/19/2016.
@@ -61,7 +61,7 @@ public class RenderFuelSystem extends AbstractIteratingGameSystem {
         fuelPoints = Geom.rotatePoints(fuelPoints, transform.angle);
         fuelPoints = Geom.translatePoints(fuelPoints, transform.position);
 
-        renderer.setColor(GameColors.FUEL_METER);
+        renderer.setColor(pilot.getHelm().palette.get(GameColors.FUEL_METER));
         renderer.polygon(fuelPoints);
     }
 
