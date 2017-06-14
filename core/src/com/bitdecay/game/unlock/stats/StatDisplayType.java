@@ -1,4 +1,4 @@
-package com.bitdecay.game.unlock;
+package com.bitdecay.game.unlock.stats;
 
 /**
  * Created by Monday on 4/9/2017.

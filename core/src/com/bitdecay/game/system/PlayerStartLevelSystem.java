@@ -22,7 +22,7 @@ import com.bitdecay.game.input.ActiveTouch;
 import com.bitdecay.game.input.TouchTracker;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
-import com.bitdecay.game.unlock.StatName;
+import com.bitdecay.game.unlock.stats.StatName;
 
 /**
  * Created by Monday on 12/14/2016.

@@ -8,9 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
-import com.bitdecay.game.unlock.LiveStat;
-import com.bitdecay.game.unlock.StatDisplayType;
-import com.bitdecay.game.unlock.StatName;
+import com.bitdecay.game.unlock.stats.LiveStat;
+import com.bitdecay.game.unlock.stats.StatDisplayType;
+import com.bitdecay.game.unlock.stats.StatName;
 
 /**
  * Created by Monday on 2/19/2017.

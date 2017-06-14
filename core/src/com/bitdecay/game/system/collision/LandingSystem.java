@@ -4,13 +4,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.Helm;
 import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.BoosterComponent;
 import com.bitdecay.game.component.CrashComponent;
 import com.bitdecay.game.component.FuelComponent;
 import com.bitdecay.game.component.RateLandingComponent;
-import com.bitdecay.game.component.collide.CollidedWithComponent;
 import com.bitdecay.game.component.control.SteeringControlComponent;
 import com.bitdecay.game.component.TimerComponent;
 import com.bitdecay.game.component.TransformComponent;
@@ -20,7 +18,7 @@ import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
-import com.bitdecay.game.unlock.StatName;
+import com.bitdecay.game.unlock.stats.StatName;
 
 /**
  * Created by Monday on 12/17/2016.

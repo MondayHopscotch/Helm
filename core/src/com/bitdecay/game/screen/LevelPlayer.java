@@ -54,7 +54,7 @@ import com.bitdecay.game.system.render.RenderFuelSystem;
 import com.bitdecay.game.system.movement.SteeringSystem;
 import com.bitdecay.game.system.render.RenderGravityWellSystem;
 import com.bitdecay.game.system.render.RenderSteeringSystem;
-import com.bitdecay.game.unlock.StatName;
+import com.bitdecay.game.unlock.stats.StatName;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LineSegment;
 import com.bitdecay.game.world.WormholePair;

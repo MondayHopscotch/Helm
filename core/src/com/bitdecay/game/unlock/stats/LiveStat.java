@@ -1,4 +1,4 @@
-package com.bitdecay.game.unlock;
+package com.bitdecay.game.unlock.stats;
 
 import com.badlogic.gdx.Preferences;
 

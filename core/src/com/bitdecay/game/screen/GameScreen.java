@@ -21,7 +21,7 @@ import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.time.TimerUtils;
-import com.bitdecay.game.unlock.StatName;
+import com.bitdecay.game.unlock.stats.StatName;
 import com.bitdecay.game.unlock.palette.GameColors;
 import com.bitdecay.game.world.LevelDefinition;
 import com.bitdecay.game.world.LevelInstance;

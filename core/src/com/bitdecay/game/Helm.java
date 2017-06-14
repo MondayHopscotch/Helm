@@ -13,9 +13,9 @@ import com.bitdecay.game.screen.SplashScreen;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.system.render.GamePalette;
-import com.bitdecay.game.unlock.LiveStat;
-import com.bitdecay.game.unlock.StatName;
-import com.bitdecay.game.unlock.Statistics;
+import com.bitdecay.game.unlock.stats.LiveStat;
+import com.bitdecay.game.unlock.stats.StatName;
+import com.bitdecay.game.unlock.stats.Statistics;
 import com.bitdecay.game.unlock.palette.PaletteList;
 
 public class Helm extends Game {

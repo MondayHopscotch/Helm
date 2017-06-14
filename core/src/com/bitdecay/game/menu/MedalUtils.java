@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.bitdecay.game.Helm;
-import com.bitdecay.game.unlock.StatName;
+import com.bitdecay.game.unlock.stats.StatName;
 import com.bitdecay.game.world.LevelInstance;
 
 /**

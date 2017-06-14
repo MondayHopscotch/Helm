@@ -2,10 +2,8 @@ package com.bitdecay.game.desktop.editor;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Preferences;
 import com.bitdecay.game.Helm;
-import com.bitdecay.game.unlock.Statistics;
+import com.bitdecay.game.unlock.stats.Statistics;
 import com.bitdecay.game.world.LevelDefinition;
 
 /**

@@ -1,9 +1,6 @@
 package com.bitdecay.game.screen;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -15,17 +12,12 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.MedalUtils;
-import com.bitdecay.game.persist.JsonUtils;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.time.TimerUtils;
-import com.bitdecay.game.unlock.StatName;
-import com.bitdecay.game.world.LevelDefinition;
-import com.bitdecay.game.world.WorldDefinition;
+import com.bitdecay.game.unlock.stats.StatName;
 import com.bitdecay.game.world.WorldInstance;
 import com.bitdecay.game.world.WorldOrderMarker;
 import com.bitdecay.game.world.WorldUtils;
-
-import static com.bitdecay.game.persist.JsonUtils.json;
 
 /**
  * Created by Monday on 1/10/2017.
