@@ -210,13 +210,13 @@ public class GameScreen implements Screen, GamePilot {
     @Override
     public void returnToMenus(boolean isQuit) {
         if (activeWorld == null) {
-            // we are in a replay (probably want to have a more explicit way of handling  this
-            game.setScreen(new ReplaySelectScreen(game));
+            // we are in a replay (probably want to have a more explicit way of handling this
+            game.setScreen(TransitionColorScreen.get(game, Color.BLACK, new ReplaySelectScreen(game)));
         } else {
             if (isQuit) {
                 Helm.stats.count(StatName.ABANDONS, 1);
             }
-            game.setScreen(new LevelSelectScreen(game, activeWorld));
+            game.setScreen(TransitionColorScreen.get(game, Color.BLACK, new LevelSelectScreen(game, activeWorld)));
         }
     }
 

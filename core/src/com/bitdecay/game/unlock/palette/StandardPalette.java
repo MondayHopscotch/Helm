@@ -16,6 +16,7 @@ public class StandardPalette extends GamePalette {
         colors.put(GameColors.FUEL_METER, Color.MAGENTA);
         colors.put(GameColors.REPULSION_FIELD, Color.TAN);
         colors.put(GameColors.GRAVITY_WELL, Color.PURPLE);
+        colors.put(GameColors.WORMHOLE, Color.DARK_GRAY);
         colors.put(GameColors.BOOST, Color.FIREBRICK);
         colors.put(GameColors.LANDING_PLATFORM, Color.GREEN);
         colors.put(GameColors.BACKGROUND, Color.BLACK);

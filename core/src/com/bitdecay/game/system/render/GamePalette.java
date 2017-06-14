@@ -21,7 +21,7 @@ public class GamePalette {
         if (colors.containsKey(selector)) {
             return colors.get(selector);
         } else {
-            return Color.WHITE;
+            return Color.PINK;
         }
     }
 }
