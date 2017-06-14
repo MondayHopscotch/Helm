@@ -82,6 +82,7 @@ public class TransitionColorScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        // if we dispose the screen, create a new instance next time we need it
+        transitionScreen = null;
     }
 }
