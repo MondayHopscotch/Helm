@@ -12,6 +12,7 @@ import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.MedalUtils;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.time.TimerUtils;
+import com.bitdecay.game.unlock.palette.GameColors;
 import com.bitdecay.game.world.LevelInstance;
 import com.bitdecay.game.world.WorldInstance;
 
@@ -107,7 +108,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         ClickListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game, world, level));
+                game.setScreen(TransitionColorScreen.get(game, game.palette.get(GameColors.BACKGROUND), new GameScreen(game, world, level)));
             }
         };
 

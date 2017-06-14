@@ -12,6 +12,7 @@ public enum GameColors {
     FUEL_METER,
     REPULSION_FIELD,
     GRAVITY_WELL,
+    WORMHOLE,
     BOOST,
     LANDING_PLATFORM,
     BACKGROUND,
