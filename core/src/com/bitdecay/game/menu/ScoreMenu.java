@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
@@ -37,6 +38,8 @@ public class ScoreMenu {
     public boolean visible = false;
 
     private GamePilot pilot;
+
+    private Table achieveTable;
 
     private Label landingSpeedLabel;
     private Label landingSpeedScore;
@@ -73,6 +76,8 @@ public class ScoreMenu {
     public ScoreMenu(final GamePilot pilot) {
         this.pilot = pilot;
         stage = new Stage();
+        stage.setDebugAll(Helm.debug);
+
         skin = pilot.getHelm().skin;
 
         Table mainTable = new Table();
@@ -236,6 +241,31 @@ public class ScoreMenu {
 
         stage.addActor(mainTable);
 
+        achieveTable = new Table();
+        achieveTable.setHeight(stage.getHeight());
+        achieveTable.setWidth(stage.getWidth() / 2);
+        achieveTable.setPosition(stage.getWidth() / 2, 0);
+        achieveTable.align(Align.right);
+        achieveTable.setOrigin(Align.center);
+
+        stage.addActor(achieveTable);
+    }
+
+    private void addUnlockLabel(String text) {
+        Label newThingLabel = new Label(text, skin);
+        newThingLabel.setAlignment(Align.left);
+        newThingLabel.setFontScale(pilot.getHelm().fontScale * 0.55f);
+        newThingLabel.setOrigin(Align.left);
+
+        Table labelParent = new Table();
+        labelParent.setTransform(true);
+        labelParent.setFillParent(false);
+        labelParent.setOrigin(Align.left);
+        labelParent.setRotation(30);
+        labelParent.add(newThingLabel);
+
+        achieveTable.add(labelParent).align(Align.left).padBottom(pilot.getHelm().fontScale * 15);
+        achieveTable.row();
     }
 
     public void rebuildNextTable(final boolean isReplay) {
@@ -275,6 +305,8 @@ public class ScoreMenu {
     }
 
     public void setScore(LevelInstance currentLevel, LandingScore score) {
+        achieveTable.clear();
+
         SequenceAction baseScoreSequence = Actions.sequence(
                 Actions.run(new Runnable() {
                     @Override
@@ -326,7 +358,6 @@ public class ScoreMenu {
                     totalTimeValue,
                     totalTimeMedal
             )));
-            baseScoreSequence.addAction(Actions.delay(1f));
         } else {
             baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL,
                     totalScoreLabel,
@@ -336,9 +367,10 @@ public class ScoreMenu {
                     totalTimeValue,
                     totalTimeMedal
             )));
-            baseScoreSequence.addAction(Actions.delay(1f));
 
         }
+        baseScoreSequence.addAction(Actions.run(getShowActorsRunnable(achieveTable)));
+        baseScoreSequence.addAction(Actions.delay(1f));
 
         baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, nextButton, playAgainButton, saveReplayButton)));
 
@@ -382,6 +414,8 @@ public class ScoreMenu {
     }
 
     private void setAllInvisible() {
+        achieveTable.setVisible(false);
+
         landingSpeedLabel.setVisible(false);
         landingSpeedScore.setVisible(false);
         landingSpeedIcon.setVisible(false);
