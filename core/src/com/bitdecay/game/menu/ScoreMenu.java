@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.scoring.LandingScore;
+import com.bitdecay.game.scoring.ScoreStamps;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.time.TimerUtils;
@@ -251,7 +252,7 @@ public class ScoreMenu {
         stage.addActor(achieveTable);
     }
 
-    private void addUnlockLabel(String text) {
+    private Actor addUnlockLabel(String text) {
         Label newThingLabel = new Label(text, skin);
         newThingLabel.setAlignment(Align.left);
         newThingLabel.setFontScale(pilot.getHelm().fontScale * 0.55f);
@@ -264,8 +265,9 @@ public class ScoreMenu {
         labelParent.setRotation(30);
         labelParent.add(newThingLabel);
 
-        achieveTable.add(labelParent).align(Align.left).padBottom(pilot.getHelm().fontScale * 15);
+        achieveTable.add(labelParent).align(Align.left).padTop(pilot.getHelm().fontScale * 15);
         achieveTable.row();
+        return labelParent;
     }
 
     public void rebuildNextTable(final boolean isReplay) {
@@ -369,6 +371,21 @@ public class ScoreMenu {
             )));
 
         }
+
+        for (String message : ScoreStamps.getPendingStamps()) {
+            Actor stamp = addUnlockLabel(message);
+            stamp.setVisible(false);
+            baseScoreSequence.addAction(
+                    Actions.sequence(
+                            Actions.delay(.2f),
+                            Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, stamp))
+                    )
+            );
+        }
+
+        ScoreStamps.clearPendingStamps();
+
+
         baseScoreSequence.addAction(Actions.run(getShowActorsRunnable(achieveTable)));
         baseScoreSequence.addAction(Actions.delay(1f));
 

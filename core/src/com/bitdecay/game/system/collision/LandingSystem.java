@@ -17,6 +17,7 @@ import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.scoring.LandingScore;
+import com.bitdecay.game.scoring.ScoreStamps;
 import com.bitdecay.game.sound.MusicLibrary;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
@@ -36,6 +37,9 @@ public class LandingSystem extends AbstractIteratingGameSystem {
     public static final float LANDING_ANGLE_MERCY = .02f;
 
     public static final float LANDING_ACCURACY_MERCY = .05f;
+
+    public static final String PERFECT_LANDING_MESSAGE = "Perfect Landing!";
+    public static final String ZERO_FUEL_LANDING_MESSAGE = "Zero Fuel Landing!";
 
     public LandingSystem(GamePilot pilot) {
         super(pilot);
@@ -113,9 +117,11 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
         levelPlayer.countStat(StatName.LANDINGS, 1);
         if (score.isLandingPerfect()) {
+            ScoreStamps.addPendingStamp(PERFECT_LANDING_MESSAGE);
             levelPlayer.countStat(StatName.PERFECT_LANDINGS, 1);
         }
         if (score.fuelLeft == 0) {
+            ScoreStamps.addPendingStamp(ZERO_FUEL_LANDING_MESSAGE);
             levelPlayer.countStat(StatName.ZERO_FUEL_LANDINGS, 1);
         }
         levelPlayer.rollStat(StatName.FLIGHT_TIME, timer.secondsElapsed);
