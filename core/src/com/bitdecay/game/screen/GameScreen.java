@@ -190,8 +190,8 @@ public class GameScreen implements Screen, GamePilot {
             // first time beating the level!
             Helm.stats.count(StatName.LEVELS_COMPLETED, 1);
         }
-        score.newHighScore = currentLevel.maybeSetNewHighScore(levelScore);
-        score.newBestTime = currentLevel.maybeSetNewBestTime(score.timeTaken);
+        score.pointsImprovement = currentLevel.maybeSetNewHighScore(levelScore);
+        score.secondsImprovement = currentLevel.maybeSetNewBestTime(score.timeTaken);
         showScoreMenu(score, false);
     }
 

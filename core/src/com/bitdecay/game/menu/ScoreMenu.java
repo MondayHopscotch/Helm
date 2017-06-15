@@ -18,9 +18,11 @@ import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.scoring.ScoreStamps;
+import com.bitdecay.game.scoring.ScoreUtils;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.time.TimerUtils;
+import com.bitdecay.game.unlock.palette.PaletteList;
 import com.bitdecay.game.world.LevelInstance;
 
 /**
@@ -255,7 +257,7 @@ public class ScoreMenu {
     private Actor addUnlockLabel(String text) {
         Label newThingLabel = new Label(text, skin);
         newThingLabel.setAlignment(Align.left);
-        newThingLabel.setFontScale(pilot.getHelm().fontScale * 0.55f);
+        newThingLabel.setFontScale(pilot.getHelm().fontScale * 0.5f);
         newThingLabel.setOrigin(Align.left);
 
         Table labelParent = new Table();
@@ -339,19 +341,22 @@ public class ScoreMenu {
                 Actions.delay(1f)
         );
 
-        if (score.newHighScore) {
+        boolean newHighScore = score.pointsImprovement > 0;
+        boolean newBestTime = score.secondsImprovement < 0;
+
+        if (newHighScore) {
             totalScoreScore.setColor(Color.GOLD);
         } else {
             totalScoreScore.setColor(Color.WHITE);
         }
 
-        if (score.newBestTime) {
+        if (newBestTime) {
             totalTimeValue.setColor(Color.GOLD);
         } else {
             totalTimeValue.setColor(Color.WHITE);
         }
 
-        if (score.newHighScore || score.newBestTime) {
+        if (newHighScore || newBestTime) {
             baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.HIGH_SCORE_BEAT,
                     totalScoreLabel,
                     totalScoreScore,
@@ -371,6 +376,9 @@ public class ScoreMenu {
             )));
 
         }
+
+        // check for palette unlock
+        PaletteList.checkUnlocks(ScoreUtils.getTotalHighScore(), score.pointsImprovement);
 
         for (String message : ScoreStamps.getPendingStamps()) {
             Actor stamp = addUnlockLabel(message);

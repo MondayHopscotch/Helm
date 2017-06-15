@@ -19,7 +19,8 @@ public class LevelInstance {
         return Helm.prefs.getInteger(getScoreKey(), GamePrefs.SCORE_NOT_SET);
     }
 
-    public boolean maybeSetNewHighScore(int newScore) {
+    // returns the number of points scored over the previous best
+    public int maybeSetNewHighScore(int newScore) {
         int oldHighScore = getHighScore();
 
         if (newScore > oldHighScore) {
@@ -33,9 +34,9 @@ public class LevelInstance {
 
             saveHighScore(newScore);
             System.out.println("Saving new high score for " + levelDef.name + ": " + newScore);
-            return true;
+            return newScore - Math.max(0, oldHighScore); // if no score is set, make sure we don't go negative
         } else {
-            return false;
+            return 0;
         }
     }
 
@@ -43,7 +44,8 @@ public class LevelInstance {
         return Helm.prefs.getFloat(getTimeKey(), GamePrefs.TIME_NOT_SET);
     }
 
-    public boolean maybeSetNewBestTime(float newTime) {
+    // returns the number of seconds trimmed off the previous best
+    public float maybeSetNewBestTime(float newTime) {
         float oldBestTime = getBestTime();
 
         if (newTime < oldBestTime) {
@@ -57,9 +59,9 @@ public class LevelInstance {
 
             saveBestTime(newTime);
             System.out.println("Saving new best time for " + levelDef.name + ": " + newTime);
-            return true;
+            return newTime - oldBestTime;
         } else {
-            return false;
+            return 0;
         }
     }
 
