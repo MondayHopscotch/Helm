@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.scoring.LandingScore;
@@ -250,7 +251,7 @@ public class ScoreMenu {
         achieveTable.setHeight(stage.getHeight());
         achieveTable.setWidth(stage.getWidth() / 2);
         achieveTable.setPosition(stage.getWidth() / 2, 0);
-        achieveTable.align(Align.center);
+        achieveTable.align(Align.right);
         achieveTable.setOrigin(Align.center);
 
         stage.addActor(achieveTable);
@@ -265,7 +266,7 @@ public class ScoreMenu {
         Table labelParent = new Table();
         labelParent.setTransform(true);
         labelParent.setFillParent(false);
-        labelParent.setRotation(MathUtils.random(-30, 30));
+        labelParent.setRotation(MathUtils.random(-20, 20));
         labelParent.add(newThingLabel);
         // width / height haven't been calculated yet, so do it manually
         labelParent.setOrigin(labelParent.getMinWidth() / 2, labelParent.getMinHeight() / 2);
@@ -273,7 +274,7 @@ public class ScoreMenu {
         boolean padTop = achieveTable.hasChildren();
         Cell parentCell = achieveTable.add(labelParent).align(Align.center);
         if (padTop) {
-            parentCell.padTop(pilot.getHelm().fontScale * 15);
+            parentCell.padTop(pilot.getHelm().fontScale * 10); // arbitrary spacing that feels pretty good
         }
         achieveTable.row();
         return labelParent;
