@@ -2,11 +2,13 @@ package com.bitdecay.game.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -248,7 +250,7 @@ public class ScoreMenu {
         achieveTable.setHeight(stage.getHeight());
         achieveTable.setWidth(stage.getWidth() / 2);
         achieveTable.setPosition(stage.getWidth() / 2, 0);
-        achieveTable.align(Align.right);
+        achieveTable.align(Align.center);
         achieveTable.setOrigin(Align.center);
 
         stage.addActor(achieveTable);
@@ -256,18 +258,23 @@ public class ScoreMenu {
 
     private Actor addUnlockLabel(String text) {
         Label newThingLabel = new Label(text, skin);
-        newThingLabel.setAlignment(Align.left);
+        newThingLabel.setAlignment(Align.center);
         newThingLabel.setFontScale(pilot.getHelm().fontScale * 0.5f);
-        newThingLabel.setOrigin(Align.left);
+        newThingLabel.setOrigin(Align.center);
 
         Table labelParent = new Table();
         labelParent.setTransform(true);
         labelParent.setFillParent(false);
-        labelParent.setOrigin(Align.left);
-        labelParent.setRotation(30);
+        labelParent.setRotation(MathUtils.random(-30, 30));
         labelParent.add(newThingLabel);
+        // width / height haven't been calculated yet, so do it manually
+        labelParent.setOrigin(labelParent.getMinWidth() / 2, labelParent.getMinHeight() / 2);
 
-        achieveTable.add(labelParent).align(Align.left).padTop(pilot.getHelm().fontScale * 15);
+        boolean padTop = achieveTable.hasChildren();
+        Cell parentCell = achieveTable.add(labelParent).align(Align.center);
+        if (padTop) {
+            parentCell.padTop(pilot.getHelm().fontScale * 15);
+        }
         achieveTable.row();
         return labelParent;
     }
@@ -393,8 +400,6 @@ public class ScoreMenu {
 
         ScoreStamps.clearPendingStamps();
 
-
-        baseScoreSequence.addAction(Actions.run(getShowActorsRunnable(achieveTable)));
         baseScoreSequence.addAction(Actions.delay(1f));
 
         baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, nextButton, playAgainButton, saveReplayButton)));
@@ -439,8 +444,6 @@ public class ScoreMenu {
     }
 
     private void setAllInvisible() {
-        achieveTable.setVisible(false);
-
         landingSpeedLabel.setVisible(false);
         landingSpeedScore.setVisible(false);
         landingSpeedIcon.setVisible(false);
