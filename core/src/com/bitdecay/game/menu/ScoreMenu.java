@@ -394,7 +394,7 @@ public class ScoreMenu {
             baseScoreSequence.addAction(
                     Actions.sequence(
                             Actions.delay(.2f),
-                            Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.LABEL_DISPLAY, stamp))
+                            Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.STAMP, stamp))
                     )
             );
         }

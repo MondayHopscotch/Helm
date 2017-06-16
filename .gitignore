@@ -79,3 +79,4 @@ Thumbs.db
 android/assets/replays/*
 ## generated texture atlas files
 android/assets/img/*
+*.wav
