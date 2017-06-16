@@ -16,6 +16,7 @@ import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.IconUtils;
 import com.bitdecay.game.menu.MedalUtils;
 import com.bitdecay.game.prefs.GamePrefs;
+import com.bitdecay.game.scoring.ScoreUtils;
 import com.bitdecay.game.unlock.palette.GameColors;
 import com.bitdecay.game.unlock.palette.PaletteList;
 import com.bitdecay.game.world.WorldInstance;
@@ -49,11 +50,7 @@ public class PaletteSelectScreen extends AbstractScrollingItemScreen {
 
     @Override
     public void populateRows(Table mainTable) {
-        Array<WorldInstance> worlds = WorldUtils.getWorlds();
-        int totalHighScore = 0;
-        for (WorldInstance world : worlds) {
-            totalHighScore += world.getHighScore();
-        }
+        int totalHighScore = ScoreUtils.getTotalHighScore();
 
         for (PaletteList palette : PaletteList.values()) {
             if (totalHighScore >= palette.pointsForUnlock) {
@@ -130,7 +127,7 @@ public class PaletteSelectScreen extends AbstractScrollingItemScreen {
         Label paletteNameLabel = getNameLabel(paletteInfo);
         paletteNameLabel.setColor(Color.GRAY);
         table.add(paletteNameLabel).expand();
-        Label unlockHintLabel = new Label(Integer.toString(currentPoints) + " points to go", skin);
+        Label unlockHintLabel = new Label(Integer.toString(paletteInfo.pointsForUnlock - currentPoints) + " points to go", skin);
         unlockHintLabel.setColor(Color.GRAY);
         unlockHintLabel.setAlignment(Align.center);
         unlockHintLabel.setFontScale(game.fontScale);

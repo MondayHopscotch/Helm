@@ -10,13 +10,13 @@ public class ReadOnlyLevelInstance extends LevelInstance {
     }
 
     @Override
-    public boolean maybeSetNewBestTime(float newTime) {
-        return false;
+    public float maybeSetNewBestTime(float newTime) {
+        return 0;
     }
 
     @Override
-    public boolean maybeSetNewHighScore(int newScore) {
-        return false;
+    public int maybeSetNewHighScore(int newScore) {
+        return 0;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.bitdecay.game.unlock.palette;
 
+import com.bitdecay.game.scoring.ScoreStamps;
 import com.bitdecay.game.system.render.GamePalette;
 
 /**
@@ -20,5 +21,15 @@ public enum PaletteList {
         this.name = name;
         this.pointsForUnlock = pointsForUnlock;
         this.palette = palette;
+    }
+
+    public static void checkUnlocks(int totalHighScore, int pointsImprovement) {
+        for (PaletteList unlock : PaletteList.values()) {
+            if (unlock.pointsForUnlock > totalHighScore - pointsImprovement && unlock.pointsForUnlock < totalHighScore) {
+                // we just crossed the unlock for this palette
+                ScoreStamps.addPendingStamp(unlock.name + " palette unlocked!");
+            }
+        }
+
     }
 }

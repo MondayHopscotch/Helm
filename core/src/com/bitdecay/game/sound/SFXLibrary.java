@@ -18,6 +18,7 @@ public class SFXLibrary {
 
     public static final String LABEL_DISPLAY = SFX_DIR + "LabelDisplay.ogg";
     public static final String SCORE_POP = SFX_DIR + "ScorePop.ogg";
+    public static final String STAMP = SFX_DIR + "Stamp.ogg";
     public static final String HIGH_SCORE_BEAT = SFX_DIR + "HighScoreBeat.ogg";
     public static final String NEXT_LEVEL = SFX_DIR + "NextLevel.ogg";
 
@@ -28,6 +29,7 @@ public class SFXLibrary {
             SHIP_WARP,
             LABEL_DISPLAY,
             SCORE_POP,
+            STAMP,
             HIGH_SCORE_BEAT,
             NEXT_LEVEL
     };

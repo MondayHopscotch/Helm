@@ -2,11 +2,13 @@ package com.bitdecay.game.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -14,11 +16,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.scoring.LandingScore;
+import com.bitdecay.game.scoring.ScoreStamps;
+import com.bitdecay.game.scoring.ScoreUtils;
 import com.bitdecay.game.sound.SFXLibrary;
 import com.bitdecay.game.sound.SoundMode;
 import com.bitdecay.game.time.TimerUtils;
+import com.bitdecay.game.unlock.palette.PaletteList;
 import com.bitdecay.game.world.LevelInstance;
 
 /**
@@ -37,6 +44,8 @@ public class ScoreMenu {
     public boolean visible = false;
 
     private GamePilot pilot;
+
+    private Table achieveTable;
 
     private Label landingSpeedLabel;
     private Label landingSpeedScore;
@@ -73,6 +82,8 @@ public class ScoreMenu {
     public ScoreMenu(final GamePilot pilot) {
         this.pilot = pilot;
         stage = new Stage();
+        stage.setDebugAll(Helm.debug);
+
         skin = pilot.getHelm().skin;
 
         Table mainTable = new Table();
@@ -236,6 +247,37 @@ public class ScoreMenu {
 
         stage.addActor(mainTable);
 
+        achieveTable = new Table();
+        achieveTable.setHeight(stage.getHeight());
+        achieveTable.setWidth(stage.getWidth() / 2);
+        achieveTable.setPosition(stage.getWidth() / 2, 0);
+        achieveTable.align(Align.right);
+        achieveTable.setOrigin(Align.center);
+
+        stage.addActor(achieveTable);
+    }
+
+    private Actor addUnlockLabel(String text) {
+        Label newThingLabel = new Label(text, skin);
+        newThingLabel.setAlignment(Align.center);
+        newThingLabel.setFontScale(pilot.getHelm().fontScale * 0.5f);
+        newThingLabel.setOrigin(Align.center);
+
+        Table labelParent = new Table();
+        labelParent.setTransform(true);
+        labelParent.setFillParent(false);
+        labelParent.setRotation(MathUtils.random(-20, 20));
+        labelParent.add(newThingLabel);
+        // width / height haven't been calculated yet, so do it manually
+        labelParent.setOrigin(labelParent.getMinWidth() / 2, labelParent.getMinHeight() / 2);
+
+        boolean padTop = achieveTable.hasChildren();
+        Cell parentCell = achieveTable.add(labelParent).align(Align.center);
+        if (padTop) {
+            parentCell.padTop(pilot.getHelm().fontScale * 10); // arbitrary spacing that feels pretty good
+        }
+        achieveTable.row();
+        return labelParent;
     }
 
     public void rebuildNextTable(final boolean isReplay) {
@@ -275,6 +317,8 @@ public class ScoreMenu {
     }
 
     public void setScore(LevelInstance currentLevel, LandingScore score) {
+        achieveTable.clear();
+
         SequenceAction baseScoreSequence = Actions.sequence(
                 Actions.run(new Runnable() {
                     @Override
@@ -305,19 +349,22 @@ public class ScoreMenu {
                 Actions.delay(1f)
         );
 
-        if (score.newHighScore) {
+        boolean newHighScore = score.pointsImprovement > 0;
+        boolean newBestTime = score.secondsImprovement < 0;
+
+        if (newHighScore) {
             totalScoreScore.setColor(Color.GOLD);
         } else {
             totalScoreScore.setColor(Color.WHITE);
         }
 
-        if (score.newBestTime) {
+        if (newBestTime) {
             totalTimeValue.setColor(Color.GOLD);
         } else {
             totalTimeValue.setColor(Color.WHITE);
         }
 
-        if (score.newHighScore || score.newBestTime) {
+        if (newHighScore || newBestTime) {
             baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.HIGH_SCORE_BEAT,
                     totalScoreLabel,
                     totalScoreScore,
@@ -326,7 +373,6 @@ public class ScoreMenu {
                     totalTimeValue,
                     totalTimeMedal
             )));
-            baseScoreSequence.addAction(Actions.delay(1f));
         } else {
             baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL,
                     totalScoreLabel,
@@ -336,9 +382,26 @@ public class ScoreMenu {
                     totalTimeValue,
                     totalTimeMedal
             )));
-            baseScoreSequence.addAction(Actions.delay(1f));
 
         }
+
+        // check for palette unlock
+        PaletteList.checkUnlocks(ScoreUtils.getTotalHighScore(), score.pointsImprovement);
+
+        for (String message : ScoreStamps.getPendingStamps()) {
+            Actor stamp = addUnlockLabel(message);
+            stamp.setVisible(false);
+            baseScoreSequence.addAction(
+                    Actions.sequence(
+                            Actions.delay(.2f),
+                            Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.STAMP, stamp))
+                    )
+            );
+        }
+
+        ScoreStamps.clearPendingStamps();
+
+        baseScoreSequence.addAction(Actions.delay(1f));
 
         baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, nextButton, playAgainButton, saveReplayButton)));
 
