@@ -69,7 +69,9 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             WorldOrderMarker testWorld = new WorldOrderMarker();
             testWorld.worldFile = "testWorld.json";
             testWorld.requiredLevelsForUnlock = 0;
-            worlds.add(WorldUtils.buildWorldInstance(testWorld));
+            WorldInstance testInstance = WorldUtils.buildWorldInstance(testWorld);
+            buildWorldRow(testInstance, worldTable);
+            worldTable.row().padTop(game.fontScale * 10);
         }
 
         boolean allWorldsUnlocked = true;
