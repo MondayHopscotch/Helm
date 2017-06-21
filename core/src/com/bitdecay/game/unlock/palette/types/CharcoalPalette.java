@@ -8,8 +8,8 @@ import com.bitdecay.game.unlock.palette.GameColors;
  * Created by Monday on 6/19/2017.
  */
 
-public class MonochromePalette extends GamePalette {
-    public MonochromePalette() {
+public class CharcoalPalette extends GamePalette {
+    public CharcoalPalette() {
         colors.put(GameColors.LEVEL_SEGMENT, Color.GRAY);
         colors.put(GameColors.EXPLOSION, Color.LIGHT_GRAY);
         colors.put(GameColors.SHIP_BODY, Color.GRAY);
