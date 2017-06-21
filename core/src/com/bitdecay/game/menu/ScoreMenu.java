@@ -266,7 +266,7 @@ public class ScoreMenu {
         Table labelParent = new Table();
         labelParent.setTransform(true);
         labelParent.setFillParent(false);
-        labelParent.setRotation(MathUtils.random(-20, 20));
+        labelParent.setRotation(MathUtils.random(-12, 12));
         labelParent.add(newThingLabel);
         // width / height haven't been calculated yet, so do it manually
         labelParent.setOrigin(labelParent.getMinWidth() / 2, labelParent.getMinHeight() / 2);

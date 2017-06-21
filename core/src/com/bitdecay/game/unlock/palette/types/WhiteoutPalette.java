@@ -1,7 +1,8 @@
-package com.bitdecay.game.unlock.palette;
+package com.bitdecay.game.unlock.palette.types;
 
 import com.badlogic.gdx.graphics.Color;
 import com.bitdecay.game.system.render.GamePalette;
+import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 6/7/2017.

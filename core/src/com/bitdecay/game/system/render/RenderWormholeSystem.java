@@ -11,6 +11,7 @@ import com.bitdecay.game.component.WormholeComponent;
 import com.bitdecay.game.component.collide.CollisionGeometryComponent;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
 import com.bitdecay.game.system.util.SecondLocationComponent;
+import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 3/19/2017.
@@ -34,7 +35,7 @@ public class RenderWormholeSystem extends AbstractIteratingGameSystem {
 
         maybeResetSizes(wormhole);
 
-        renderer.setColor(Color.DARK_GRAY);
+        renderer.setColor(pilot.getHelm().palette.get(GameColors.WORMHOLE));
 
         drawWormhole(transform.position, wormhole, wormhole.inSize, wormhole.inner, true);
         drawWormhole(exitLocationComponent.position, wormhole, wormhole.outSize, wormhole.inner * (wormhole.outSize / wormhole.inSize), false);

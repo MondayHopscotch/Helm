@@ -1,20 +1,21 @@
-package com.bitdecay.game.unlock.palette;
+package com.bitdecay.game.unlock.palette.types;
 
 import com.badlogic.gdx.graphics.Color;
 import com.bitdecay.game.system.render.GamePalette;
+import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 6/13/2017.
  */
 
-public class GameBoyPalette extends GamePalette {
+public class VideoKidPalette extends GamePalette {
     private static final Color green1 =new Color(0x9bbc0fff);
     private static final Color green2 =new Color(0x8bac0fff);
     private static final Color green3 =new Color(0x306230ff);
     private static final Color green4 =new Color(0x0f380fff);
 
 
-    public GameBoyPalette() {
+    public VideoKidPalette() {
         colors.put(GameColors.LEVEL_SEGMENT, green3);
         colors.put(GameColors.EXPLOSION, green1);
         colors.put(GameColors.SHIP_BODY, green3);
