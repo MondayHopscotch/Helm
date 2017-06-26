@@ -45,7 +45,6 @@ public class CreditsScreen implements Screen {
         creditTitle.setFontScale(game.fontScale * 1.5f);
 
         Table creditsTable = new Table();
-        creditsTable.setFillParent(true);
         creditsTable.setWidth(Gdx.graphics.getWidth() * .75f);
 
         for (CreditsData loadedCredit : loadedCredits) {

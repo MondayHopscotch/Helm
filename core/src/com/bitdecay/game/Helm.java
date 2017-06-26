@@ -64,6 +64,7 @@ public class Helm extends Game {
         String[] updatesRequiringClear = new String[]{
                 "clear_required_0.4",
                 "clear_required_0.6",
+                "clear_required_0.7"
         };
 
         boolean prefClearRequired = false;

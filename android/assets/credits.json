@@ -26,6 +26,12 @@
 		]
 	},
 	{
+		sectionTitle: Font
+		creditLines: [
+			Visitor (Brian Kent)
+		]
+	},
+	{
 		sectionTitle: Music
 		creditLines: [
 			None as of yet
