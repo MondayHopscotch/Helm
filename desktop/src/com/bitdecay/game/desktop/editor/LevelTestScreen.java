@@ -8,6 +8,7 @@ import com.bitdecay.game.Helm;
 import com.bitdecay.game.scoring.LandingScore;
 import com.bitdecay.game.screen.LevelPlayer;
 import com.bitdecay.game.sound.SoundMode;
+import com.bitdecay.game.unlock.palette.types.StandardPalette;
 import com.bitdecay.game.world.LevelDefinition;
 
 /**
@@ -15,10 +16,13 @@ import com.bitdecay.game.world.LevelDefinition;
  */
 public class LevelTestScreen implements Screen, GamePilot {
     private final LevelPlayer levelPlayer;
+    private final Helm helmGame;
     private HelmEditor editor;
     private LevelDefinition level;
 
     public LevelTestScreen(HelmEditor editor) {
+        this.helmGame = new Helm();
+        helmGame.palette = new StandardPalette();
         this.editor = editor;
         levelPlayer = new LevelPlayer(this, false);
     }
@@ -95,7 +99,7 @@ public class LevelTestScreen implements Screen, GamePilot {
 
     @Override
     public Helm getHelm() {
-        return null;
+        return helmGame;
     }
 
     @Override

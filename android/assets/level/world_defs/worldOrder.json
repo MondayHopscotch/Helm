@@ -16,6 +16,10 @@
     requiredLevelsForUnlock: 9
   },
   {
+    worldFile: "ramp_up.json",
+    requiredLevelsForUnlock: 9
+  },
+  {
     worldFile: "black_hole.json",
     requiredLevelsForUnlock: 10
   },

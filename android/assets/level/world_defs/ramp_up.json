@@ -1,0 +1,7 @@
+{
+  worldName: "Ramp Up",
+  levelList: [
+    "level/ramping/pinch.json",
+    "level/ramping/economy.json"
+  ]
+}
