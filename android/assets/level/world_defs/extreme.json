@@ -2,6 +2,7 @@
   worldName: "End Game",
   levelList: [
     "level/extreme/close_quarters.json",
+    "level/extreme/corridor.json",
     "level/extreme/zig.json",
     "level/extreme/air_twist.json",
     "level/extreme/slither.json",
