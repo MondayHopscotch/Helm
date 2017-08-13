@@ -2,6 +2,8 @@
   worldName: "Ramp Up",
   levelList: [
     "level/ramping/pinch.json",
-    "level/ramping/economy.json"
+    "level/ramping/economy.json",
+    "level/ramping/tick_tock.json",
+    "level/ramping/horseshoe.json"
   ]
 }

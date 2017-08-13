@@ -32,11 +32,11 @@
     requiredLevelsForUnlock: 20
   },
   {
-    worldFile: "extreme.json",
+    worldFile: "guest_world.json",
     requiredLevelsForUnlock: 23
   },
   {
-    worldFile: "guest_world.json",
+    worldFile: "extreme.json",
     requiredLevelsForUnlock: 30
   }
 ]
