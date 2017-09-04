@@ -1,10 +1,10 @@
 {
-  worldName: "Islands",
+  worldName: "Explore",
   levelList: [
-    "level/islands/islands_1.json",
+    "level/islands/transfer.json",
     "level/rotated/tilted.json",
-    "level/rotated/spider.json",
-    "level/rotated/muerto.json",
+    "level/medium/camber.json",
     "level/rotated/peanut.json",
+    "level/medium/klein.json"
   ]
 }

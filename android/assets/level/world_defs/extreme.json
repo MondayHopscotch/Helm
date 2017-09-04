@@ -1,9 +1,11 @@
 {
-  worldName: "Extreme",
+  worldName: "End Game",
   levelList: [
-    "level/extreme/level_hard2.json",
-    "level/extreme/level_hard1_focus.json",
-    "level/extreme/level_hard3.json",
+    "level/extreme/close_quarters.json",
+    "level/extreme/corridor.json",
+    "level/extreme/zig.json",
+    "level/extreme/air_twist.json",
+    "level/extreme/slither.json",
     "level/extreme/apex.json"
   ]
 }

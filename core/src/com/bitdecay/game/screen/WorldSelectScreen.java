@@ -72,6 +72,13 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             WorldInstance testInstance = WorldUtils.buildWorldInstance(testWorld);
             buildWorldRow(testInstance, worldTable);
             worldTable.row().padTop(game.fontScale * 10);
+
+            // print level count
+            int levelCount = 0;
+            for (WorldInstance world : worlds) {
+                levelCount += world.levels.size;
+            }
+            System.out.println(levelCount + " levels across all worlds");
         }
 
         boolean allWorldsUnlocked = true;
