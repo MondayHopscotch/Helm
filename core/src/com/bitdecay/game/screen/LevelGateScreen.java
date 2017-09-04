@@ -140,7 +140,7 @@ public class LevelGateScreen implements Screen {
             return;
         }
 
-        Label scoreTextLabel = new Label("Score for next medal", skin);
+        Label scoreTextLabel = new Label("Score for " + scoreRank.nextRank().medalName() + " medal", skin);
         scoreTextLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
         scoreTextLabel.setAlignment(Align.center);
         scoreTextLabel.setOrigin(Align.center);
@@ -191,7 +191,7 @@ public class LevelGateScreen implements Screen {
             return;
         }
 
-        Label timeTextLabel = new Label("Time for next medal", skin);
+        Label timeTextLabel = new Label("Time for " + timeRank.nextRank().medalName() + " medal", skin);
         timeTextLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
         timeTextLabel.setAlignment(Align.center);
         timeTextLabel.setOrigin(Align.center);
