@@ -3,6 +3,8 @@
   levelList: [
     "level/islands/transfer.json",
     "level/rotated/tilted.json",
-    "level/rotated/peanut.json"
+    "level/medium/camber.json",
+    "level/rotated/peanut.json",
+    "level/medium/klein.json"
   ]
 }
