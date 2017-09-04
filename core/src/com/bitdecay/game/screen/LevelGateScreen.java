@@ -3,11 +3,13 @@ package com.bitdecay.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.MedalUtils;
@@ -56,8 +58,23 @@ public class LevelGateScreen implements Screen {
         skin = game.skin;
     }
 
+    private void goToNextScreen() {
+        game.setScreen(TransitionColorScreen.get(game, game.palette.get(GameColors.BACKGROUND), after));
+    }
+
     private void build() {
         stage.clear();
+
+        stage.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                if (timePassed > NO_INPUT_WAIT_TIME) {
+                    goToNextScreen();
+                }
+            }
+        });
+
         Table screenTable = new Table(skin);
         screenTable.setFillParent(true);
 
@@ -207,7 +224,7 @@ public class LevelGateScreen implements Screen {
         timePassed += delta;
 
         if (timePassed >= MAX_WAIT_TIME) {
-            game.setScreen(TransitionColorScreen.get(game, game.palette.get(GameColors.BACKGROUND), after));
+            goToNextScreen();
         }
 
         stage.act();

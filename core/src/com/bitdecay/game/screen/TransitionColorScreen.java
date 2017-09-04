@@ -46,6 +46,7 @@ public class TransitionColorScreen implements Screen {
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(null);
     }
 
     @Override
