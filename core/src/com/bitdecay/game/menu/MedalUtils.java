@@ -36,6 +36,16 @@ public class MedalUtils {
         public StatName statName() {
             return statName;
         }
+
+        public LevelRating nextRank() {
+            int ordinal = this.ordinal();
+            if (ordinal >= LevelRating.values().length) {
+                // there is no next, return this one
+                return this;
+            }
+
+            return LevelRating.values()[ordinal+1];
+        }
     }
 
     public static void init(Helm game) {
