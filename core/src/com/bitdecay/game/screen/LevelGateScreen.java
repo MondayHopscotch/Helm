@@ -24,11 +24,11 @@ import com.bitdecay.game.unlock.palette.GameColors;
 public class LevelGateScreen implements Screen {
 
     private static final float NO_INPUT_WAIT_TIME = 0.25f;
-    private static final float MAX_WAIT_TIME = 3f;
+    private static final float MAX_WAIT_TIME = 5f;
 
     public static LevelGateScreen gateScreen;
 
-    private static float INFO_FONT_SCALE = 1.1f;
+    private static float INFO_FONT_SCALE = 1.0f;
 
     public static LevelGateScreen get(Helm helm, GameScreen after) {
         if (gateScreen == null) {
@@ -116,13 +116,13 @@ public class LevelGateScreen implements Screen {
         }
 
         Label scoreTextLabel = new Label("Current Best Score", skin);
-        scoreTextLabel.setFontScale(1.2f * game.fontScale);
+        scoreTextLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
         scoreTextLabel.setAlignment(Align.center);
         scoreTextLabel.setOrigin(Align.center);
 
         Image medalImage = MedalUtils.getIconForHighScore(after.currentLevel);
         Label scoreLabel = new Label(Integer.toString(after.currentLevel.getHighScore()), skin);
-        scoreLabel.setFontScale(1.2f * game.fontScale);
+        scoreLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
         scoreLabel.setAlignment(Align.center);
         scoreLabel.setOrigin(Align.center);
 
