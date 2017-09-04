@@ -108,7 +108,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         ClickListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(TransitionColorScreen.get(game, game.palette.get(GameColors.BACKGROUND), new GameScreen(game, world, level)));
+                game.setScreen(LevelGateScreen.get(game, new GameScreen(game, world, level)));
             }
         };
 

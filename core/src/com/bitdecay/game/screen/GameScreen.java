@@ -37,7 +37,7 @@ public class GameScreen implements Screen, GamePilot {
     LevelPlayer levelPlayer;
 
     private WorldInstance activeWorld;
-    private LevelInstance currentLevel;
+    public LevelInstance currentLevel;
     private InputReplay currentReplay;
 
     private boolean reloadQueued;

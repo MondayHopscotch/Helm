@@ -15,6 +15,36 @@ public class LevelInstance {
         levelDef = def;
     }
 
+    public int getScoreNeededForMedal(MedalUtils.LevelRating rating) {
+        switch(rating) {
+            case BRONZE:
+                return levelDef.bronzeScore;
+            case SILVER:
+                return levelDef.silverScore;
+            case GOLD:
+                return levelDef.goldScore;
+            case DEV:
+                return levelDef.devScore;
+            default:
+                return 0;
+        }
+    }
+
+    public float getTimeNeededForMedal(MedalUtils.LevelRating rating) {
+        switch(rating) {
+            case BRONZE:
+                return levelDef.bronzeTime;
+            case SILVER:
+                return levelDef.silverTime;
+            case GOLD:
+                return levelDef.goldTime;
+            case DEV:
+                return levelDef.devTime;
+            default:
+                return Float.POSITIVE_INFINITY;
+        }
+    }
+
     public int getHighScore() {
         return Helm.prefs.getInteger(getScoreKey(), GamePrefs.SCORE_NOT_SET);
     }

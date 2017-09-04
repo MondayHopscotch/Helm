@@ -20,21 +20,37 @@ public class MedalUtils {
     public static int imageSize;
 
     public enum LevelRating {
-        UNRANKED(StatName.NO_STAT),
-        BRONZE(StatName.BRONZE_MEDALS),
-        SILVER(StatName.SILVER_MEDALS),
-        GOLD(StatName.GOLD_MEDALS),
-        DEV(StatName.DEV_MEDALS);
+        UNRANKED(StatName.NO_STAT, "Unranked"),
+        BRONZE(StatName.BRONZE_MEDALS, "Bronze"),
+        SILVER(StatName.SILVER_MEDALS, "Silver"),
+        GOLD(StatName.GOLD_MEDALS, "Gold"),
+        DEV(StatName.DEV_MEDALS, "Developer");
 
 
         private StatName statName;
+        private String medalName;
 
-        LevelRating(StatName statName) {
+        LevelRating(StatName statName, String medalName) {
             this.statName = statName;
+            this.medalName = medalName;
         }
 
         public StatName statName() {
             return statName;
+        }
+
+        public String medalName() {
+            return this.medalName;
+        }
+
+        public LevelRating nextRank() {
+            int ordinal = this.ordinal();
+            if (ordinal >= LevelRating.values().length) {
+                // there is no next, return this one
+                return this;
+            }
+
+            return LevelRating.values()[ordinal+1];
         }
     }
 
