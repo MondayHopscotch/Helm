@@ -33,6 +33,8 @@ import com.bitdecay.game.system.camera.CameraUpdateSystem;
 import com.bitdecay.game.system.collision.CollisionAlignmentSystem;
 import com.bitdecay.game.system.collision.CollisionSystem;
 import com.bitdecay.game.system.collision.CrashSystem;
+import com.bitdecay.game.system.render.LandingHintSystem;
+import com.bitdecay.game.system.render.RenderSpeedFlamesSystem;
 import com.bitdecay.game.system.render.RenderWormholeSystem;
 import com.bitdecay.game.system.util.DelayedAddSystem;
 import com.bitdecay.game.system.GameSystem;
@@ -205,6 +207,8 @@ public class LevelPlayer {
         RenderExplosionSystem renderExplosionSystem = new RenderExplosionSystem(pilot, shapeRenderer);
         RenderGravityWellSystem renderGravityWellSystem = new RenderGravityWellSystem(pilot, shapeRenderer);
         RenderWormholeSystem renderWormholeSystem = new RenderWormholeSystem(pilot, shapeRenderer);
+        RenderSpeedFlamesSystem renderFlamesSystem = new RenderSpeedFlamesSystem(pilot, shapeRenderer);
+        LandingHintSystem landingHintSystem = new LandingHintSystem(pilot, shapeRenderer);
 
         gameRenderSystems.add(renderBoostSystem);
         gameRenderSystems.add(renderBodySystem);
@@ -212,6 +216,8 @@ public class LevelPlayer {
         gameRenderSystems.add(renderExplosionSystem);
         gameRenderSystems.add(renderGravityWellSystem);
         gameRenderSystems.add(renderWormholeSystem);
+        gameRenderSystems.add(renderFlamesSystem);
+        gameRenderSystems.add(landingHintSystem);
 
         RenderSteeringSystem renderSteeringSystem = new RenderSteeringSystem(pilot, screenCam, shapeRenderer);
         screenRenderSystems.add(renderSteeringSystem);
