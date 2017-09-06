@@ -12,6 +12,7 @@ import com.bitdecay.game.component.collide.CollisionKindComponent;
 import com.bitdecay.game.component.collide.PlayerCollisionComponent;
 import com.bitdecay.game.math.Geom;
 import com.bitdecay.game.system.AbstractIteratingGameSystem;
+import com.bitdecay.game.system.collision.LandingSystem;
 import com.bitdecay.game.unlock.palette.GameColors;
 
 /**
@@ -20,8 +21,8 @@ import com.bitdecay.game.unlock.palette.GameColors;
 
 public class LandingHintSystem extends AbstractIteratingGameSystem {
     public static final float HINT_RANGE = 350;
-    public static final float MAX_GUIDE_WIDTH = 200;
-
+    public static final float MAX_GUIDE_WIDTH = 100;
+    public static final float LINE_SIZER = 0.7f;
 
     private ShapeRenderer renderer;
 
@@ -83,53 +84,55 @@ public class LandingHintSystem extends AbstractIteratingGameSystem {
         float heightOfPlatform = Geom.getHeightOfPoints(platformBodyDef.bodyPoints);
         float widthOfPlatform = Geom.getWidthOfPoints(platformBodyDef.bodyPoints);
 
-        // get platform normal
-        // our relative 'up' from the perspective of the landing platform
-        float landingPlatformNormal = platformTransform.angle + Geom.ROTATION_UP;
-        float landingPlatformTangent = platformTransform.angle;
-        Vector2 normalSearchVector = new Vector2(1, 0).rotateRad(landingPlatformNormal);
-        Vector2 tangentSearchVector = new Vector2(1, 0).rotateRad(landingPlatformTangent);
+        Vector2 normalSearchVector = new Vector2(0, 1).rotateRad(platformTransform.angle);
+        Vector2 tangentSearchVector = new Vector2(1, 0).rotateRad(platformTransform.angle);
         Vector2 relativePlayerPosition = new Vector2(playerTransform.position).sub(platformTransform.position);
 
-//        float[] transPlayerPoints = Geom.transformPoints(playerBodyDef.bodyPoints, playerTransform);
-//        float playerMinY = Geom.getMinY(transPlayerPoints);// this is our lowest point on the player ship
+        float[] platformGeom = Geom.transformPoints(platformBodyDef.bodyPoints, platformTransform);
+        float[] playerGeom = Geom.transformPoints(playerBodyDef.bodyPoints, playerTransform);
+        float minBodyReference = Geom.getMinAlongVector(playerGeom, normalSearchVector);
+        float maxPlatformReference = Geom.getMaxAlongVector(platformGeom, normalSearchVector);
 
-        // check if player transform is within range of platform
+        float normalDistance = minBodyReference - maxPlatformReference;
 
-        float normalDistance = normalSearchVector.dot(relativePlayerPosition);
         float tangentDistance = tangentSearchVector.dot(relativePlayerPosition);
 
-        boolean withinNormal = normalDistance <= HINT_RANGE;
+        boolean withinNormal = normalDistance <= HINT_RANGE && normalDistance > 0;
         boolean withinTangent = tangentDistance > 0 && tangentDistance <= widthOfPlatform;
-        if (withinNormal && withinTangent) {
+
+        float landingPlatformNormal = platformTransform.angle + Geom.ROTATION_UP;
+        float radsAwayFromStraightUp = Math.abs(playerTransform.angle - landingPlatformNormal);
+
+        boolean landable = radsAwayFromStraightUp <= LandingSystem.MAX_LANDING_ANGLE;
+
+        if (landable && withinNormal && withinTangent) {
             System.out.println("Distance from surface: " + normalDistance);
 
-            float trueDistanceToPlatformTop = normalDistance - heightOfPlatform;
-            float trueHintRange = HINT_RANGE - heightOfPlatform;
-
-            float percentage = 1 - (trueDistanceToPlatformTop / trueHintRange);
+            float percentage = 1 - (normalDistance / HINT_RANGE);
             float guideHalfWidth = MAX_GUIDE_WIDTH * percentage  / 2 ;
 
             System.out.println("PERCENTAGE: " + percentage);
             System.out.println("HALF WIDTH:      " +  guideHalfWidth);
 
-            // these are centered
-            Vector2 start = new Vector2(tangentDistance, heightOfPlatform).add(platformTransform.position);
-            Vector2 end = new Vector2(tangentDistance, normalDistance).add(platformTransform.position);
+            // these are centered under the player
+            Vector2 start = new Vector2(tangentDistance, heightOfPlatform);
 
             Vector2 leftStart = new Vector2(start).sub(guideHalfWidth, 0);
             Vector2 rightStart = new Vector2(start).add(guideHalfWidth, 0);
 
-            Vector2 leftEnd = new Vector2(end).sub(guideHalfWidth, 0);
+            leftStart.x = Math.min(widthOfPlatform, Math.max(0, leftStart.x));
+            rightStart.x = Math.min(widthOfPlatform, Math.max(0, rightStart.x));
+
+            Vector2 leftEnd = new Vector2(leftStart).add(0, normalDistance * LINE_SIZER);
             leftEnd.y = Math.max(leftEnd.y, leftStart.y);
-            Vector2 rightEnd = new Vector2(end).add(guideHalfWidth, 0);
+            Vector2 rightEnd = new Vector2(rightStart).add(0, normalDistance * LINE_SIZER);
             rightEnd.y = Math.max(rightEnd.y, rightStart.y);
 
 
-            leftStart.rotateRad(platformTransform.angle);
-            rightStart.rotateRad(platformTransform.angle);
-            leftEnd.rotateRad(platformTransform.angle);
-            rightEnd.rotateRad(platformTransform.angle);
+            leftStart.rotateRad(platformTransform.angle).add(platformTransform.position);
+            rightStart.rotateRad(platformTransform.angle).add(platformTransform.position);
+            leftEnd.rotateRad(platformTransform.angle).add(platformTransform.position);
+            rightEnd.rotateRad(platformTransform.angle).add(platformTransform.position);
 
 
             renderer.setColor(pilot.getHelm().palette.get(GameColors.LANDING_PLATFORM));

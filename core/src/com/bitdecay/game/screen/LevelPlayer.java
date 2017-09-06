@@ -216,7 +216,7 @@ public class LevelPlayer {
         gameRenderSystems.add(renderExplosionSystem);
         gameRenderSystems.add(renderGravityWellSystem);
         gameRenderSystems.add(renderWormholeSystem);
-        gameRenderSystems.add(renderFlamesSystem);
+//        gameRenderSystems.add(renderFlamesSystem);
         gameRenderSystems.add(landingHintSystem);
 
         RenderSteeringSystem renderSteeringSystem = new RenderSteeringSystem(pilot, screenCam, shapeRenderer);
