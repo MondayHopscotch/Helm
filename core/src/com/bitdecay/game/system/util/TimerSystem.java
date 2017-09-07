@@ -23,11 +23,7 @@ public class TimerSystem extends AbstractIteratingGameSystem {
     public void actOnSingle(GameEntity entity, float delta) {
         TimerComponent timer = entity.getComponent(TimerComponent.class);
         timer.secondsElapsed += delta;
-        if (Helm.debug) {
-            pilot.setTime(levelPlayer.getTick());
-        } else {
-            pilot.setTime(timer.secondsElapsed);
-        }
+        pilot.setTime(timer.secondsElapsed);
     }
 
     @Override

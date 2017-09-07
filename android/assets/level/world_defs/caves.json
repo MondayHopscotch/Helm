@@ -1,8 +1,9 @@
 {
   worldName: "Caves",
   levelList: [
-    "level/medium/level_medium1.json",
-    "level/medium/level_medium2.json",
-    "level/medium/level_medium3.json"
+    "level/caves/cashew.json",
+    "level/caves/ascent.json",
+    "level/caves/grounded.json",
+    "level/caves/zed.json"
   ]
 }

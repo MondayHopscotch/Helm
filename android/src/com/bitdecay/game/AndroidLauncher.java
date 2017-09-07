@@ -11,6 +11,7 @@ import com.bitdecay.game.system.input.TouchScreenSteeringInputSystem;
 public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
+		Helm.debug = true;
 		super.onCreate(savedInstanceState);
 		InputSystemFactory.setInputSystems(TouchScreenBoosterInputSystem.class, TouchScreenSteeringInputSystem.class);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
