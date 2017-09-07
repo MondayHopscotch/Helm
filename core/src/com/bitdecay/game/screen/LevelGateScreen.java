@@ -65,7 +65,7 @@ public class LevelGateScreen implements Screen {
     private void build() {
         stage.clear();
 
-        stage.addListener(new ClickListener() {
+        ClickListener skipListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -73,10 +73,13 @@ public class LevelGateScreen implements Screen {
                     goToNextScreen();
                 }
             }
-        });
+        };
+
+        stage.addListener(skipListener);
 
         Table screenTable = new Table(skin);
         screenTable.setFillParent(true);
+        screenTable.addListener(skipListener);
 
         Label levelTitleLabel = new Label(after.currentLevel.levelDef.name, skin);
         levelTitleLabel.setFontScale(2 * game.fontScale);

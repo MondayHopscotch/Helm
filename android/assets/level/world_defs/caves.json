@@ -4,6 +4,7 @@
     "level/caves/cashew.json",
     "level/caves/ascent.json",
     "level/caves/grounded.json",
-    "level/caves/zed.json"
+    "level/caves/zed.json",
+    "level/caves/debris.json"
   ]
 }
