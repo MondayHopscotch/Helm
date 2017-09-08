@@ -1,15 +1,14 @@
 package com.bitdecay.game.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.MedalUtils;
@@ -21,7 +20,7 @@ import com.bitdecay.game.unlock.palette.GameColors;
  * Created by Monday on 9/4/2017.
  */
 
-public class LevelGateScreen implements Screen {
+public class LevelGateScreen extends InputAdapter implements Screen {
 
     private static final float NO_INPUT_WAIT_TIME = 0.25f;
     private static final float MAX_WAIT_TIME = 5f;
@@ -46,6 +45,7 @@ public class LevelGateScreen implements Screen {
     Skin skin;
 
     private float timePassed = 0;
+    private boolean touchTriggered = false;
     private GameScreen after;
 
     private LevelGateScreen(Helm game) {
@@ -65,21 +65,8 @@ public class LevelGateScreen implements Screen {
     private void build() {
         stage.clear();
 
-        ClickListener skipListener = new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                if (timePassed > NO_INPUT_WAIT_TIME) {
-                    goToNextScreen();
-                }
-            }
-        };
-
-        stage.addListener(skipListener);
-
         Table screenTable = new Table(skin);
         screenTable.setFillParent(true);
-        screenTable.addListener(skipListener);
 
         Label levelTitleLabel = new Label(after.currentLevel.levelDef.name, skin);
         levelTitleLabel.setFontScale(2 * game.fontScale);
@@ -216,7 +203,8 @@ public class LevelGateScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        touchTriggered = false;
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -232,6 +220,15 @@ public class LevelGateScreen implements Screen {
 
         stage.act();
         stage.draw();
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (touchTriggered != true && timePassed > NO_INPUT_WAIT_TIME) {
+            touchTriggered = true;
+            goToNextScreen();
+        }
+        return true;
     }
 
     @Override

@@ -1,8 +1,9 @@
 {
   worldName: "Channels",
   levelList: [
-    "level/medium/choke_point.json",
-    "level/medium/pegleg.json",
-    "level/medium/options.json"
+    "level/channels/choke_point.json",
+    "level/channels/pegleg.json",
+    "level/channels/options.json",
+    "level/channels/cavity.json"
   ]
 }
