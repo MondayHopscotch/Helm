@@ -20,6 +20,7 @@ import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.time.TimerUtils;
 import com.bitdecay.game.unlock.StatName;
 import com.bitdecay.game.world.LevelDefinition;
+import com.bitdecay.game.world.LevelInstance;
 import com.bitdecay.game.world.WorldDefinition;
 import com.bitdecay.game.world.WorldInstance;
 import com.bitdecay.game.world.WorldOrderMarker;
@@ -77,7 +78,18 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             int levelCount = 0;
             for (WorldInstance world : worlds) {
                 levelCount += world.levels.size;
+                for (LevelInstance level : world.levels) {
+                    if (level.getScoreNeededForMedal(MedalUtils.LevelRating.DEV) == Integer.MAX_VALUE) {
+                        System.out.println(level.levelDef.name + " does not have a dev score");
+                    }
+
+                    if (level.getTimeNeededForMedal(MedalUtils.LevelRating.DEV) == 0) {
+                        System.out.println(level.levelDef.name + " does not have a dev time");
+                    }
+                }
+
             }
+
             System.out.println(levelCount + " levels across all worlds");
         }
 

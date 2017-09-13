@@ -1,8 +1,10 @@
 package com.bitdecay.game.world;
 
 import com.badlogic.gdx.utils.Array;
+import com.bitdecay.game.Helm;
 import com.bitdecay.game.menu.MedalUtils;
 import com.bitdecay.game.prefs.GamePrefs;
+import com.bitdecay.game.time.TimerUtils;
 
 /**
  * Created by Monday on 12/23/2016.
@@ -23,7 +25,11 @@ public class WorldInstance {
     }
 
     public void addLevelInstance(LevelDefinition levelDef) {
-        levels.add(new LevelInstance(levelDef));
+        LevelInstance instance = new LevelInstance(levelDef);
+        if (Helm.debug) {
+            System.out.println(instance.levelDef.name + "      High Score: " + instance.getHighScore() + "         Best Time: " + TimerUtils.getFormattedTime(instance.getBestTime()));
+        }
+        levels.add(instance);
     }
 
     public MedalUtils.LevelRating getBestScoreMedal() {

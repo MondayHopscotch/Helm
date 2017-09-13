@@ -40,7 +40,7 @@ public class Geom {
         return newPoints;
     }
 
-    public static float[]rotatePoints(float[] points, float angle, Vector2 origin) {
+    public static float[] rotatePoints(float[] points, float angle, Vector2 origin) {
         float[] newPoints = new float[points.length];
         for (int i = 0; i < points.length; i += 2) {
             Vector2 rotated = getRotatedPoint(points[i], points[i + 1], angle, origin);
@@ -165,5 +165,29 @@ public class Geom {
             maxY = Math.max(maxY, points[i]);
         }
         return maxY;
+    }
+
+    public static float getMinX(float[] points) {
+        float minX = Float.POSITIVE_INFINITY;
+        for (int i = 0; i < points.length; i += 2) {
+            minX = Math.min(minX, points[i]);
+        }
+        return minX;
+    }
+
+    public static float getMaxX(float[] points) {
+        float maxX = Float.NEGATIVE_INFINITY;
+        for (int i = 0; i < points.length; i += 2) {
+            maxX = Math.max(maxX, points[i]);
+        }
+        return maxX;
+    }
+
+    public static float getWidthOfPoints(float[] points) {
+        return getMaxX(points) - getMinX(points);
+    }
+
+    public static float getHeightOfPoints(float[] points) {
+        return getMaxY(points) - getMinY(points);
     }
 }

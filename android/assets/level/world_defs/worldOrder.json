@@ -8,15 +8,15 @@
     requiredLevelsForUnlock: 2
   },
   {
-    worldFile: "islands.json",
+    worldFile: "explore.json",
     requiredLevelsForUnlock: 4
   },
   {
-    worldFile: "channels.json",
+    worldFile: "ramp_up.json",
     requiredLevelsForUnlock: 9
   },
   {
-    worldFile: "ramp_up.json",
+    worldFile: "channels.json",
     requiredLevelsForUnlock: 9
   },
   {
