@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
-import com.bitdecay.game.Helm;
 import com.bitdecay.game.component.BodyDefComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.VelocityComponent;
@@ -21,13 +20,37 @@ import com.bitdecay.game.unlock.palette.GameColors;
 
 public class LandingHintSystem extends AbstractIteratingGameSystem {
     public static final float HINT_RANGE = 350;
-    public static final float MAX_GUIDE_WIDTH = 100;
-    public static final float LINE_SIZER = 0.7f;
 
     private ShapeRenderer renderer;
 
     private GameEntity player;
     private GameEntity platform;
+
+    private static final float[] checkMark = new float[]{
+            -8, -1,
+            -6, 1,
+            -3, -1,
+            5, 6,
+            7, 4,
+            -3, -6,
+            -8, -1
+    };
+
+    private static final float[] xMark = new float[]{
+            -7, 5,
+            -5, 7,
+            0, 2,
+            5, 7,
+            7, 5,
+            2, 0,
+            7, -5,
+            5, -7,
+            0, -2,
+            -5, -7,
+            -7, -5,
+            -2, 0,
+            -7, 5
+    };
 
     public LandingHintSystem(GamePilot pilot, ShapeRenderer renderer) {
         super(pilot);
@@ -70,9 +93,6 @@ public class LandingHintSystem extends AbstractIteratingGameSystem {
         super.after();
 
         if (player == null || platform == null) {
-            if (Helm.debug) {
-//                System.out.println("Objects not found for Landing Hint System");
-            }
             return;
         }
 
@@ -105,39 +125,20 @@ public class LandingHintSystem extends AbstractIteratingGameSystem {
 
         boolean landable = radsAwayFromStraightUp <= LandingSystem.MAX_LANDING_ANGLE;
 
-        if (landable && withinNormal && withinTangent) {
-            System.out.println("Distance from surface: " + normalDistance);
+        Vector2 platCenter = new Vector2(widthOfPlatform / 2, heightOfPlatform / 2).rotateRad(platformTransform.angle).add(platformTransform.position);
 
-            float percentage = 1 - (normalDistance / HINT_RANGE);
-            float guideHalfWidth = MAX_GUIDE_WIDTH * percentage  / 2 ;
-
-            System.out.println("PERCENTAGE: " + percentage);
-            System.out.println("HALF WIDTH:      " +  guideHalfWidth);
-
-            // these are centered under the player
-            Vector2 start = new Vector2(tangentDistance, heightOfPlatform);
-
-            Vector2 leftStart = new Vector2(start).sub(guideHalfWidth, 0);
-            Vector2 rightStart = new Vector2(start).add(guideHalfWidth, 0);
-
-            leftStart.x = Math.min(widthOfPlatform, Math.max(0, leftStart.x));
-            rightStart.x = Math.min(widthOfPlatform, Math.max(0, rightStart.x));
-
-            Vector2 leftEnd = new Vector2(leftStart).add(0, normalDistance * LINE_SIZER);
-            leftEnd.y = Math.max(leftEnd.y, leftStart.y);
-            Vector2 rightEnd = new Vector2(rightStart).add(0, normalDistance * LINE_SIZER);
-            rightEnd.y = Math.max(rightEnd.y, rightStart.y);
-
-
-            leftStart.rotateRad(platformTransform.angle).add(platformTransform.position);
-            rightStart.rotateRad(platformTransform.angle).add(platformTransform.position);
-            leftEnd.rotateRad(platformTransform.angle).add(platformTransform.position);
-            rightEnd.rotateRad(platformTransform.angle).add(platformTransform.position);
-
-
-            renderer.setColor(pilot.getHelm().palette.get(GameColors.LANDING_PLATFORM));
-            renderer.line(leftStart.x, leftStart.y, leftEnd.x, leftEnd.y);
-            renderer.line(rightStart.x, rightStart.y, rightEnd.x, rightEnd.y);
+        if (withinNormal && withinTangent) {
+            if (landable) {
+                renderer.setColor(pilot.getHelm().palette.get(GameColors.LANDING_PLATFORM));
+                float[] checkPoints = Geom.rotatePoints(checkMark, platformTransform.angle);
+                checkPoints = Geom.translatePoints(checkPoints, platCenter);
+                renderer.polyline(checkPoints);
+            } else {
+                renderer.setColor(pilot.getHelm().palette.get(GameColors.LEVEL_SEGMENT));
+                float[] xPoints = Geom.rotatePoints(xMark, platformTransform.angle);
+                xPoints = Geom.translatePoints(xPoints, platCenter);
+                renderer.polyline(xPoints);
+            }
         }
 
         player = null;
