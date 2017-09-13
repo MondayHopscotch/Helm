@@ -1,0 +1,10 @@
+{
+  worldName: "Explore",
+  levelList: [
+    "level/explore/tilted.json",
+    "level/explore/camber.json",
+    "level/explore/peanut.json",
+    "level/explore/klein.json",
+    "level/explore/flings.json"
+  ]
+}

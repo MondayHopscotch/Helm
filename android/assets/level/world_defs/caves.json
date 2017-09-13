@@ -1,6 +1,7 @@
 {
   worldName: "Caves",
   levelList: [
+    "level/caves/transfer.json",
     "level/caves/cashew.json",
     "level/caves/ascent.json",
     "level/caves/grounded.json",
