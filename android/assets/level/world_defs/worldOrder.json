@@ -32,6 +32,10 @@
     requiredLevelsForUnlock: 20
   },
   {
+    worldFile: "mixer.json",
+    requiredLevelsForUnlock: 21,
+  }
+  {
     worldFile: "guest_world.json",
     requiredLevelsForUnlock: 23
   },
