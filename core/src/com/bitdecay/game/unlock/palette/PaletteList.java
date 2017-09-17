@@ -13,7 +13,8 @@ public enum PaletteList {
     GUACAMOLE("Guacamole", new GuacamolePalette(), 100000),
     WHITEOUT("Whiteout", new WhiteoutPalette(), 200000),
     VIDEO_KID("Video Kid", new VideoKidPalette(), 300000),
-    CHARCOAL("Charcoal", new CharcoalPalette(), 400000);
+    CHARCOAL("Charcoal", new CharcoalPalette(), 400000),
+    MUTED("Muted", new MutedPalette(), 500000);
 
     public final String name;
     public final int pointsForUnlock;

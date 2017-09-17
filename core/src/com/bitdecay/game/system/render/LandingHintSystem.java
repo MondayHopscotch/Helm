@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.game.GameEntity;
 import com.bitdecay.game.GamePilot;
+import com.bitdecay.game.collision.CollisionKind;
 import com.bitdecay.game.component.BodyDefComponent;
+import com.bitdecay.game.component.SteeringComponent;
 import com.bitdecay.game.component.TransformComponent;
 import com.bitdecay.game.component.VelocityComponent;
 import com.bitdecay.game.component.collide.CollisionKindComponent;
@@ -23,8 +25,8 @@ public class LandingHintSystem extends AbstractIteratingGameSystem {
 
     private ShapeRenderer renderer;
 
-    private GameEntity player;
-    private GameEntity platform;
+    private GameEntity player = null;
+    private GameEntity platform = null;
 
     private static final float[] checkMark = new float[]{
             -8, -1,
@@ -66,24 +68,27 @@ public class LandingHintSystem extends AbstractIteratingGameSystem {
         return entity.hasComponents(
                 PlayerCollisionComponent.class,
                 TransformComponent.class,
-                VelocityComponent.class,
                 BodyDefComponent.class
         );
     }
 
     private boolean isPlatform(GameEntity entity) {
-        return entity.hasComponents(
+        if (entity.hasComponents(
                 CollisionKindComponent.class,
                 TransformComponent.class,
                 BodyDefComponent.class
-        );
+        )) {
+            return CollisionKind.LANDING_PLATFORM.equals(entity.getComponent(CollisionKindComponent.class).kind);
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void actOnSingle(GameEntity entity, float delta) {
-        if (isPlayer(entity)) {
+        if (isPlayer(entity) && entity != player) {
             player = entity;
-        } else if (isPlatform(entity)) {
+        } else if (isPlatform(entity) && entity != platform) {
             platform = entity;
         }
     }
@@ -91,7 +96,6 @@ public class LandingHintSystem extends AbstractIteratingGameSystem {
     @Override
     public void after() {
         super.after();
-
         if (player == null || platform == null) {
             return;
         }
@@ -117,7 +121,8 @@ public class LandingHintSystem extends AbstractIteratingGameSystem {
 
         float tangentDistance = tangentSearchVector.dot(relativePlayerPosition);
 
-        boolean withinNormal = normalDistance <= HINT_RANGE && normalDistance > 0;
+        // we want to keep rendering once the player lands, so give them a little slack on the min
+        boolean withinNormal = normalDistance <= HINT_RANGE && normalDistance > (-heightOfPlatform / 2);
         boolean withinTangent = tangentDistance > 0 && tangentDistance <= widthOfPlatform;
 
         float landingPlatformNormal = platformTransform.angle + Geom.ROTATION_UP;
@@ -140,7 +145,11 @@ public class LandingHintSystem extends AbstractIteratingGameSystem {
                 renderer.polyline(xPoints);
             }
         }
+    }
 
+    @Override
+    public void reset() {
+        super.reset();
         player = null;
         platform = null;
     }

@@ -1,0 +1,9 @@
+{
+  worldName: "Mixer",
+  levelList: [
+    "level/mixer/rewind.json",
+    "level/mixer/fork.json",
+    "level/mixer/caution.json",
+    "level/mixer/round_trip.json"
+  ]
+}
