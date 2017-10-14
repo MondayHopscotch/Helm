@@ -2,6 +2,7 @@ package com.bitdecay.game.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,6 +19,7 @@ import com.bitdecay.game.persist.ReplayUtils;
 import com.bitdecay.game.prefs.GamePrefs;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.Version;
+import com.bitdecay.game.sound.MusicLibrary;
 
 /**
  * Created by Monday on 12/21/2016.
@@ -156,6 +158,11 @@ public class TitleScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        Music music = game.assets.get(MusicLibrary.AMBIENT_MUSIC, Music.class);
+        music.setLooping(true);
+        if (!music.isPlaying()) {
+            music.play();
+        }
     }
 
     @Override

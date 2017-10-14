@@ -12,8 +12,11 @@ public class MusicLibrary {
 
     public static final String SHIP_BOOST = MUSIC_DIR + "BoostNoise.ogg";
 
+    public static final String AMBIENT_MUSIC = MUSIC_DIR + "ROZKOL_Ambient_I.ogg";
+
     public static final String[] allMusic = new String[] {
-            SHIP_BOOST
+            SHIP_BOOST,
+            AMBIENT_MUSIC
     };
 
     public static void loadAllAsync(AssetManager assets) {

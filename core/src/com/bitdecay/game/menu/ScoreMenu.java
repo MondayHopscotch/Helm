@@ -2,6 +2,8 @@ package com.bitdecay.game.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,13 +12,14 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.bitdecay.game.GamePilot;
 import com.bitdecay.game.Helm;
 import com.bitdecay.game.scoring.LandingScore;
@@ -37,6 +40,11 @@ public class ScoreMenu {
     private static final String RETURN_TO_REPLAY = "Done";
     private static final String SAVE_REPLAY_TEXT = "Save Replay";
     private static final String PLAY_AGAIN = "Play Again";
+
+    private static final float IMAGE_ICON_SCALE = 0.6f;
+
+    private static TextureRegion retryLevelTexture;
+    private static TextureRegion saveReplayTexture;
 
     public final Stage stage;
     private final Skin skin;
@@ -76,11 +84,14 @@ public class ScoreMenu {
 
     private final Table nextTable;
     private final TextButton nextButton;
-    private final TextButton saveReplayButton;
+    private final ImageButton saveReplayButton;
     private final TextButton playAgainButton;
 
     public ScoreMenu(final GamePilot pilot) {
         this.pilot = pilot;
+
+        initIcons();
+
         stage = new Stage();
         stage.setDebugAll(Helm.debug);
 
@@ -214,15 +225,19 @@ public class ScoreMenu {
         nextButton.align(Align.center);
         nextButton.setOrigin(Align.center);
 
-        saveReplayButton = new TextButton(SAVE_REPLAY_TEXT, skin);
-        saveReplayButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
-        saveReplayButton.align(Align.center);
-        saveReplayButton.setOrigin(Align.center);
+        TextureRegionDrawable imageUp = new TextureRegionDrawable(saveReplayTexture);
+        saveReplayButton = new ImageButton(imageUp);
+        saveReplayButton.setSkin(pilot.getHelm().skin);
+        saveReplayButton.align(Align.bottomLeft);
+        saveReplayButton.setOrigin(Align.bottomLeft);
+        saveReplayButton.getImage().setScale(pilot.getHelm().fontScale * 0.6f);
+        saveReplayButton.getImage().setOrigin(Align.center);
+        saveReplayButton.getImage().setAlign(Align.center);
         saveReplayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 pilot.saveLastReplay();
-                saveReplayButton.getLabel().setText("Replay Saved");
+//                saveReplayButton.getLabel().setText("Replay Saved");
                 saveReplayButton.removeListener(this);
                 saveReplayButton.setDisabled(true);
             }
@@ -255,6 +270,11 @@ public class ScoreMenu {
         achieveTable.setOrigin(Align.center);
 
         stage.addActor(achieveTable);
+    }
+
+    private void initIcons() {
+        retryLevelTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("retry_icon");
+        saveReplayTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("save_icon");
     }
 
     private Actor addUnlockLabel(String text) {
@@ -300,7 +320,7 @@ public class ScoreMenu {
         if (!isReplay) {
             // if we aren't watching a replay, let them save it
             nextTable.add(playAgainButton).padLeft(pilot.getHelm().fontScale * 5);
-            nextTable.add(saveReplayButton).padLeft(pilot.getHelm().fontScale * 5);
+            nextTable.add(saveReplayButton).size(32 * pilot.getHelm().fontScale * IMAGE_ICON_SCALE).padLeft(pilot.getHelm().fontScale * 5);
         }
     }
 
