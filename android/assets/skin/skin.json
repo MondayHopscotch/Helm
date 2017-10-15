@@ -2,7 +2,8 @@
   "com.badlogic.gdx.graphics.Color": {
     "white": { "r": 1, "g": 1, "b": 1, "a": 1 },
     "black": { "r": 0, "g": 0, "b": 0, "a": 1 },
-    "green": { "r": 0, "g": 1, "b": 0, "a": 1 }
+    "green": { "r": 0, "g": 1, "b": 0, "a": 1 },
+    "grey": { "r": 0.7, "g": 0.7, "b": 0.7, "a": 1 }
   },
   "com.badlogic.gdx.graphics.g2d.BitmapFont": {
     "defaultFont": {
@@ -34,7 +35,8 @@
       "font": "defaultFont",
       "fontColor": "black",
       "downFontColor": "white",
-      "pressedOffsetY": -2
+      "pressedOffsetY": -2,
+      "disabledFontColor": "grey"
     },
     "button": {
       "up": "button-white" ,
@@ -42,7 +44,8 @@
       "font": "defaultFont",
       "fontColor": "black",
       "downFontColor": "white",
-      "pressedOffsetY": -2
+      "pressedOffsetY": -2,
+      "disabledFontColor": "grey"
     },
     "toggle-button": {
       "up": "button-white" ,
@@ -50,7 +53,8 @@
       "font": "defaultFont",
       "fontColor": "black",
       "checkedFontColor": "white",
-      "pressedOffsetY": -2
+      "pressedOffsetY": -2,
+      "disabledFontColor": "grey"
     }
   },
   "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
