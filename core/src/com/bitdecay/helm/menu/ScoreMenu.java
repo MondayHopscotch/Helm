@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -42,6 +43,7 @@ public class ScoreMenu {
 
     private static TextureRegion retryLevelTexture;
     private static TextureRegion saveReplayTexture;
+    private static TextureRegion saveCompleteTexture;
 
     public final Stage stage;
     private final Skin skin;
@@ -81,8 +83,8 @@ public class ScoreMenu {
 
     private final Table nextTable;
     private final TextButton nextButton;
-    private final ImageButton saveReplayButton;
-    private final TextButton playAgainButton;
+    private final BitImageButton saveReplayButton;
+    private final BitImageButton playAgainButton;
 
     public ScoreMenu(final com.bitdecay.helm.GamePilot pilot) {
         this.pilot = pilot;
@@ -223,27 +225,23 @@ public class ScoreMenu {
         nextButton.setOrigin(Align.center);
 
         TextureRegionDrawable imageUp = new TextureRegionDrawable(saveReplayTexture);
-        saveReplayButton = new ImageButton(imageUp);
-        saveReplayButton.setSkin(pilot.getHelm().skin);
+        final TextureRegionDrawable imageDown = new TextureRegionDrawable(saveCompleteTexture);
+        saveReplayButton = new BitImageButton(imageUp, pilot.getHelm().fontScale * 0.4f, skin);
         saveReplayButton.align(Align.bottomLeft);
         saveReplayButton.setOrigin(Align.bottomLeft);
-        saveReplayButton.getImage().setScale(pilot.getHelm().fontScale * 0.6f);
-        saveReplayButton.getImage().setOrigin(Align.center);
-        saveReplayButton.getImage().setAlign(Align.center);
+
         saveReplayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 pilot.saveLastReplay();
-//                saveReplayButton.getLabel().setText("Replay Saved");
                 saveReplayButton.removeListener(this);
+                saveReplayButton.setImage(imageDown);
                 saveReplayButton.setDisabled(true);
             }
         });
 
-        playAgainButton = new TextButton(PLAY_AGAIN, skin);
-        playAgainButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
-        playAgainButton.align(Align.center);
-        playAgainButton.setOrigin(Align.center);
+        TextureRegionDrawable retryImage = new TextureRegionDrawable(retryLevelTexture);
+        playAgainButton = new BitImageButton(retryImage, pilot.getHelm().fontScale * 0.4f, skin);
         playAgainButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -272,6 +270,7 @@ public class ScoreMenu {
     private void initIcons() {
         retryLevelTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("retry_icon");
         saveReplayTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("save_icon");
+        saveCompleteTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("saved_icon");
     }
 
     private Actor addUnlockLabel(String text) {

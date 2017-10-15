@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.bitdecay.helm.prefs.GamePrefs;
+import com.bitdecay.helm.sound.MusicLibrary;
 
 /**
  * Created by Monday on 12/21/2016.
@@ -154,8 +156,15 @@ public class TitleScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         Music music = game.assets.get(com.bitdecay.helm.sound.MusicLibrary.AMBIENT_MUSIC, Music.class);
         music.setLooping(true);
-        if (!music.isPlaying()) {
-            music.play();
+
+        if (game.prefs.getBoolean(GamePrefs.MUTE_MUSIC)) {
+            if (music.isPlaying()) {
+                music.pause();
+            }
+        } else {
+            if (!music.isPlaying()) {
+                music.play();
+            }
         }
     }
 
