@@ -84,7 +84,7 @@ public class ScoreMenu {
     private final Table nextTable;
     private final TextButton nextButton;
     private final BitImageButton saveReplayButton;
-    private final TextButton playAgainButton;
+    private final BitImageButton playAgainButton;
 
     public ScoreMenu(final com.bitdecay.helm.GamePilot pilot) {
         this.pilot = pilot;
@@ -240,10 +240,8 @@ public class ScoreMenu {
             }
         });
 
-        playAgainButton = new TextButton(PLAY_AGAIN, skin);
-        playAgainButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
-        playAgainButton.align(Align.center);
-        playAgainButton.setOrigin(Align.center);
+        TextureRegionDrawable retryImage = new TextureRegionDrawable(retryLevelTexture);
+        playAgainButton = new BitImageButton(retryImage, pilot.getHelm().fontScale * 0.4f, skin);
         playAgainButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
