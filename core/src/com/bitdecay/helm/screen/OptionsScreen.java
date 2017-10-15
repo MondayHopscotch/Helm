@@ -2,6 +2,7 @@ package com.bitdecay.helm.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.prefs.GamePrefs;
+import com.bitdecay.helm.sound.MusicLibrary;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +71,14 @@ public class OptionsScreen implements Screen {
         generateSliderFloatSetting("Steering Joystick X", GamePrefs.JOYSTICK_STEERING_WIDTH, GamePrefs.JOYSTICK_STEERING_WIDTH_DEFAULT, GamePrefs.JOYSTICK_STEERING_MIN, GamePrefs.JOYSTICK_STEERING_MAX);
         generateSliderFloatSetting("Steering Joystick Y", GamePrefs.JOYSTICK_STEERING_HEIGHT, GamePrefs.JOYSTICK_STEERING_HEIGHT_DEFAULT, GamePrefs.JOYSTICK_STEERING_MIN, GamePrefs.JOYSTICK_STEERING_MAX);
         generateCheckBoxSetting("Use Lefty Controls", GamePrefs.USE_LEFT_HANDED_CONTROLS, GamePrefs.USE_LEFT_HANDED_CONTROLS_DEFAULT);
+
+        generateCheckBoxSetting("Mute Music", GamePrefs.MUTE_MUSIC, GamePrefs.MUTE_MUSIC_DEFAULT);
+        inputMap.get(GamePrefs.MUTE_MUSIC).addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                updateMusicMute();
+            }
+        });
 
         TextButton doneLabel = new TextButton("Save", skin);
         doneLabel.getLabel().setFontScale(baseFontScale * 1.5f);
@@ -166,6 +176,22 @@ public class OptionsScreen implements Screen {
         prefsTable.add(settingLabel).align(Align.left);
         prefsTable.add(settingInput).width(300);
         prefsTable.row();
+    }
+
+    private void updateMusicMute() {
+        boolean mute = ((CheckBox) inputMap.get(GamePrefs.MUTE_MUSIC)).isChecked();
+        if (mute) {
+            Music music = game.assets.get(com.bitdecay.helm.sound.MusicLibrary.AMBIENT_MUSIC, Music.class);
+            if (music.isPlaying()) {
+                music.pause();
+            }
+        } else {
+            Music music = game.assets.get(com.bitdecay.helm.sound.MusicLibrary.AMBIENT_MUSIC, Music.class);
+            music.setLooping(true);
+            if (!music.isPlaying()) {
+                music.play();
+            }
+        }
     }
 
     private void updateSteeringSettingVisibility() {
