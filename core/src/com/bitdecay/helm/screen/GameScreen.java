@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.input.InputReplay;
+import com.bitdecay.helm.menu.MedalUtils;
 import com.bitdecay.helm.menu.Overlay;
 import com.bitdecay.helm.menu.PauseMenu;
 import com.bitdecay.helm.persist.ReplayUtils;
@@ -18,6 +19,7 @@ import com.bitdecay.helm.prefs.GamePrefs;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.menu.ScoreMenu;
 import com.bitdecay.helm.scoring.LandingScore;
+import com.bitdecay.helm.scoring.ScoreStamps;
 import com.bitdecay.helm.sound.MusicLibrary;
 import com.bitdecay.helm.sound.SoundMode;
 import com.bitdecay.helm.time.TimerUtils;
@@ -190,6 +192,15 @@ public class GameScreen implements Screen, GamePilot {
             // first time beating the level!
             Helm.stats.count(StatName.LEVELS_COMPLETED, 1);
         }
+
+        if (score.total() >= currentLevel.getScoreNeededForMedal(MedalUtils.LevelRating.DEV)) {
+            ScoreStamps.addPendingStamp("Dev score beaten");
+        }
+
+        if (score.timeTaken <= currentLevel.getTimeNeededForMedal(MedalUtils.LevelRating.DEV)) {
+            ScoreStamps.addPendingStamp("Dev time beaten");
+        }
+
         score.pointsImprovement = currentLevel.maybeSetNewHighScore(levelScore);
         score.secondsImprovement = currentLevel.maybeSetNewBestTime(score.timeTaken);
         showScoreMenu(score, false);
