@@ -31,13 +31,6 @@ import com.bitdecay.helm.unlock.palette.PaletteList;
  */
 public class ScoreMenu {
 
-    private static final String RETURN_TO_LEVEL_SELECT = "Level Select";
-    private static final String RETURN_TO_REPLAY = "Done";
-    private static final String SAVE_REPLAY_TEXT = "Save Replay";
-    private static final String PLAY_AGAIN = "Play Again";
-
-    private static final float IMAGE_ICON_SCALE = 0.6f;
-
     private static TextureRegion levelSelectTexture;
     private static TextureRegion retryLevelTexture;
     private static TextureRegion saveReplayTexture;
@@ -89,6 +82,7 @@ public class ScoreMenu {
     public ScoreMenu(final com.bitdecay.helm.GamePilot pilot) {
         this.pilot = pilot;
 
+        float iconSize = pilot.getHelm().fontScale * 0.4f;
         initIcons();
 
         stage = new Stage();
@@ -220,7 +214,7 @@ public class ScoreMenu {
         buttonTable.setOrigin(Align.center);
 
         TextureRegionDrawable levelSelectDrawable = new TextureRegionDrawable(levelSelectTexture);
-        levelSelectButton = new BitImageButton(levelSelectDrawable, pilot.getHelm().fontScale * 0.4f, skin);
+        levelSelectButton = new BitImageButton(levelSelectDrawable, iconSize, skin);
         levelSelectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -230,7 +224,7 @@ public class ScoreMenu {
 
         TextureRegionDrawable imageUp = new TextureRegionDrawable(saveReplayTexture);
         final TextureRegionDrawable imageDown = new TextureRegionDrawable(saveCompleteTexture);
-        saveReplayButton = new BitImageButton(imageUp, pilot.getHelm().fontScale * 0.4f, skin);
+        saveReplayButton = new BitImageButton(imageUp, iconSize, skin);
         saveReplayButton.align(Align.bottomLeft);
         saveReplayButton.setOrigin(Align.bottomLeft);
 
@@ -245,7 +239,7 @@ public class ScoreMenu {
         });
 
         TextureRegionDrawable retryImage = new TextureRegionDrawable(retryLevelTexture);
-        playAgainButton = new BitImageButton(retryImage, pilot.getHelm().fontScale * 0.4f, skin);
+        playAgainButton = new BitImageButton(retryImage, iconSize, skin);
         playAgainButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -255,7 +249,7 @@ public class ScoreMenu {
 
 
         TextureRegionDrawable nextLevelIcon = new TextureRegionDrawable(nextLevelTexture);
-        nextLevelButton = new BitImageButton(nextLevelIcon, pilot.getHelm().fontScale * 0.4f, skin);
+        nextLevelButton = new BitImageButton(nextLevelIcon, iconSize, skin);
         nextLevelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
