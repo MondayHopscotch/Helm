@@ -196,7 +196,7 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     private void showScoreMenu(LandingScore score, boolean isReplay) {
-        scoreMenu.rebuildNextTable(isReplay);
+        scoreMenu.rebuildButtonTable(isReplay);
         scoreMenu.visible = true;
         if (PlayMode.REPLAY_MODE.equals(currentMode)) {
             scoreMenu.setScore(new ReadOnlyLevelInstance(currentReplay.levelDef), score);
@@ -217,6 +217,29 @@ public class GameScreen implements Screen, GamePilot {
                 Helm.stats.count(StatName.ABANDONS, 1);
             }
             game.setScreen(com.bitdecay.helm.screen.TransitionColorScreen.get(game, Color.BLACK, new com.bitdecay.helm.screen.LevelSelectScreen(game, activeWorld)));
+        }
+    }
+
+    @Override
+    public void goToNextLevel() {
+        if (activeWorld == null) {
+            // not sure if this is a reasonable check or not
+            returnToMenus(false);
+        }
+
+        int levelPos = -1;
+        for (int i = 0; i < activeWorld.levels.size; i++) {
+            if (activeWorld.levels.get(i) == currentLevel) {
+                levelPos = i;
+                break;
+            }
+        }
+
+        if (levelPos == -1 || levelPos + 1 >= activeWorld.levels.size) {
+            returnToMenus(false);
+        } else {
+            LevelInstance nextLevel = activeWorld.levels.get(levelPos + 1);
+            game.setScreen(LevelGateScreen.get(game, new GameScreen(game, activeWorld, nextLevel)));
         }
     }
 

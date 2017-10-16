@@ -87,7 +87,11 @@ public class LevelTestScreen implements Screen, com.bitdecay.helm.GamePilot {
     @Override
     public void returnToMenus(boolean isQuit) {
         editor.showEditor();
+    }
 
+    @Override
+    public void goToNextLevel() {
+        editor.showEditor();
     }
 
     @Override

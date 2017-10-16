@@ -10,14 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -41,9 +38,11 @@ public class ScoreMenu {
 
     private static final float IMAGE_ICON_SCALE = 0.6f;
 
+    private static TextureRegion levelSelectTexture;
     private static TextureRegion retryLevelTexture;
     private static TextureRegion saveReplayTexture;
     private static TextureRegion saveCompleteTexture;
+    private static TextureRegion nextLevelTexture;
 
     public final Stage stage;
     private final Skin skin;
@@ -81,10 +80,11 @@ public class ScoreMenu {
     private Label totalScoreScore;
     private Image totalScoreMedal;
 
-    private final Table nextTable;
-    private final TextButton nextButton;
+    private final Table buttonTable;
+    private final BitImageButton levelSelectButton;
     private final BitImageButton saveReplayButton;
     private final BitImageButton playAgainButton;
+    private final BitImageButton nextLevelButton;
 
     public ScoreMenu(final com.bitdecay.helm.GamePilot pilot) {
         this.pilot = pilot;
@@ -215,14 +215,18 @@ public class ScoreMenu {
         scoreTable.add(totalTimeMedal).size(com.bitdecay.helm.menu.MedalUtils.imageSize, com.bitdecay.helm.menu.MedalUtils.imageSize).expand(false, false).fill(false);
         scoreTable.row();
 
-        nextTable = new Table();
-        nextTable.align(Align.center);
-        nextTable.setOrigin(Align.center);
+        buttonTable = new Table();
+        buttonTable.align(Align.center);
+        buttonTable.setOrigin(Align.center);
 
-        nextButton = new TextButton(RETURN_TO_LEVEL_SELECT, skin);
-        nextButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
-        nextButton.align(Align.center);
-        nextButton.setOrigin(Align.center);
+        TextureRegionDrawable levelSelectDrawable = new TextureRegionDrawable(levelSelectTexture);
+        levelSelectButton = new BitImageButton(levelSelectDrawable, pilot.getHelm().fontScale * 0.4f, skin);
+        levelSelectButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                pilot.returnToMenus(false);
+            }
+        });
 
         TextureRegionDrawable imageUp = new TextureRegionDrawable(saveReplayTexture);
         final TextureRegionDrawable imageDown = new TextureRegionDrawable(saveCompleteTexture);
@@ -249,11 +253,21 @@ public class ScoreMenu {
             }
         });
 
-        rebuildNextTable(false);
+
+        TextureRegionDrawable nextLevelIcon = new TextureRegionDrawable(nextLevelTexture);
+        nextLevelButton = new BitImageButton(nextLevelIcon, pilot.getHelm().fontScale * 0.4f, skin);
+        nextLevelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                pilot.goToNextLevel();
+            }
+        });
+
+        rebuildButtonTable(false);
 
         mainTable.add(scoreTable);
         mainTable.row();
-        mainTable.add(nextTable).padTop(Gdx.graphics.getHeight() / 5);
+        mainTable.add(buttonTable).padTop(Gdx.graphics.getHeight() / 5);
 
         stage.addActor(mainTable);
 
@@ -268,9 +282,11 @@ public class ScoreMenu {
     }
 
     private void initIcons() {
+        levelSelectTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("exit_icon");
         retryLevelTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("retry_icon");
         saveReplayTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("save_icon");
         saveCompleteTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("saved_icon");
+        nextLevelTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("next_icon");
     }
 
     private Actor addUnlockLabel(String text) {
@@ -296,27 +312,16 @@ public class ScoreMenu {
         return labelParent;
     }
 
-    public void rebuildNextTable(final boolean isReplay) {
-        nextTable.clear();
-        nextButton.clearListeners();
-        if (isReplay) {
-            nextButton.getLabel().setText(RETURN_TO_REPLAY);
-        } else {
-            nextButton.getLabel().setText(RETURN_TO_LEVEL_SELECT);
-        }
-        nextButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                pilot.returnToMenus(false);
-            }
-        });
+    public void rebuildButtonTable(final boolean isReplay) {
+        buttonTable.clear();
 
-        nextTable.add(nextButton);
+        buttonTable.add(levelSelectButton);
 
         if (!isReplay) {
             // if we aren't watching a replay, let them save it
-            nextTable.add(playAgainButton).padLeft(pilot.getHelm().fontScale * 5);
-            nextTable.add(saveReplayButton).size(32 * pilot.getHelm().fontScale * IMAGE_ICON_SCALE).padLeft(pilot.getHelm().fontScale * 5);
+            buttonTable.add(playAgainButton).padLeft(pilot.getHelm().fontScale * 15);
+            buttonTable.add(saveReplayButton).padLeft(pilot.getHelm().fontScale * 15);
+            buttonTable.add(nextLevelButton).padLeft(pilot.getHelm().fontScale * 15);
         }
     }
 
@@ -419,7 +424,7 @@ public class ScoreMenu {
 
         baseScoreSequence.addAction(Actions.delay(1f));
 
-        baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, nextButton, playAgainButton, saveReplayButton)));
+        baseScoreSequence.addAction(Actions.run(getShowActorsRunnableWithSFX(SFXLibrary.NEXT_LEVEL, levelSelectButton, playAgainButton, saveReplayButton, nextLevelButton)));
 
         stage.addAction(baseScoreSequence);
 
@@ -480,8 +485,9 @@ public class ScoreMenu {
         totalTimeLabel.setVisible(false);
         totalTimeMedal.setVisible(false);
         totalTimeValue.setVisible(false);
-        nextButton.setVisible(false);
+        levelSelectButton.setVisible(false);
         playAgainButton.setVisible(false);
         saveReplayButton.setVisible(false);
+        nextLevelButton.setVisible(false);
     }
 }

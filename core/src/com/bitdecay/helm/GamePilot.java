@@ -18,6 +18,8 @@ public interface GamePilot {
 
     void returnToMenus(boolean isQuit);
 
+    void goToNextLevel();
+
     Helm getHelm();
 
     void togglePause();
