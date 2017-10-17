@@ -99,10 +99,11 @@ public class GameScreen implements Screen, GamePilot {
         overlay = new Overlay(this);
     }
 
-    private void setLevel(LevelDefinition level) {
-        levelPlayer.loadLevel(level);
+    private void setLevel(LevelInstance level) {
+        levelPlayer.loadLevel(level.levelDef);
         Gdx.input.setInputProcessor(combinedGameInput);
         scoreMenu.visible = false;
+        pauseMenu.setLevel(level);
     }
 
     private void setReplay(InputReplay replay) {
@@ -330,7 +331,7 @@ public class GameScreen implements Screen, GamePilot {
         if (reloadQueued) {
             switch(currentMode) {
                 case PLAY_MODE:
-                    setLevel(currentLevel.levelDef);
+                    setLevel(currentLevel);
                     break;
                 case REPLAY_MODE:
                     setReplay(currentReplay);
