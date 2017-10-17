@@ -39,7 +39,7 @@ public class SplashScreen implements Screen {
             "Fueling ship",
             "Checking turn signals",
             "Checking tire pressure",
-            "Wrapping up oil change",
+            "Changing oil",
             "Adjusting seat"
     };
 

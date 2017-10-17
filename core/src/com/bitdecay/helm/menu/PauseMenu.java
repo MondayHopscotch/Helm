@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.screen.ScreenElements;
+import com.bitdecay.helm.world.LevelInstance;
 
 /**
  * Created by Monday on 1/5/2017.
@@ -20,6 +22,8 @@ public class PauseMenu {
     private final ClickListener pauseListener;
     private GamePilot pilot;
     private final Table pauseMenu;
+    private LevelInstance level;
+    private final Table goalsTable;
 
     public PauseMenu(final GamePilot pilot) {
         this.pilot = pilot;
@@ -29,6 +33,7 @@ public class PauseMenu {
             public void clicked(InputEvent event, float x, float y) {
                 pilot.togglePause();
                 pauseMenu.setVisible(!pauseMenu.isVisible());
+                goalsTable.setVisible(!goalsTable.isVisible());
             }
         };
 
@@ -80,12 +85,23 @@ public class PauseMenu {
         int screenWidth = Gdx.graphics.getWidth();
         mainTable.add(pauseButtonLabel).padRight(screenWidth / 25).width(screenWidth / 10).height(screenWidth / 10);
 
+        goalsTable = new Table(pilot.getHelm().skin);
+        goalsTable.setFillParent(true);
+        goalsTable.setVisible(false);
+        goalsTable.align(Align.bottom);
+
         stage.addActor(mainTable);
         stage.addActor(pauseMenu);
+        stage.addActor(goalsTable);
     }
 
     public void updateAndDraw() {
         stage.act();
         stage.draw();
+    }
+
+    public void setLevel(LevelInstance level) {
+        this.level = level;
+        ScreenElements.getGoalsElement(goalsTable, pilot.getHelm(), level, pilot.getHelm().skin);
     }
 }

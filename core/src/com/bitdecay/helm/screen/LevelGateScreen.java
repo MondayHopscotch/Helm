@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.menu.MedalUtils;
 import com.bitdecay.helm.time.TimerUtils;
+import com.bitdecay.helm.world.LevelInstance;
 
 /**
  * Created by Monday on 9/4/2017.
@@ -24,8 +25,6 @@ public class LevelGateScreen extends InputAdapter implements Screen {
     private static final float MAX_WAIT_TIME = 5f;
 
     public static LevelGateScreen gateScreen;
-
-    private static float INFO_FONT_SCALE = 1.0f;
 
     public static LevelGateScreen get(Helm helm, GameScreen after) {
         if (gateScreen == null) {
@@ -74,129 +73,12 @@ public class LevelGateScreen extends InputAdapter implements Screen {
         screenTable.add(levelTitleLabel).fillX().expandX().padTop(30 * game.fontScale);
         screenTable.row();
 
-        Table fillTable = new Table(skin);
-
-        Table scoreTable = new Table(skin);
-        Table timeTable = new Table(skin);
-
-
-
-        if (after.currentLevel.getBestTime() != com.bitdecay.helm.prefs.GamePrefs.TIME_NOT_SET &&
-                after.currentLevel.getHighScore() != com.bitdecay.helm.prefs.GamePrefs.SCORE_NOT_SET) {
-            buildCurrentScoreParts(scoreTable);
-            buildCurrentTimeParts(timeTable);
-        }
-
-        buildTargetScoreParts(scoreTable);
-        buildTargetTimeParts(timeTable);
-
-        fillTable.add(scoreTable).padRight(10 * game.fontScale);
-        fillTable.add(timeTable).padLeft(10 * game.fontScale);
+        Table fillTable =  new Table(skin);
+        ScreenElements.getGoalsElement(fillTable, game, after.currentLevel, skin);
 
         screenTable.add(fillTable).fill().expand();
 
         stage.addActor(screenTable);
-    }
-
-    private void buildCurrentScoreParts(Table table) {
-        if (after.currentLevel.getHighScore() == com.bitdecay.helm.prefs.GamePrefs.SCORE_NOT_SET) {
-            return;
-        }
-
-        Label scoreTextLabel = new Label("Current Best Score", skin);
-        scoreTextLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        scoreTextLabel.setAlignment(Align.center);
-        scoreTextLabel.setOrigin(Align.center);
-
-        Image medalImage = MedalUtils.getIconForHighScore(after.currentLevel);
-        Label scoreLabel = new Label(Integer.toString(after.currentLevel.getHighScore()), skin);
-        scoreLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        scoreLabel.setAlignment(Align.center);
-        scoreLabel.setOrigin(Align.center);
-
-        Table scoreTable = new Table(skin);
-        scoreTable.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
-        scoreTable.add(scoreLabel);
-
-        table.add(scoreTextLabel).row();
-        table.add(scoreTable).row();
-    }
-
-    private void buildTargetScoreParts(Table table) {
-        MedalUtils.LevelRating scoreRank = MedalUtils.getScoreRank(after.currentLevel, after.currentLevel.getHighScore());
-        if (MedalUtils.LevelRating.DEV.equals(scoreRank)) {
-            return;
-        }
-
-        Label scoreTextLabel = new Label("Score for " + scoreRank.nextRank().medalName() + " medal", skin);
-        scoreTextLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        scoreTextLabel.setAlignment(Align.center);
-        scoreTextLabel.setOrigin(Align.center);
-
-        Image medalImage = MedalUtils.getRankImage(scoreRank.nextRank());
-        Label scoreLabel = new Label(Integer.toString(after.currentLevel.getScoreNeededForMedal(scoreRank.nextRank())), skin);
-        scoreLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        scoreLabel.setAlignment(Align.center);
-        scoreLabel.setOrigin(Align.center);
-
-        Table scoreTable = new Table(skin);
-        scoreTable.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
-        scoreTable.add(scoreLabel);
-
-        table.add(scoreTextLabel).row();
-        table.add(scoreTable);
-        table.row();
-    }
-
-    private void buildCurrentTimeParts(Table table) {
-        if (after.currentLevel.getBestTime() == com.bitdecay.helm.prefs.GamePrefs.TIME_NOT_SET) {
-            return;
-        }
-
-        Label timeTextLabel = new Label("Current Best Time", skin);
-        timeTextLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        timeTextLabel.setAlignment(Align.center);
-        timeTextLabel.setOrigin(Align.center);
-
-        Image medalImage = MedalUtils.getIconForBestTime(after.currentLevel);
-        Label timeLabel = new Label(TimerUtils.getFormattedTime(after.currentLevel.getBestTime()), skin);
-        timeLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        timeLabel.setAlignment(Align.center);
-        timeLabel.setOrigin(Align.center);
-
-        Table scoreTable = new Table(skin);
-        scoreTable.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
-        scoreTable.add(timeLabel);
-
-        table.add(timeTextLabel).row();
-        table.add(scoreTable);
-        table.row();
-    }
-
-    private void buildTargetTimeParts(Table table) {
-        MedalUtils.LevelRating timeRank = MedalUtils.getTimeRank(after.currentLevel, after.currentLevel.getBestTime());
-        if (MedalUtils.LevelRating.DEV.equals(timeRank)) {
-            return;
-        }
-
-        Label timeTextLabel = new Label("Time for " + timeRank.nextRank().medalName() + " medal", skin);
-        timeTextLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        timeTextLabel.setAlignment(Align.center);
-        timeTextLabel.setOrigin(Align.center);
-
-        Image medalImage = MedalUtils.getRankImage(timeRank.nextRank());
-        Label scoreLabel = new Label(TimerUtils.getFormattedTime(after.currentLevel.getTimeNeededForMedal(timeRank.nextRank())), skin);
-        scoreLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        scoreLabel.setAlignment(Align.center);
-        scoreLabel.setOrigin(Align.center);
-
-        Table scoreTable = new Table(skin);
-        scoreTable.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
-        scoreTable.add(scoreLabel);
-
-        table.add(timeTextLabel).row();
-        table.add(scoreTable);
-        table.row();
     }
 
     @Override
