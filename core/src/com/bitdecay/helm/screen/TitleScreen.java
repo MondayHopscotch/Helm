@@ -30,12 +30,19 @@ public class TitleScreen implements Screen {
     Skin skin;
     com.bitdecay.helm.Helm game;
 
-    private final Actor mainMenu;
-    private final Actor extraMenu;
-    private float menuSpeed = .15f;
+    private final Table mainMenu;
+    private final Table extraMenu;
 
+    private float menuTransitionSpeed = .15f;
+
+    private boolean spinningRight = true;
+    private float maxRotation = 10;
+    private float rotation = maxRotation;
+    private float spinSpeed = 0;
+    private float spinAccel = .005f;
 
     private static TitleScreen instance;
+
     public static TitleScreen get(Helm game) {
         if (instance == null) {
             instance = new TitleScreen(game);
@@ -82,8 +89,9 @@ public class TitleScreen implements Screen {
         stage.addActor(versionTable);
     }
 
-    private Actor buildMainMenu() {
+    private Table buildMainMenu() {
         final Table menu = new Table();
+        menu.setTransform(true);
         menu.align(Align.center);
         menu.setOrigin(Align.center);
 
@@ -116,55 +124,18 @@ public class TitleScreen implements Screen {
         });
         extraMenuLabel.setFontScale(game.fontScale * 1.2f);
 
-        menu.add(startLabel).padRight(game.fontScale * 30);
+        menu.add(wrapLabel(startLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 30);
         menu.row();
-        menu.add(optionsLabel).padRight(game.fontScale * 30);
+        menu.add(wrapLabel(optionsLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 30);
         menu.row();
-        menu.add(extraMenuLabel).padRight(game.fontScale * 30);
+        menu.add(wrapLabel(extraMenuLabel)).padRight(game.fontScale * 30);
 
         return menu;
     }
 
-    private void transitionMenu(final Actor from, final Actor to) {
-        from.addAction(
-                Actions.sequence(
-                        Actions.moveBy(from.getWidth(), 0, menuSpeed),
-                        Actions.run(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        from.setVisible(false);
-                                    }
-                                }
-                        ),
-                        Actions.moveBy(-from.getWidth(), 0, menuSpeed),
-                        Actions.run(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        to.addAction(
-                                                Actions.sequence(
-                                                        Actions.moveBy(to.getWidth(), 0),
-                                                        Actions.run(
-                                                                new Runnable() {
-                                                                    @Override
-                                                                    public void run() {
-                                                                        to.setVisible(true);
-                                                                    }
-                                                                }
-                                                        ),
-                                                        Actions.moveBy(-to.getWidth(), 0, menuSpeed)
-                                                )
-                                        );
-                                    }
-                                }
-                        )
-                )
-        );
-    }
-
-    private Actor buildExtraMenu() {
+    private Table buildExtraMenu() {
         final Table menu = new Table();
+        menu.setTransform(true);
         menu.align(Align.center);
         menu.setOrigin(Align.center);
 
@@ -217,19 +188,66 @@ public class TitleScreen implements Screen {
         });
         mainMenuLabel.setFontScale(game.fontScale * 1.2f);
 
-
-        menu.add(paletteLabel).padRight(game.fontScale * 30);
+        menu.add(wrapLabel(paletteLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
         menu.row();
-        menu.add(statsLabel).padRight(game.fontScale * 30);
+        menu.add(wrapLabel(statsLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
         menu.row();
-        menu.add(replayLabel).padRight(game.fontScale * 30);
+        menu.add(wrapLabel(replayLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
         menu.row();
-        menu.add(creditLabel).padRight(game.fontScale * 30);
+        menu.add(wrapLabel(creditLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
         menu.row();
-        menu.add(mainMenuLabel).padRight(game.fontScale * 30);
+        menu.add(wrapLabel(mainMenuLabel)).padRight(game.fontScale * 30);
 
         return menu;
     }
+
+    private Actor wrapLabel(Label label) {
+        Table labelParent = new Table();
+        labelParent.setTransform(true);
+        labelParent.setFillParent(false);
+        labelParent.add(label);
+        labelParent.setOrigin(labelParent.getMinWidth() / 2, labelParent.getMinHeight() / 2);
+        return labelParent;
+    }
+
+    private void transitionMenu(final Actor from, final Actor to) {
+        from.addAction(
+                Actions.sequence(
+                        Actions.moveBy(from.getWidth(), 0, menuTransitionSpeed),
+                        Actions.run(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        from.setVisible(false);
+                                    }
+                                }
+                        ),
+                        Actions.moveBy(-from.getWidth(), 0, menuTransitionSpeed),
+                        Actions.run(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        to.addAction(
+                                                Actions.sequence(
+                                                        Actions.moveBy(to.getWidth(), 0),
+                                                        Actions.run(
+                                                                new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        to.setVisible(true);
+                                                                    }
+                                                                }
+                                                        ),
+                                                        Actions.moveBy(-to.getWidth(), 0, menuTransitionSpeed)
+                                                )
+                                        );
+                                    }
+                                }
+                        )
+                )
+        );
+    }
+
 
     private void finishLoadingAssets() {
         game.assets.finishLoading();
@@ -271,6 +289,38 @@ public class TitleScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.assets.update();
+
+        if (spinningRight) {
+            if (rotation > 0) {
+                spinSpeed -= spinAccel;
+            } else {
+                spinSpeed += spinAccel;
+            }
+        } else {
+            if (rotation > 0) {
+                spinSpeed += spinAccel;
+            } else {
+                spinSpeed -= spinAccel;
+            }
+        }
+
+        rotation += spinSpeed;
+
+        if (rotation > maxRotation || rotation < -maxRotation) {
+            spinningRight = !spinningRight;
+            spinSpeed = 0;
+            rotation = Math.max(rotation, -maxRotation);
+            rotation = Math.min(rotation, maxRotation);
+        }
+
+        for (Actor actor : mainMenu.getChildren()) {
+            actor.setRotation(rotation);
+        }
+
+        for (Actor actor : extraMenu.getChildren()) {
+            actor.setRotation(rotation);
+        }
+
 
         batch.begin();
         batch.draw(backgroundImage, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
