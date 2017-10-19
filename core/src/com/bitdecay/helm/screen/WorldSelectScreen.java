@@ -149,7 +149,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new com.bitdecay.helm.screen.TitleScreen(game));
+                game.setScreen(TitleScreen.get(game));
             }
         });
         return returnButton;
