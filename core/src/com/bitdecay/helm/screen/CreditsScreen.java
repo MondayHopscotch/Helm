@@ -62,7 +62,7 @@ public class CreditsScreen implements Screen {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new TitleScreen(game));
+                game.setScreen(TitleScreen.get(game));
             }
         });
 
