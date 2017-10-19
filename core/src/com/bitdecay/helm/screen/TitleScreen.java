@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.prefs.GamePrefs;
-import com.bitdecay.helm.sound.MusicLibrary;
 
 /**
  * Created by Monday on 12/21/2016.
@@ -33,7 +32,7 @@ public class TitleScreen implements Screen {
 
     private final Actor mainMenu;
     private final Actor extraMenu;
-    private float menuSpeed = .25f;
+    private float menuSpeed = .15f;
 
 
     private static TitleScreen instance;
