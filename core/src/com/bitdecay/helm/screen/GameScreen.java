@@ -201,11 +201,11 @@ public class GameScreen implements Screen, GamePilot {
         }
 
         if (score.total() >= currentLevel.getScoreNeededForMedal(MedalUtils.LevelRating.DEV)) {
-            ScoreStamps.addPendingStamp("Dev score beaten");
+            ScoreStamps.addPendingStamp("Dev score beaten!");
         }
 
         if (score.timeTaken <= currentLevel.getTimeNeededForMedal(MedalUtils.LevelRating.DEV)) {
-            ScoreStamps.addPendingStamp("Dev time beaten");
+            ScoreStamps.addPendingStamp("Dev time beaten!");
         }
 
         score.pointsImprovement = currentLevel.maybeSetNewHighScore(levelScore);
