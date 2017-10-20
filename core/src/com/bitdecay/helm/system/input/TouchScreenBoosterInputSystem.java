@@ -1,18 +1,24 @@
 package com.bitdecay.helm.system.input;
 
+import com.bitdecay.helm.GamePilot;
+import com.bitdecay.helm.component.BoostCountComponent;
 import com.bitdecay.helm.component.BoosterComponent;
+import com.bitdecay.helm.component.PlayerActiveComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
+import com.bitdecay.helm.input.TouchTracker;
 
 /**
  * Created by Monday on 12/8/2016.
  */
-public class TouchScreenBoosterInputSystem extends com.bitdecay.helm.system.input.AbstractInputSystem {
+public class TouchScreenBoosterInputSystem extends AbstractInputSystem {
 
-    com.bitdecay.helm.input.TouchTracker tracker = new com.bitdecay.helm.input.TouchTracker(5);
+    TouchTracker tracker = new TouchTracker(5);
 
     boolean pressTrack = false;
 
-    public TouchScreenBoosterInputSystem(com.bitdecay.helm.GamePilot pilot) {
+    BoostCountComponent boostCounter;
+
+    public TouchScreenBoosterInputSystem(GamePilot pilot) {
         super(pilot);
     }
 
@@ -27,6 +33,13 @@ public class TouchScreenBoosterInputSystem extends com.bitdecay.helm.system.inpu
             }
         }
         if (pressTrack != button.pressed) {
+            if (pressTrack == false) {
+                // we just pushed boost
+                if (entity.hasComponent(BoostCountComponent.class)) {
+                    boostCounter = entity.getComponent(BoostCountComponent.class);
+                    boostCounter.boostCount++;
+                }
+            }
             levelPlayer.recordNewBoostToggle();
         }
     }
@@ -36,13 +49,18 @@ public class TouchScreenBoosterInputSystem extends com.bitdecay.helm.system.inpu
         return entity.hasComponents(
                 BoosterComponent.class,
                 BoostControlComponent.class,
-                com.bitdecay.helm.component.PlayerActiveComponent.class
+                PlayerActiveComponent.class
         );
     }
 
     @Override
     public void reset() {
-        tracker = new com.bitdecay.helm.input.TouchTracker(5);
+        tracker = new TouchTracker(5);
+
+        if (boostCounter != null) {
+            boostCounter.boostCount = 0;
+            boostCounter = null;
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.collision.CollisionDirection;
+import com.bitdecay.helm.component.BoostCountComponent;
 import com.bitdecay.helm.component.DelayedAddComponent;
 import com.bitdecay.helm.component.collide.GeometryComponentFactory;
 import com.bitdecay.helm.component.control.BoostControlComponent;
@@ -29,6 +30,7 @@ public class ShipEntity extends GameEntity {
     public ShipEntity(Vector2 startPosition, int startingFuel) {
         addComponent(new ShipLaunchComponent(1.5f));
         addComponent(new FuelComponent(startingFuel));
+        addComponent(new BoostCountComponent());
 
         boolean lefty = Helm.prefs.getBoolean(GamePrefs.USE_LEFT_HANDED_CONTROLS, GamePrefs.USE_LEFT_HANDED_CONTROLS_DEFAULT);
 

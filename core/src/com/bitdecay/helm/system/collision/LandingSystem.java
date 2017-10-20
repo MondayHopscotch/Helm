@@ -3,9 +3,12 @@ package com.bitdecay.helm.system.collision;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.helm.collision.CollisionKind;
+import com.bitdecay.helm.component.BoostCountComponent;
 import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.CrashComponent;
 import com.bitdecay.helm.component.FuelComponent;
+import com.bitdecay.helm.component.RateLandingComponent;
+import com.bitdecay.helm.component.TimerComponent;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
 import com.bitdecay.helm.component.TransformComponent;
 import com.bitdecay.helm.component.VelocityComponent;
@@ -33,6 +36,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
     public static final String PERFECT_LANDING_MESSAGE = "Perfect Landing!";
     public static final String ZERO_FUEL_LANDING_MESSAGE = "Zero Fuel Landing!";
+    public static final String SINGLE_THRUST_LANDING = "Single Thrust!";
 
     public LandingSystem(com.bitdecay.helm.GamePilot pilot) {
         super(pilot);
@@ -117,6 +121,14 @@ public class LandingSystem extends AbstractIteratingGameSystem {
             ScoreStamps.addPendingStamp(ZERO_FUEL_LANDING_MESSAGE);
             levelPlayer.countStat(StatName.ZERO_FUEL_LANDINGS, 1);
         }
+
+        if (entity.hasComponent(BoostCountComponent.class)) {
+            BoostCountComponent boostCounter = entity.getComponent(BoostCountComponent.class);
+            if (boostCounter.boostCount == 1) {
+                ScoreStamps.addPendingStamp(SINGLE_THRUST_LANDING);
+            }
+        }
+
         levelPlayer.rollStat(StatName.FLIGHT_TIME, timer.secondsElapsed);
         pilot.finishLevel(score);
     }
@@ -184,11 +196,11 @@ public class LandingSystem extends AbstractIteratingGameSystem {
     @Override
     public boolean canActOn(com.bitdecay.helm.GameEntity entity) {
         return entity.hasComponents(
-                com.bitdecay.helm.component.RateLandingComponent.class,
+                RateLandingComponent.class,
                 VelocityComponent.class,
                 TransformComponent.class,
                 FuelComponent.class,
-                com.bitdecay.helm.component.TimerComponent.class
+                TimerComponent.class
         );
     }
 }
