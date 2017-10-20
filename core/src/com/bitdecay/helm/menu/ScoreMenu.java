@@ -1,6 +1,7 @@
 package com.bitdecay.helm.menu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -19,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.input.ReplayNameInputListener;
 import com.bitdecay.helm.scoring.LandingScore;
 import com.bitdecay.helm.scoring.ScoreStamps;
 import com.bitdecay.helm.sound.SFXLibrary;
@@ -78,9 +81,12 @@ public class ScoreMenu {
     private final BitImageButton saveReplayButton;
     private final BitImageButton playAgainButton;
     private final BitImageButton nextLevelButton;
+    private ReplayNameInputListener inputListener;
 
     public ScoreMenu(final com.bitdecay.helm.GamePilot pilot) {
         this.pilot = pilot;
+
+        inputListener = new ReplayNameInputListener();
 
         float iconSize = pilot.getHelm().fontScale * 0.4f;
         initIcons();
@@ -231,10 +237,15 @@ public class ScoreMenu {
         saveReplayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                pilot.saveLastReplay();
+                String defaultName = TimerUtils.getDateAsString() + " - " + pilot.getLevelName();
+                Gdx.input.getTextInput(inputListener, "Replay Name", defaultName, "");
+                pilot.saveLastReplay(inputListener.lastInput);
                 saveReplayButton.removeListener(this);
                 saveReplayButton.setImage(imageDown);
                 saveReplayButton.setDisabled(true);
+                saveReplayButton.setTouchable(Touchable.disabled);
+
+
             }
         });
 

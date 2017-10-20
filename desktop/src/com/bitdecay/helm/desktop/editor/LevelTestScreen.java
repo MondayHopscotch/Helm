@@ -74,13 +74,18 @@ public class LevelTestScreen implements Screen, com.bitdecay.helm.GamePilot {
     }
 
     @Override
+    public String getLevelName() {
+        return null;
+    }
+
+    @Override
     public void finishLevel(com.bitdecay.helm.scoring.LandingScore score) {
         editor.showEditor();
 
     }
 
     @Override
-    public void saveLastReplay() {
+    public void saveLastReplay(String name) {
 
     }
 
