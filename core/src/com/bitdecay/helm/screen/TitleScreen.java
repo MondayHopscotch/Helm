@@ -5,11 +5,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -23,7 +23,6 @@ import com.bitdecay.helm.prefs.GamePrefs;
  */
 public class TitleScreen implements Screen {
 
-    SpriteBatch batch;
     Texture backgroundImage;
     Stage stage;
 
@@ -52,13 +51,16 @@ public class TitleScreen implements Screen {
 
     private TitleScreen(Helm game) {
         this.game = game;
-        batch = new SpriteBatch();
-        backgroundImage = new Texture(Gdx.files.internal("splash/TitleScreen.png"));
-
         stage = new Stage();
         stage.setDebugAll(Helm.debug);
 
         skin = game.skin;
+
+        backgroundImage = new Texture(Gdx.files.internal("splash/TitleScreen.png"));
+
+        Image bgImage = new Image(backgroundImage);
+        bgImage.setFillParent(true);
+        stage.addActor(bgImage);
 
         Table mainTable = new Table();
         mainTable.setFillParent(true);
@@ -100,7 +102,13 @@ public class TitleScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
-                game.setScreen(WorldSelectScreen.get(game));
+                stage.addAction(Transitions.getFadeOut(new Runnable() {
+                            @Override
+                            public void run() {
+                                game.setScreen(WorldSelectScreen.get(game));
+                            }
+                        })
+                );
             }
         });
         startLabel.setFontScale(game.fontScale * 1.8f);
@@ -110,7 +118,12 @@ public class TitleScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
-                game.setScreen(new OptionsScreen(game));
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(new OptionsScreen(game));
+                    }
+                }));
             }
         });
         optionsLabel.setFontScale(game.fontScale * 1.2f);
@@ -144,7 +157,12 @@ public class TitleScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
-                game.setScreen(new PaletteSelectScreen(game));
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(new PaletteSelectScreen(game));
+                    }
+                }));
             }
         });
         paletteLabel.setFontScale(game.fontScale * 1.2f);
@@ -154,7 +172,12 @@ public class TitleScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
-                game.setScreen(new StatsScreen(game));
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(new StatsScreen(game));
+                    }
+                }));
             }
         });
         statsLabel.setFontScale(game.fontScale * 1.2f);
@@ -164,7 +187,12 @@ public class TitleScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
-                game.setScreen(new ReplaySelectScreen(game));
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(new ReplaySelectScreen(game));
+                    }
+                }));
             }
         });
         replayLabel.setFontScale(game.fontScale * 1.2f);
@@ -174,7 +202,12 @@ public class TitleScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
-                game.setScreen(new CreditsScreen(game));
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(new CreditsScreen(game));
+                    }
+                }));
             }
         });
         creditLabel.setFontScale(game.fontScale * 1.2f);
@@ -269,6 +302,7 @@ public class TitleScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        stage.addAction(Transitions.getFadeIn());
         Music music = game.assets.get(com.bitdecay.helm.sound.MusicLibrary.AMBIENT_MUSIC, Music.class);
         music.setLooping(true);
 
@@ -322,10 +356,6 @@ public class TitleScreen implements Screen {
         }
 
 
-        batch.begin();
-        batch.draw(backgroundImage, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.end();
-
         stage.act();
         stage.draw();
     }
@@ -353,7 +383,6 @@ public class TitleScreen implements Screen {
     @Override
     public void dispose() {
         backgroundImage.dispose();
-        batch.dispose();
         stage.dispose();
     }
 }

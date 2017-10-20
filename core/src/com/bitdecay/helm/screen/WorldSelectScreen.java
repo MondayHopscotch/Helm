@@ -149,7 +149,12 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(TitleScreen.get(game));
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(TitleScreen.get(game));
+                    }
+                }));
             }
         });
         return returnButton;
@@ -159,7 +164,12 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         ClickListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new com.bitdecay.helm.screen.LevelSelectScreen(game, world));
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(new LevelSelectScreen(game, world));
+                    }
+                }));
             }
         };
 

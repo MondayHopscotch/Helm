@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.bitdecay.helm.screen.SplashScreen;
 import com.bitdecay.helm.sound.SFXLibrary;
 import com.bitdecay.helm.unlock.LiveStat;
 
@@ -46,7 +47,7 @@ public class Helm extends Game {
         // super arbitrary number to try to get fonts to scale nicely for different screens
         fontScale = (int) (Gdx.graphics.getWidth() / 300f);
 
-        setScreen(new com.bitdecay.helm.screen.SplashScreen(this));
+        setScreen(new SplashScreen(this));
     }
 
     private void loadImageAtlases(AssetManager assets) {

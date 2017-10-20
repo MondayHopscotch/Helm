@@ -158,7 +158,12 @@ public class PaletteSelectScreen extends AbstractScrollingItemScreen {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(TitleScreen.get(game));
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(TitleScreen.get(game));
+                    }
+                }));
             }
         });
         return returnButton;

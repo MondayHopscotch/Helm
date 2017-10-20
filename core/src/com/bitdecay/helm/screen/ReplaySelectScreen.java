@@ -40,10 +40,16 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
 
             final TextButton deleteButton = new TextButton(" Delete ", skin);
             deleteButton.getLabel().setFontScale(game.fontScale);
+
             ClickListener watchListener = new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    game.setScreen(new GameScreen(game, replay));
+                    stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                        @Override
+                        public void run() {
+                            game.setScreen(new GameScreen(game, replay));
+                        }
+                    }));
                 }
             };
 
@@ -84,7 +90,12 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(TitleScreen.get(game));
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(TitleScreen.get(game));
+                    }
+                }));
             }
         });
         return returnButton;
