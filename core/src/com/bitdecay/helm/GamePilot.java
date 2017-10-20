@@ -14,6 +14,8 @@ public interface GamePilot {
 
     void doMusic(SoundMode mode, String soundName);
 
+    String getLevelName();
+
     void finishLevel(LandingScore score);
 
     void returnToMenus(boolean isQuit);
@@ -28,5 +30,5 @@ public interface GamePilot {
 
     boolean isDebug();
 
-    void saveLastReplay();
+    void saveLastReplay(String name);
 }

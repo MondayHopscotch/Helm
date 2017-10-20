@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.input.ReplayNameInputListener;
 import com.bitdecay.helm.scoring.LandingScore;
 import com.bitdecay.helm.scoring.ScoreStamps;
 import com.bitdecay.helm.sound.SFXLibrary;
@@ -81,6 +83,7 @@ public class ScoreMenu {
 
     public ScoreMenu(final com.bitdecay.helm.GamePilot pilot) {
         this.pilot = pilot;
+
 
         float iconSize = pilot.getHelm().fontScale * 0.4f;
         initIcons();
@@ -214,7 +217,7 @@ public class ScoreMenu {
         buttonTable.setOrigin(Align.center);
 
         TextureRegionDrawable levelSelectDrawable = new TextureRegionDrawable(levelSelectTexture);
-        levelSelectButton = new BitImageButton(levelSelectDrawable, iconSize, skin);
+        levelSelectButton = new BitImageButton(levelSelectDrawable, levelSelectDrawable, iconSize, skin);
         levelSelectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -224,22 +227,20 @@ public class ScoreMenu {
 
         TextureRegionDrawable imageUp = new TextureRegionDrawable(saveReplayTexture);
         final TextureRegionDrawable imageDown = new TextureRegionDrawable(saveCompleteTexture);
-        saveReplayButton = new BitImageButton(imageUp, iconSize, skin);
+        saveReplayButton = new BitImageButton(imageUp, imageDown, iconSize, skin);
         saveReplayButton.align(Align.bottomLeft);
         saveReplayButton.setOrigin(Align.bottomLeft);
 
         saveReplayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                pilot.saveLastReplay();
-                saveReplayButton.removeListener(this);
-                saveReplayButton.setImage(imageDown);
-                saveReplayButton.setDisabled(true);
+                String defaultName = TimerUtils.getDateAsString() + " - " + pilot.getLevelName();
+                Gdx.input.getTextInput(new ReplayNameInputListener(pilot, saveReplayButton), "Replay Name", defaultName, "");
             }
         });
 
         TextureRegionDrawable retryImage = new TextureRegionDrawable(retryLevelTexture);
-        playAgainButton = new BitImageButton(retryImage, iconSize, skin);
+        playAgainButton = new BitImageButton(retryImage, retryImage, iconSize, skin);
         playAgainButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -249,7 +250,7 @@ public class ScoreMenu {
 
 
         TextureRegionDrawable nextLevelIcon = new TextureRegionDrawable(nextLevelTexture);
-        nextLevelButton = new BitImageButton(nextLevelIcon, iconSize, skin);
+        nextLevelButton = new BitImageButton(nextLevelIcon, nextLevelIcon, iconSize, skin);
         nextLevelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

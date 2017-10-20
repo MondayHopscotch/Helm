@@ -25,7 +25,6 @@ import com.bitdecay.helm.sound.SoundMode;
 import com.bitdecay.helm.time.TimerUtils;
 import com.bitdecay.helm.unlock.StatName;
 import com.bitdecay.helm.unlock.palette.GameColors;
-import com.bitdecay.helm.world.LevelDefinition;
 import com.bitdecay.helm.world.LevelInstance;
 import com.bitdecay.helm.world.ReadOnlyLevelInstance;
 import com.bitdecay.helm.world.WorldInstance;
@@ -166,8 +165,15 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     @Override
-    public void saveLastReplay() {
-        String replayName = TimerUtils.getDateAsString() + " - " + currentLevel.levelDef.name;
+    public String getLevelName() {
+        return currentLevel.levelDef.name;
+    }
+
+    @Override
+    public void saveLastReplay(String replayName) {
+        if (replayName == null) {
+            replayName = TimerUtils.getDateAsString() + " - " + currentLevel.levelDef.name;
+        }
         System.out.println("Saving replay: " + replayName);
         ReplayUtils.saveReplay(replayName, levelPlayer.recordedInput);
     }
