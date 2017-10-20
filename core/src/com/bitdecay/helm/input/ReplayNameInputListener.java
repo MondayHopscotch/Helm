@@ -27,7 +27,7 @@ public class ReplayNameInputListener implements Input.TextInputListener {
             return;
         }
 
-        text = text.replaceAll("[^A-Za-z0-9_-] ", "");
+        text = text.replaceAll("[^ A-Za-z0-9_-]", "");
         if (text.length() > 0) {
             saver.saveLastReplay(text);
             button.clearListeners();
