@@ -86,6 +86,7 @@ public abstract class AbstractScrollingItemScreen implements Screen {
 
     @Override
     public void show() {
+        stage.addAction(Transitions.getFadeIn());
         Gdx.input.setInputProcessor(stage);
     }
 

@@ -33,7 +33,7 @@ public class SplashScreen implements Screen {
 
     private boolean transitioningAway = false;
 
-    private final String[] loadingSayings = new String[] {
+    private final String[] loadingSayings = new String[]{
             "Preparing cockpit",
             "Cleaning windshield",
             "Fueling ship",
@@ -53,7 +53,7 @@ public class SplashScreen implements Screen {
 
         stage.addActor(bitDecaySplash);
 
-        loadingText = new Label(loadingSayings[MathUtils.random(0, loadingSayings.length-1)], helm.skin);
+        loadingText = new Label(loadingSayings[MathUtils.random(0, loadingSayings.length - 1)], helm.skin);
         loadingText.setFontScale(helm.fontScale * 1.5f);
 
         animatedText = new Label("", helm.skin);
@@ -118,18 +118,12 @@ public class SplashScreen implements Screen {
         animatedText.setText("");
         animatedText.clearActions();
         animatedText.addAction(Actions.fadeOut(1));
-        bitDecaySplash.addAction(
-                Actions.sequence(
-                        Actions.fadeOut(1),
-                        Actions.run(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        helm.setScreen(TitleScreen.get(helm));
-                                    }
-                                }
-                        )
-                )
+        bitDecaySplash.addAction(Transitions.getLongFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        helm.setScreen(TitleScreen.get(helm));
+                    }
+                })
         );
     }
 

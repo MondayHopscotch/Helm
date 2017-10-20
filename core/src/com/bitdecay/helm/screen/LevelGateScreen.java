@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.menu.MedalUtils;
 import com.bitdecay.helm.time.TimerUtils;
+import com.bitdecay.helm.unlock.palette.GameColors;
 import com.bitdecay.helm.world.LevelInstance;
 
 /**
@@ -56,7 +57,12 @@ public class LevelGateScreen extends InputAdapter implements Screen {
     }
 
     private void goToNextScreen() {
-        game.setScreen(TransitionColorScreen.get(game, game.palette.get(com.bitdecay.helm.unlock.palette.GameColors.BACKGROUND), after));
+        stage.addAction(Transitions.getFadeOut(new Runnable() {
+            @Override
+            public void run() {
+                game.setScreen(TransitionColorScreen.get(game, game.palette.get(GameColors.BACKGROUND), after));
+            }
+        }));
     }
 
     private void build() {
@@ -84,6 +90,7 @@ public class LevelGateScreen extends InputAdapter implements Screen {
     @Override
     public void show() {
         touchTriggered = false;
+        stage.addAction(Transitions.getFadeIn());
         Gdx.input.setInputProcessor(this);
     }
 

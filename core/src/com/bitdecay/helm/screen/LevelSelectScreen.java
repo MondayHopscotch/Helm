@@ -8,6 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.bitdecay.helm.menu.MedalUtils;
+import com.bitdecay.helm.time.TimerUtils;
+import com.bitdecay.helm.world.LevelInstance;
 
 /**
  * Created by Monday on 2/9/2017.
@@ -91,17 +94,27 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(WorldSelectScreen.get(game));
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(WorldSelectScreen.get(game));
+                    }
+                }));
             }
         });
         return returnButton;
     }
 
-    private int buildLevelRow(final com.bitdecay.helm.world.LevelInstance level, Table table) {
+    private int buildLevelRow(final LevelInstance level, Table table) {
         ClickListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(LevelGateScreen.get(game, new GameScreen(game, world, level)));
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(LevelGateScreen.get(game, new GameScreen(game, world, level)));
+                    }
+                }));
             }
         };
 
@@ -128,7 +141,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
         float levelTimeScore = level.getBestTime();
 
-        Label levelTimeLabel = new Label(com.bitdecay.helm.time.TimerUtils.getFormattedTime(levelTimeScore), skin);
+        Label levelTimeLabel = new Label(TimerUtils.getFormattedTime(levelTimeScore), skin);
         if (levelTimeScore == com.bitdecay.helm.prefs.GamePrefs.TIME_NOT_SET) {
             levelTimeLabel.setText("--");
         }
@@ -146,12 +159,12 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
     }
 
     private void addScoreMedal(Table table, com.bitdecay.helm.world.LevelInstance level) {
-        Image medalImage = com.bitdecay.helm.menu.MedalUtils.getIconForHighScore(level);
-        table.add(medalImage).size(com.bitdecay.helm.menu.MedalUtils.imageSize, com.bitdecay.helm.menu.MedalUtils.imageSize).expand(false, false).fill(false);
+        Image medalImage = MedalUtils.getIconForHighScore(level);
+        table.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
     }
 
     private void addTimeMedal(Table table, com.bitdecay.helm.world.LevelInstance level) {
-        Image medalImage = com.bitdecay.helm.menu.MedalUtils.getIconForBestTime(level);
-        table.add(medalImage).size(com.bitdecay.helm.menu.MedalUtils.imageSize, com.bitdecay.helm.menu.MedalUtils.imageSize).expand(false, false).fill(false);
+        Image medalImage = MedalUtils.getIconForBestTime(level);
+        table.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
     }
 }
