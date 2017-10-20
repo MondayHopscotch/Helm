@@ -9,6 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Sort;
+import com.bitdecay.helm.input.InputReplay;
+import com.bitdecay.helm.persist.JsonUtils;
+
+import java.util.Comparator;
 
 /**
  * Created by Monday on 2/26/2017.
@@ -27,8 +32,24 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
     @Override
     public void populateRows(Table table) {
         FileHandle replayDir = Gdx.files.local(com.bitdecay.helm.persist.ReplayUtils.REPLAY_DIR);
-        for (final FileHandle replayFile : replayDir.list()) {
-            final com.bitdecay.helm.input.InputReplay replay = com.bitdecay.helm.persist.JsonUtils.unmarshal(com.bitdecay.helm.input.InputReplay.class, replayFile);
+        FileHandle[] fileList = replayDir.list();
+
+        Sort sorter = Sort.instance();
+        sorter.sort(fileList, new Comparator<FileHandle>() {
+            @Override
+            public int compare(FileHandle o1, FileHandle o2) {
+                if (o1.lastModified() < o2.lastModified()) {
+                    // older files to the back
+                    return 1;
+                } else {
+                    // newer files to the front
+                    return -1;
+                }
+            }
+        });
+
+        for (final FileHandle replayFile : fileList) {
+            final InputReplay replay = JsonUtils.unmarshal(InputReplay.class, replayFile);
 
             TextButton watchButton = new TextButton("Watch", skin);
             watchButton.getLabel().setFontScale(game.fontScale);

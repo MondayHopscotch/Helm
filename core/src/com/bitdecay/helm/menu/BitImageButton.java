@@ -11,15 +11,19 @@ import com.badlogic.gdx.utils.Scaling;
 
 public class BitImageButton extends Button {
     private final Image image;
+    private TextureRegionDrawable imgUp;
+    private TextureRegionDrawable imgDown;
     private TextButton.TextButtonStyle style;
 
-    public BitImageButton(TextureRegionDrawable img, float scale, Skin skin) {
-        this(img, scale, skin.get(TextButton.TextButtonStyle.class));
+    public BitImageButton(TextureRegionDrawable imageUp, TextureRegionDrawable imgDown, float scale, Skin skin) {
+        this(imageUp, imgDown, scale, skin.get(TextButton.TextButtonStyle.class));
         setSkin(skin);
     }
 
-    public BitImageButton(TextureRegionDrawable img, float scale, TextButton.TextButtonStyle style) {
+    public BitImageButton(TextureRegionDrawable imgUp, TextureRegionDrawable imgDown, float scale, TextButton.TextButtonStyle style) {
         super();
+        this.imgUp = imgUp;
+        this.imgDown = imgDown;
         this.style = style;
         setStyle(style);
 
@@ -27,8 +31,8 @@ public class BitImageButton extends Button {
         image.setScaling(Scaling.fit);
         image.setOrigin(Align.center);
         image.setAlign(Align.center);
-        image.setDrawable(img);
-        add(image).size(img.getRegion().getRegionHeight() * scale);
+        image.setDrawable(imgUp);
+        add(image).size(imgUp.getRegion().getRegionHeight() * scale);
     }
 
     public TextButton.TextButtonStyle getStyle() {
@@ -45,5 +49,13 @@ public class BitImageButton extends Button {
 
     public void setImage(TextureRegionDrawable image) {
         this.image.setDrawable(image);
+    }
+
+    public void down() {
+        setImage(imgDown);
+    }
+
+    public void up() {
+        setImage(imgUp);
     }
 }
