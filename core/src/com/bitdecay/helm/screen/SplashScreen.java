@@ -2,6 +2,7 @@ package com.bitdecay.helm.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,6 +18,9 @@ import com.badlogic.gdx.utils.StringBuilder;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.menu.IconUtils;
 import com.bitdecay.helm.menu.MedalUtils;
+import com.bitdecay.helm.persist.AssetUtils;
+import com.bitdecay.helm.sound.MusicLibrary;
+import com.bitdecay.helm.sound.SFXLibrary;
 
 /**
  * Created by Monday on 4/8/2017.
@@ -76,6 +80,9 @@ public class SplashScreen implements Screen {
 
     @Override
     public void show() {
+        // if this screen is shown, we are reloading all assets
+        reloadAllAssets();
+
         loadingText.addAction(
                 Actions.sequence(
                         Actions.alpha(0),
@@ -115,6 +122,15 @@ public class SplashScreen implements Screen {
         );
     }
 
+    private void reloadAllAssets() {
+        System.out.println("Reloading ALL ASSETS: " + System.currentTimeMillis());
+        helm.assets.clear();
+        SFXLibrary.loadAllAsync(helm.assets);
+        MusicLibrary.loadAllAsync(helm.assets);
+        AssetUtils.loadSkinSync(helm.assets);
+        AssetUtils.loadImageAtlases(helm.assets);
+    }
+
     private void nextScreen() {
         loadingText.addAction(Actions.fadeOut(1));
         animatedText.setText("");
@@ -133,9 +149,15 @@ public class SplashScreen implements Screen {
     public void render(float delta) {
         if (helm.assets.update() && !transitioningAway) {
             if (bitDecaySplash.getActions().size == 0) {
+                System.out.println("ALL ASSETS RELOADED: " + System.currentTimeMillis());
                 transitioningAway = true;
                 initCaches();
                 nextScreen();
+
+                Music music = helm.assets.get(MusicLibrary.AMBIENT_MUSIC, Music.class);
+                System.out.println(music.toString());
+                music = helm.assets.get(MusicLibrary.AMBIENT_MUSIC, Music.class);
+                System.out.println(music.toString());
             }
         }
         Gdx.gl.glClearColor(0, 0, 0, 1);
