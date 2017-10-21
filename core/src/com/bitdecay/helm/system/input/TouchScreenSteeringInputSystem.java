@@ -3,6 +3,8 @@ package com.bitdecay.helm.system.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.helm.component.BoostCountComponent;
+import com.bitdecay.helm.component.HasSteeredComponent;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
@@ -25,6 +27,8 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
     Vector2 deltaVector = new Vector2();
 
     float tempAngle = 0;
+
+    private HasSteeredComponent hasSteered;
 
     public TouchScreenSteeringInputSystem(com.bitdecay.helm.GamePilot pilot) {
         super(pilot);
@@ -64,6 +68,11 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
         }
 
         if (tempAngle != control.angle) {
+            // we just steered
+            if (entity.hasComponent(HasSteeredComponent.class)) {
+                hasSteered = entity.getComponent(HasSteeredComponent.class);
+                hasSteered.playerHasSteered = true;
+            }
             levelPlayer.recordNewAngle(control.angle);
         }
     }
@@ -92,6 +101,11 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
     @Override
     public void reset() {
         tracker = new TouchTracker(5);
+
+        if (hasSteered != null) {
+            hasSteered.playerHasSteered = false;
+            hasSteered = null;
+        }
     }
 
     @Override

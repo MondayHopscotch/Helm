@@ -7,6 +7,7 @@ import com.bitdecay.helm.component.BoostCountComponent;
 import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.CrashComponent;
 import com.bitdecay.helm.component.FuelComponent;
+import com.bitdecay.helm.component.HasSteeredComponent;
 import com.bitdecay.helm.component.RateLandingComponent;
 import com.bitdecay.helm.component.TimerComponent;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
@@ -37,6 +38,8 @@ public class LandingSystem extends AbstractIteratingGameSystem {
     public static final String PERFECT_LANDING_MESSAGE = "Perfect Landing!";
     public static final String ZERO_FUEL_LANDING_MESSAGE = "Zero Fuel Landing!";
     public static final String SINGLE_THRUST_LANDING = "Single Thrust!";
+    public static final String NO_STEERING_LANDING = "Never Steered!";
+
 
     public LandingSystem(com.bitdecay.helm.GamePilot pilot) {
         super(pilot);
@@ -126,6 +129,13 @@ public class LandingSystem extends AbstractIteratingGameSystem {
             BoostCountComponent boostCounter = entity.getComponent(BoostCountComponent.class);
             if (boostCounter.boostCount == 1) {
                 ScoreStamps.addPendingStamp(SINGLE_THRUST_LANDING);
+            }
+        }
+
+        if (entity.hasComponent(HasSteeredComponent.class)) {
+            HasSteeredComponent hasSteered = entity.getComponent(HasSteeredComponent.class);
+            if (!hasSteered.playerHasSteered) {
+                ScoreStamps.addPendingStamp(NO_STEERING_LANDING);
             }
         }
 
