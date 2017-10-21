@@ -51,23 +51,12 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
         for (com.bitdecay.helm.input.ActiveTouch touch : tracker.activeTouches) {
             if (control.activeArea.contains(touch.startingLocation)) {
 
-                if (joystickSteering) {
-                    updateJoystickControls(control, touch);
-                    float deltaX = control.endPoint.x - control.startPoint.x;
-                    float deltaY = control.endPoint.y - control.startPoint.y;
-                    Vector2 touchVector = new Vector2(deltaX, deltaY);
-                    if (touchVector.len() > joystickSensitivity) {
-                        float angle = (float) Math.atan2(touchVector.y, touchVector.x);
-                        control.angle = angle;
-                    }
-                } else {
-                    // swipe steering
-                    touch.consumeDeltaInto(deltaVector);
-                    int sensitivity = BASE_LINEARITY - prefSensitivity;
-                    scaleBasedOnScreenSize(deltaVector);
-                    accelerate(deltaVector, sensitivity, BASE_INTERSECTION);
-                    control.angle -= deltaVector.x / sensitivity;
-                }
+                touch.consumeDeltaInto(deltaVector);
+                int sensitivity = BASE_LINEARITY - prefSensitivity;
+                scaleBasedOnScreenSize(deltaVector);
+                accelerate(deltaVector, sensitivity, BASE_INTERSECTION);
+                control.angle -= deltaVector.x / sensitivity;
+
                 if (control.angle != com.bitdecay.helm.component.control.SteeringControlComponent.ANGLE_NOT_SET) {
                     while (control.angle > MathUtils.PI2) {
                         control.angle -= MathUtils.PI2;
