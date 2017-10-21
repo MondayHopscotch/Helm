@@ -1,5 +1,6 @@
 package com.bitdecay.helm.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.camera.FollowOrthoCamera;
 import com.bitdecay.helm.component.ReplayActiveComponent;
 import com.bitdecay.helm.entities.FocusPointEntity;
 import com.bitdecay.helm.entities.LandingPlatformEntity;
@@ -47,7 +49,7 @@ public class LevelPlayer {
     boolean boostToggled = lastRecordedBoost;
 
     private static final int BASE_CAM_BUFFER = 500;
-    com.bitdecay.helm.camera.FollowOrthoCamera gameCam;
+    FollowOrthoCamera gameCam;
 
     private com.bitdecay.helm.GamePilot pilot;
     private boolean isReplay;
@@ -84,7 +86,9 @@ public class LevelPlayer {
         screenCam.translate(screenCam.viewportWidth / 2, screenCam.viewportHeight / 2);
         screenCam.update();
 
-        gameCam = new com.bitdecay.helm.camera.FollowOrthoCamera(1920, 1080);
+        float screenRatio = 1.0f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
+
+        gameCam = new FollowOrthoCamera(1080 * screenRatio, 1080);
         gameCam.minZoom = 10;
         gameCam.maxZoom = .2f;
         gameCam.buffer = BASE_CAM_BUFFER;
