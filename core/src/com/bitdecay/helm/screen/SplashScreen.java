@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.menu.IconUtils;
@@ -49,7 +50,8 @@ public class SplashScreen implements Screen {
         stage.setDebugAll(Helm.debug);
 
         bitDecaySplash = new Image(new TextureRegion(new Texture(Gdx.files.internal("splash/bitDecay_splash.png"))));
-        bitDecaySplash.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        bitDecaySplash.setScaling(Scaling.fillY);
+        bitDecaySplash.setFillParent(true);
 
         stage.addActor(bitDecaySplash);
 

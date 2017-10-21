@@ -5,6 +5,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.helm.component.BoostCountComponent;
 import com.bitdecay.helm.component.HasSteeredComponent;
+import com.bitdecay.helm.GameEntity;
+import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.component.control.SteeringControlComponent;
+import com.bitdecay.helm.input.TouchTracker;
+import com.bitdecay.helm.prefs.GamePrefs;
 
 /**
  * Created by Monday on 12/16/2016.
@@ -13,8 +18,6 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
 
     private static final int REFERENCE_SCREEN_WIDTH = 1920;
     private static final int REFERENCE_SCREEN_HEIGHT = 1080;
-
-    public static int BASE_JOYSTICK_SENSITIVITY = 75;
 
     public static int BASE_LINEARITY = 400;
     private static float BASE_INTERSECTION = .5f;
@@ -25,8 +28,6 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
 
     float tempAngle = 0;
 
-    private Vector2 joystickSteeringStartVector = new Vector2();
-
     private HasSteeredComponent hasSteered;
 
     public TouchScreenSteeringInputSystem(com.bitdecay.helm.GamePilot pilot) {
@@ -35,18 +36,10 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
 
     @Override
     public void actOnSingle(com.bitdecay.helm.GameEntity entity, float delta) {
-        com.bitdecay.helm.component.control.SteeringControlComponent control = entity.getComponent(com.bitdecay.helm.component.control.SteeringControlComponent.class);
+        SteeringControlComponent control = entity.getComponent(SteeringControlComponent.class);
 
-        boolean joystickSteering = com.bitdecay.helm.Helm.prefs.getBoolean(com.bitdecay.helm.prefs.GamePrefs.USE_JOYSTICK_STEERING, com.bitdecay.helm.prefs.GamePrefs.USE_JOYSTICK_STEERING_DEFAULT);
+        int prefSensitivity = Helm.prefs.getInteger(GamePrefs.SENSITIVITY, GamePrefs.SENSITIVITY_DEFAULT);
 
-        int prefSensitivity = com.bitdecay.helm.Helm.prefs.getInteger(com.bitdecay.helm.prefs.GamePrefs.SENSITIVITY, com.bitdecay.helm.prefs.GamePrefs.SENSITIVITY_DEFAULT);
-
-        int joystickSensitivity = BASE_JOYSTICK_SENSITIVITY;
-
-        if (joystickSteering) {
-            setJoystickSteeringStartPoint(control);
-            control.sensitivity = joystickSensitivity;
-        }
         control.endPoint = null;
 
         // track our angle for recording purposes
@@ -55,24 +48,13 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
         for (com.bitdecay.helm.input.ActiveTouch touch : tracker.activeTouches) {
             if (control.activeArea.contains(touch.startingLocation)) {
 
-                if (joystickSteering) {
-                    updateJoystickControls(control, touch);
-                    float deltaX = control.endPoint.x - control.startPoint.x;
-                    float deltaY = control.endPoint.y - control.startPoint.y;
-                    Vector2 touchVector = new Vector2(deltaX, deltaY);
-                    if (touchVector.len() > joystickSensitivity) {
-                        float angle = (float) Math.atan2(touchVector.y, touchVector.x);
-                        control.angle = angle;
-                    }
-                } else {
-                    // swipe steering
-                    touch.consumeDeltaInto(deltaVector);
-                    int sensitivity = BASE_LINEARITY - prefSensitivity;
-                    scaleBasedOnScreenSize(deltaVector);
-                    accelerate(deltaVector, sensitivity, BASE_INTERSECTION);
-                    control.angle -= deltaVector.x / sensitivity;
-                }
-                if (control.angle != com.bitdecay.helm.component.control.SteeringControlComponent.ANGLE_NOT_SET) {
+                touch.consumeDeltaInto(deltaVector);
+                int sensitivity = BASE_LINEARITY - prefSensitivity;
+                scaleBasedOnScreenSize(deltaVector);
+                accelerate(deltaVector, sensitivity, BASE_INTERSECTION);
+                control.angle -= deltaVector.x / sensitivity;
+
+                if (control.angle != SteeringControlComponent.ANGLE_NOT_SET) {
                     while (control.angle > MathUtils.PI2) {
                         control.angle -= MathUtils.PI2;
                     }
@@ -108,18 +90,8 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
         deltaVector.y = (1f / (intersection + linearity)) * deltaVector.y * (Math.abs(deltaVector.y) + linearity);
     }
 
-    private void setJoystickSteeringStartPoint(com.bitdecay.helm.component.control.SteeringControlComponent control) {
-        float height_ratio = com.bitdecay.helm.Helm.prefs.getFloat(com.bitdecay.helm.prefs.GamePrefs.JOYSTICK_STEERING_HEIGHT, com.bitdecay.helm.prefs.GamePrefs.JOYSTICK_STEERING_HEIGHT_DEFAULT);
-        float width_ratio = com.bitdecay.helm.Helm.prefs.getFloat(com.bitdecay.helm.prefs.GamePrefs.JOYSTICK_STEERING_WIDTH, com.bitdecay.helm.prefs.GamePrefs.JOYSTICK_STEERING_WIDTH_DEFAULT);
-        control.startPoint = control.activeArea.getSize(joystickSteeringStartVector).scl(width_ratio, height_ratio).add(control.activeArea.x, 0);
-    }
-
-    private void updateJoystickControls(com.bitdecay.helm.component.control.SteeringControlComponent control, com.bitdecay.helm.input.ActiveTouch touch) {
-        control.endPoint = touch.currentLocation;
-    }
-
     @Override
-    public boolean canActOn(com.bitdecay.helm.GameEntity entity) {
+    public boolean canActOn(GameEntity entity) {
         return entity.hasComponents(
                 com.bitdecay.helm.component.control.SteeringControlComponent.class,
                 com.bitdecay.helm.component.PlayerActiveComponent.class
@@ -128,7 +100,7 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
 
     @Override
     public void reset() {
-        tracker = new com.bitdecay.helm.input.TouchTracker(5);
+        tracker = new TouchTracker(5);
 
         if (hasSteered != null) {
             hasSteered.playerHasSteered = false;
