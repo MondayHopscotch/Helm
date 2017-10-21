@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.prefs.GamePrefs;
 
@@ -59,7 +60,9 @@ public class TitleScreen implements Screen {
         backgroundImage = new Texture(Gdx.files.internal("splash/TitleScreen.png"));
 
         Image bgImage = new Image(backgroundImage);
+        bgImage.setScaling(Scaling.fillY);
         bgImage.setFillParent(true);
+
         stage.addActor(bgImage);
 
         Table mainTable = new Table();

@@ -15,6 +15,8 @@ import com.bitdecay.helm.unlock.LiveStat;
 public class Helm extends Game {
     public static boolean debug;
 
+    public static float aspectRatio = 16 / 9f;
+
     public static Preferences prefs;
     public static com.bitdecay.helm.unlock.Statistics stats;
 
@@ -29,6 +31,8 @@ public class Helm extends Game {
 
     @Override
     public void create() {
+        aspectRatio = 1.0f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
+
         Helm.prefs = Gdx.app.getPreferences("helm-pref");
         stats = new com.bitdecay.helm.unlock.Statistics();
         stats.init(Helm.prefs);
@@ -45,7 +49,7 @@ public class Helm extends Game {
 
         skin.getFont("defaultFont").setUseIntegerPositions(true);
         // super arbitrary number to try to get fonts to scale nicely for different screens
-        fontScale = (int) (Gdx.graphics.getWidth() / 300f);
+        fontScale = (int) (Gdx.graphics.getHeight() / 168.75f);
 
         setScreen(new SplashScreen(this));
     }

@@ -1,5 +1,6 @@
 package com.bitdecay.helm.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -8,23 +9,55 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.bitdecay.helm.GameEntity;
+import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.camera.FollowOrthoCamera;
+import com.bitdecay.helm.component.PlayerActiveComponent;
 import com.bitdecay.helm.component.ReplayActiveComponent;
 import com.bitdecay.helm.entities.FocusPointEntity;
+import com.bitdecay.helm.entities.GravityWellEntity;
 import com.bitdecay.helm.entities.LandingPlatformEntity;
+import com.bitdecay.helm.entities.LineSegmentEntity;
+import com.bitdecay.helm.entities.ShipEntity;
+import com.bitdecay.helm.entities.WormholeEntity;
 import com.bitdecay.helm.input.InputRecord;
 import com.bitdecay.helm.input.InputReplay;
+import com.bitdecay.helm.system.PlayerStartLevelSystem;
+import com.bitdecay.helm.system.ResolvePlayerExplosionSystem;
+import com.bitdecay.helm.system.camera.ProximityFocusSystem;
+import com.bitdecay.helm.system.collision.CollisionSystem;
+import com.bitdecay.helm.system.collision.LandingSystem;
 import com.bitdecay.helm.system.collision.WormholeCollisionHandlerSystem;
+import com.bitdecay.helm.system.input.AbstractInputSystem;
+import com.bitdecay.helm.system.input.InputSystemFactory;
+import com.bitdecay.helm.system.movement.BoostSystem;
 import com.bitdecay.helm.system.movement.GravityApplicationSystem;
 import com.bitdecay.helm.system.camera.CameraUpdateSystem;
 import com.bitdecay.helm.system.collision.CollisionAlignmentSystem;
 import com.bitdecay.helm.system.collision.CrashSystem;
+import com.bitdecay.helm.system.movement.GravityFinderSystem;
+import com.bitdecay.helm.system.movement.MovementSystem;
+import com.bitdecay.helm.system.movement.PlayerBoundarySystem;
+import com.bitdecay.helm.system.movement.SteeringSystem;
+import com.bitdecay.helm.system.render.DebugFocusPointSystem;
+import com.bitdecay.helm.system.render.LandingHintSystem;
+import com.bitdecay.helm.system.render.RenderBodySystem;
+import com.bitdecay.helm.system.render.RenderExplosionSystem;
+import com.bitdecay.helm.system.render.RenderFuelSystem;
+import com.bitdecay.helm.system.render.RenderWormholeSystem;
 import com.bitdecay.helm.system.util.DelayedAddSystem;
 import com.bitdecay.helm.system.GameSystem;
 import com.bitdecay.helm.system.collision.PlayerCollisionHandlerSystem;
 import com.bitdecay.helm.system.input.ReplayInputSystem;
 import com.bitdecay.helm.system.render.RenderBoostSystem;
 import com.bitdecay.helm.system.render.RenderGravityWellSystem;
+import com.bitdecay.helm.system.util.ProximityRemovalSystem;
+import com.bitdecay.helm.system.util.RemoveComponentSystem;
+import com.bitdecay.helm.system.util.TimerSystem;
+import com.bitdecay.helm.unlock.StatName;
+import com.bitdecay.helm.world.LevelDefinition;
+import com.bitdecay.helm.world.LineSegment;
 import com.bitdecay.helm.world.WormholePair;
 
 import java.util.List;
@@ -47,9 +80,9 @@ public class LevelPlayer {
     boolean boostToggled = lastRecordedBoost;
 
     private static final int BASE_CAM_BUFFER = 500;
-    com.bitdecay.helm.camera.FollowOrthoCamera gameCam;
+    FollowOrthoCamera gameCam;
 
-    private com.bitdecay.helm.GamePilot pilot;
+    private GamePilot pilot;
     private boolean isReplay;
 
     OrthographicCamera screenCam;
@@ -65,26 +98,30 @@ public class LevelPlayer {
     Array<GameSystem> screenRenderSystems = new Array<>(1);
 
 
-    Array<com.bitdecay.helm.GameEntity> allEntities = new Array<>(1000);
+    Array<GameEntity> allEntities = new Array<>(1000);
 
-    Array<com.bitdecay.helm.GameEntity> pendingAdds = new Array<>(100);
-    Array<com.bitdecay.helm.GameEntity> pendingRemoves = new Array<>(100);
+    Array<GameEntity> pendingAdds = new Array<>(100);
+    Array<GameEntity> pendingRemoves = new Array<>(100);
 
     private final InputMultiplexer inputMux;
-    private com.bitdecay.helm.system.movement.PlayerBoundarySystem playerBoundarySystem;
+    private PlayerBoundarySystem playerBoundarySystem;
 
     public Vector2 universalGravity = new Vector2();
 
 
-    public LevelPlayer(com.bitdecay.helm.GamePilot pilot, boolean isReplay) {
+    public LevelPlayer(GamePilot pilot, boolean isReplay) {
         this.pilot = pilot;
         this.isReplay = isReplay;
 
-        screenCam = new OrthographicCamera(1920, 1080);
+
+        float camHeight = 1080;
+        float camWidth = camHeight * Helm.aspectRatio;
+
+        screenCam = new OrthographicCamera(camWidth, camHeight);
         screenCam.translate(screenCam.viewportWidth / 2, screenCam.viewportHeight / 2);
         screenCam.update();
 
-        gameCam = new com.bitdecay.helm.camera.FollowOrthoCamera(1920, 1080);
+        gameCam = new FollowOrthoCamera(camWidth, camHeight);
         gameCam.minZoom = 10;
         gameCam.maxZoom = .2f;
         gameCam.buffer = BASE_CAM_BUFFER;
@@ -98,47 +135,47 @@ public class LevelPlayer {
     }
 
     private void initSystems() {
-        List<com.bitdecay.helm.system.input.AbstractInputSystem> inputSystems = com.bitdecay.helm.system.input.InputSystemFactory.getInputSystems(pilot);
-        for (com.bitdecay.helm.system.input.AbstractInputSystem inputSystem : inputSystems) {
+        List<AbstractInputSystem> inputSystems = InputSystemFactory.getInputSystems(pilot);
+        for (AbstractInputSystem inputSystem : inputSystems) {
             this.inputSystems.add(inputSystem);
             inputMux.addProcessor(inputSystem);
             addGameplaySystem(inputSystem);
         }
 
-        com.bitdecay.helm.system.movement.BoostSystem boostSystem = new com.bitdecay.helm.system.movement.BoostSystem(pilot);
+        BoostSystem boostSystem = new BoostSystem(pilot);
 
-        com.bitdecay.helm.system.movement.SteeringSystem steeringSystem = new com.bitdecay.helm.system.movement.SteeringSystem(pilot);
+        SteeringSystem steeringSystem = new SteeringSystem(pilot);
 
-        com.bitdecay.helm.system.PlayerStartLevelSystem startSystem = new com.bitdecay.helm.system.PlayerStartLevelSystem(pilot);
+        PlayerStartLevelSystem startSystem = new PlayerStartLevelSystem(pilot);
         inputMux.addProcessor(startSystem);
 
-        com.bitdecay.helm.system.movement.GravityFinderSystem gravityFinderSystem = new com.bitdecay.helm.system.movement.GravityFinderSystem(pilot);
+        GravityFinderSystem gravityFinderSystem = new GravityFinderSystem(pilot);
         GravityApplicationSystem gravityApplicationSystem = new GravityApplicationSystem(pilot);
 
-        com.bitdecay.helm.system.movement.MovementSystem movementSystem = new com.bitdecay.helm.system.movement.MovementSystem(pilot);
+        MovementSystem movementSystem = new MovementSystem(pilot);
 
         CameraUpdateSystem cameraSystem = new CameraUpdateSystem(pilot, gameCam);
 
         CollisionAlignmentSystem collisionAlignmentSystem = new CollisionAlignmentSystem(pilot);
-        com.bitdecay.helm.system.collision.CollisionSystem collisionSystem = new com.bitdecay.helm.system.collision.CollisionSystem(pilot);
+        CollisionSystem collisionSystem = new CollisionSystem(pilot);
         PlayerCollisionHandlerSystem playerCollisionSystem = new PlayerCollisionHandlerSystem(pilot);
         WormholeCollisionHandlerSystem wormholeCollisionHandlerSystem = new WormholeCollisionHandlerSystem(pilot);
 
-        com.bitdecay.helm.system.util.ProximityRemovalSystem proximityRemovalSystem = new com.bitdecay.helm.system.util.ProximityRemovalSystem(pilot);
-        com.bitdecay.helm.system.camera.ProximityFocusSystem cameraProximitySystem = new com.bitdecay.helm.system.camera.ProximityFocusSystem(pilot);
+        ProximityRemovalSystem proximityRemovalSystem = new ProximityRemovalSystem(pilot);
+        ProximityFocusSystem cameraProximitySystem = new ProximityFocusSystem(pilot);
 
         DelayedAddSystem delaySystem = new DelayedAddSystem(pilot);
-        com.bitdecay.helm.system.util.RemoveComponentSystem removeComponentSystem = new com.bitdecay.helm.system.util.RemoveComponentSystem(pilot);
+        RemoveComponentSystem removeComponentSystem = new RemoveComponentSystem(pilot);
 
-        com.bitdecay.helm.system.collision.LandingSystem landingSystem = new com.bitdecay.helm.system.collision.LandingSystem(pilot);
+        LandingSystem landingSystem = new LandingSystem(pilot);
 
-        playerBoundarySystem = new com.bitdecay.helm.system.movement.PlayerBoundarySystem(pilot);
+        playerBoundarySystem = new PlayerBoundarySystem(pilot);
 
         CrashSystem crashSystem = new CrashSystem(pilot);
 
-        com.bitdecay.helm.system.ResolvePlayerExplosionSystem resolveExplosionSystem = new com.bitdecay.helm.system.ResolvePlayerExplosionSystem(pilot);
+        ResolvePlayerExplosionSystem resolveExplosionSystem = new ResolvePlayerExplosionSystem(pilot);
 
-        com.bitdecay.helm.system.util.TimerSystem timerSystem = new com.bitdecay.helm.system.util.TimerSystem(pilot);
+        TimerSystem timerSystem = new TimerSystem(pilot);
 
         ReplayInputSystem replayInputSystem = new ReplayInputSystem(pilot);
 
@@ -167,14 +204,13 @@ public class LevelPlayer {
         addGameplaySystem(resolveExplosionSystem);
         addGameplaySystem(timerSystem);
 
-        com.bitdecay.helm.system.render.RenderBodySystem renderBodySystem = new com.bitdecay.helm.system.render.RenderBodySystem(pilot, shapeRenderer);
+        RenderBodySystem renderBodySystem = new RenderBodySystem(pilot, shapeRenderer);
         RenderBoostSystem renderBoostSystem = new RenderBoostSystem(pilot, shapeRenderer);
-        com.bitdecay.helm.system.render.RenderFuelSystem renderFuelSystem = new com.bitdecay.helm.system.render.RenderFuelSystem(pilot, shapeRenderer);
-        com.bitdecay.helm.system.render.RenderExplosionSystem renderExplosionSystem = new com.bitdecay.helm.system.render.RenderExplosionSystem(pilot, shapeRenderer);
+        RenderFuelSystem renderFuelSystem = new RenderFuelSystem(pilot, shapeRenderer);
+        RenderExplosionSystem renderExplosionSystem = new RenderExplosionSystem(pilot, shapeRenderer);
         RenderGravityWellSystem renderGravityWellSystem = new RenderGravityWellSystem(pilot, shapeRenderer);
-        com.bitdecay.helm.system.render.RenderWormholeSystem renderWormholeSystem = new com.bitdecay.helm.system.render.RenderWormholeSystem(pilot, shapeRenderer);
-        com.bitdecay.helm.system.render.RenderSpeedFlamesSystem renderFlamesSystem = new com.bitdecay.helm.system.render.RenderSpeedFlamesSystem(pilot, shapeRenderer);
-        com.bitdecay.helm.system.render.LandingHintSystem landingHintSystem = new com.bitdecay.helm.system.render.LandingHintSystem(pilot, shapeRenderer);
+        RenderWormholeSystem renderWormholeSystem = new RenderWormholeSystem(pilot, shapeRenderer);
+        LandingHintSystem landingHintSystem = new LandingHintSystem(pilot, shapeRenderer);
 
         gameRenderSystems.add(renderBoostSystem);
         gameRenderSystems.add(renderBodySystem);
@@ -182,14 +218,10 @@ public class LevelPlayer {
         gameRenderSystems.add(renderExplosionSystem);
         gameRenderSystems.add(renderGravityWellSystem);
         gameRenderSystems.add(renderWormholeSystem);
-//        gameRenderSystems.add(renderFlamesSystem);
         gameRenderSystems.add(landingHintSystem);
 
-        com.bitdecay.helm.system.render.RenderSteeringSystem renderSteeringSystem = new com.bitdecay.helm.system.render.RenderSteeringSystem(pilot, screenCam, shapeRenderer);
-        screenRenderSystems.add(renderSteeringSystem);
-
         if (pilot.isDebug()) {
-            com.bitdecay.helm.system.render.DebugFocusPointSystem debugFocusPointSystem = new com.bitdecay.helm.system.render.DebugFocusPointSystem(pilot, shapeRenderer);
+            DebugFocusPointSystem debugFocusPointSystem = new DebugFocusPointSystem(pilot, shapeRenderer);
             gameRenderSystems.add(debugFocusPointSystem);
         }
     }
@@ -213,13 +245,13 @@ public class LevelPlayer {
         }
     }
 
-    public void loadLevel(com.bitdecay.helm.world.LevelDefinition levelDef) {
+    public void loadLevel(LevelDefinition levelDef) {
         recordedInput.levelDef = levelDef;
 
         resetLevel(levelDef);
 
-        com.bitdecay.helm.entities.ShipEntity ship = new com.bitdecay.helm.entities.ShipEntity(levelDef.startPosition, levelDef.startingFuel);
-        ship.addComponent(new com.bitdecay.helm.component.PlayerActiveComponent());
+        ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
+        ship.addComponent(new PlayerActiveComponent());
         printMatchingGameSystems(ship);
         allEntities.add(ship);
     }
@@ -227,19 +259,19 @@ public class LevelPlayer {
     public void loadReplay(InputReplay replay) {
         resetLevel(replay.levelDef);
 
-        com.bitdecay.helm.entities.ShipEntity ship = new com.bitdecay.helm.entities.ShipEntity(replay.levelDef.startPosition, replay.levelDef.startingFuel);
+        ShipEntity ship = new ShipEntity(replay.levelDef.startPosition, replay.levelDef.startingFuel);
         ship.addComponent(new ReplayActiveComponent(replay));
         printMatchingGameSystems(ship);
         allEntities.add(ship);
     }
 
-    protected void resetLevel(com.bitdecay.helm.world.LevelDefinition levelDef) {
+    protected void resetLevel(LevelDefinition levelDef) {
         resetQueued = true;
 
         allEntities.clear();
 
-        for (com.bitdecay.helm.world.LineSegment line : levelDef.levelLines) {
-            allEntities.add(new com.bitdecay.helm.entities.LineSegmentEntity(line));
+        for (LineSegment line : levelDef.levelLines) {
+            allEntities.add(new LineSegmentEntity(line));
         }
 
         if (levelDef.finishPlatform.area() > 0) {
@@ -248,17 +280,17 @@ public class LevelPlayer {
         }
 
         for (Circle well: levelDef.gravityWells) {
-            com.bitdecay.helm.entities.GravityWellEntity gravityWell = new com.bitdecay.helm.entities.GravityWellEntity(well, false);
+            GravityWellEntity gravityWell = new GravityWellEntity(well, false);
             allEntities.add(gravityWell);
         }
 
         for (Circle field: levelDef.repulsionFields) {
-            com.bitdecay.helm.entities.GravityWellEntity gravityWell = new com.bitdecay.helm.entities.GravityWellEntity(field, true);
+            GravityWellEntity gravityWell = new GravityWellEntity(field, true);
             allEntities.add(gravityWell);
         }
 
         for (WormholePair pair: levelDef.wormholes) {
-            com.bitdecay.helm.entities.WormholeEntity wormhole = new com.bitdecay.helm.entities.WormholeEntity(pair);
+            WormholeEntity wormhole = new WormholeEntity(pair);
             allEntities.add(wormhole);
         }
 
@@ -274,14 +306,14 @@ public class LevelPlayer {
         updateBoundarySystem(levelDef.levelLines);
     }
 
-    private void updateBoundarySystem(Array<com.bitdecay.helm.world.LineSegment> levelLines) {
+    private void updateBoundarySystem(Array<LineSegment> levelLines) {
         float minX = Float.POSITIVE_INFINITY;
         float maxX = Float.NEGATIVE_INFINITY;
 
         float minY = Float.POSITIVE_INFINITY;
         float maxY = Float.NEGATIVE_INFINITY;
 
-        for (com.bitdecay.helm.world.LineSegment line : levelLines) {
+        for (LineSegment line : levelLines) {
             minX = Math.min(minX, line.startPoint.x);
             maxX = Math.max(maxX, line.startPoint.x);
             minX = Math.min(minX, line.endPoint.x);
@@ -300,7 +332,7 @@ public class LevelPlayer {
         playerBoundarySystem.setKillRadius(new Vector2((minX + maxX) / 2, (minY + maxY) / 2), largestDimension);
     }
 
-    public void printMatchingGameSystems(com.bitdecay.helm.GameEntity entity) {
+    public void printMatchingGameSystems(GameEntity entity) {
         System.out.println("Entity " + entity.getClass().getSimpleName() + " matches the following systems:");
         for (GameSystem system : gameSystems) {
             if (system.canActOn(entity)) {
@@ -393,11 +425,11 @@ public class LevelPlayer {
         return inputMux;
     }
 
-    public void addEntity(com.bitdecay.helm.GameEntity entity) {
+    public void addEntity(GameEntity entity) {
         pendingAdds.add(entity);
     }
 
-    public void removeEntity(com.bitdecay.helm.GameEntity entity) {
+    public void removeEntity(GameEntity entity) {
         pendingRemoves.add(entity);
     }
 
@@ -422,13 +454,13 @@ public class LevelPlayer {
         return tick;
     }
 
-    public void countStat(com.bitdecay.helm.unlock.StatName statName, int amount) {
+    public void countStat(StatName statName, int amount) {
         if (!isReplay) {
             Helm.stats.count(statName, amount);
         }
     }
 
-    public void rollStat(com.bitdecay.helm.unlock.StatName statName, float amount) {
+    public void rollStat(StatName statName, float amount) {
         if (!isReplay) {
             Helm.stats.roll(statName, amount);
         }

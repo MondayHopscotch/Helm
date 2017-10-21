@@ -59,17 +59,6 @@ public class OptionsScreen implements Screen {
         prefsTable.pad(200);
 
         generateSliderIntSetting("Steering Sensitivity", GamePrefs.SENSITIVITY, GamePrefs.SENSITIVITY_DEFAULT, GamePrefs.SENSITIVITY_MIN, GamePrefs.SENSITIVITY_MAX);
-        generateCheckBoxSetting("Use Joystick Steering", GamePrefs.USE_JOYSTICK_STEERING, GamePrefs.USE_JOYSTICK_STEERING_DEFAULT);
-
-        inputMap.get(GamePrefs.USE_JOYSTICK_STEERING).addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                updateSteeringSettingVisibility();
-            }
-        });
-
-        generateSliderFloatSetting("Steering Joystick X", GamePrefs.JOYSTICK_STEERING_WIDTH, GamePrefs.JOYSTICK_STEERING_WIDTH_DEFAULT, GamePrefs.JOYSTICK_STEERING_MIN, GamePrefs.JOYSTICK_STEERING_MAX);
-        generateSliderFloatSetting("Steering Joystick Y", GamePrefs.JOYSTICK_STEERING_HEIGHT, GamePrefs.JOYSTICK_STEERING_HEIGHT_DEFAULT, GamePrefs.JOYSTICK_STEERING_MIN, GamePrefs.JOYSTICK_STEERING_MAX);
         generateCheckBoxSetting("Use Lefty Controls", GamePrefs.USE_LEFT_HANDED_CONTROLS, GamePrefs.USE_LEFT_HANDED_CONTROLS_DEFAULT);
 
         generateCheckBoxSetting("Mute Music", GamePrefs.MUTE_MUSIC, GamePrefs.MUTE_MUSIC_DEFAULT);
@@ -100,9 +89,6 @@ public class OptionsScreen implements Screen {
         mainTable.add(doneLabel);
 
         stage.addActor(mainTable);
-
-        // call this to make sure our settings are appearing correctly right after opening the screen
-        updateSteeringSettingVisibility();
     }
 
     private void generateCheckBoxSetting(String displayName, final String settingName, boolean defaultValue) {
@@ -115,10 +101,14 @@ public class OptionsScreen implements Screen {
         settingInput.align(Align.bottomLeft);
         settingInput.setOrigin(Align.bottomLeft);
 
-        prefsTable.add(settingLabel).align(Align.left).expandX();
+        int screenHeight = Gdx.graphics.getHeight();
+
+        prefsTable.add(settingLabel).align(Align.left).expandX().padBottom(screenHeight / 10);
         prefsTable.add(settingInput).size(
                 settingInput.getImage().getWidth() * settingInput.getImage().getScaleX(),
-                settingInput.getImage().getHeight() * settingInput.getImage().getScaleY()).align(Align.center);
+                settingInput.getImage().getHeight() * settingInput.getImage().getScaleY())
+                .align(Align.center)
+                .padBottom(screenHeight / 10);
         prefsTable.row();
 
         labelMap.put(settingName, settingLabel);
@@ -150,36 +140,22 @@ public class OptionsScreen implements Screen {
         });
     }
 
-    private void generateSliderFloatSetting(String displayName, final String settingName, float defaultValue, float minValue, float maxValue) {
-        Label settingLabel = new Label(displayName, skin);
-        settingLabel.setFontScale(baseFontScale);
-        final Slider settingInput = new Slider(minValue, maxValue, .05f, false, skin);
-        settingInput.setAnimateDuration(0.1f);
-        settingInput.setValue(Helm.prefs.getFloat(settingName, defaultValue));
-
-        setSliderKnobHeight(settingInput);
-        addToOptions(settingName, settingLabel, settingInput);
-
-        closingActions.add(new Runnable() {
-            @Override
-            public void run() {
-                Helm.prefs.putFloat(settingName, settingInput.getValue());
-            }
-        });
-    }
-
     private void setSliderKnobHeight(Slider settingInput) {
         // this affects all slider knobs
         int screenHeight = Gdx.graphics.getHeight();
-        settingInput.getStyle().knob.setMinHeight(screenHeight / 15);
+        int knobHeight = screenHeight / 7;
+        int knobWidth = knobHeight / 3;
+        settingInput.getStyle().knob.setMinHeight(screenHeight / 7);
+        settingInput.getStyle().knob.setMinWidth(knobWidth);
     }
 
     private void addToOptions(String settingName, Label settingLabel, Slider settingInput) {
         labelMap.put(settingName, settingLabel);
         inputMap.put(settingName, settingInput);
 
-        prefsTable.add(settingLabel).align(Align.left);
-        prefsTable.add(settingInput).width(300);
+        int screenHeight = Gdx.graphics.getHeight();
+        prefsTable.add(settingLabel).align(Align.left).padBottom(screenHeight / 10);
+        prefsTable.add(settingInput).width(screenHeight / 3).padBottom(screenHeight / 10);
         prefsTable.row();
     }
 
@@ -197,34 +173,6 @@ public class OptionsScreen implements Screen {
                 music.play();
             }
         }
-    }
-
-    private void updateSteeringSettingVisibility() {
-        boolean usingJoystickSteering = ((CheckBox) inputMap.get(GamePrefs.USE_JOYSTICK_STEERING)).isChecked();
-
-        if (usingJoystickSteering) {
-            disableSetting(GamePrefs.SENSITIVITY);
-            enableSetting(GamePrefs.JOYSTICK_STEERING_WIDTH);
-            enableSetting(GamePrefs.JOYSTICK_STEERING_HEIGHT);
-        } else {
-            enableSetting(GamePrefs.SENSITIVITY);
-            disableSetting(GamePrefs.JOYSTICK_STEERING_WIDTH);
-            disableSetting(GamePrefs.JOYSTICK_STEERING_HEIGHT);
-        }
-    }
-
-    private void enableSetting(String settingName) {
-        labelMap.get(settingName).setTouchable(Touchable.enabled);
-        inputMap.get(settingName).setTouchable(Touchable.enabled);
-        labelMap.get(settingName).setColor(Color.WHITE);
-        inputMap.get(settingName).setColor(Color.WHITE);
-    }
-
-    private void disableSetting(String settingName) {
-        labelMap.get(settingName).setTouchable(Touchable.disabled);
-        inputMap.get(settingName).setTouchable(Touchable.disabled);
-        labelMap.get(settingName).setColor(Color.DARK_GRAY);
-        inputMap.get(settingName).setColor(Color.DARK_GRAY);
     }
 
     @Override
