@@ -1,5 +1,7 @@
 package com.bitdecay.helm.system.input;
 
+import com.bitdecay.helm.component.BoostCountComponent;
+import com.bitdecay.helm.component.HasSteeredComponent;
 import com.bitdecay.helm.component.ReplayActiveComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
@@ -11,6 +13,8 @@ import com.bitdecay.helm.system.AbstractIteratingGameSystem;
  */
 
 public class ReplayInputSystem extends AbstractIteratingGameSystem {
+    private HasSteeredComponent hasSteered;
+    private BoostCountComponent boostCounter;
 
     public ReplayInputSystem(com.bitdecay.helm.GamePilot pilot) {
         super(pilot);
@@ -33,15 +37,40 @@ public class ReplayInputSystem extends AbstractIteratingGameSystem {
                 SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
                 steering.angle = inputRecord.angle;
                 System.out.println("REPLAY: TICK " + tick + " Setting angle: " + inputRecord.angle);
+
+                if (entity.hasComponent(HasSteeredComponent.class)) {
+                    hasSteered = entity.getComponent(HasSteeredComponent.class);
+                    hasSteered.playerHasSteered = true;
+                }
             }
 
             BoostControlComponent boost = entity.getComponent(BoostControlComponent.class);
             if (inputRecord.boostToggled) {
+                if (boost.pressed == false) {
+                    // we just pushed boost
+                    if (entity.hasComponent(BoostCountComponent.class)) {
+                        boostCounter = entity.getComponent(BoostCountComponent.class);
+                        boostCounter.boostCount++;
+                    }
+                }
                 boost.pressed = !boost.pressed;
             }
             System.out.println("REPLAY: TICK " + tick + " Setting boost: " + boost.pressed);
 
             replay.nextInput++;
+        }
+    }
+
+    @Override
+    public void reset() {
+        if (hasSteered != null) {
+            hasSteered.playerHasSteered = false;
+            hasSteered = null;
+        }
+
+        if (boostCounter != null) {
+            boostCounter.boostCount = 0;
+            boostCounter = null;
         }
     }
 
