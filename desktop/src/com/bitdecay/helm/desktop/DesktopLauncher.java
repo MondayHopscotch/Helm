@@ -15,6 +15,9 @@ public class DesktopLauncher {
 		InputSystemFactory.setInputSystems(DesktopBoosterInputSystem.class, DesktopSteeringInputSystem.class);
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1600;
+		if (arg.length > 1) {
+			config.width = 1800;
+		}
 		config.height = 900;
 		new LwjglApplication(new Helm(), config);
 	}

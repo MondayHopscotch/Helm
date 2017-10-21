@@ -113,9 +113,9 @@ public class LevelPlayer {
         this.pilot = pilot;
         this.isReplay = isReplay;
 
-        float screenRatio = 1.0f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
+
         float camHeight = 1080;
-        float camWidth = camHeight * screenRatio;
+        float camWidth = camHeight * Helm.aspectRatio;
 
         screenCam = new OrthographicCamera(camWidth, camHeight);
         screenCam.translate(screenCam.viewportWidth / 2, screenCam.viewportHeight / 2);
