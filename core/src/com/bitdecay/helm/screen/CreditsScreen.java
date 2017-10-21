@@ -104,13 +104,6 @@ public class CreditsScreen implements Screen {
         sectionHeader.setAlignment(Align.left);
         sectionHeader.setOrigin(Align.left);
 
-        sectionHeader.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Helm.urlOpener.open("http://www.google.co.in");
-            }
-        });
-
         creditsTable.add(sectionHeader).align(Align.left).padTop(game.fontScale * 10);
         creditsTable.row();
 
