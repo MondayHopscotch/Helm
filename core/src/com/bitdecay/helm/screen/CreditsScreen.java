@@ -5,23 +5,31 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.credits.CreditsData;
+import com.bitdecay.helm.menu.BitImageButton;
+import com.bitdecay.helm.persist.JsonUtils;
 
 public class CreditsScreen implements Screen {
     private Helm game;
     private Stage stage = new Stage();
 
     private final Skin skin;
+
+    private static TextureRegion gotoTexture;
 
 
     public CreditsScreen(final Helm game) {
@@ -31,9 +39,11 @@ public class CreditsScreen implements Screen {
 
         skin = game.skin;
 
+        initIcons();
+
         FileHandle creditsFile = Gdx.files.internal("credits.json");
 
-        CreditsData[] loadedCredits = com.bitdecay.helm.persist.JsonUtils.unmarshal(CreditsData[].class, creditsFile);
+        CreditsData[] loadedCredits = JsonUtils.unmarshal(CreditsData[].class, creditsFile);
 
         Table container = new Table();
         container.setFillParent(true);
@@ -84,23 +94,46 @@ public class CreditsScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
+    private void initIcons() {
+        gotoTexture = game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("next_icon");
+    }
+
     private void addCreditSection(Table creditsTable, CreditsData credit) {
         Label sectionHeader = new Label(credit.sectionTitle, skin);
         sectionHeader.setFontScale(game.fontScale * 1.2f);
         sectionHeader.setAlignment(Align.left);
         sectionHeader.setOrigin(Align.left);
 
-        creditsTable.add(sectionHeader).align(Align.left);
+        creditsTable.add(sectionHeader).align(Align.left).padTop(game.fontScale * 10);
         creditsTable.row();
 
-        for (String creditLine : credit.creditLines) {
-            Label lineLabel = new Label(creditLine, skin);
+        for (final CreditsData.CreditLine creditLine : credit.creditLines) {
+            Label lineLabel = new Label(creditLine.text, skin);
             lineLabel.setFontScale(game.fontScale);
             lineLabel.setAlignment(Align.right);
             lineLabel.setOrigin(Align.right);
 
-            creditsTable.add(lineLabel).align(Align.right);
-            creditsTable.row().width(Gdx.graphics.getWidth() * .75f);
+            creditsTable.add(lineLabel).align(Align.right).width(Gdx.graphics.getWidth() * .75f);
+
+            if (creditLine.url != null && creditLine.url.length() > 0) {
+                ClickListener linkListener = new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        Helm.urlOpener.open(creditLine.url);
+                    }
+                };
+
+                TextureRegionDrawable gotoDrawable = new TextureRegionDrawable(gotoTexture);
+                BitImageButton linkButton = new BitImageButton(gotoDrawable, gotoDrawable, game.fontScale * 0.2f, game.skin);
+
+                linkButton.addListener(linkListener);
+                lineLabel.addListener(linkListener);
+
+                creditsTable.add(linkButton).padLeft(game.fontScale * 5);
+            } else {
+                creditsTable.add(new Image());
+            }
+            creditsTable.row();
         }
     }
 
