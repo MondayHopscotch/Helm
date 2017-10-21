@@ -1,40 +1,78 @@
 [
     {
-        sectionTitle: A Game By
+        sectionTitle: "A Game By",
         creditLines: [
-          bitDecay Games 2017
+			{
+				text: "Bit Decay Games LLC 2017",
+				url: "https://bitdecaygames.itch.io/"
+			}
+
         ]
     },
 	{
-		sectionTitle: Programming and Design
+		sectionTitle: "Programming and Design",
 		creditLines: [
-			Logan Moore
+			{
+				text: "Logan Moore"
+			}
 		]
 	},
     {
-      sectionTitle: Level Design
+      sectionTitle: "Level Design",
       creditLines: [
-        Logan Moore
-        "Erik \"NandemoGuy\" Meredith"
+		  {
+			  text: "Logan Moore"
+		  },
+		  {
+			  text: "Erik \"NandemoGuy\" Meredith"
+		  }
       ]
     },
 	{
-		sectionTitle: Sound Effects
+		sectionTitle: "Sound Effects",
 		creditLines: [
-			Logan Moore
-			BFXR (www.bfxr.net)
+			{
+				text: "Logan Moore"
+			},
+			{
+				text: "BFXR	(www.bfxr.net)",
+				url: "http://www.bfxr.net"
+			},
+
 		]
 	},
 	{
-		sectionTitle: Font
+		sectionTitle: "Font",
 		creditLines: [
-			Visitor (Brian Kent)
+			{
+				text: "Visitor by Brian Kent\n(kentpw@norwich.net)"
+			}
+
 		]
 	},
 	{
-		sectionTitle: Music
+		sectionTitle: "Music",
 		creditLines: [
-			None as of yet
+			{
+				text: "Ambient I-IV\nROZKOL (rozkol.com)",
+				url: "http://www.rozkol.com"
+			},
+			{
+				text: "Modified to only include\nAmbient I (0:00 - 2:40)"
+			},
+			{
+				text: "Used under CC-BY-4.0",
+				url: "https://creativecommons.org/licenses/by/4.0/legalcode"
+			}
+		]
+	},
+	{
+		sectionTitle: "Special Thanks",
+		creditLines: [
+			{
+				text: "libGDX (libgdx.badlogicgames.com)",
+				url: "http://libgdx.badlogicgames.com"
+			}
 		]
 	}
 ]

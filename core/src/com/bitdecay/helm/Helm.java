@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.bitdecay.helm.external.URLOpener;
 import com.bitdecay.helm.screen.SplashScreen;
 import com.bitdecay.helm.sound.MusicLibrary;
 import com.bitdecay.helm.sound.SFXLibrary;
@@ -23,6 +24,8 @@ public class Helm extends Game {
 
     public static Preferences prefs;
     public static Statistics stats;
+
+    public static URLOpener urlOpener;
 
     public AssetManager assets;
     public Skin skin;

@@ -19,6 +19,9 @@ public class DesktopLauncher {
 			config.width = 1800;
 		}
 		config.height = 900;
+
+		Helm.urlOpener = new DesktopURLOpener();
+
 		new LwjglApplication(new Helm(), config);
 	}
 }
