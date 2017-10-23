@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.prefs.GamePrefs;
 import com.bitdecay.helm.sound.MusicLibrary;
 
@@ -101,8 +102,7 @@ public class TitleScreen implements Screen {
         menu.align(Align.center);
         menu.setOrigin(Align.center);
 
-        Label startLabel = new Label("Start", skin);
-        startLabel.addListener(new ClickListener() {
+        RotatingLabel startLabel = new RotatingLabel("Start", game.fontScale * 1.8f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
@@ -115,10 +115,8 @@ public class TitleScreen implements Screen {
                 );
             }
         });
-        startLabel.setFontScale(game.fontScale * 1.8f);
 
-        Label optionsLabel = new Label("Options", skin);
-        optionsLabel.addListener(new ClickListener() {
+        RotatingLabel optionsLabel = new RotatingLabel("Options", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
@@ -130,22 +128,19 @@ public class TitleScreen implements Screen {
                 }));
             }
         });
-        optionsLabel.setFontScale(game.fontScale * 1.2f);
 
-        final Label extraMenuLabel = new Label("Extras", skin);
-        extraMenuLabel.addListener(new ClickListener() {
+        final RotatingLabel extraMenuLabel = new RotatingLabel("Extras", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 transitionMenu(mainMenu, extraMenu);
             }
         });
-        extraMenuLabel.setFontScale(game.fontScale * 1.2f);
 
-        menu.add(wrapLabel(startLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 30);
+        menu.add(startLabel).padRight(game.fontScale * 30).padBottom(game.fontScale * 30);
         menu.row();
-        menu.add(wrapLabel(optionsLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 30);
+        menu.add(optionsLabel).padRight(game.fontScale * 30).padBottom(game.fontScale * 30);
         menu.row();
-        menu.add(wrapLabel(extraMenuLabel)).padRight(game.fontScale * 30);
+        menu.add(extraMenuLabel).padRight(game.fontScale * 30);
 
         return menu;
     }
@@ -156,8 +151,7 @@ public class TitleScreen implements Screen {
         menu.align(Align.center);
         menu.setOrigin(Align.center);
 
-        Label paletteLabel = new Label("Palette", skin);
-        paletteLabel.addListener(new ClickListener() {
+        RotatingLabel paletteLabel = new RotatingLabel("Palette", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
@@ -169,10 +163,8 @@ public class TitleScreen implements Screen {
                 }));
             }
         });
-        paletteLabel.setFontScale(game.fontScale * 1.2f);
 
-        Label statsLabel = new Label("Stats", skin);
-        statsLabel.addListener(new ClickListener() {
+        RotatingLabel statsLabel = new RotatingLabel("Stats", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
@@ -184,10 +176,8 @@ public class TitleScreen implements Screen {
                 }));
             }
         });
-        statsLabel.setFontScale(game.fontScale * 1.2f);
 
-        Label replayLabel = new Label("Replays", skin);
-        replayLabel.addListener(new ClickListener() {
+        RotatingLabel replayLabel = new RotatingLabel("Replays", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
@@ -199,10 +189,8 @@ public class TitleScreen implements Screen {
                 }));
             }
         });
-        replayLabel.setFontScale(game.fontScale * 1.2f);
 
-        Label creditLabel = new Label("Credits", skin);
-        creditLabel.addListener(new ClickListener() {
+        RotatingLabel creditLabel = new RotatingLabel("Credits", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 finishLoadingAssets();
@@ -214,26 +202,23 @@ public class TitleScreen implements Screen {
                 }));
             }
         });
-        creditLabel.setFontScale(game.fontScale * 1.2f);
 
-        final Label mainMenuLabel = new Label("Main Menu", skin);
-        mainMenuLabel.addListener(new ClickListener() {
+        final RotatingLabel mainMenuLabel = new RotatingLabel("Main Menu", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 transitionMenu(extraMenu, mainMenu);
             }
         });
-        mainMenuLabel.setFontScale(game.fontScale * 1.2f);
 
-        menu.add(wrapLabel(paletteLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
+        menu.add(paletteLabel).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
         menu.row();
-        menu.add(wrapLabel(statsLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
+        menu.add(statsLabel).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
         menu.row();
-        menu.add(wrapLabel(replayLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
+        menu.add(replayLabel).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
         menu.row();
-        menu.add(wrapLabel(creditLabel)).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
+        menu.add(creditLabel).padRight(game.fontScale * 30).padBottom(game.fontScale * 15);
         menu.row();
-        menu.add(wrapLabel(mainMenuLabel)).padRight(game.fontScale * 30);
+        menu.add(mainMenuLabel).padRight(game.fontScale * 30);
 
         return menu;
     }
@@ -327,38 +312,6 @@ public class TitleScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.assets.update();
-
-        if (spinningRight) {
-            if (rotation > 0) {
-                spinSpeed -= spinAccel;
-            } else {
-                spinSpeed += spinAccel;
-            }
-        } else {
-            if (rotation > 0) {
-                spinSpeed += spinAccel;
-            } else {
-                spinSpeed -= spinAccel;
-            }
-        }
-
-        rotation += spinSpeed;
-
-        if (rotation > maxRotation || rotation < -maxRotation) {
-            spinningRight = !spinningRight;
-            spinSpeed = 0;
-            rotation = Math.max(rotation, -maxRotation);
-            rotation = Math.min(rotation, maxRotation);
-        }
-
-        for (Actor actor : mainMenu.getChildren()) {
-            actor.setRotation(rotation);
-        }
-
-        for (Actor actor : extraMenu.getChildren()) {
-            actor.setRotation(rotation);
-        }
-
 
         stage.act();
         stage.draw();
