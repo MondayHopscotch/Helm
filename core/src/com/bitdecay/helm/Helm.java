@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.bitdecay.helm.external.URLOpener;
+import com.bitdecay.helm.prefs.GamePrefs;
 import com.bitdecay.helm.screen.SplashScreen;
 import com.bitdecay.helm.sound.MusicLibrary;
 import com.bitdecay.helm.sound.SFXLibrary;
@@ -41,6 +42,10 @@ public class Helm extends Game {
         aspectRatio = 1.0f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
 
         Helm.prefs = Gdx.app.getPreferences("helm-pref");
+
+        // this is here for Android
+        Gdx.input.setCatchBackKey(Helm.prefs.getBoolean(GamePrefs.DISABLE_BACK_BUTTON, GamePrefs.DISABLE_BACK_BUTTON_DEFAULT));
+
         stats = new com.bitdecay.helm.unlock.Statistics();
         stats.init(Helm.prefs);
         checkUpdateClears();
