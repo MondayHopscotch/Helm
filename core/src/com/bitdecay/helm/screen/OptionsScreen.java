@@ -69,6 +69,15 @@ public class OptionsScreen implements Screen {
             }
         });
 
+        generateCheckBoxSetting("Disable Back Button", GamePrefs.DISABLE_BACK_BUTTON, GamePrefs.DISABLE_BACK_BUTTON_DEFAULT);
+        inputMap.get(GamePrefs.DISABLE_BACK_BUTTON).addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean disabled = ((CheckBox) inputMap.get(GamePrefs.DISABLE_BACK_BUTTON)).isChecked();
+                Gdx.input.setCatchBackKey(disabled);
+            }
+        });
+
         TextButton doneLabel = new TextButton("Save", skin);
         doneLabel.getLabel().setFontScale(baseFontScale * 1.5f);
 
