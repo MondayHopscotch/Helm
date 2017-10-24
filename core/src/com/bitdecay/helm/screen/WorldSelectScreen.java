@@ -1,17 +1,23 @@
 package com.bitdecay.helm.screen;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.menu.BitImageButton;
+import com.bitdecay.helm.menu.MedalUtils;
+import com.bitdecay.helm.menu.RotatingLabel;
+import com.bitdecay.helm.unlock.StatName;
+import com.bitdecay.helm.world.LevelInstance;
+import com.bitdecay.helm.world.WorldInstance;
+import com.bitdecay.helm.world.WorldOrderMarker;
 import com.bitdecay.helm.world.WorldUtils;
 
 /**
@@ -44,32 +50,32 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
     public void populateRows(Table worldTable) {
         itemTable.columnDefaults(1).expandX();
         itemTable.columnDefaults(2).width(game.fontScale * 50);
-        itemTable.columnDefaults(3).width(com.bitdecay.helm.menu.MedalUtils.imageSize);
+        itemTable.columnDefaults(3).width(MedalUtils.imageSize);
         itemTable.columnDefaults(4).width(game.fontScale * 50);
-        itemTable.columnDefaults(5).width(com.bitdecay.helm.menu.MedalUtils.imageSize);
+        itemTable.columnDefaults(5).width(MedalUtils.imageSize);
 
         Array<com.bitdecay.helm.world.WorldInstance> worlds = WorldUtils.getWorlds();
 
-        int levelsCompleted = Helm.prefs.getInteger(com.bitdecay.helm.unlock.StatName.LEVELS_COMPLETED.preferenceID);
+        int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID);
 
         if (Helm.debug) {
-            com.bitdecay.helm.world.WorldOrderMarker testWorld = new com.bitdecay.helm.world.WorldOrderMarker();
+            WorldOrderMarker testWorld = new WorldOrderMarker();
             testWorld.worldFile = "testWorld.json";
             testWorld.requiredLevelsForUnlock = 0;
-            com.bitdecay.helm.world.WorldInstance testInstance = WorldUtils.buildWorldInstance(testWorld);
+            WorldInstance testInstance = WorldUtils.buildWorldInstance(testWorld);
             buildWorldRow(testInstance, worldTable);
             worldTable.row().padTop(game.fontScale * 10);
 
             // print level count
             int levelCount = 0;
-            for (com.bitdecay.helm.world.WorldInstance world : worlds) {
+            for (WorldInstance world : worlds) {
                 levelCount += world.levels.size;
-                for (com.bitdecay.helm.world.LevelInstance level : world.levels) {
-                    if (level.getScoreNeededForMedal(com.bitdecay.helm.menu.MedalUtils.LevelRating.DEV) == Integer.MAX_VALUE) {
+                for (LevelInstance level : world.levels) {
+                    if (level.getScoreNeededForMedal(MedalUtils.LevelRating.DEV) == Integer.MAX_VALUE) {
                         System.out.println(level.levelDef.name + " does not have a dev score");
                     }
 
-                    if (level.getTimeNeededForMedal(com.bitdecay.helm.menu.MedalUtils.LevelRating.DEV) == 0) {
+                    if (level.getTimeNeededForMedal(MedalUtils.LevelRating.DEV) == 0) {
                         System.out.println(level.levelDef.name + " does not have a dev time");
                     }
                 }
@@ -80,7 +86,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         }
 
         boolean allWorldsUnlocked = true;
-        for (com.bitdecay.helm.world.WorldInstance world : worlds) {
+        for (WorldInstance world : worlds) {
             if (levelsCompleted >= world.requiredLevelsForUnlock) {
                 buildWorldRow(world, worldTable);
                 worldTable.row().padTop(game.fontScale * 10);
@@ -142,12 +148,8 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
     }
 
     @Override
-    public Actor getReturnButton() {
-        TextButton returnButton = new TextButton("Return to Title Screen", skin);
-        returnButton.getLabel().setFontScale(game.fontScale);
-        returnButton.align(Align.bottomRight);
-        returnButton.setOrigin(Align.bottomRight);
-        returnButton.addListener(new ClickListener() {
+    public ClickListener getReturnButtonAction() {
+        return new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
@@ -157,8 +159,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
                     }
                 }));
             }
-        });
-        return returnButton;
+        };
     }
 
     private int buildWorldRow(final com.bitdecay.helm.world.WorldInstance world, Table table) {
@@ -174,15 +175,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             }
         };
 
-        TextButton goButton = new TextButton("Go!", skin);
-        goButton.getLabel().setFontScale(game.fontScale);
-        goButton.addListener(listener);
-
-        Label worldNameLabel = new Label(world.getWorldName(), skin);
-        worldNameLabel.setAlignment(Align.center);
-        worldNameLabel.setFontScale(game.fontScale);
-
-        worldNameLabel.addListener(listener);
+        RotatingLabel worldNameLabel = new RotatingLabel(world.getWorldName(), game.fontScale, skin, listener);
 
         int worldHighScore = world.getHighScore();
 
@@ -199,8 +192,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         worldTimeLabel.setAlignment(Align.right);
         worldTimeLabel.setFontScale(game.fontScale);
 
-        table.add(goButton).expand(false, false);
-        table.add(worldNameLabel);
+        table.add(worldNameLabel).colspan(2).expandX().fillX();
         table.add(worldScoreLabel);
         addScoreMedal(table, world);
         table.add(worldTimeLabel).padLeft(com.bitdecay.helm.menu.MedalUtils.imageSize / 2);

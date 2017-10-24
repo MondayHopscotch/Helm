@@ -3,13 +3,17 @@ package com.bitdecay.helm.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.bitdecay.helm.menu.BitImageButton;
 
 /**
  * Created by Monday on 2/12/2017.
@@ -26,6 +30,8 @@ public abstract class AbstractScrollingItemScreen implements Screen {
     private final ScrollPane scroll;
 
     private boolean requestAutoScrollToBottom = false;
+    private float iconSize;
+    private TextureAtlas.AtlasRegion exitIcon;
 
     public AbstractScrollingItemScreen(final com.bitdecay.helm.Helm game) {
         this.game = game;
@@ -35,6 +41,9 @@ public abstract class AbstractScrollingItemScreen implements Screen {
             stage.setDebugAll(true);
         }
         skin = game.skin;
+
+        iconSize = game.fontScale * 0.4f;
+        exitIcon = game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("exit_icon");
 
         Table container = new Table();
         container.setFillParent(true);
@@ -75,14 +84,19 @@ public abstract class AbstractScrollingItemScreen implements Screen {
         itemTable.clear();
         populateRows(itemTable);
         returnTable.clear();
-        returnTable.add(getReturnButton()).padRight(game.fontScale).padBottom(game.fontScale);
+
+        TextureRegionDrawable levelSelectDrawable = new TextureRegionDrawable(exitIcon);
+        BitImageButton returnButton = new BitImageButton(levelSelectDrawable, levelSelectDrawable, iconSize, skin);
+        returnButton.addListener(getReturnButtonAction());
+
+        returnTable.add(returnButton).padRight(game.fontScale).padBottom(game.fontScale);
     }
 
     public abstract void populateRows(Table mainTable);
 
     public abstract String getTitle();
 
-    public abstract Actor getReturnButton();
+    public abstract ClickListener getReturnButtonAction();
 
     @Override
     public void show() {

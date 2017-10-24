@@ -1,6 +1,5 @@
 package com.bitdecay.helm.screen;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -9,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.menu.MedalUtils;
+import com.bitdecay.helm.menu.RotatingLabel;
+import com.bitdecay.helm.prefs.GamePrefs;
 import com.bitdecay.helm.time.TimerUtils;
 import com.bitdecay.helm.world.LevelInstance;
 
@@ -36,22 +37,22 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
     public void populateRows(Table levelTable) {
         itemTable.columnDefaults(1).expandX();
         itemTable.columnDefaults(2).width(game.fontScale * 50);
-        itemTable.columnDefaults(3).width(com.bitdecay.helm.menu.MedalUtils.imageSize);
+        itemTable.columnDefaults(3).width(MedalUtils.imageSize);
         itemTable.columnDefaults(4).width(game.fontScale * 50);
-        itemTable.columnDefaults(5).width(com.bitdecay.helm.menu.MedalUtils.imageSize);
+        itemTable.columnDefaults(5).width(MedalUtils.imageSize);
 
         int totalHighScore = 0;
         float totalBestTime = 0;
 
         boolean allLevelsCompleted = true;
-        for (com.bitdecay.helm.world.LevelInstance level : world.levels) {
+        for (LevelInstance level : world.levels) {
             buildLevelRow(level, levelTable);
             int score = level.getHighScore();
-            if (score != com.bitdecay.helm.prefs.GamePrefs.SCORE_NOT_SET) {
+            if (score != GamePrefs.SCORE_NOT_SET) {
                 totalHighScore += score;
             }
 
-            if (level.getBestTime() == com.bitdecay.helm.prefs.GamePrefs.TIME_NOT_SET) {
+            if (level.getBestTime() == GamePrefs.TIME_NOT_SET) {
                 allLevelsCompleted = false;
             } else {
                 totalBestTime += level.getBestTime();
@@ -59,7 +60,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         }
 
         if (!allLevelsCompleted) {
-            totalBestTime = com.bitdecay.helm.prefs.GamePrefs.TIME_NOT_SET;
+            totalBestTime = GamePrefs.TIME_NOT_SET;
         }
 
         Label totalHighScoreLabel = new Label("Total: ", skin);
@@ -86,12 +87,8 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
     }
 
     @Override
-    public Actor getReturnButton() {
-        TextButton returnButton = new TextButton("Return to World Select", skin);
-        returnButton.getLabel().setFontScale(game.fontScale);
-        returnButton.align(Align.bottomRight);
-        returnButton.setOrigin(Align.bottomRight);
-        returnButton.addListener(new ClickListener() {
+    public ClickListener getReturnButtonAction() {
+        return new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
@@ -101,8 +98,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
                     }
                 }));
             }
-        });
-        return returnButton;
+        };
     }
 
     private int buildLevelRow(final LevelInstance level, Table table) {
@@ -118,15 +114,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
             }
         };
 
-        TextButton goButton = new TextButton("Go!", skin);
-        goButton.getLabel().setFontScale(game.fontScale);
-        goButton.addListener(listener);
-
-        Label levelNameLabel = new Label(level.levelDef.name, skin);
-        levelNameLabel.setAlignment(Align.center);
-        levelNameLabel.setFontScale(game.fontScale);
-
-        levelNameLabel.addListener(listener);
+        RotatingLabel levelNameLabel = new RotatingLabel(level.levelDef.name, game.fontScale, skin, listener);
 
         int levelHighScore = level.getHighScore();
 
@@ -148,8 +136,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         levelTimeLabel.setAlignment(Align.right);
         levelTimeLabel.setFontScale(game.fontScale);
 
-        table.add(goButton).expand(false, false);
-        table.add(levelNameLabel);
+        table.add(levelNameLabel).colspan(2).expandX().fillX();
         table.add(levelScoreLabel);
         addScoreMedal(table, level);
         table.add(levelTimeLabel).padLeft(com.bitdecay.helm.menu.MedalUtils.imageSize / 2);
