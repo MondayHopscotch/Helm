@@ -1,6 +1,5 @@
 package com.bitdecay.helm.screen;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -61,12 +60,8 @@ public class StatsScreen extends AbstractScrollingItemScreen {
     }
 
     @Override
-    public Actor getReturnButton() {
-        TextButton returnButton = new TextButton("Return to Title Screen", skin);
-        returnButton.getLabel().setFontScale(game.fontScale);
-        returnButton.align(Align.bottomRight);
-        returnButton.setOrigin(Align.bottomRight);
-        returnButton.addListener(new ClickListener() {
+    public ClickListener getReturnButtonAction() {
+        return new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
@@ -76,7 +71,6 @@ public class StatsScreen extends AbstractScrollingItemScreen {
                     }
                 }));
             }
-        });
-        return returnButton;
+        };
     }
 }

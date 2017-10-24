@@ -65,10 +65,8 @@ public class CreditsScreen implements Screen {
         returnTable.align(Align.bottomRight);
         returnTable.setOrigin(Align.bottomRight);
 
-        TextButton returnButton = new TextButton("Return to Title Screen", skin);
-        returnButton.getLabel().setFontScale(game.fontScale);
-        returnButton.align(Align.bottomRight);
-        returnButton.setOrigin(Align.bottomRight);
+        TextureRegionDrawable levelSelectDrawable = new TextureRegionDrawable(game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("exit_icon"));
+        BitImageButton returnButton = new BitImageButton(levelSelectDrawable, levelSelectDrawable, game.fontScale * 0.4f, skin);
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
