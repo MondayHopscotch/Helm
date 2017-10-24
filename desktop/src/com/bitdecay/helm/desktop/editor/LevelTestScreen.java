@@ -114,11 +114,6 @@ public class LevelTestScreen implements Screen, com.bitdecay.helm.GamePilot {
 
     }
 
-    @Override
-    public boolean isDebug() {
-        return true;
-    }
-
     public void setLevel(com.bitdecay.helm.world.LevelDefinition level) {
         levelPlayer.loadLevel(level);
     }

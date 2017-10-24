@@ -26,4 +26,7 @@ public class GamePrefs {
 
     public static final String DISABLE_BACK_BUTTON = "disableBackButton";
     public static final boolean DISABLE_BACK_BUTTON_DEFAULT = false;
+
+    public static final String TUTORIAL_COMPLETE = "tutorialComplete";
+    public static final boolean TUTORIAL_COMPLETE_DEFAULT = false;
 }

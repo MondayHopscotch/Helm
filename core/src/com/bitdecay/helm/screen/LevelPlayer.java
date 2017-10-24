@@ -220,7 +220,7 @@ public class LevelPlayer {
         gameRenderSystems.add(renderWormholeSystem);
         gameRenderSystems.add(landingHintSystem);
 
-        if (pilot.isDebug()) {
+        if (Helm.debug) {
             DebugFocusPointSystem debugFocusPointSystem = new DebugFocusPointSystem(pilot, shapeRenderer);
             gameRenderSystems.add(debugFocusPointSystem);
         }

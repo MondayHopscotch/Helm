@@ -109,7 +109,11 @@ public class TitleScreen implements Screen {
                 stage.addAction(Transitions.getFadeOut(new Runnable() {
                             @Override
                             public void run() {
-                                game.setScreen(WorldSelectScreen.get(game));
+                                if (!Helm.prefs.getBoolean(GamePrefs.TUTORIAL_COMPLETE, GamePrefs.TUTORIAL_COMPLETE_DEFAULT)) {
+                                    game.setScreen(new TutorialScreen(game));
+                                } else {
+                                    game.setScreen(WorldSelectScreen.get(game));
+                                }
                             }
                         })
                 );
