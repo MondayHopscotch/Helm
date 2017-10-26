@@ -20,6 +20,7 @@ import com.bitdecay.helm.unlock.palette.PaletteList;
 
 public class Helm extends Game {
     public static boolean debug;
+    public static boolean feedbackMode = true;
 
     public static float aspectRatio = 16 / 9f;
 
