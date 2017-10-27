@@ -98,7 +98,7 @@ public class LevelPlayer {
     Array<GameSystem> screenRenderSystems = new Array<>(1);
 
 
-    Array<GameEntity> allEntities = new Array<>(1000);
+    public Array<GameEntity> allEntities = new Array<>(1000);
 
     Array<GameEntity> pendingAdds = new Array<>(100);
     Array<GameEntity> pendingRemoves = new Array<>(100);

@@ -10,5 +10,6 @@ public class TutorialLevelPlayer extends LevelPlayer {
     public TutorialLevelPlayer(GamePilot pilot) {
         super(pilot, false);
         universalGravity.set(0, 0);
+        gameCam.maxZoom = 1f;
     }
 }

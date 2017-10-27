@@ -5,16 +5,18 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Array;
 import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.Helm;
-import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.scoring.LandingScore;
 import com.bitdecay.helm.sound.SoundMode;
+import com.bitdecay.helm.tutorial.BoostingPhase;
+import com.bitdecay.helm.tutorial.SteeringPhase;
+import com.bitdecay.helm.tutorial.TutorialPhase;
 import com.bitdecay.helm.unlock.palette.GameColors;
-import com.bitdecay.helm.world.LevelDefinition;
-import com.bitdecay.helm.world.WorldInstance;
-import com.bitdecay.helm.world.WorldOrderMarker;
-import com.bitdecay.helm.world.WorldUtils;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 /**
  * Created by Monday on 10/23/2017.
@@ -25,15 +27,28 @@ public class TutorialScreen implements Screen, GamePilot {
     private final LevelPlayer levelPlayer;
     private final InputMultiplexer combinedGameInput;
 
+    private final ShapeRenderer tutorialShaper;
+    private final SpriteBatch tutorialBatch;
+
     private boolean paused = false;
+
+    public Array<TutorialPhase> phases;
+    public int activePhase;
 
     public TutorialScreen(Helm game) {
         this.game = game;
 
+        tutorialShaper = new ShapeRenderer();
         levelPlayer = new TutorialLevelPlayer(this);
+        tutorialBatch = new SpriteBatch();
 
-        LevelDefinition tutorial1 = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/tutorial/tut1.json"));
-        levelPlayer.loadLevel(tutorial1);
+        phases = new Array<>();
+        phases.add(new SteeringPhase());
+        phases.add(new BoostingPhase());
+//        phases.add(new LandingPhase(levelPlayer));
+        activePhase = 0;
+        phases.get(activePhase).start(levelPlayer);
+
 
         combinedGameInput = new InputMultiplexer(levelPlayer.getInput());
         Gdx.input.setInputProcessor(combinedGameInput);
@@ -52,6 +67,21 @@ public class TutorialScreen implements Screen, GamePilot {
         Color clearColor = getHelm().palette.get(GameColors.BACKGROUND);
         Gdx.gl.glClearColor(clearColor.r, clearColor.g, clearColor.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        tutorialShaper.begin(ShapeRenderer.ShapeType.Filled);
+
+        if (activePhase < phases.size) {
+            if (phases.get(activePhase).update(tutorialShaper)) {
+                activePhase++;
+                if (activePhase < phases.size) {
+                    phases.get(activePhase).start(levelPlayer);
+                }
+            }
+        } else {
+            System.out.println("WE DONE");
+        }
+
+        tutorialShaper.end();
 
         if (!paused) {
             levelPlayer.update(delta);
