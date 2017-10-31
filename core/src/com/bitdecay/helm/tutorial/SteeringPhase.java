@@ -5,13 +5,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.bitdecay.helm.GameEntity;
+import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.CameraFollowComponent;
 import com.bitdecay.helm.component.ShipLaunchComponent;
 import com.bitdecay.helm.component.SteeringComponent;
 import com.bitdecay.helm.component.TransformComponent;
-import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
 import com.bitdecay.helm.entities.ShipEntity;
 import com.bitdecay.helm.persist.JsonUtils;
@@ -30,7 +31,7 @@ public class SteeringPhase implements TutorialPhase {
     private float lastAngle = 0;
 
     @Override
-    public void start(LevelPlayer player) {
+    public void start(Helm game, LevelPlayer player, Stage stage) {
         this.player = player;
         LevelDefinition tutorial1 = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/tutorial/tut1.json"));
         player.loadLevel(tutorial1);

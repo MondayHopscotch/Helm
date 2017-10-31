@@ -80,7 +80,7 @@ public class LevelPlayer {
     boolean boostToggled = lastRecordedBoost;
 
     private static final int BASE_CAM_BUFFER = 500;
-    FollowOrthoCamera gameCam;
+    public final FollowOrthoCamera gameCam;
 
     private GamePilot pilot;
     private boolean isReplay;

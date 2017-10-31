@@ -3,18 +3,14 @@ package com.bitdecay.helm.tutorial;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.FuelComponent;
-import com.bitdecay.helm.component.ShipLaunchComponent;
-import com.bitdecay.helm.component.SteeringComponent;
-import com.bitdecay.helm.component.TransformComponent;
 import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.entities.ShipEntity;
-import com.bitdecay.helm.prefs.GamePrefs;
 import com.bitdecay.helm.screen.LevelPlayer;
 import com.bitdecay.helm.system.PlayerStartLevelSystem;
 
@@ -26,8 +22,10 @@ import com.bitdecay.helm.system.PlayerStartLevelSystem;
 public class BoostingPhase implements TutorialPhase {
     private LevelPlayer player;
 
+    private FuelComponent fuelComponent;
+
     @Override
-    public void start(LevelPlayer player) {
+    public void start(Helm game, LevelPlayer player, Stage stage) {
         this.player = player;
         for (GameEntity entity : player.allEntities) {
             if (entity instanceof ShipEntity) {
@@ -35,7 +33,8 @@ public class BoostingPhase implements TutorialPhase {
                 entity.addComponent(new VelocityComponent());
                 entity.getComponent(FuelComponent.class).maxFuel = 100;
                 entity.getComponent(FuelComponent.class).fuelRemaining = 100;
-                player.printMatchingGameSystems(entity);
+
+                fuelComponent = entity.getComponent(FuelComponent.class);
             }
         }
     }
@@ -51,6 +50,11 @@ public class BoostingPhase implements TutorialPhase {
                 DrawUtils.drawDottedRect(shaper, rect);
             }
         }
-        return false;
+
+        if (fuelComponent.fuelRemaining <= 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

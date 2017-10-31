@@ -7,12 +7,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.scoring.LandingScore;
 import com.bitdecay.helm.sound.SoundMode;
 import com.bitdecay.helm.tutorial.BoostingPhase;
+import com.bitdecay.helm.tutorial.LandingPhase;
+import com.bitdecay.helm.tutorial.LaunchPhase;
 import com.bitdecay.helm.tutorial.SteeringPhase;
 import com.bitdecay.helm.tutorial.TutorialPhase;
 import com.bitdecay.helm.unlock.palette.GameColors;
@@ -28,7 +31,7 @@ public class TutorialScreen implements Screen, GamePilot {
     private final InputMultiplexer combinedGameInput;
 
     private final ShapeRenderer tutorialShaper;
-    private final SpriteBatch tutorialBatch;
+    private final Stage stage;
 
     private boolean paused = false;
 
@@ -39,18 +42,19 @@ public class TutorialScreen implements Screen, GamePilot {
         this.game = game;
 
         tutorialShaper = new ShapeRenderer();
+        stage = new Stage();
         levelPlayer = new TutorialLevelPlayer(this);
-        tutorialBatch = new SpriteBatch();
 
         phases = new Array<>();
+        phases.add(new LaunchPhase());
         phases.add(new SteeringPhase());
         phases.add(new BoostingPhase());
-//        phases.add(new LandingPhase(levelPlayer));
-        activePhase = 0;
-        phases.get(activePhase).start(levelPlayer);
+        phases.add(new LandingPhase());
+        activePhase = -1;
+        nextPhase();
 
 
-        combinedGameInput = new InputMultiplexer(levelPlayer.getInput());
+        combinedGameInput = new InputMultiplexer(stage, levelPlayer.getInput());
         Gdx.input.setInputProcessor(combinedGameInput);
     }
 
@@ -72,10 +76,7 @@ public class TutorialScreen implements Screen, GamePilot {
 
         if (activePhase < phases.size) {
             if (phases.get(activePhase).update(tutorialShaper)) {
-                activePhase++;
-                if (activePhase < phases.size) {
-                    phases.get(activePhase).start(levelPlayer);
-                }
+                nextPhase();
             }
         } else {
             System.out.println("WE DONE");
@@ -88,6 +89,16 @@ public class TutorialScreen implements Screen, GamePilot {
         }
 
         levelPlayer.render(delta);
+
+        stage.act();
+        stage.draw();
+    }
+
+    private void nextPhase() {
+        activePhase++;
+        if (activePhase < phases.size) {
+            phases.get(activePhase).start(game, levelPlayer, stage);
+        }
     }
 
     @Override
@@ -137,7 +148,7 @@ public class TutorialScreen implements Screen, GamePilot {
 
     @Override
     public void finishLevel(LandingScore score) {
-
+        nextPhase();
     }
 
     @Override
