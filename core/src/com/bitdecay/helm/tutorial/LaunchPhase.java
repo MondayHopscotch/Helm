@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -91,10 +92,21 @@ public class LaunchPhase implements TutorialPhase {
         pages.add(page1);
 
         final Vector2 landingLocation = getLandingLocation();
-        Label landingLabel = new Label("This is where\nyou need to get!", game.skin);
-        landingLabel.setFontScale(game.fontScale);
-        landingLabel.setOrigin(Align.center);
-        final UpdatingContainer page2 = new UpdatingContainer(landingLabel);
+        Label landingLabel1 = new Label("This is where", game.skin);
+        landingLabel1.setFontScale(game.fontScale);
+        landingLabel1.setOrigin(Align.center);
+
+        Label landingLabel2 = new Label("you need to get!", game.skin);
+        landingLabel2.setFontScale(game.fontScale);
+        landingLabel2.setOrigin(Align.center);
+
+        Table landingTable = new Table();
+        landingTable.align(Align.left);
+        landingTable.add(landingLabel1).center();
+        landingTable.row();
+        landingTable.add(landingLabel2).center();
+
+        final UpdatingContainer page2 = new UpdatingContainer(landingTable);
         page2.updater = new Runnable() {
             @Override
             public void run() {
