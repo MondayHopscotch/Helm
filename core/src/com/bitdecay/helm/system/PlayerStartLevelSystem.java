@@ -2,6 +2,8 @@ package com.bitdecay.helm.system;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.helm.GameEntity;
+import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.collision.CollisionKind;
 import com.bitdecay.helm.component.BodyDefComponent;
 import com.bitdecay.helm.component.DelayedAddComponent;
@@ -16,6 +18,7 @@ import com.bitdecay.helm.component.collide.CollisionKindComponent;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
 import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.entities.LaunchSmokeEntity;
+import com.bitdecay.helm.input.ActiveTouch;
 import com.bitdecay.helm.input.TouchTracker;
 import com.bitdecay.helm.sound.SFXLibrary;
 import com.bitdecay.helm.sound.SoundMode;
@@ -31,19 +34,19 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
 
     public static final float PLAYER_BOOST_STRENGTH = 25;
 
-    private com.bitdecay.helm.input.TouchTracker touches = new com.bitdecay.helm.input.TouchTracker(5);
+    public TouchTracker touches = new TouchTracker(5);
 
-    public PlayerStartLevelSystem(com.bitdecay.helm.GamePilot pilot) {
+    public PlayerStartLevelSystem(GamePilot pilot) {
         super(pilot);
     }
 
     @Override
-    public void actOnSingle(com.bitdecay.helm.GameEntity entity, float delta) {
+    public void actOnSingle(GameEntity entity, float delta) {
         BoostControlComponent boostInput = entity.getComponent(BoostControlComponent.class);
 
         boolean launchTouchFound = false;
 
-        for (com.bitdecay.helm.input.ActiveTouch touch : touches.activeTouches) {
+        for (ActiveTouch touch : touches.activeTouches) {
             if (boostInput.activeArea.contains(touch.startingLocation)) {
                 launchTouchFound = true;
             }

@@ -226,6 +226,15 @@ public class LevelPlayer {
         }
     }
 
+    public <T extends GameSystem> T getSystem(Class<T> clazz) {
+        for (GameSystem gameSystem : gameSystems) {
+            if (clazz.isAssignableFrom(gameSystem.getClass())) {
+                return clazz.cast(gameSystem);
+            }
+        }
+        return null;
+    }
+
     private void addGameplaySystem(GameSystem system) {
         system.setLevelPlayer(this);
         gameSystems.add(system);

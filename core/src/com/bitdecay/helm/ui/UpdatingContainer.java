@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 
 public class UpdatingContainer extends Container {
     public Runnable updater;
+    public Runnable action;
 
     public UpdatingContainer(Actor wrap) {
         super(wrap);

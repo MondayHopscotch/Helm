@@ -18,9 +18,11 @@ import com.bitdecay.helm.component.TransformComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.entities.LandingPlatformEntity;
 import com.bitdecay.helm.entities.ShipEntity;
+import com.bitdecay.helm.input.ActiveTouch;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.screen.LevelPlayer;
+import com.bitdecay.helm.system.PlayerStartLevelSystem;
 import com.bitdecay.helm.ui.UpdatingContainer;
 import com.bitdecay.helm.world.LevelDefinition;
 
@@ -51,6 +53,9 @@ public class LaunchPhase implements TutorialPhase {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                if (livePage != null && livePage.action != null) {
+                    livePage.action.run();
+                }
                 nextPage();
             }
         };
@@ -135,6 +140,14 @@ public class LaunchPhase implements TutorialPhase {
             @Override
             public void run() {
                 page3.setPosition(boostCenter.x, boostCenter.y);
+            }
+        };
+        page3.action = new Runnable() {
+            @Override
+            public void run() {
+                // launch the ship for the player!
+                PlayerStartLevelSystem startSystem = player.getSystem(PlayerStartLevelSystem.class);
+                startSystem.touches.activeTouches.add(new ActiveTouch(0, (int)boostCenter.x, (int)boostCenter.y));
             }
         };
         pages.add(page3);
