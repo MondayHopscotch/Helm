@@ -18,6 +18,7 @@ import com.bitdecay.helm.component.TransformComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.entities.LandingPlatformEntity;
 import com.bitdecay.helm.entities.ShipEntity;
+import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.screen.LevelPlayer;
 import com.bitdecay.helm.ui.UpdatingContainer;
@@ -78,8 +79,7 @@ public class LaunchPhase implements TutorialPhase {
         // it should be updatable such that it can follow it properly
 
         final Vector2 playerLocation = getPlayerLocation();
-        Label playerLabel = new Label("This is your ship!", game.skin);
-        playerLabel.setFontScale(game.fontScale);
+        RotatingLabel playerLabel = new RotatingLabel("This is your ship!", game.fontScale, game.skin, stageClickListener);
         playerLabel.setOrigin(Align.center);
         final UpdatingContainer page1 = new UpdatingContainer(playerLabel);
         page1.updater = new Runnable() {
@@ -92,12 +92,10 @@ public class LaunchPhase implements TutorialPhase {
         pages.add(page1);
 
         final Vector2 landingLocation = getLandingLocation();
-        Label landingLabel1 = new Label("This is where", game.skin);
-        landingLabel1.setFontScale(game.fontScale);
+        RotatingLabel landingLabel1 = new RotatingLabel("This is where", game.fontScale, game.skin, stageClickListener);
         landingLabel1.setOrigin(Align.center);
 
-        Label landingLabel2 = new Label("you need to get!", game.skin);
-        landingLabel2.setFontScale(game.fontScale);
+        RotatingLabel landingLabel2 = new RotatingLabel("you need to get!", game.fontScale, game.skin, stageClickListener);
         landingLabel2.setOrigin(Align.center);
 
         Table landingTable = new Table();
@@ -115,6 +113,31 @@ public class LaunchPhase implements TutorialPhase {
             }
         };
         pages.add(page2);
+
+        final Vector2 boostCenter = getBoostCenter();
+        RotatingLabel boostLabel1 = new RotatingLabel("Tap anywhere on this", game.fontScale, game.skin, stageClickListener);
+        boostLabel1.setOrigin(Align.center);
+        RotatingLabel boostLabel2 = new RotatingLabel("side of the screen", game.fontScale, game.skin, stageClickListener);
+        boostLabel2.setOrigin(Align.center);
+            RotatingLabel boostLabel3 = new RotatingLabel("to launch your ship!", game.fontScale, game.skin, stageClickListener);
+        boostLabel3.setOrigin(Align.center);
+
+        Table boostTable = new Table();
+        boostTable.align(Align.left);
+        boostTable.add(boostLabel1).center();
+        boostTable.row();
+        boostTable.add(boostLabel2).center();
+        boostTable.row();
+        boostTable.add(boostLabel3).center();
+
+        final UpdatingContainer page3 = new UpdatingContainer(boostTable);
+        page3.updater = new Runnable() {
+            @Override
+            public void run() {
+                page3.setPosition(boostCenter.x, boostCenter.y);
+            }
+        };
+        pages.add(page3);
 
         nextPage();
     }
@@ -149,6 +172,18 @@ public class LaunchPhase implements TutorialPhase {
             }
         }
         return null;
+    }
+
+    private Vector2 getBoostCenter() {
+        for (GameEntity entity : player.allEntities) {
+            if (entity instanceof ShipEntity) {
+                BoostControlComponent component = entity.getComponent(BoostControlComponent.class);
+                Vector2 center = new Vector2(component.activeArea.x, component.activeArea.y);
+                center.add(component.activeArea.getWidth() / 2, component.activeArea.getHeight() / 2);
+                return center;
+            }
+        }
+        return Vector2.Zero;
     }
 
     @Override
