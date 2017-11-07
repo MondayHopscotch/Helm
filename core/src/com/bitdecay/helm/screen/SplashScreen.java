@@ -169,7 +169,6 @@ public class SplashScreen implements Screen {
     }
 
     private void initCaches() {
-        StatName.values();
         MedalUtils.init(helm);
         IconUtils.init(helm);
     }
