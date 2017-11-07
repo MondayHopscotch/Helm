@@ -21,6 +21,7 @@ import com.bitdecay.helm.menu.MedalUtils;
 import com.bitdecay.helm.persist.AssetUtils;
 import com.bitdecay.helm.sound.MusicLibrary;
 import com.bitdecay.helm.sound.SFXLibrary;
+import com.bitdecay.helm.unlock.StatName;
 
 /**
  * Created by Monday on 4/8/2017.
@@ -168,6 +169,7 @@ public class SplashScreen implements Screen {
     }
 
     private void initCaches() {
+        StatName.values();
         MedalUtils.init(helm);
         IconUtils.init(helm);
     }
