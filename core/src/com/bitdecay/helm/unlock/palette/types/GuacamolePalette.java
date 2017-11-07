@@ -18,6 +18,6 @@ public class GuacamolePalette extends GamePalette {
         colors.put(com.bitdecay.helm.unlock.palette.GameColors.WORMHOLE, Color.DARK_GRAY);
         colors.put(com.bitdecay.helm.unlock.palette.GameColors.BOOST, Color.GOLD);
         colors.put(com.bitdecay.helm.unlock.palette.GameColors.LANDING_PLATFORM, Color.OLIVE);
-        colors.put(com.bitdecay.helm.unlock.palette.GameColors.BACKGROUND, Color.BROWN.mul(0.25f));
+        colors.put(com.bitdecay.helm.unlock.palette.GameColors.BACKGROUND, Color.BROWN.mul(0.25f).add(0,0,0,1));
     }
 }
