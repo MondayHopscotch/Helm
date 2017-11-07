@@ -14,7 +14,9 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.component.SteeringComponent;
 import com.bitdecay.helm.component.TransformComponent;
+import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.entities.LandingPlatformEntity;
 import com.bitdecay.helm.entities.ShipEntity;
@@ -36,11 +38,10 @@ public class LaunchPhase implements TutorialPhase {
     private Stage stage;
     private UpdatingContainer livePage;
 
-    private BoostControlComponent playerBoost;
-
     private Array<UpdatingContainer> pages;
     private int currentPage = -1;
     private ClickListener stageClickListener;
+    private GameEntity ship;
 
     @Override
     public void start(Helm game, LevelPlayer player, Stage stage) {
@@ -49,7 +50,7 @@ public class LaunchPhase implements TutorialPhase {
         this.stage = stage;
         pages = new Array<>();
 
-        stageClickListener = new ClickListener(){
+        stageClickListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -65,18 +66,23 @@ public class LaunchPhase implements TutorialPhase {
 
         stage.clear();
 
+        findShip();
+
         findPlayerBoost();
 
         addPlayerInfo();
     }
 
-    private void findPlayerBoost() {
+    private void findShip() {
         for (GameEntity entity : player.allEntities) {
-            BoostControlComponent boostControl = entity.getComponent(BoostControlComponent.class);
-            if (boostControl != null) {
-                playerBoost = boostControl;
+            if (entity instanceof ShipEntity) {
+                ship = entity;
             }
         }
+    }
+
+    private BoostControlComponent findPlayerBoost() {
+        return ship.getComponent(BoostControlComponent.class);
     }
 
     private void addPlayerInfo() {
@@ -124,7 +130,7 @@ public class LaunchPhase implements TutorialPhase {
         boostLabel1.setOrigin(Align.center);
         RotatingLabel boostLabel2 = new RotatingLabel("side of the screen", game.fontScale, game.skin, stageClickListener);
         boostLabel2.setOrigin(Align.center);
-            RotatingLabel boostLabel3 = new RotatingLabel("to launch your ship!", game.fontScale, game.skin, stageClickListener);
+        RotatingLabel boostLabel3 = new RotatingLabel("to launch your ship!", game.fontScale, game.skin, stageClickListener);
         boostLabel3.setOrigin(Align.center);
 
         Table boostTable = new Table();
@@ -147,7 +153,7 @@ public class LaunchPhase implements TutorialPhase {
             public void run() {
                 // launch the ship for the player!
                 PlayerStartLevelSystem startSystem = player.getSystem(PlayerStartLevelSystem.class);
-                startSystem.touches.activeTouches.add(new ActiveTouch(0, (int)boostCenter.x, (int)boostCenter.y));
+                startSystem.touches.activeTouches.add(new ActiveTouch(0, (int) boostCenter.x, (int) boostCenter.y));
             }
         };
         pages.add(page3);
@@ -170,12 +176,7 @@ public class LaunchPhase implements TutorialPhase {
     }
 
     private Vector2 getPlayerLocation() {
-        for (GameEntity entity : player.allEntities) {
-            if (entity instanceof ShipEntity) {
-                return entity.getComponent(TransformComponent.class).position;
-            }
-        }
-        return null;
+        return ship.getComponent(TransformComponent.class).position;
     }
 
     private Vector2 getLandingLocation() {
@@ -188,24 +189,19 @@ public class LaunchPhase implements TutorialPhase {
     }
 
     private Vector2 getBoostCenter() {
-        for (GameEntity entity : player.allEntities) {
-            if (entity instanceof ShipEntity) {
-                BoostControlComponent component = entity.getComponent(BoostControlComponent.class);
-                Vector2 center = new Vector2(component.activeArea.x, component.activeArea.y);
-                center.add(component.activeArea.getWidth() / 2, component.activeArea.getHeight() / 2);
-                return center;
-            }
-        }
-        return Vector2.Zero;
+        BoostControlComponent component = ship.getComponent(BoostControlComponent.class);
+        Vector2 center = new Vector2(component.activeArea.x, component.activeArea.y);
+        center.add(component.activeArea.getWidth() / 2, component.activeArea.getHeight() / 2);
+        return center;
     }
 
     @Override
     public boolean update(ShapeRenderer shaper) {
-        if (livePage != null) {
-            livePage.update(shaper);
-            return false;
-        } else {
-            return true;
+        if (ship.hasComponent(SteeringComponent.class) && ship.hasComponent(VelocityComponent.class)) {
+            if (ship.getComponent(VelocityComponent.class).currentVelocity.len() < 0.1f) {
+                return true;
+            }
         }
+        return false;
     }
 }

@@ -16,7 +16,9 @@ public class UpdatingContainer extends Container {
         super(wrap);
     }
 
-    public void update(ShapeRenderer delta) {
+    @Override
+    public void act(float delta) {
+        super.act(delta);
         if (updater != null) {
             updater.run();
         }
