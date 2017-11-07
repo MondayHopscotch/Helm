@@ -1,5 +1,7 @@
 package com.bitdecay.helm.unlock;
 
+import com.bitdecay.helm.menu.MedalUtils;
+
 /**
  * Created by Monday on 2/18/2017.
  */
@@ -13,10 +15,10 @@ public enum StatName {
     PERFECT_LANDINGS("Perfect Landings", "perfectLandings", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
     ZERO_FUEL_LANDINGS("Zero Fuel Landings", "zeroFuelLandings", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
 
-    DEV_MEDALS(com.bitdecay.helm.menu.MedalUtils.LevelRating.DEV.medalName() + " Medals", "developerMedalCount", StatType.COUNT, StatDisplayType.ONLY_SHOW_WHEN_PRESENT),
-    GOLD_MEDALS(com.bitdecay.helm.menu.MedalUtils.LevelRating.GOLD.medalName() + " Medals", "goldMedalCount", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
-    SILVER_MEDALS(com.bitdecay.helm.menu.MedalUtils.LevelRating.SILVER.medalName() + " Medals", "silverMedalCount", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
-    BRONZE_MEDALS(com.bitdecay.helm.menu.MedalUtils.LevelRating.BRONZE.medalName() + " Medals", "bronzeMedalCount", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
+    DEV_MEDALS(MedalUtils.DeveloperMedalName + " Medals", "developerMedalCount", StatType.COUNT, StatDisplayType.ONLY_SHOW_WHEN_PRESENT),
+    GOLD_MEDALS(MedalUtils.GoldMedalName + " Medals", "goldMedalCount", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
+    SILVER_MEDALS(MedalUtils.SilverMedalName + " Medals", "silverMedalCount", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
+    BRONZE_MEDALS(MedalUtils.BronzeMedalName + " Medals", "bronzeMedalCount", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
 
     WALL_CRASHES("Terrain Crashes", "wallCrashes", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),
     GRAV_WELL_CRASHES("Gravity Well Crashes", "gravWellCrashes", StatType.COUNT, StatDisplayType.ALWAYS_SHOW),

@@ -18,12 +18,18 @@ public class MedalUtils {
 
     public static int imageSize;
 
+    public static String UnrankedMedalName = "Unranked";
+    public static String BronzeMedalName = "Bronze";
+    public static String SilverMedalName = "Silver";
+    public static String GoldMedalName = "Gold";
+    public static String DeveloperMedalName = "Developer";
+
     public enum LevelRating {
-        UNRANKED(StatName.NO_STAT, "Unranked"),
-        BRONZE(StatName.BRONZE_MEDALS, "Bronze"),
-        SILVER(StatName.SILVER_MEDALS, "Silver"),
-        GOLD(StatName.GOLD_MEDALS, "Gold"),
-        DEV(StatName.DEV_MEDALS, "Developer");
+        UNRANKED(StatName.NO_STAT, UnrankedMedalName),
+        BRONZE(StatName.BRONZE_MEDALS, BronzeMedalName),
+        SILVER(StatName.SILVER_MEDALS, SilverMedalName),
+        GOLD(StatName.GOLD_MEDALS, GoldMedalName),
+        DEV(StatName.DEV_MEDALS, DeveloperMedalName);
 
 
         private StatName statName;
