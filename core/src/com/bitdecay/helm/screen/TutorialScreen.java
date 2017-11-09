@@ -47,7 +47,7 @@ public class TutorialScreen implements Screen, GamePilot {
         stage = new Stage();
         levelPlayer = new TutorialLevelPlayer(this);
 
-        LevelDefinition tutorial1 = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/testCollisions.json"));
+        LevelDefinition tutorial1 = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/tutorial/tut1.json"));
         levelPlayer.loadLevel(tutorial1);
 
         phases = new Array<>();

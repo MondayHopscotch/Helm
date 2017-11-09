@@ -24,31 +24,46 @@ public class DrawUtils {
         inner.width -= 2 * border;
         inner.height -= 2 * border;
 
-        for (int x = (int) inner.x; x < inner.x + inner.width; x += gap + lineLength) {
-            segmentLength = lineLength;
-            end = x + lineLength;
+        segmentLength = lineLength;
 
+        int x = (int) inner.x;
+        int y = (int) inner.y;
+        for (; x < inner.x + inner.width; x += lineLength + gap) {
+            end = x + segmentLength;
             if (end > inner.x + inner.width) {
-                // cut our line short
-                segmentLength = (int) (end - (inner.x + inner.width));
-            } else if (end + gap >= inner.x + inner.width) {
-                // draw out the rest of the line
-                segmentLength += inner.x + inner.width - end;
+                segmentLength -= (int) (end - (inner.x + inner.width));
             }
-
-
-            shaper.rect(x, inner.y, segmentLength, lineThickness);
-            shaper.rect(x, inner.y + inner.getHeight() - lineThickness, segmentLength, lineThickness);
+            shaper.rect(x, y, segmentLength, lineThickness);
         }
+        segmentLength = lineLength;
+        x = (int) (inner.x + inner.width);
 
-        for (int y = (int) inner.y; y < inner.y + inner.height; y += gap + lineLength) {
-            segmentLength = lineLength;
-            end = y + lineLength;
+        for (; y < inner.y + inner.height; y += lineLength + gap) {
+            end = y + segmentLength;
             if (end > inner.y + inner.height) {
-                segmentLength = (int) (end - (inner.y + inner.height));
+                segmentLength -= (int) (end - (inner.y + inner.height));
             }
-            shaper.rect(inner.x, y, lineThickness, segmentLength);
-            shaper.rect(inner.x + inner.getWidth() - lineThickness, y, lineThickness, segmentLength);
+            shaper.rect(x, y, -lineThickness, segmentLength);
+        }
+        segmentLength = lineLength;
+        y = (int) (inner.y + inner.height);
+
+        for (; x > inner.x; x -= lineLength + gap) {
+            end = x - segmentLength;
+            if (end < inner.x) {
+                segmentLength -= (int) (inner.x - end);
+            }
+            shaper.rect(x, y, -segmentLength, -lineThickness);
+        }
+        segmentLength = lineLength;
+        x = (int) inner.x;
+
+        for (; y > inner.y; y -= lineLength + gap) {
+            end = y - segmentLength;
+            if (end < inner.y) {
+                segmentLength -= (int) (inner.y - end);
+            }
+            shaper.rect(x, y, lineThickness, -segmentLength);
         }
     }
 }

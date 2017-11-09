@@ -45,11 +45,11 @@ public class LaunchPhase extends PagedPhase {
 
     private void makePages() {
         final Vector2 boostCenter = getBoostCenter(boostControl);
-        RotatingLabel boostLabel1 = new RotatingLabel("Tap on this side", game.fontScale, game.skin, stageClickListener);
+        RotatingLabel boostLabel1 = new RotatingLabel("Tap on this side", game.fontScale, game.skin);
         boostLabel1.setOrigin(Align.center);
-        RotatingLabel boostLabel2 = new RotatingLabel("of the screen", game.fontScale, game.skin, stageClickListener);
+        RotatingLabel boostLabel2 = new RotatingLabel("of the screen", game.fontScale, game.skin);
         boostLabel2.setOrigin(Align.center);
-        RotatingLabel boostLabel3 = new RotatingLabel("to launch your ship!", game.fontScale, game.skin, stageClickListener);
+        RotatingLabel boostLabel3 = new RotatingLabel("to launch your ship!", game.fontScale, game.skin);
         boostLabel3.setOrigin(Align.center);
 
         Table boostTable = new Table();

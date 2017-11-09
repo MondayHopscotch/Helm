@@ -32,6 +32,7 @@ public class FirstBoostPhase extends PagedPhase {
     private FuelComponent fuelComponent;
     private BoostControlComponent controls;
     private BoosterComponent boost;
+    private float savedBoostStrength;
     private float boostTime;
     private GameEntity ship;
 
@@ -46,9 +47,9 @@ public class FirstBoostPhase extends PagedPhase {
         boostTime = 0;
 
         final Vector2 boostCenter = controls.activeArea.getCenter(new Vector2());
-        RotatingLabel steeringLabel1 = new RotatingLabel("Touch this area", game.fontScale, game.skin, new ClickListener());
+        RotatingLabel steeringLabel1 = new RotatingLabel("Touch this area", game.fontScale, game.skin);
         steeringLabel1.setOrigin(Align.center);
-        RotatingLabel steeringLabel2 = new RotatingLabel("to use your booster", game.fontScale, game.skin, new ClickListener());
+        RotatingLabel steeringLabel2 = new RotatingLabel("to use your booster", game.fontScale, game.skin);
         steeringLabel2.setOrigin(Align.center);
 
         Table boostTable = new Table();
@@ -74,7 +75,8 @@ public class FirstBoostPhase extends PagedPhase {
         fuelComponent = ship.getComponent(FuelComponent.class);
         controls = ship.getComponent(BoostControlComponent.class);
         boost = ship.getComponent(BoosterComponent.class);
-        boost.strength = 0;
+        savedBoostStrength = boost.strength;
+        boost.strength *= 0.1f;
     }
 
     @Override
@@ -90,6 +92,11 @@ public class FirstBoostPhase extends PagedPhase {
 
         DrawUtils.drawDottedRect(shaper, rect);
 
-        return boostTime >= 0.75f;
+        if (boostTime >= 0.75f) {
+            boost.strength = savedBoostStrength;
+            return true;
+        } else {
+            return false;
+        }
     }
 }

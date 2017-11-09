@@ -8,10 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
-import com.bitdecay.helm.component.BodyDefComponent;
 import com.bitdecay.helm.component.TransformComponent;
-import com.bitdecay.helm.entities.LandingPlatformEntity;
-import com.bitdecay.helm.math.Geom;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.screen.LevelPlayer;
 import com.bitdecay.helm.ui.UpdatingContainer;
@@ -35,7 +32,7 @@ public class StartPhase extends PagedPhase {
         ship = TutorialUtils.getShip(player.allEntities);
 
         final Vector2 playerLocation = getPlayerLocation();
-        RotatingLabel playerLabel = new RotatingLabel("This is your ship!", game.fontScale, game.skin, stageClickListener);
+        RotatingLabel playerLabel = new RotatingLabel("This is your ship!", game.fontScale, game.skin);
         playerLabel.setOrigin(Align.center);
         final UpdatingContainer page1 = new UpdatingContainer(playerLabel);
         page1.updater = new Runnable() {
@@ -48,11 +45,11 @@ public class StartPhase extends PagedPhase {
         page1.updater.run();
         pages.add(page1);
 
-        final Vector2 landingLocation = getLandingLocation();
-        RotatingLabel landingLabel1 = new RotatingLabel("This is where", game.fontScale, game.skin, stageClickListener);
+        final Vector2 landingLocation = TutorialUtils.getLandingLocation(player.allEntities);
+        RotatingLabel landingLabel1 = new RotatingLabel("This is where", game.fontScale, game.skin);
         landingLabel1.setOrigin(Align.center);
 
-        RotatingLabel landingLabel2 = new RotatingLabel("you need to get!", game.fontScale, game.skin, stageClickListener);
+        RotatingLabel landingLabel2 = new RotatingLabel("you need to get...", game.fontScale, game.skin);
         landingLabel2.setOrigin(Align.center);
 
         Table landingTable = new Table();
@@ -72,24 +69,34 @@ public class StartPhase extends PagedPhase {
         page2.updater.run();
         pages.add(page2);
 
+        RotatingLabel landingLabel3 = new RotatingLabel("We'll get back to", game.fontScale, game.skin);
+        landingLabel1.setOrigin(Align.center);
+
+        RotatingLabel landingLabel4 = new RotatingLabel("this in a bit.", game.fontScale, game.skin);
+        landingLabel2.setOrigin(Align.center);
+
+        Table landingTable2 = new Table();
+        landingTable2.align(Align.left);
+        landingTable2.add(landingLabel3).center();
+        landingTable2.row();
+        landingTable2.add(landingLabel4).center();
+
+        final UpdatingContainer page3 = new UpdatingContainer(landingTable2);
+        page3.updater = new Runnable() {
+            @Override
+            public void run() {
+                Vector3 project = player.gameCam.project(new Vector3(landingLocation.x, landingLocation.y, 0));
+                page3.setPosition(project.x, project.y);
+            }
+        };
+        page3.updater.run();
+        pages.add(page3);
+
         nextPage();
     }
 
     private Vector2 getPlayerLocation() {
         return ship.getComponent(TransformComponent.class).position;
-    }
-
-    private Vector2 getLandingLocation() {
-        for (GameEntity entity : player.allEntities) {
-            if (entity instanceof LandingPlatformEntity) {
-                float widthOfPoints = Geom.getWidthOfPoints(entity.getComponent(BodyDefComponent.class).bodyPoints);
-                Vector2 midPoint = new Vector2(widthOfPoints / 2, 0);
-                TransformComponent transform = entity.getComponent(TransformComponent.class);
-                midPoint.rotateRad(transform.angle);
-                return midPoint.add(transform.position);
-            }
-        }
-        return null;
     }
 
     @Override

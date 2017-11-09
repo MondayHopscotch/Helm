@@ -9,7 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.component.GravityAffectedComponent;
 import com.bitdecay.helm.component.TransformComponent;
+import com.bitdecay.helm.component.VelocityComponent;
+import com.bitdecay.helm.component.control.SteeringControlComponent;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.screen.LevelPlayer;
 import com.bitdecay.helm.ui.UpdatingContainer;
@@ -22,6 +25,8 @@ public class FuelPhase extends PagedPhase {
     private Helm game;
     private LevelPlayer player;
     private GameEntity ship;
+    private VelocityComponent velocity;
+    private SteeringControlComponent steering;
 
 
     @Override
@@ -32,16 +37,22 @@ public class FuelPhase extends PagedPhase {
 
         ship = TutorialUtils.getShip(player.allEntities);
 
+        velocity = ship.getComponent(VelocityComponent.class);
+        steering = ship.getComponent(SteeringControlComponent.class);
+        // take off the velocity and steering and put it back on later
+        ship.removeComponent(VelocityComponent.class);
+        ship.removeComponent(SteeringControlComponent.class);
+
         makePages();
     }
 
     private void makePages() {
         final Vector2 playerLocation = ship.getComponent(TransformComponent.class).position;
-        RotatingLabel fuelLabel1 = new RotatingLabel("Boosting uses fuel", game.fontScale, game.skin, stageClickListener);
+        RotatingLabel fuelLabel1 = new RotatingLabel("Boosting uses fuel", game.fontScale, game.skin);
         fuelLabel1.setOrigin(Align.center);
-        RotatingLabel fuelLabel2 = new RotatingLabel("So pay attention to the", game.fontScale, game.skin, stageClickListener);
+        RotatingLabel fuelLabel2 = new RotatingLabel("So pay attention to the", game.fontScale, game.skin);
         fuelLabel2.setOrigin(Align.center);
-        RotatingLabel fuelLabel3 = new RotatingLabel("fuel line on your ship!", game.fontScale, game.skin, stageClickListener);
+        RotatingLabel fuelLabel3 = new RotatingLabel("fuel line on your ship!", game.fontScale, game.skin);
         fuelLabel3.setOrigin(Align.center);
 
         Table fuelTable = new Table();
@@ -58,9 +69,10 @@ public class FuelPhase extends PagedPhase {
             @Override
             public void run() {
                 Vector3 project = player.gameCam.project(new Vector3(playerLocation.x, playerLocation.y, 0));
-                page1.setPosition(project.x - page1.getPrefWidth()/2, project.y);
+                page1.setPosition(project.x, project.y - page1.getPrefHeight()/2);
             }
         };
+        page1.updater.run();
         pages.add(page1);
 
         nextPage();
@@ -68,6 +80,13 @@ public class FuelPhase extends PagedPhase {
 
     @Override
     public boolean update(ShapeRenderer shaper) {
-        return currentPage >= pages.size;
+        if (currentPage >= pages.size) {
+            ship.addComponent(velocity);
+            ship.addComponent(steering);
+            ship.addComponent(new GravityAffectedComponent());
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.GravityAffectedComponent;
 import com.bitdecay.helm.component.TransformComponent;
 import com.bitdecay.helm.component.VelocityComponent;
@@ -43,11 +44,11 @@ public class SteeringPhase implements TutorialPhase {
         fixShipForSteering();
 
         final Vector2 steeringCenter = steering.activeArea.getCenter(new Vector2());
-        RotatingLabel steeringLabel1 = new RotatingLabel("Drag left and right", game.fontScale, game.skin, new ClickListener());
+        RotatingLabel steeringLabel1 = new RotatingLabel("Drag left and right", game.fontScale, game.skin);
         steeringLabel1.setOrigin(Align.center);
-        RotatingLabel steeringLabel2 = new RotatingLabel("in this area", game.fontScale, game.skin, new ClickListener());
+        RotatingLabel steeringLabel2 = new RotatingLabel("in this area", game.fontScale, game.skin);
         steeringLabel2.setOrigin(Align.center);
-        RotatingLabel steeringLabel3 = new RotatingLabel("to steer your ship", game.fontScale, game.skin, new ClickListener());
+        RotatingLabel steeringLabel3 = new RotatingLabel("to steer your ship", game.fontScale, game.skin);
         steeringLabel3.setOrigin(Align.center);
 
         Table steeringTable = new Table();
@@ -69,15 +70,31 @@ public class SteeringPhase implements TutorialPhase {
         stage.addActor(page1);
     }
 
+    private void fixShipForSteering() {
+        for (GameEntity entity : player.allEntities) {
+            if (entity instanceof ShipEntity) {
+                ship = entity;
+                break;
+            }
+        }
+        shipTransform = ship.getComponent(TransformComponent.class);
+        steering = ship.getComponent(SteeringControlComponent.class);
+
+        lastAngle = shipTransform.angle;
+
+        if (ship.hasComponent(VelocityComponent.class)) {
+            ship.getComponent(VelocityComponent.class).currentVelocity.set(0, 0);
+        }
+        ship.removeComponent(GravityAffectedComponent.class);
+    }
+
     public boolean update(ShapeRenderer shaper) {
         float spin = Math.abs(shipTransform.angle - lastAngle);
         while (spin > 1) {
             // they can't spin this fast, so they just passed "0" on the unit circle
             spin -= 1;
         }
-        System.out.println(spin);
         totalSpin += spin;
-        System.out.println(totalSpin);
 
         lastAngle = shipTransform.angle;
 
@@ -91,25 +108,6 @@ public class SteeringPhase implements TutorialPhase {
             return true;
         } else {
             return false;
-        }
-    }
-
-    private void fixShipForSteering() {
-        for (GameEntity entity : player.allEntities) {
-            if (entity instanceof ShipEntity) {
-                ship = entity;
-                break;
-            }
-        }
-        shipTransform = ship.getComponent(TransformComponent.class);
-
-        steering = ship.getComponent(SteeringControlComponent.class);
-
-        lastAngle = shipTransform.angle;
-
-        if (ship.hasComponent(VelocityComponent.class)) {
-            ship.getComponent(VelocityComponent.class).currentVelocity.set(0, 0);
-            ship.removeComponent(GravityAffectedComponent.class);
         }
     }
 }
