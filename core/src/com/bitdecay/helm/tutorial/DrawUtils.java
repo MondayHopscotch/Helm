@@ -8,16 +8,47 @@ import com.badlogic.gdx.math.Rectangle;
  */
 
 public class DrawUtils {
+    private static int gap = 25;
+    private static int lineLength = 50;
+    private static int lineThickness = 10;
+    private static int border = 25;
+
     public static void drawDottedRect(ShapeRenderer shaper, Rectangle rect) {
-        int spacing = 75;
-        for (int x = (int) rect.x + spacing / 4; x < rect.x + rect.getWidth() - spacing / 2; x += spacing) {
-            shaper.rect(x, rect.y + spacing / 4, spacing / 2, spacing / 4);
-            shaper.rect(x, rect.y + rect.getHeight() - spacing / 2, spacing / 2, spacing / 4);
+
+        int end;
+        int segmentLength;
+
+        Rectangle inner = new Rectangle(rect);
+        inner.x += border;
+        inner.y += border;
+        inner.width -= 2 * border;
+        inner.height -= 2 * border;
+
+        for (int x = (int) inner.x; x < inner.x + inner.width; x += gap + lineLength) {
+            segmentLength = lineLength;
+            end = x + lineLength;
+
+            if (end > inner.x + inner.width) {
+                // cut our line short
+                segmentLength = (int) (end - (inner.x + inner.width));
+            } else if (end + gap >= inner.x + inner.width) {
+                // draw out the rest of the line
+                segmentLength += inner.x + inner.width - end;
+            }
+
+
+            shaper.rect(x, inner.y, segmentLength, lineThickness);
+            shaper.rect(x, inner.y + inner.getHeight() - lineThickness, segmentLength, lineThickness);
         }
 
-        for (int y = (int) rect.y + spacing / 4; y < rect.y + rect.getHeight() - spacing / 2; y += spacing) {
-            shaper.rect(rect.x + spacing / 4, y, spacing / 4, spacing / 2);
-            shaper.rect(rect.x + rect.getWidth() - spacing / 2, y, spacing / 4, spacing / 2);
+        for (int y = (int) inner.y; y < inner.y + inner.height; y += gap + lineLength) {
+            segmentLength = lineLength;
+            end = y + lineLength;
+            if (end > inner.y + inner.height) {
+                segmentLength = (int) (end - (inner.y + inner.height));
+            }
+            shaper.rect(inner.x, y, lineThickness, segmentLength);
+            shaper.rect(inner.x + inner.getWidth() - lineThickness, y, lineThickness, segmentLength);
         }
     }
 }

@@ -28,19 +28,22 @@ import com.bitdecay.helm.ui.UpdatingContainer;
 
 public class SteeringPhase implements TutorialPhase {
     private LevelPlayer player;
+    private Stage stage;
 
     private TransformComponent shipTransform;
     private SteeringControlComponent steering;
     private float totalSpin = 0;
     private float lastAngle = 0;
+    private GameEntity ship;
 
     @Override
     public void start(Helm game, final LevelPlayer player, Stage stage) {
         this.player = player;
+        this.stage = stage;
         fixShipForSteering();
 
         final Vector2 steeringCenter = steering.activeArea.getCenter(new Vector2());
-        RotatingLabel steeringLabel1 = new RotatingLabel("Drag left or right", game.fontScale, game.skin, new ClickListener());
+        RotatingLabel steeringLabel1 = new RotatingLabel("Drag left and right", game.fontScale, game.skin, new ClickListener());
         steeringLabel1.setOrigin(Align.center);
         RotatingLabel steeringLabel2 = new RotatingLabel("in this area", game.fontScale, game.skin, new ClickListener());
         steeringLabel2.setOrigin(Align.center);
@@ -62,39 +65,51 @@ public class SteeringPhase implements TutorialPhase {
                 page1.setPosition(steeringCenter.x, steeringCenter.y);
             }
         };
+        page1.updater.run();
         stage.addActor(page1);
     }
 
     public boolean update(ShapeRenderer shaper) {
-        totalSpin += Math.abs(shipTransform.angle - lastAngle);
+        float spin = Math.abs(shipTransform.angle - lastAngle);
+        while (spin > 1) {
+            // they can't spin this fast, so they just passed "0" on the unit circle
+            spin -= 1;
+        }
+        System.out.println(spin);
+        totalSpin += spin;
+        System.out.println(totalSpin);
+
         lastAngle = shipTransform.angle;
 
-        if (totalSpin < MathUtils.PI2 * 2) {
-            if (steering != null) {
-                Rectangle rect = steering.activeArea;
-                shaper.setColor(Color.WHITE);
-                DrawUtils.drawDottedRect(shaper, rect);
-                }
-            return false;
-        } else {
+        if (steering != null) {
+            Rectangle rect = steering.activeArea;
+            shaper.setColor(Color.WHITE);
+            DrawUtils.drawDottedRect(shaper, rect);
+        }
+
+        if (totalSpin > MathUtils.PI2) {
             return true;
+        } else {
+            return false;
         }
     }
 
     private void fixShipForSteering() {
         for (GameEntity entity : player.allEntities) {
             if (entity instanceof ShipEntity) {
-                shipTransform = entity.getComponent(TransformComponent.class);
-
-                steering = entity.getComponent(SteeringControlComponent.class);
-
-                lastAngle = shipTransform.angle;
-
-                if (entity.hasComponent(VelocityComponent.class)) {
-                    entity.getComponent(VelocityComponent.class).currentVelocity.set(0, 0);
-                    entity.removeComponent(GravityAffectedComponent.class);
-                }
+                ship = entity;
+                break;
             }
+        }
+        shipTransform = ship.getComponent(TransformComponent.class);
+
+        steering = ship.getComponent(SteeringControlComponent.class);
+
+        lastAngle = shipTransform.angle;
+
+        if (ship.hasComponent(VelocityComponent.class)) {
+            ship.getComponent(VelocityComponent.class).currentVelocity.set(0, 0);
+            ship.removeComponent(GravityAffectedComponent.class);
         }
     }
 }

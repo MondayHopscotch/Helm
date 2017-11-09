@@ -5,21 +5,23 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.scoring.LandingScore;
 import com.bitdecay.helm.sound.SoundMode;
-import com.bitdecay.helm.tutorial.BoostingPhase;
+import com.bitdecay.helm.tutorial.FirstBoostPhase;
+import com.bitdecay.helm.tutorial.FuelPhase;
 import com.bitdecay.helm.tutorial.LandingPhase;
 import com.bitdecay.helm.tutorial.LaunchPhase;
+import com.bitdecay.helm.tutorial.StartPhase;
 import com.bitdecay.helm.tutorial.SteeringPhase;
 import com.bitdecay.helm.tutorial.TutorialPhase;
 import com.bitdecay.helm.unlock.palette.GameColors;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import com.bitdecay.helm.world.LevelDefinition;
 
 /**
  * Created by Monday on 10/23/2017.
@@ -45,10 +47,15 @@ public class TutorialScreen implements Screen, GamePilot {
         stage = new Stage();
         levelPlayer = new TutorialLevelPlayer(this);
 
+        LevelDefinition tutorial1 = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/testCollisions.json"));
+        levelPlayer.loadLevel(tutorial1);
+
         phases = new Array<>();
+        phases.add(new StartPhase());
         phases.add(new LaunchPhase());
         phases.add(new SteeringPhase());
-        phases.add(new BoostingPhase());
+        phases.add(new FirstBoostPhase());
+        phases.add(new FuelPhase());
         phases.add(new LandingPhase());
         activePhase = -1;
         nextPhase();
