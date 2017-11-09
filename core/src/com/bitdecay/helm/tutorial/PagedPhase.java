@@ -42,6 +42,10 @@ public abstract class PagedPhase implements TutorialPhase {
 
     protected void nextPage() {
         stage.clear();
+        // this is just to consume the clicks so a player can't unintentionally interact
+        // with the game while the stage has pages left.
+        stage.addListener(new ClickListener());
+
         currentPage++;
         if (currentPage >= pages.size) {
             System.out.println("NO PAGES LEFT!");
@@ -58,11 +62,11 @@ public abstract class PagedPhase implements TutorialPhase {
                             @Override
                             public void run() {
                                 page.addListener(nextPageListener);
+                                stage.addListener(nextPageListener);
                             }
                         })
                 )
         );
         stage.addActor(page);
-        stage.addListener(nextPageListener);
     }
 }
