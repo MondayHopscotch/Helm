@@ -1,22 +1,19 @@
 package com.bitdecay.helm.tutorial;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
-import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.GravityAffectedComponent;
 import com.bitdecay.helm.component.TransformComponent;
 import com.bitdecay.helm.component.VelocityComponent;
+import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
 import com.bitdecay.helm.entities.ShipEntity;
 import com.bitdecay.helm.menu.RotatingLabel;
@@ -36,9 +33,13 @@ public class SteeringPhase implements TutorialPhase {
     private float totalSpin = 0;
     private float lastAngle = 0;
     private GameEntity ship;
+    private BoostControlComponent boostControl;
+    private boolean finishedSpinning;
 
     @Override
     public void start(Helm game, final LevelPlayer player, Stage stage) {
+        finishedSpinning = false;
+
         this.player = player;
         this.stage = stage;
         fixShipForSteering();
@@ -80,6 +81,9 @@ public class SteeringPhase implements TutorialPhase {
         shipTransform = ship.getComponent(TransformComponent.class);
         steering = ship.getComponent(SteeringControlComponent.class);
 
+        boostControl = ship.getComponent(BoostControlComponent.class);
+        ship.removeComponent(BoostControlComponent.class);
+
         lastAngle = shipTransform.angle;
 
         if (ship.hasComponent(VelocityComponent.class)) {
@@ -104,10 +108,20 @@ public class SteeringPhase implements TutorialPhase {
             DrawUtils.drawDottedRect(shaper, rect);
         }
 
-        if (totalSpin > MathUtils.PI2) {
+        if (finishedSpinning) {
+            ship.addComponent(boostControl);
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY) {
+        if (totalSpin > MathUtils.PI2) {
+            finishedSpinning = true;
+        }
+
+        return false;
     }
 }

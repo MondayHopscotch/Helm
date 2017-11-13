@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.ui.UpdatingContainer;
 
 /**
@@ -24,12 +25,13 @@ public abstract class PagedPhase implements TutorialPhase {
 
     protected void init(Stage stage) {
         this.stage = stage;
-        stage.clear();
+        stage.setDebugAll(Helm.debug);
         pages = new Array<>();
 
         nextPageListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                System.out.println("CLICKED CLICKED CLICKED CLICKED ");
                 super.clicked(event, x, y);
                 if (livePage != null && livePage.action != null) {
                     livePage.action.run();
@@ -39,12 +41,18 @@ public abstract class PagedPhase implements TutorialPhase {
         };
     }
 
+    @Override
+    public boolean touchUp(int screenX, int screenY) {
+        nextPage();
+        return true;
+    }
 
     protected void nextPage() {
         stage.clear();
         // this is just to consume the clicks so a player can't unintentionally interact
         // with the game while the stage has pages left.
-        stage.addListener(new ClickListener());
+        final ClickListener tempListener = new ClickListener();
+        stage.addListener(tempListener);
 
         currentPage++;
         if (currentPage >= pages.size) {
@@ -57,14 +65,7 @@ public abstract class PagedPhase implements TutorialPhase {
         page.addAction(
                 Actions.sequence(
                         Actions.fadeOut(0),
-                        Actions.fadeIn(0.2f),
-                        Actions.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                page.addListener(nextPageListener);
-                                stage.addListener(nextPageListener);
-                            }
-                        })
+                        Actions.fadeIn(0.2f)
                 )
         );
         stage.addActor(page);

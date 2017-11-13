@@ -23,17 +23,18 @@ import com.bitdecay.helm.ui.UpdatingContainer;
  * Created by Monday on 10/30/2017.
  */
 
-public class LaunchPhase extends PagedPhase {
+public class LaunchPhase implements TutorialPhase {
     private Helm game;
     private LevelPlayer player;
     private GameEntity ship;
+    private Stage stage;
     private BoostControlComponent boostControl;
 
     @Override
     public void start(Helm game, LevelPlayer player, Stage stage) {
         this.game = game;
         this.player = player;
-        init(stage);
+        this.stage = stage;
 
         ship = TutorialUtils.getShip(player.allEntities);
 
@@ -69,17 +70,7 @@ public class LaunchPhase extends PagedPhase {
             }
         };
         page1.updater.run();
-        page1.action = new Runnable() {
-            @Override
-            public void run() {
-                // launch the ship for the player!
-                PlayerStartLevelSystem startSystem = player.getSystem(PlayerStartLevelSystem.class);
-                startSystem.touches.activeTouches.add(new ActiveTouch(0, (int) boostCenter.x, (int) boostCenter.y));
-            }
-        };
-        pages.add(page1);
-
-        nextPage();
+        stage.addActor(page1);
     }
 
     private Vector2 getBoostCenter(BoostControlComponent boostControl) {
@@ -98,9 +89,18 @@ public class LaunchPhase extends PagedPhase {
         }
 
         if (ship.hasComponent(SteeringComponent.class) && ship.hasComponent(VelocityComponent.class)) {
-            if (ship.getComponent(VelocityComponent.class).currentVelocity.len() < 0.1f) {
+            if (ship.getComponent(VelocityComponent.class).currentVelocity.y <= 0) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY) {
+        if (boostControl.activeArea.contains(screenX, screenY)) {
+            PlayerStartLevelSystem startSystem = player.getSystem(PlayerStartLevelSystem.class);
+            startSystem.touches.activeTouches.add(new ActiveTouch(0, screenX, screenY));
         }
         return false;
     }

@@ -1,6 +1,7 @@
 package com.bitdecay.helm.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -27,7 +28,7 @@ import com.bitdecay.helm.world.LevelDefinition;
  * Created by Monday on 10/23/2017.
  */
 
-public class TutorialScreen implements Screen, GamePilot {
+public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
     private final Helm game;
     private final LevelPlayer levelPlayer;
     private final InputMultiplexer combinedGameInput;
@@ -60,9 +61,17 @@ public class TutorialScreen implements Screen, GamePilot {
         activePhase = -1;
         nextPhase();
 
-
-        combinedGameInput = new InputMultiplexer(stage, levelPlayer.getInput());
+        combinedGameInput = new InputMultiplexer(this, stage, levelPlayer.getInput());
         Gdx.input.setInputProcessor(combinedGameInput);
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (activePhase < phases.size) {
+            return phases.get(activePhase).touchUp(screenX, screenY);
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -102,6 +111,7 @@ public class TutorialScreen implements Screen, GamePilot {
     }
 
     private void nextPhase() {
+        stage.clear();
         activePhase++;
         if (activePhase < phases.size) {
             phases.get(activePhase).start(game, levelPlayer, stage);

@@ -15,6 +15,7 @@ import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.component.BoostCountComponent;
 import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.FuelComponent;
+import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.entities.ShipEntity;
 import com.bitdecay.helm.menu.RotatingLabel;
@@ -26,22 +27,30 @@ import com.bitdecay.helm.ui.UpdatingContainer;
  * Created by Monday on 10/26/2017.
  */
 
-public class FirstBoostPhase extends PagedPhase {
+public class FirstBoostPhase implements TutorialPhase {
     private LevelPlayer player;
 
     private FuelComponent fuelComponent;
     private BoostControlComponent controls;
     private BoosterComponent boost;
+    private VelocityComponent velocity;
+
     private float savedBoostStrength;
     private float boostTime;
     private GameEntity ship;
+    private Stage stage;
+    private boolean doneBoosting;
+    private boolean done;
 
     @Override
     public void start(Helm game, LevelPlayer player, final Stage stage) {
+        doneBoosting = false;
+        done = false;
+
         this.player = player;
-        init(stage);
 
         ship = TutorialUtils.getShip(player.allEntities);
+        this.stage = stage;
         setupShip();
 
         boostTime = 0;
@@ -66,9 +75,7 @@ public class FirstBoostPhase extends PagedPhase {
             }
         };
         page1.updater.run();
-        pages.add(page1);
-
-        nextPage();
+        stage.addActor(page1);
     }
 
     public void setupShip() {
@@ -92,11 +99,26 @@ public class FirstBoostPhase extends PagedPhase {
 
         DrawUtils.drawDottedRect(shaper, rect);
 
-        if (boostTime >= 0.75f) {
-            boost.strength = savedBoostStrength;
+        if (!doneBoosting && boostTime >= 0.75f) {
+            doneBoosting = true;
+            velocity = ship.getComponent(VelocityComponent.class);
+            ship.removeComponent(VelocityComponent.class);
+        }
+
+        if (done) {
+            ship.addComponent(velocity);
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY) {
+        if (doneBoosting) {
+            boost.strength = savedBoostStrength;
+            done = true;
+        }
+        return false;
     }
 }
