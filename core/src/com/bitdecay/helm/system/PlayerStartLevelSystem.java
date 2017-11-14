@@ -2,19 +2,20 @@ package com.bitdecay.helm.system;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.collision.CollisionKind;
 import com.bitdecay.helm.component.BodyDefComponent;
+import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.DelayedAddComponent;
 import com.bitdecay.helm.component.ExplosionComponent;
 import com.bitdecay.helm.component.ShipLaunchComponent;
 import com.bitdecay.helm.component.SteeringComponent;
 import com.bitdecay.helm.component.TimerComponent;
 import com.bitdecay.helm.component.TransformComponent;
-import com.bitdecay.helm.component.control.BoostControlComponent;
-import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.collide.CollisionKindComponent;
+import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
 import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.entities.LaunchSmokeEntity;
@@ -54,7 +55,7 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
 
         if (launchTouchFound) {
             levelPlayer.beginInputReplayCapture();
-            entity.removeComponent(com.bitdecay.helm.component.ShipLaunchComponent.class);
+            entity.removeComponent(ShipLaunchComponent.class);
 
             // reset player input so the ship doesn't start pointing some weird direction
             SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
@@ -67,28 +68,30 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
             TimerComponent timer = new TimerComponent();
             entity.addComponent(timer);
 
-            com.bitdecay.helm.component.TransformComponent transform = entity.getComponent(com.bitdecay.helm.component.TransformComponent.class);
+            TransformComponent transform = entity.getComponent(TransformComponent.class);
 
             LaunchSmokeEntity launchExplosion = new LaunchSmokeEntity(transform.position.cpy().add(0, -100));
             ExplosionComponent explosion = launchExplosion.getComponent(ExplosionComponent.class);
             explosion.spreadCount = 2;
             levelPlayer.addEntity(launchExplosion);
 
-
-           DelayedAddComponent.DelayedAdd boosterDelay = new DelayedAddComponent.DelayedAdd(new BoosterComponent(PLAYER_BOOST_STRENGTH), PLAYER_CONTROL_DELAY);
-           DelayedAddComponent.DelayedAdd collisionDelay = new DelayedAddComponent.DelayedAdd(new CollisionKindComponent(CollisionKind.PLAYER), PLAYER_CONTROL_DELAY);
-           DelayedAddComponent.DelayedAdd steeringDelay = new DelayedAddComponent.DelayedAdd(new SteeringComponent(), PLAYER_CONTROL_DELAY / 2);
-
-            DelayedAddComponent delayedAddComponent = entity.getComponent(DelayedAddComponent.class);
-            delayedAddComponent.delays.add(boosterDelay);
-            delayedAddComponent.delays.add(collisionDelay);
-            delayedAddComponent.delays.add(steeringDelay);
-
-            entity.addComponent(new DelayedAddComponent(boosterDelay, collisionDelay, steeringDelay));
+            addPlayerStartComponents(entity.getComponent(DelayedAddComponent.class));
 
             pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_LAUNCH);
             levelPlayer.countStat(StatName.LAUNCHES, 1);
         }
+    }
+
+    public static DelayedAddComponent addPlayerStartComponents(DelayedAddComponent delay) {
+        DelayedAddComponent.DelayedAdd boosterDelay = new DelayedAddComponent.DelayedAdd(new BoosterComponent(PLAYER_BOOST_STRENGTH), PLAYER_CONTROL_DELAY);
+        DelayedAddComponent.DelayedAdd collisionDelay = new DelayedAddComponent.DelayedAdd(new CollisionKindComponent(CollisionKind.PLAYER), PLAYER_CONTROL_DELAY);
+        DelayedAddComponent.DelayedAdd steeringDelay = new DelayedAddComponent.DelayedAdd(new SteeringComponent(), PLAYER_CONTROL_DELAY / 2);
+
+        delay.delays.add(boosterDelay);
+        delay.delays.add(collisionDelay);
+        delay.delays.add(steeringDelay);
+
+        return delay;
     }
 
     @Override

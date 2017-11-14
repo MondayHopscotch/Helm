@@ -8,10 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
+import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.component.DelayedAddComponent;
+import com.bitdecay.helm.component.ShipLaunchComponent;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.screen.LevelPlayer;
+import com.bitdecay.helm.system.PlayerStartLevelSystem;
 import com.bitdecay.helm.ui.UpdatingContainer;
 import com.bitdecay.helm.world.LevelDefinition;
 
@@ -31,11 +35,27 @@ public class LandingPhase extends PagedPhase {
         LevelDefinition tutorial1 = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/tutorial/tut2.json"));
         player.loadLevel(tutorial1);
 
+        // get ship
+        GameEntity ship = TutorialUtils.getShip(player.allEntities);
+
+        // add components
+        ship.removeComponent(ShipLaunchComponent.class);
+        DelayedAddComponent delays = PlayerStartLevelSystem.addPlayerStartComponents(new DelayedAddComponent());
+        for (DelayedAddComponent.DelayedAdd delay : delays.delays) {
+            ship.addComponent(delay.component);
+        }
+
         init(stage);
         makePages();
     }
 
     private void makePages() {
+        RotatingLabel phaseLabel = new RotatingLabel("Phase 2: Landing", game.fontScale * 2, game.skin);
+        phaseLabel.setOrigin(Align.center);
+        UpdatingContainer phasePage = new UpdatingContainer(phaseLabel);
+        phasePage.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        pages.add(phasePage);
+
         final Vector2 landingLocation = TutorialUtils.getLandingLocation(player.allEntities);
         RotatingLabel boostLabel1 = new RotatingLabel("This is the", game.fontScale, game.skin);
         boostLabel1.setOrigin(Align.center);
