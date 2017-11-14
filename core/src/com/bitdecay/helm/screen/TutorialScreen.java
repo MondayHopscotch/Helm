@@ -9,8 +9,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.component.CameraFollowComponent;
+import com.bitdecay.helm.entities.LandingPlatformEntity;
 import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.scoring.LandingScore;
 import com.bitdecay.helm.sound.SoundMode;
@@ -51,6 +54,8 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
         LevelDefinition tutorial1 = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/tutorial/tut1.json"));
         levelPlayer.loadLevel(tutorial1);
 
+        removeLandingFocus();
+
         phases = new Array<>();
         phases.add(new StartPhase());
         phases.add(new LaunchPhase());
@@ -63,6 +68,15 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
 
         combinedGameInput = new InputMultiplexer(this, stage, levelPlayer.getInput());
         Gdx.input.setInputProcessor(combinedGameInput);
+    }
+
+    private void removeLandingFocus() {
+        for (GameEntity entity : levelPlayer.allEntities) {
+            if (entity instanceof LandingPlatformEntity) {
+                entity.removeComponent(CameraFollowComponent.class);
+                return;
+            }
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.bitdecay.helm.tutorial;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -9,8 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.menu.RotatingLabel;
+import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.screen.LevelPlayer;
 import com.bitdecay.helm.ui.UpdatingContainer;
+import com.bitdecay.helm.world.LevelDefinition;
 
 /**
  * Created by Monday on 10/30/2017.
@@ -24,6 +27,10 @@ public class LandingPhase extends PagedPhase {
     public void start(Helm game, LevelPlayer player, Stage stage) {
         this.game = game;
         this.player = player;
+
+        LevelDefinition tutorial1 = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/tutorial/tut2.json"));
+        player.loadLevel(tutorial1);
+
         init(stage);
         makePages();
     }
