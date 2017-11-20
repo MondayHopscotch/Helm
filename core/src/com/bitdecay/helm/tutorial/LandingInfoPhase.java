@@ -130,7 +130,9 @@ public class LandingInfoPhase extends PagedPhase {
     }
 
     @Override
-    public boolean update(ShapeRenderer shaper) {
+    public boolean update(ShapeRenderer shaper, float delta) {
+        super.update(shaper, delta);
+
         return currentPage >= pages.size;
     }
 }

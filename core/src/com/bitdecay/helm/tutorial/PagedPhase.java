@@ -1,6 +1,6 @@
 package com.bitdecay.helm.tutorial;
 
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -15,11 +15,13 @@ import com.bitdecay.helm.ui.UpdatingContainer;
 public abstract class PagedPhase implements TutorialPhase {
     protected Stage stage;
 
+    float timeOnPage = 0;
 
     protected UpdatingContainer livePage;
 
     protected Array<UpdatingContainer> pages;
     protected int currentPage = -1;
+    private float timePerPage = 1f;
 
     protected void init(Stage stage) {
         currentPage = -1;
@@ -30,7 +32,18 @@ public abstract class PagedPhase implements TutorialPhase {
 
     @Override
     public boolean touchUp(int screenX, int screenY) {
-        return nextPage();
+        if (timeOnPage >= timePerPage) {
+            timeOnPage = 0;
+            return nextPage();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(ShapeRenderer shaper, float delta) {
+        timeOnPage += delta;
+        return false;
     }
 
     protected boolean nextPage() {

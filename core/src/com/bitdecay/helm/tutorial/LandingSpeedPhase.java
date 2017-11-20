@@ -68,7 +68,9 @@ public class LandingSpeedPhase extends PagedPhase {
     }
 
     @Override
-    public boolean update(ShapeRenderer shaper) {
+    public boolean update(ShapeRenderer shaper, float delta) {
+        super.update(shaper, delta);
+
         // The phase will automatically end once the player successfully lands.
         return false;
     }

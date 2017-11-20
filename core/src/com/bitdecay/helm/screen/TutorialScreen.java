@@ -100,12 +100,10 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if (pointer != activePointer) {
-            // we only handle one touch at a time
-            System.out.println("POINTER: wrong pointer up: " + pointer);
+            // so we only handle one touch at a time
             return false;
         }
 
-        System.out.println("POINTER: resetting pointer");
         activePointer = -1;
 
         if (activePhase < phases.size) {
@@ -132,7 +130,7 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
         tutorialShaper.begin(ShapeRenderer.ShapeType.Filled);
 
         if (activePhase < phases.size) {
-            if (phases.get(activePhase).update(tutorialShaper)) {
+            if (phases.get(activePhase).update(tutorialShaper, delta)) {
                 nextPhase();
             }
         } else {

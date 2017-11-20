@@ -3,7 +3,6 @@ package com.bitdecay.helm.tutorial;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -69,7 +68,9 @@ public class StartPhase extends PagedPhase {
     }
 
     @Override
-    public boolean update(ShapeRenderer shaper) {
+    public boolean update(ShapeRenderer shaper, float delta) {
+        super.update(shaper, delta);
+
         if (currentPage >= pages.size) {
             return true;
         } else {

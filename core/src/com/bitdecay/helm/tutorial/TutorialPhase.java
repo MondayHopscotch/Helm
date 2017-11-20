@@ -12,7 +12,7 @@ import com.bitdecay.helm.screen.LevelPlayer;
 public interface TutorialPhase {
     void start(Helm game, LevelPlayer player, Stage stage);
 
-    boolean update(ShapeRenderer shaper);
+    boolean update(ShapeRenderer shaper, float delta);
 
     boolean touchUp(int screenX, int screenY);
 }

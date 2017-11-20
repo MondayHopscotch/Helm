@@ -2,7 +2,6 @@ package com.bitdecay.helm.tutorial;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -54,7 +53,9 @@ public class WrapUpPhase extends PagedPhase {
     }
 
     @Override
-    public boolean update(ShapeRenderer shaper) {
+    public boolean update(ShapeRenderer shaper, float delta) {
+        super.update(shaper, delta);
+
         return currentPage >= pages.size;
     }
 }

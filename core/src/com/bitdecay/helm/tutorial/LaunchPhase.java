@@ -30,6 +30,9 @@ public class LaunchPhase implements TutorialPhase {
     private Stage stage;
     private BoostControlComponent boostControl;
 
+    private static final float timeBeforeLaunch = .5f;
+    private float elapsed = 0;
+
     @Override
     public void start(Helm game, LevelPlayer player, Stage stage) {
         this.game = game;
@@ -39,8 +42,11 @@ public class LaunchPhase implements TutorialPhase {
         ship = TutorialUtils.getShip(player.allEntities);
 
         boostControl = ship.getComponent(BoostControlComponent.class);
+        // take this off the ship so they don't launch until we are ready for them to.
+        ship.removeComponent(BoostControlComponent.class);
 
         makePages();
+        elapsed = 0;
     }
 
 
@@ -76,7 +82,9 @@ public class LaunchPhase implements TutorialPhase {
     }
 
     @Override
-    public boolean update(ShapeRenderer shaper) {
+    public boolean update(ShapeRenderer shaper, float delta) {
+        elapsed += delta;
+        System.out.println("ELAPSED: " + elapsed);
         if (boostControl != null) {
             Rectangle rect = boostControl.activeArea;
             shaper.setColor(Color.WHITE);
@@ -94,7 +102,14 @@ public class LaunchPhase implements TutorialPhase {
 
     @Override
     public boolean touchUp(int screenX, int screenY) {
+        if (elapsed <= timeBeforeLaunch) {
+            System.out.println("ELAPSED AT LAUNCH: " + elapsed);
+            // ensure they are on this page for just a bit so they can read
+            return true;
+        }
+
         if (boostControl.activeArea.contains(screenX, screenY)) {
+            ship.addComponent(boostControl);
             PlayerStartLevelSystem startSystem = player.getSystem(PlayerStartLevelSystem.class);
             startSystem.touches.activeTouches.add(new ActiveTouch(0, screenX, screenY));
         }

@@ -79,7 +79,8 @@ public class FuelPhase extends PagedPhase {
     }
 
     @Override
-    public boolean update(ShapeRenderer shaper) {
+    public boolean update(ShapeRenderer shaper, float delta) {
+        super.update(shaper, delta);
         if (currentPage >= pages.size) {
             ship.addComponent(velocity);
             ship.addComponent(steering);

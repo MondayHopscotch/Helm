@@ -94,7 +94,9 @@ public class LandingAnglePhase extends PagedPhase {
     }
 
     @Override
-    public boolean update(ShapeRenderer shaper) {
+    public boolean update(ShapeRenderer shaper, float delta) {
+        super.update(shaper, delta);
+
         if (transform.angle > maxRot) {
             rotation *= -1;
             transform.angle = maxRot;

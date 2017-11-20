@@ -5,19 +5,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
-import com.bitdecay.helm.component.BoostCountComponent;
 import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.FuelComponent;
 import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
-import com.bitdecay.helm.entities.ShipEntity;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.screen.LevelPlayer;
 import com.bitdecay.helm.ui.UpdatingContainer;
@@ -87,7 +83,7 @@ public class FirstBoostPhase implements TutorialPhase {
     }
 
     @Override
-    public boolean update(ShapeRenderer shaper) {
+    public boolean update(ShapeRenderer shaper, float delta) {
 
 
         if (boost.engaged) {

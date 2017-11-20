@@ -93,7 +93,7 @@ public class SteeringPhase implements TutorialPhase {
         ship.removeComponent(GravityAffectedComponent.class);
     }
 
-    public boolean update(ShapeRenderer shaper) {
+    public boolean update(ShapeRenderer shaper, float delta) {
         float spin = Math.abs(shipTransform.angle - lastAngle);
         while (spin > 1) {
             // they can't spin this fast, so they just passed "0" on the unit circle
