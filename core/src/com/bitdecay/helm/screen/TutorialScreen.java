@@ -19,11 +19,14 @@ import com.bitdecay.helm.scoring.LandingScore;
 import com.bitdecay.helm.sound.SoundMode;
 import com.bitdecay.helm.tutorial.FirstBoostPhase;
 import com.bitdecay.helm.tutorial.FuelPhase;
-import com.bitdecay.helm.tutorial.LandingPhase;
+import com.bitdecay.helm.tutorial.LandingAnglePhase;
+import com.bitdecay.helm.tutorial.LandingInfoPhase;
+import com.bitdecay.helm.tutorial.LandingSpeedPhase;
 import com.bitdecay.helm.tutorial.LaunchPhase;
 import com.bitdecay.helm.tutorial.StartPhase;
 import com.bitdecay.helm.tutorial.SteeringPhase;
 import com.bitdecay.helm.tutorial.TutorialPhase;
+import com.bitdecay.helm.tutorial.WrapUpPhase;
 import com.bitdecay.helm.unlock.palette.GameColors;
 import com.bitdecay.helm.world.LevelDefinition;
 
@@ -44,6 +47,9 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
     public Array<TutorialPhase> phases;
     public int activePhase;
 
+    // active 'pointer' or 'touch' on the screen
+    private int activePointer;
+
     public TutorialScreen(Helm game) {
         this.game = game;
 
@@ -62,7 +68,10 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
         phases.add(new SteeringPhase());
         phases.add(new FirstBoostPhase());
         phases.add(new FuelPhase());
-        phases.add(new LandingPhase());
+        phases.add(new LandingInfoPhase());
+        phases.add(new LandingAnglePhase());
+        phases.add(new LandingSpeedPhase());
+        phases.add(new WrapUpPhase());
         activePhase = -1;
         nextPhase();
 
@@ -80,7 +89,25 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
     }
 
     @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (activePointer == -1) {
+            activePointer = pointer;
+            System.out.println("POINTER: new active: " + activePointer);
+        }
+        return false;
+    }
+
+    @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (pointer != activePointer) {
+            // we only handle one touch at a time
+            System.out.println("POINTER: wrong pointer up: " + pointer);
+            return false;
+        }
+
+        System.out.println("POINTER: resetting pointer");
+        activePointer = -1;
+
         if (activePhase < phases.size) {
             return phases.get(activePhase).touchUp(screenX, screenY);
         } else {
@@ -109,7 +136,7 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
                 nextPhase();
             }
         } else {
-            System.out.println("WE DONE");
+            game.setScreen(WorldSelectScreen.get(game));
         }
 
         tutorialShaper.end();
@@ -159,7 +186,11 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
 
     @Override
     public void requestRestartLevel() {
-
+        // just restart current phase
+        stage.clear();
+        if (activePhase < phases.size) {
+            phases.get(activePhase).start(game, levelPlayer, stage);
+        }
     }
 
     @Override

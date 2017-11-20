@@ -23,7 +23,7 @@ import com.bitdecay.helm.world.LevelDefinition;
  * Created by Monday on 10/30/2017.
  */
 
-public class LandingPhase extends PagedPhase {
+public class LandingInfoPhase extends PagedPhase {
     private Helm game;
     private LevelPlayer player;
 
@@ -69,21 +69,44 @@ public class LandingPhase extends PagedPhase {
         landingTable1.row();
         landingTable1.add(boostLabel2).center();
 
-        final UpdatingContainer page1 = new UpdatingContainer(landingTable1);
-        page1.updater = new Runnable() {
+        final UpdatingContainer landingLocationPage = new UpdatingContainer(landingTable1);
+        landingLocationPage.updater = new Runnable() {
             @Override
             public void run() {
                 Vector3 project = player.gameCam.project(new Vector3(landingLocation.x, landingLocation.y, 0));
-                page1.setPosition(project.x, project.y - page1.getPrefHeight() / 2);
+                landingLocationPage.setPosition(project.x, project.y - landingLocationPage.getPrefHeight() / 2);
             }
         };
-        page1.updater.run();
-        pages.add(page1);
+        landingLocationPage.updater.run();
+        pages.add(landingLocationPage);
 
-        RotatingLabel boostLabel3 = new RotatingLabel("You'll have to land", game.fontScale, game.skin);
-        boostLabel1.setOrigin(Align.center);
-        RotatingLabel boostLabel4 = new RotatingLabel("upright and slowly", game.fontScale, game.skin);
-        boostLabel2.setOrigin(Align.center);
+        RotatingLabel missionLabel1 = new RotatingLabel("Your goal is to get", game.fontScale, game.skin);
+        missionLabel1.setOrigin(Align.center);
+        RotatingLabel missionLabel2 = new RotatingLabel("the ship here safely", game.fontScale, game.skin);
+        missionLabel2.setOrigin(Align.center);
+
+        Table missionTable = new Table();
+        missionTable.setTouchable(Touchable.disabled);
+        missionTable.align(Align.left);
+        missionTable.add(missionLabel1).center();
+        missionTable.row();
+        missionTable.add(missionLabel2).center();
+
+        final UpdatingContainer missionPage = new UpdatingContainer(missionTable);
+        missionPage.updater = new Runnable() {
+            @Override
+            public void run() {
+                Vector3 project = player.gameCam.project(new Vector3(landingLocation.x, landingLocation.y, 0));
+                missionPage.setPosition(project.x, project.y - missionPage.getPrefHeight() / 2);
+            }
+        };
+        missionPage.updater.run();
+        pages.add(missionPage);
+
+        RotatingLabel boostLabel3 = new RotatingLabel("You must land upright and", game.fontScale, game.skin);
+        boostLabel3.setOrigin(Align.center);
+        RotatingLabel boostLabel4 = new RotatingLabel("slowly to avoid crashing", game.fontScale, game.skin);
+        boostLabel4.setOrigin(Align.center);
 
         Table landingTable2 = new Table();
         landingTable2.setTouchable(Touchable.disabled);

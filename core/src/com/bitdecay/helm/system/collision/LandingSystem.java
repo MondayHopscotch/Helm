@@ -103,9 +103,6 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
         entity.removeComponent(SteeringControlComponent.class);
 
-        com.bitdecay.helm.component.TimerComponent timer = entity.getComponent(com.bitdecay.helm.component.TimerComponent.class);
-        entity.removeComponent(com.bitdecay.helm.component.TimerComponent.class);
-
         LandingScore score = new LandingScore();
         score.angleScore = rateAngle(radsAwayFromStraightUp);
         score.speedScore = rateSpeed(impactSpeed);
@@ -113,7 +110,14 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         score.fuelLeft = fuel.fuelRemaining / fuel.maxFuel;
         score.fuelScore = rateFuelRemaining(fuel);
 
-        score.timeTaken = timer.secondsElapsed;
+        score.timeTaken = 0;
+        if (entity.hasComponent(TimerComponent.class)) {
+            TimerComponent timer = entity.getComponent(TimerComponent.class);
+            entity.removeComponent(TimerComponent.class);
+            score.timeTaken = timer.secondsElapsed;
+
+            levelPlayer.rollStat(StatName.FLIGHT_TIME, timer.secondsElapsed);
+        }
 
         levelPlayer.countStat(StatName.LANDINGS, 1);
         if (score.isLandingPerfect()) {
@@ -139,7 +143,6 @@ public class LandingSystem extends AbstractIteratingGameSystem {
             }
         }
 
-        levelPlayer.rollStat(StatName.FLIGHT_TIME, timer.secondsElapsed);
         pilot.finishLevel(score);
     }
 
@@ -209,8 +212,7 @@ public class LandingSystem extends AbstractIteratingGameSystem {
                 RateLandingComponent.class,
                 VelocityComponent.class,
                 TransformComponent.class,
-                FuelComponent.class,
-                TimerComponent.class
+                FuelComponent.class
         );
     }
 }

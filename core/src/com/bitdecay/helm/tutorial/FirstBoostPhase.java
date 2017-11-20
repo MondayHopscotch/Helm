@@ -58,7 +58,7 @@ public class FirstBoostPhase implements TutorialPhase {
         final Vector2 boostCenter = controls.activeArea.getCenter(new Vector2());
         RotatingLabel steeringLabel1 = new RotatingLabel("Touch this area", game.fontScale, game.skin);
         steeringLabel1.setOrigin(Align.center);
-        RotatingLabel steeringLabel2 = new RotatingLabel("to use your booster", game.fontScale, game.skin);
+        RotatingLabel steeringLabel2 = new RotatingLabel("to use your thruster", game.fontScale, game.skin);
         steeringLabel2.setOrigin(Align.center);
 
         Table boostTable = new Table();
@@ -102,7 +102,7 @@ public class FirstBoostPhase implements TutorialPhase {
         if (!doneBoosting && boostTime >= 0.75f) {
             doneBoosting = true;
             velocity = ship.getComponent(VelocityComponent.class);
-            ship.removeComponent(VelocityComponent.class);
+                           ship.removeComponent(VelocityComponent.class);
         }
 
         if (done) {

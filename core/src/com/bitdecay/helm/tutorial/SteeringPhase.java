@@ -16,6 +16,7 @@ import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
 import com.bitdecay.helm.entities.ShipEntity;
+import com.bitdecay.helm.math.Geom;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.screen.LevelPlayer;
 import com.bitdecay.helm.ui.UpdatingContainer;
@@ -110,6 +111,7 @@ public class SteeringPhase implements TutorialPhase {
 
         if (finishedSpinning) {
             ship.addComponent(boostControl);
+            shipTransform.angle = Geom.ROTATION_UP;
             return true;
         } else {
             return false;

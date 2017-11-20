@@ -48,11 +48,11 @@ public class FuelPhase extends PagedPhase {
 
     private void makePages() {
         final Vector2 playerLocation = ship.getComponent(TransformComponent.class).position;
-        RotatingLabel fuelLabel1 = new RotatingLabel("Boosting uses fuel", game.fontScale, game.skin);
+        RotatingLabel fuelLabel1 = new RotatingLabel("The thruster uses fuel.", game.fontScale, game.skin);
         fuelLabel1.setOrigin(Align.center);
-        RotatingLabel fuelLabel2 = new RotatingLabel("So pay attention to the", game.fontScale, game.skin);
+        RotatingLabel fuelLabel2 = new RotatingLabel("Pay attention to the", game.fontScale, game.skin);
         fuelLabel2.setOrigin(Align.center);
-        RotatingLabel fuelLabel3 = new RotatingLabel("fuel line on your ship!", game.fontScale, game.skin);
+        RotatingLabel fuelLabel3 = new RotatingLabel("fuel line on the ship!", game.fontScale, game.skin);
         fuelLabel3.setOrigin(Align.center);
 
         Table fuelTable = new Table();

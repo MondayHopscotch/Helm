@@ -107,6 +107,7 @@ public class LevelPlayer {
     private PlayerBoundarySystem playerBoundarySystem;
 
     public Vector2 universalGravity = new Vector2();
+    public Vector2 originalGravity = new Vector2();
 
 
     public LevelPlayer(GamePilot pilot, boolean isReplay) {
@@ -308,6 +309,7 @@ public class LevelPlayer {
             allEntities.add(focusPoint);
         }
 
+        originalGravity.set(levelDef.gravity);
         universalGravity.set(levelDef.gravity);
 
         resetAllButInputSystems();

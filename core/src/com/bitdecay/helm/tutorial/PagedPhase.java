@@ -21,44 +21,37 @@ public abstract class PagedPhase implements TutorialPhase {
     protected Array<UpdatingContainer> pages;
     protected int currentPage = -1;
 
-    protected ClickListener nextPageListener;
-
     protected void init(Stage stage) {
+        currentPage = -1;
         this.stage = stage;
         stage.setDebugAll(Helm.debug);
         pages = new Array<>();
-
-        nextPageListener = new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("CLICKED CLICKED CLICKED CLICKED ");
-                super.clicked(event, x, y);
-                if (livePage != null && livePage.action != null) {
-                    livePage.action.run();
-                }
-                nextPage();
-            }
-        };
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY) {
-        nextPage();
-        return true;
+        return nextPage();
     }
 
-    protected void nextPage() {
+    protected boolean nextPage() {
         stage.clear();
-        // this is just to consume the clicks so a player can't unintentionally interact
-        // with the game while the stage has pages left.
-        final ClickListener tempListener = new ClickListener();
-        stage.addListener(tempListener);
+
+        if (livePage != null && livePage.action != null) {
+            livePage.action.run();
+        }
+
+        livePage = null;
 
         currentPage++;
         if (currentPage >= pages.size) {
             System.out.println("NO PAGES LEFT!");
-            return;
+            return false;
         }
+
+        // this is just to consume the clicks so a player can't unintentionally interact
+        // with the game while the stage has pages left.
+        final ClickListener tempListener = new ClickListener();
+        stage.addListener(tempListener);
 
         final UpdatingContainer page = pages.get(currentPage);
         livePage = page;
@@ -69,5 +62,6 @@ public abstract class PagedPhase implements TutorialPhase {
                 )
         );
         stage.addActor(page);
+        return true;
     }
 }

@@ -46,10 +46,8 @@ public class LaunchPhase implements TutorialPhase {
 
     private void makePages() {
         final Vector2 boostCenter = getBoostCenter(boostControl);
-        RotatingLabel boostLabel1 = new RotatingLabel("Tap on this side", game.fontScale, game.skin);
+        RotatingLabel boostLabel1 = new RotatingLabel("Tap in this area", game.fontScale, game.skin);
         boostLabel1.setOrigin(Align.center);
-        RotatingLabel boostLabel2 = new RotatingLabel("of the screen", game.fontScale, game.skin);
-        boostLabel2.setOrigin(Align.center);
         RotatingLabel boostLabel3 = new RotatingLabel("to launch your ship!", game.fontScale, game.skin);
         boostLabel3.setOrigin(Align.center);
 
@@ -57,8 +55,6 @@ public class LaunchPhase implements TutorialPhase {
         boostTable.setTouchable(Touchable.disabled);
         boostTable.align(Align.left);
         boostTable.add(boostLabel1).center();
-        boostTable.row();
-        boostTable.add(boostLabel2).center();
         boostTable.row();
         boostTable.add(boostLabel3).center();
 

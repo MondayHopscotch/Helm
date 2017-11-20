@@ -61,67 +61,6 @@ public class StartPhase extends PagedPhase {
         phasePage.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         pages.add(phasePage);
 
-        final Vector2 playerLocation = getPlayerLocation();
-        RotatingLabel playerLabel = new RotatingLabel("This is your ship!", game.fontScale, game.skin);
-        playerLabel.setOrigin(Align.center);
-        final UpdatingContainer page1 = new UpdatingContainer(playerLabel);
-        page1.updater = new Runnable() {
-            @Override
-            public void run() {
-                Vector3 project = player.gameCam.project(new Vector3(playerLocation.x, playerLocation.y, 0));
-                page1.setPosition(project.x, project.y);
-            }
-        };
-        page1.updater.run();
-        pages.add(page1);
-
-//        final Vector2 landingLocation = TutorialUtils.getLandingLocation(player.allEntities);
-//        RotatingLabel landingLabel1 = new RotatingLabel("This is where", game.fontScale, game.skin);
-//        landingLabel1.setOrigin(Align.center);
-//
-//        RotatingLabel landingLabel2 = new RotatingLabel("you need to get...", game.fontScale, game.skin);
-//        landingLabel2.setOrigin(Align.center);
-//
-//        Table landingTable = new Table();
-//        landingTable.align(Align.left);
-//        landingTable.add(landingLabel1).center();
-//        landingTable.row();
-//        landingTable.add(landingLabel2).center();
-//
-//        final UpdatingContainer page2 = new UpdatingContainer(landingTable);
-//        page2.updater = new Runnable() {
-//            @Override
-//            public void run() {
-//                Vector3 project = player.gameCam.project(new Vector3(landingLocation.x, landingLocation.y, 0));
-//                page2.setPosition(project.x, project.y);
-//            }
-//        };
-//        page2.updater.run();
-//        pages.add(page2);
-
-//        RotatingLabel landingLabel3 = new RotatingLabel("We'll get back to", game.fontScale, game.skin);
-//        landingLabel3.setOrigin(Align.center);
-//
-//        RotatingLabel landingLabel4 = new RotatingLabel("this in a bit.", game.fontScale, game.skin);
-//        landingLabel4.setOrigin(Align.center);
-
-//        Table landingTable2 = new Table();
-//        landingTable2.align(Align.left);
-//        landingTable2.add(landingLabel3).center();
-//        landingTable2.row();
-//        landingTable2.add(landingLabel4).center();
-
-//        final UpdatingContainer page3 = new UpdatingContainer(landingTable2);
-//        page3.updater = new Runnable() {
-//            @Override
-//            public void run() {
-//                Vector3 project = player.gameCam.project(new Vector3(landingLocation.x, landingLocation.y, 0));
-//                page3.setPosition(project.x, project.y);
-//            }
-//        };
-//        page3.updater.run();
-//        pages.add(page3);
-
         nextPage();
     }
 
