@@ -84,7 +84,6 @@ public class LaunchPhase implements TutorialPhase {
     @Override
     public boolean update(ShapeRenderer shaper, float delta) {
         elapsed += delta;
-        System.out.println("ELAPSED: " + elapsed);
         if (boostControl != null) {
             Rectangle rect = boostControl.activeArea;
             shaper.setColor(Color.WHITE);
@@ -103,7 +102,6 @@ public class LaunchPhase implements TutorialPhase {
     @Override
     public boolean touchUp(int screenX, int screenY) {
         if (elapsed <= timeBeforeLaunch) {
-            System.out.println("ELAPSED AT LAUNCH: " + elapsed);
             // ensure they are on this page for just a bit so they can read
             return true;
         }

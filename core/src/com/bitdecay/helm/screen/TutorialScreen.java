@@ -15,6 +15,7 @@ import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.component.CameraFollowComponent;
 import com.bitdecay.helm.entities.LandingPlatformEntity;
 import com.bitdecay.helm.persist.JsonUtils;
+import com.bitdecay.helm.prefs.GamePrefs;
 import com.bitdecay.helm.scoring.LandingScore;
 import com.bitdecay.helm.sound.SoundMode;
 import com.bitdecay.helm.tutorial.FirstBoostPhase;
@@ -134,6 +135,7 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
                 nextPhase();
             }
         } else {
+            game.prefs.putBoolean(GamePrefs.TUTORIAL_COMPLETE, true);
             game.setScreen(WorldSelectScreen.get(game));
         }
 

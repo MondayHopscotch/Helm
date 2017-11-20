@@ -21,7 +21,7 @@ public abstract class PagedPhase implements TutorialPhase {
 
     protected Array<UpdatingContainer> pages;
     protected int currentPage = -1;
-    private float timePerPage = 1f;
+    private float timePerPage = 0.5f;
 
     protected void init(Stage stage) {
         currentPage = -1;

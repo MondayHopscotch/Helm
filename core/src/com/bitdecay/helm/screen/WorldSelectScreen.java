@@ -85,6 +85,9 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             System.out.println(levelCount + " levels across all worlds");
         }
 
+        buildTutorialRow(worldTable);
+        worldTable.row().padTop(game.fontScale * 10);
+
         boolean allWorldsUnlocked = true;
         for (WorldInstance world : worlds) {
             if (levelsCompleted >= world.requiredLevelsForUnlock) {
@@ -160,6 +163,23 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
                 }));
             }
         };
+    }
+
+    private void buildTutorialRow(Table table) {
+        ClickListener listener = new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(new TutorialScreen(game));
+                    }
+                }));
+            }
+        };
+
+        RotatingLabel tutorialLabel = new RotatingLabel("Tutorial", game.fontScale, skin, listener);
+        table.add(tutorialLabel).colspan(2).expandX().fillX();
     }
 
     private int buildWorldRow(final com.bitdecay.helm.world.WorldInstance world, Table table) {

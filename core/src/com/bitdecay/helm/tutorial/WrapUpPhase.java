@@ -20,7 +20,7 @@ public class WrapUpPhase extends PagedPhase {
     public void start(Helm game, LevelPlayer player, Stage stage) {
         init(stage);
 
-        RotatingLabel gratsMessage = new RotatingLabel("That's it!", game.fontScale * 2, game.skin);
+        RotatingLabel gratsMessage = new RotatingLabel("Success!", game.fontScale * 2, game.skin);
         gratsMessage.setOrigin(Align.center);
         UpdatingContainer gratsPage = new UpdatingContainer(gratsMessage);
         gratsPage.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
