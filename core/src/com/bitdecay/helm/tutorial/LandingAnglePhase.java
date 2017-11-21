@@ -42,19 +42,10 @@ public class LandingAnglePhase extends PagedPhase {
         transform = ship.getComponent(TransformComponent.class);
 
         final Vector2 landingLocation = TutorialUtils.getLandingLocation(player.allEntities);
-        RotatingLabel boostLabel1 = new RotatingLabel("The icon will show if", game.fontScale, game.skin);
-        boostLabel1.setOrigin(Align.center);
-        RotatingLabel boostLabel2 = new RotatingLabel("the ship's angle is correct", game.fontScale, game.skin);
-        boostLabel2.setOrigin(Align.center);
-
-        Table landingTable1 = new Table();
-        landingTable1.setTouchable(Touchable.disabled);
-        landingTable1.align(Align.left);
-        landingTable1.add(boostLabel1).center();
-        landingTable1.row();
-        landingTable1.add(boostLabel2).center();
-
-        final UpdatingContainer page1 = new UpdatingContainer(landingTable1);
+        final UpdatingContainer page1 = TutorialUtils.getPage(game.fontScale, game.skin,
+                "The icon will show if",
+                "the ship's angle is correct"
+        );
         page1.updater = new Runnable() {
             @Override
             public void run() {
@@ -64,23 +55,11 @@ public class LandingAnglePhase extends PagedPhase {
         };
         pages.add(page1);
 
-        RotatingLabel speedLabel1 = new RotatingLabel("Land as slowly as possible.", game.fontScale, game.skin);
-        speedLabel1.setOrigin(Align.center);
-        RotatingLabel speedLabel2 = new RotatingLabel("Too much speed and the", game.fontScale, game.skin);
-        speedLabel2.setOrigin(Align.center);
-        RotatingLabel speedLabel3 = new RotatingLabel("ship will crash", game.fontScale, game.skin);
-        speedLabel3.setOrigin(Align.center);
-
-        Table speedTable1 = new Table();
-        speedTable1.setTouchable(Touchable.disabled);
-        speedTable1.align(Align.left);
-        speedTable1.add(speedLabel1).center();
-        speedTable1.row();
-        speedTable1.add(speedLabel2).center();
-        speedTable1.row();
-        speedTable1.add(speedLabel3).center();
-
-        final UpdatingContainer page3 = new UpdatingContainer(speedTable1);
+        final UpdatingContainer page3 = TutorialUtils.getPage(game.fontScale, game.skin,
+                "Land as slowly as possible.",
+                "Too much speed and the",
+                "ship will crash"
+        );
         page3.updater = new Runnable() {
             @Override
             public void run() {

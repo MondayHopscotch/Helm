@@ -46,22 +46,11 @@ public class SteeringPhase implements TutorialPhase {
         fixShipForSteering();
 
         final Vector2 steeringCenter = steering.activeArea.getCenter(new Vector2());
-        RotatingLabel steeringLabel1 = new RotatingLabel("Drag left and right", game.fontScale, game.skin);
-        steeringLabel1.setOrigin(Align.center);
-        RotatingLabel steeringLabel2 = new RotatingLabel("in this area", game.fontScale, game.skin);
-        steeringLabel2.setOrigin(Align.center);
-        RotatingLabel steeringLabel3 = new RotatingLabel("to steer your ship", game.fontScale, game.skin);
-        steeringLabel3.setOrigin(Align.center);
-
-        Table steeringTable = new Table();
-        steeringTable.align(Align.left);
-        steeringTable.add(steeringLabel1).center();
-        steeringTable.row();
-        steeringTable.add(steeringLabel2).center();
-        steeringTable.row();
-        steeringTable.add(steeringLabel3).center();
-
-        final UpdatingContainer page1 = new UpdatingContainer(steeringTable);
+        final UpdatingContainer page1 = TutorialUtils.getPage(game.fontScale, game.skin,
+                "Drag left and right",
+                "in this area",
+                "to steer your ship"
+        );
         page1.updater = new Runnable() {
             @Override
             public void run() {

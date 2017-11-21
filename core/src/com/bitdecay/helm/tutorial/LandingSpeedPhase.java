@@ -8,13 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
-import com.bitdecay.helm.component.DelayedAddComponent;
-import com.bitdecay.helm.component.ShipLaunchComponent;
 import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.screen.LevelPlayer;
-import com.bitdecay.helm.system.PlayerStartLevelSystem;
 import com.bitdecay.helm.ui.UpdatingContainer;
 import com.bitdecay.helm.world.LevelDefinition;
 
@@ -37,18 +34,11 @@ public class LandingSpeedPhase extends PagedPhase {
         // get ship
         ship = TutorialUtils.getShip(player.allEntities);
 
-        // add components
-        ship.removeComponent(ShipLaunchComponent.class);
-        DelayedAddComponent delays = PlayerStartLevelSystem.addPlayerStartComponents(new DelayedAddComponent());
-        for (DelayedAddComponent.DelayedAdd delay : delays.delays) {
-            ship.addComponent(delay.component);
-        }
+        TutorialUtils.preLaunchShip(ship);
+        ship.removeComponent(VelocityComponent.class);
 
         final Vector2 landingLocation = TutorialUtils.getLandingLocation(player.allEntities);
-        RotatingLabel speedLabel4 = new RotatingLabel("Try landing the ship gently.", game.fontScale, game.skin);
-        speedLabel4.setOrigin(Align.center);
-
-        final UpdatingContainer page2 = new UpdatingContainer(speedLabel4);
+        final UpdatingContainer page2 = TutorialUtils.getPage(game.fontScale, game.skin, "Try landing the ship gently.");
         page2.updater = new Runnable() {
             @Override
             public void run() {

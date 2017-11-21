@@ -1,5 +1,6 @@
 package com.bitdecay.helm.tutorial;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -9,13 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.component.FuelComponent;
 import com.bitdecay.helm.component.GravityAffectedComponent;
 import com.bitdecay.helm.component.TransformComponent;
 import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
 import com.bitdecay.helm.menu.RotatingLabel;
+import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.screen.LevelPlayer;
 import com.bitdecay.helm.ui.UpdatingContainer;
+import com.bitdecay.helm.world.LevelDefinition;
 
 /**
  * Created by Monday on 11/8/2017.
@@ -27,6 +31,7 @@ public class FuelPhase extends PagedPhase {
     private GameEntity ship;
     private VelocityComponent velocity;
     private SteeringControlComponent steering;
+    private FuelComponent fuel;
 
 
     @Override
@@ -35,46 +40,67 @@ public class FuelPhase extends PagedPhase {
         this.player = player;
         init(stage);
 
+        LevelDefinition fuelTutorialLevel = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/tutorial/tut_boost.json"));
+        player.loadLevel(fuelTutorialLevel);
+        TutorialUtils.removeLandingFocus(player.allEntities);
+
         ship = TutorialUtils.getShip(player.allEntities);
+        TutorialUtils.preLaunchShip(ship);
 
         velocity = ship.getComponent(VelocityComponent.class);
         steering = ship.getComponent(SteeringControlComponent.class);
+        fuel = ship.getComponent(FuelComponent.class);
+        fuel.fuelRemaining = fuel.maxFuel / 2;
+
         // take off the velocity and steering and put it back on later
         ship.removeComponent(VelocityComponent.class);
         ship.removeComponent(SteeringControlComponent.class);
+
 
         makePages();
     }
 
     private void makePages() {
         final Vector2 playerLocation = ship.getComponent(TransformComponent.class).position;
-        RotatingLabel fuelLabel1 = new RotatingLabel("The thruster uses fuel.", game.fontScale, game.skin);
-        fuelLabel1.setOrigin(Align.center);
-        RotatingLabel fuelLabel2 = new RotatingLabel("Pay attention to the", game.fontScale, game.skin);
-        fuelLabel2.setOrigin(Align.center);
-        RotatingLabel fuelLabel3 = new RotatingLabel("fuel line on the ship!", game.fontScale, game.skin);
-        fuelLabel3.setOrigin(Align.center);
 
-        Table fuelTable = new Table();
-        fuelTable.setTouchable(Touchable.disabled);
-        fuelTable.align(Align.left);
-        fuelTable.add(fuelLabel1).center();
-        fuelTable.row();
-        fuelTable.add(fuelLabel2).center();
-        fuelTable.row();
-        fuelTable.add(fuelLabel3).center();
-
-        final UpdatingContainer page1 = new UpdatingContainer(fuelTable);
-        page1.updater = new Runnable() {
+        final UpdatingContainer thrusterPage = TutorialUtils.getPage(game.fontScale, game.skin,
+                "The ship also comes equipped",
+                "with a thruster"
+        );
+        thrusterPage.updater = new Runnable() {
             @Override
             public void run() {
                 Vector3 project = player.gameCam.project(new Vector3(playerLocation.x, playerLocation.y, 0));
-                page1.setPosition(project.x, project.y - page1.getPrefHeight()/2);
+                thrusterPage.setPosition(project.x, project.y - thrusterPage.getPrefHeight() / 2);
             }
         };
-        page1.updater.run();
-        pages.add(page1);
+        pages.add(thrusterPage);
 
+        final UpdatingContainer halfFuelPage = TutorialUtils.getPage(game.fontScale, game.skin,
+                "The thruster consumes",
+                "fuel as it is used"
+        );
+        halfFuelPage.updater = new Runnable() {
+            @Override
+            public void run() {
+                Vector3 project = player.gameCam.project(new Vector3(playerLocation.x, playerLocation.y, 0));
+                halfFuelPage.setPosition(project.x, project.y - halfFuelPage.getPrefHeight() / 2);
+            }
+        };
+        pages.add(halfFuelPage);
+
+        final UpdatingContainer fuelLinePage = TutorialUtils.getPage(game.fontScale, game.skin,
+                "We've given you half fuel.",
+                "Note the fuel line on the ship"
+        );
+        fuelLinePage.updater = new Runnable() {
+            @Override
+            public void run() {
+                Vector3 project = player.gameCam.project(new Vector3(playerLocation.x, playerLocation.y, 0));
+                fuelLinePage.setPosition(project.x, project.y - fuelLinePage.getPrefHeight() / 2);
+            }
+        };
+        pages.add(fuelLinePage);
         nextPage();
     }
 

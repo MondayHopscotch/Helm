@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -18,6 +19,7 @@ import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.prefs.GamePrefs;
 import com.bitdecay.helm.scoring.LandingScore;
 import com.bitdecay.helm.sound.SoundMode;
+import com.bitdecay.helm.tutorial.CrashPhase;
 import com.bitdecay.helm.tutorial.FirstBoostPhase;
 import com.bitdecay.helm.tutorial.FuelPhase;
 import com.bitdecay.helm.tutorial.LandingAnglePhase;
@@ -27,6 +29,7 @@ import com.bitdecay.helm.tutorial.LaunchPhase;
 import com.bitdecay.helm.tutorial.StartPhase;
 import com.bitdecay.helm.tutorial.SteeringPhase;
 import com.bitdecay.helm.tutorial.TutorialPhase;
+import com.bitdecay.helm.tutorial.TutorialUtils;
 import com.bitdecay.helm.tutorial.WrapUpPhase;
 import com.bitdecay.helm.unlock.palette.GameColors;
 import com.bitdecay.helm.world.LevelDefinition;
@@ -58,17 +61,18 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
         stage = new Stage();
         levelPlayer = new TutorialLevelPlayer(this);
 
-        LevelDefinition tutorial1 = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/tutorial/tut1.json"));
+        LevelDefinition tutorial1 = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/tutorial/tut1_v2.json"));
         levelPlayer.loadLevel(tutorial1);
 
-        removeLandingFocus();
+        TutorialUtils.removeLandingFocus(levelPlayer.allEntities);
 
         phases = new Array<>();
         phases.add(new StartPhase());
         phases.add(new LaunchPhase());
         phases.add(new SteeringPhase());
-        phases.add(new FirstBoostPhase());
         phases.add(new FuelPhase());
+        phases.add(new FirstBoostPhase());
+        phases.add(new CrashPhase()); // TODO: Tell the player that they die if they touch anything
         phases.add(new LandingInfoPhase());
         phases.add(new LandingAnglePhase());
         phases.add(new LandingSpeedPhase());
@@ -78,15 +82,6 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
 
         combinedGameInput = new InputMultiplexer(this, stage, levelPlayer.getInput());
         Gdx.input.setInputProcessor(combinedGameInput);
-    }
-
-    private void removeLandingFocus() {
-        for (GameEntity entity : levelPlayer.allEntities) {
-            if (entity instanceof LandingPlatformEntity) {
-                entity.removeComponent(CameraFollowComponent.class);
-                return;
-            }
-        }
     }
 
     @Override
@@ -195,12 +190,12 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
 
     @Override
     public void doSound(SoundMode mode, String soundName) {
-
+        AudioUtils.doSound(game, mode, soundName);
     }
 
     @Override
-    public void doMusic(SoundMode mode, String soundName) {
-
+    public void doMusic(SoundMode mode, String musicName) {
+        AudioUtils.doMusic(game, mode, musicName);
     }
 
     @Override

@@ -12,11 +12,14 @@ import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.FuelComponent;
+import com.bitdecay.helm.component.GravityAffectedComponent;
 import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.menu.RotatingLabel;
+import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.screen.LevelPlayer;
 import com.bitdecay.helm.ui.UpdatingContainer;
+import com.bitdecay.helm.world.LevelDefinition;
 
 
 /**
@@ -29,41 +32,42 @@ public class FirstBoostPhase implements TutorialPhase {
     private FuelComponent fuelComponent;
     private BoostControlComponent controls;
     private BoosterComponent boost;
-    private VelocityComponent velocity;
 
-    private float savedBoostStrength;
-    private float boostTime;
     private GameEntity ship;
     private Stage stage;
-    private boolean doneBoosting;
     private boolean done;
+    private boolean started;
 
     @Override
     public void start(Helm game, LevelPlayer player, final Stage stage) {
-        doneBoosting = false;
-        done = false;
+        if (started) {
+            // if we are being restarted, then the player already played this phase
+            done = true;
+        }
+
+        started = false;
 
         this.player = player;
+        this.stage = stage;
+
+        LevelDefinition fuelTutorialLevel = JsonUtils.unmarshal(LevelDefinition.class, Gdx.files.internal("level/tutorial/tut_boost.json"));
+        player.loadLevel(fuelTutorialLevel);
 
         ship = TutorialUtils.getShip(player.allEntities);
-        this.stage = stage;
-        setupShip();
+        TutorialUtils.preLaunchShip(ship);
+        TutorialUtils.removeLandingFocus(player.allEntities);
 
-        boostTime = 0;
+        ship.removeComponent(GravityAffectedComponent.class);
+
+        fuelComponent = ship.getComponent(FuelComponent.class);
+        controls = ship.getComponent(BoostControlComponent.class);
+        boost = ship.getComponent(BoosterComponent.class);
 
         final Vector2 boostCenter = controls.activeArea.getCenter(new Vector2());
-        RotatingLabel steeringLabel1 = new RotatingLabel("Touch this area", game.fontScale, game.skin);
-        steeringLabel1.setOrigin(Align.center);
-        RotatingLabel steeringLabel2 = new RotatingLabel("to use your thruster", game.fontScale, game.skin);
-        steeringLabel2.setOrigin(Align.center);
-
-        Table boostTable = new Table();
-        boostTable.align(Align.left);
-        boostTable.add(steeringLabel1).center();
-        boostTable.row();
-        boostTable.add(steeringLabel2).center();
-
-        final UpdatingContainer page1 = new UpdatingContainer(boostTable);
+        final UpdatingContainer page1 = TutorialUtils.getPage(game.fontScale, game.skin,
+                "Touch this area",
+                "to use your thruster"
+        );
         page1.updater = new Runnable() {
             @Override
             public void run() {
@@ -74,35 +78,14 @@ public class FirstBoostPhase implements TutorialPhase {
         stage.addActor(page1);
     }
 
-    public void setupShip() {
-        fuelComponent = ship.getComponent(FuelComponent.class);
-        controls = ship.getComponent(BoostControlComponent.class);
-        boost = ship.getComponent(BoosterComponent.class);
-        savedBoostStrength = boost.strength;
-        boost.strength *= 0.1f;
-    }
-
     @Override
     public boolean update(ShapeRenderer shaper, float delta) {
-
-
-        if (boost.engaged) {
-            boostTime += Gdx.graphics.getDeltaTime();
-        }
-
         Rectangle rect = controls.activeArea;
         shaper.setColor(Color.WHITE);
 
         DrawUtils.drawDottedRect(shaper, rect);
 
-        if (!doneBoosting && boostTime >= 0.75f) {
-            doneBoosting = true;
-            velocity = ship.getComponent(VelocityComponent.class);
-                           ship.removeComponent(VelocityComponent.class);
-        }
-
-        if (done) {
-            ship.addComponent(velocity);
+        if (TutorialUtils.getShip(player.allEntities) == null) {
             return true;
         } else {
             return false;
@@ -111,9 +94,9 @@ public class FirstBoostPhase implements TutorialPhase {
 
     @Override
     public boolean touchUp(int screenX, int screenY) {
-        if (doneBoosting) {
-            boost.strength = savedBoostStrength;
-            done = true;
+        if (!started && controls.activeArea.contains(screenX, screenY)) {
+            started = true;
+            ship.addComponent(new GravityAffectedComponent());
         }
         return false;
     }

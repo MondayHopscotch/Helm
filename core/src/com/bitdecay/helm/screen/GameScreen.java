@@ -124,44 +124,12 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void doSound(SoundMode mode, String soundName) {
-
-        Sound sfx = game.assets.get(soundName, Sound.class);
-
-        if (SoundMode.PLAY.equals(mode)) {
-            sfx.play();
-        } else if (SoundMode.STOP.equals(mode)) {
-            sfx.stop();
-        }
+       AudioUtils.doSound(game, mode, soundName);
     }
 
     @Override
     public void doMusic(SoundMode mode, String musicName) {
-
-        Music music = game.assets.get(musicName, Music.class);
-
-        switch(mode) {
-            case START:
-            case PLAY:
-            case RESUME:
-                music.setLooping(true);
-                if (!music.isPlaying()) {
-                    music.play();
-                }
-                break;
-            case PAUSE:
-                if (music.isPlaying()) {
-                    music.pause();
-                }
-                break;
-            case STOP:
-                music.stop();
-                break;
-        }
-        if (SoundMode.PLAY.equals(mode) && !music.isPlaying()) {
-            music.play();
-        } else if (SoundMode.STOP.equals(mode) && music.isPlaying()) {
-            music.stop();
-        }
+        AudioUtils.doMusic(game, mode, musicName);
     }
 
     @Override

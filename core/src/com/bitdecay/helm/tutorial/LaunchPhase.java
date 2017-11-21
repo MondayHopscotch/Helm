@@ -52,19 +52,10 @@ public class LaunchPhase implements TutorialPhase {
 
     private void makePages() {
         final Vector2 boostCenter = getBoostCenter(boostControl);
-        RotatingLabel boostLabel1 = new RotatingLabel("Tap in this area", game.fontScale, game.skin);
-        boostLabel1.setOrigin(Align.center);
-        RotatingLabel boostLabel3 = new RotatingLabel("to launch your ship!", game.fontScale, game.skin);
-        boostLabel3.setOrigin(Align.center);
-
-        Table boostTable = new Table();
-        boostTable.setTouchable(Touchable.disabled);
-        boostTable.align(Align.left);
-        boostTable.add(boostLabel1).center();
-        boostTable.row();
-        boostTable.add(boostLabel3).center();
-
-        final UpdatingContainer page1 = new UpdatingContainer(boostTable);
+        final UpdatingContainer page1 = TutorialUtils.getPage(game.fontScale, game.skin,
+                "Tap in this area",
+                "to launch your ship!"
+        );
         page1.updater = new Runnable() {
             @Override
             public void run() {

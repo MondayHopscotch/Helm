@@ -20,32 +20,18 @@ public class WrapUpPhase extends PagedPhase {
     public void start(Helm game, LevelPlayer player, Stage stage) {
         init(stage);
 
-        RotatingLabel gratsMessage = new RotatingLabel("Success!", game.fontScale * 2, game.skin);
-        gratsMessage.setOrigin(Align.center);
-        UpdatingContainer gratsPage = new UpdatingContainer(gratsMessage);
+        UpdatingContainer gratsPage = TutorialUtils.getPage(game.fontScale * 2, game.skin, "Success!");
         gratsPage.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         pages.add(gratsPage);
 
-
-        RotatingLabel optionsLabel = new RotatingLabel("Check out the Options", game.fontScale, game.skin);
-        optionsLabel.setOrigin(Align.center);
-        RotatingLabel optionsLabel2 = new RotatingLabel("menu from the Title Screen", game.fontScale, game.skin);
-        optionsLabel2.setOrigin(Align.center);
-
-        Table optionsTable = new Table();
-        optionsTable.setTouchable(Touchable.disabled);
-        optionsTable.align(Align.left);
-        optionsTable.add(optionsLabel).center();
-        optionsTable.row();
-        optionsTable.add(optionsLabel2).center();
-
-        final UpdatingContainer page1 = new UpdatingContainer(optionsTable);
+        final UpdatingContainer page1 = TutorialUtils.getPage(game.fontScale, game.skin,
+                "Check out the Options",
+                "menu from the Title Screen"
+        );
         page1.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         pages.add(page1);
 
-        RotatingLabel goodLuckLabel = new RotatingLabel("Good Luck, Cadet!", game.fontScale * 2, game.skin);
-        gratsMessage.setOrigin(Align.center);
-        UpdatingContainer goodLuckPage = new UpdatingContainer(goodLuckLabel);
+        UpdatingContainer goodLuckPage = TutorialUtils.getPage(game.fontScale * 2, game.skin,"Good Luck, Cadet!");
         goodLuckPage.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         pages.add(goodLuckPage);
 

@@ -12,6 +12,7 @@ import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.component.DelayedAddComponent;
 import com.bitdecay.helm.component.ShipLaunchComponent;
+import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.screen.LevelPlayer;
@@ -38,38 +39,23 @@ public class LandingInfoPhase extends PagedPhase {
         // get ship
         GameEntity ship = TutorialUtils.getShip(player.allEntities);
 
-        // add components
-        ship.removeComponent(ShipLaunchComponent.class);
-        DelayedAddComponent delays = PlayerStartLevelSystem.addPlayerStartComponents(new DelayedAddComponent());
-        for (DelayedAddComponent.DelayedAdd delay : delays.delays) {
-            ship.addComponent(delay.component);
-        }
+        TutorialUtils.preLaunchShip(ship);
+        ship.removeComponent(VelocityComponent.class);
 
         init(stage);
         makePages();
     }
 
     private void makePages() {
-        RotatingLabel phaseLabel = new RotatingLabel("Phase 2: Landing", game.fontScale * 2, game.skin);
-        phaseLabel.setOrigin(Align.center);
-        UpdatingContainer phasePage = new UpdatingContainer(phaseLabel);
+        UpdatingContainer phasePage = TutorialUtils.getPage(game.fontScale * 2, game.skin, "Phase 2: Landing");
         phasePage.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         pages.add(phasePage);
 
         final Vector2 landingLocation = TutorialUtils.getLandingLocation(player.allEntities);
-        RotatingLabel boostLabel1 = new RotatingLabel("This is the", game.fontScale, game.skin);
-        boostLabel1.setOrigin(Align.center);
-        RotatingLabel boostLabel2 = new RotatingLabel("landing platform", game.fontScale, game.skin);
-        boostLabel2.setOrigin(Align.center);
-
-        Table landingTable1 = new Table();
-        landingTable1.setTouchable(Touchable.disabled);
-        landingTable1.align(Align.left);
-        landingTable1.add(boostLabel1).center();
-        landingTable1.row();
-        landingTable1.add(boostLabel2).center();
-
-        final UpdatingContainer landingLocationPage = new UpdatingContainer(landingTable1);
+        final UpdatingContainer landingLocationPage = TutorialUtils.getPage(game.fontScale, game.skin,
+                "This is the",
+                "landing platform"
+        );
         landingLocationPage.updater = new Runnable() {
             @Override
             public void run() {
@@ -80,19 +66,10 @@ public class LandingInfoPhase extends PagedPhase {
         landingLocationPage.updater.run();
         pages.add(landingLocationPage);
 
-        RotatingLabel missionLabel1 = new RotatingLabel("Your goal is to get", game.fontScale, game.skin);
-        missionLabel1.setOrigin(Align.center);
-        RotatingLabel missionLabel2 = new RotatingLabel("the ship here safely", game.fontScale, game.skin);
-        missionLabel2.setOrigin(Align.center);
-
-        Table missionTable = new Table();
-        missionTable.setTouchable(Touchable.disabled);
-        missionTable.align(Align.left);
-        missionTable.add(missionLabel1).center();
-        missionTable.row();
-        missionTable.add(missionLabel2).center();
-
-        final UpdatingContainer missionPage = new UpdatingContainer(missionTable);
+        final UpdatingContainer missionPage = TutorialUtils.getPage(game.fontScale, game.skin,
+                "Your mission is to get",
+                "the ship here safely"
+        );
         missionPage.updater = new Runnable() {
             @Override
             public void run() {
@@ -103,19 +80,10 @@ public class LandingInfoPhase extends PagedPhase {
         missionPage.updater.run();
         pages.add(missionPage);
 
-        RotatingLabel boostLabel3 = new RotatingLabel("You must land upright and", game.fontScale, game.skin);
-        boostLabel3.setOrigin(Align.center);
-        RotatingLabel boostLabel4 = new RotatingLabel("slowly to avoid crashing", game.fontScale, game.skin);
-        boostLabel4.setOrigin(Align.center);
-
-        Table landingTable2 = new Table();
-        landingTable2.setTouchable(Touchable.disabled);
-        landingTable2.align(Align.left);
-        landingTable2.add(boostLabel3).center();
-        landingTable2.row();
-        landingTable2.add(boostLabel4).center();
-
-        final UpdatingContainer page2 = new UpdatingContainer(landingTable2);
+        final UpdatingContainer page2 = TutorialUtils.getPage(game.fontScale, game.skin,
+                "You must land upright and",
+                "slowly to avoid crashing"
+        );
         page2.updater = new Runnable() {
             @Override
             public void run() {
