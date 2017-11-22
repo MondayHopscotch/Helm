@@ -94,6 +94,22 @@ public class TitleScreen implements Screen {
         stage.addActor(mainTable);
         stage.addActor(extraTable);
         stage.addActor(versionTable);
+
+        if (Helm.feedbackMode) {
+            Table feedbackTable = new Table();
+            feedbackTable.setFillParent(true);
+            feedbackTable.setOrigin(Align.bottom);
+            feedbackTable.align(Align.bottom);
+            RotatingLabel feedbackLabel = new RotatingLabel("Give Feedback", game.fontScale * 1.2f, skin, new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    Helm.urlOpener.open("https://goo.gl/forms/pT6n5bB9rlH30ecu2");
+                }
+            });
+            feedbackTable.add(feedbackLabel).padBottom(game.fontScale * 20).align(Align.bottom).fillX().expandX();
+
+            stage.addActor(feedbackTable);
+        }
     }
 
     private Table buildMainMenu() {
