@@ -89,6 +89,7 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
         if (activePointer == -1) {
             activePointer = pointer;
             System.out.println("POINTER: new active: " + activePointer);
+            return phases.get(activePhase).touchDown(screenX, screenY);
         }
         return false;
     }
@@ -147,7 +148,6 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
     }
 
     private void nextPhase() {
-        stage.clear();
         activePhase++;
         if (activePhase < phases.size) {
             phases.get(activePhase).start(game, levelPlayer, stage);
@@ -182,7 +182,6 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
     @Override
     public void requestRestartLevel() {
         // just restart current phase
-        stage.clear();
         if (activePhase < phases.size) {
             phases.get(activePhase).start(game, levelPlayer, stage);
         }

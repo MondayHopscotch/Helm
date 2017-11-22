@@ -24,6 +24,7 @@ public abstract class PagedPhase implements TutorialPhase {
     private float timePerPage = 0.5f;
 
     protected void init(Stage stage) {
+        stage.clear();
         currentPage = -1;
         this.stage = stage;
         stage.setDebugAll(Helm.debug);
@@ -76,5 +77,10 @@ public abstract class PagedPhase implements TutorialPhase {
         );
         stage.addActor(page);
         return true;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY) {
+        return false;
     }
 }

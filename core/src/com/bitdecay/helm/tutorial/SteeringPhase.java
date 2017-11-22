@@ -39,6 +39,8 @@ public class SteeringPhase implements TutorialPhase {
 
     @Override
     public void start(Helm game, final LevelPlayer player, Stage stage) {
+        stage.clear();
+
         finishedSpinning = false;
 
         this.player = player;
@@ -113,6 +115,11 @@ public class SteeringPhase implements TutorialPhase {
             finishedSpinning = true;
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY) {
         return false;
     }
 }

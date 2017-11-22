@@ -50,7 +50,6 @@ public class FuelPhase extends PagedPhase {
         velocity = ship.getComponent(VelocityComponent.class);
         steering = ship.getComponent(SteeringControlComponent.class);
         fuel = ship.getComponent(FuelComponent.class);
-        fuel.fuelRemaining = fuel.maxFuel / 2;
 
         // take off the velocity and steering and put it back on later
         ship.removeComponent(VelocityComponent.class);
@@ -85,6 +84,12 @@ public class FuelPhase extends PagedPhase {
             public void run() {
                 Vector3 project = player.gameCam.project(new Vector3(playerLocation.x, playerLocation.y, 0));
                 halfFuelPage.setPosition(project.x, project.y - halfFuelPage.getPrefHeight() / 2);
+            }
+        };
+        halfFuelPage.action = new Runnable() {
+            @Override
+            public void run() {
+                fuel.fuelRemaining = fuel.maxFuel / 2;
             }
         };
         pages.add(halfFuelPage);

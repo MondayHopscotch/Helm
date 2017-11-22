@@ -15,4 +15,6 @@ public interface TutorialPhase {
     boolean update(ShapeRenderer shaper, float delta);
 
     boolean touchUp(int screenX, int screenY);
+
+    boolean touchDown(int screenX, int screenY);
 }

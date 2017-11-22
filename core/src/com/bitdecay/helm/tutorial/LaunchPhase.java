@@ -92,6 +92,11 @@ public class LaunchPhase implements TutorialPhase {
 
     @Override
     public boolean touchUp(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY) {
         if (elapsed <= timeBeforeLaunch) {
             // ensure they are on this page for just a bit so they can read
             return true;

@@ -60,6 +60,8 @@ public class FirstBoostPhase implements TutorialPhase {
         ship.removeComponent(GravityAffectedComponent.class);
 
         fuelComponent = ship.getComponent(FuelComponent.class);
+        fuelComponent.fuelRemaining = fuelComponent.maxFuel / 2;
+
         controls = ship.getComponent(BoostControlComponent.class);
         boost = ship.getComponent(BoosterComponent.class);
 
@@ -98,6 +100,11 @@ public class FirstBoostPhase implements TutorialPhase {
             started = true;
             ship.addComponent(new GravityAffectedComponent());
         }
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY) {
         return false;
     }
 }

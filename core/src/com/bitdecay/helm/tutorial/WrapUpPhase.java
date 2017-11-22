@@ -26,7 +26,8 @@ public class WrapUpPhase extends PagedPhase {
 
         final UpdatingContainer page1 = TutorialUtils.getPage(game.fontScale, game.skin,
                 "Check out the Options",
-                "menu from the Title Screen"
+                "menu from the Title Screen",
+                "for tuning settings"
         );
         page1.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         pages.add(page1);
