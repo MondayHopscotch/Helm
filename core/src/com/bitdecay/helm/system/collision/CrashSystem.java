@@ -1,5 +1,6 @@
 package com.bitdecay.helm.system.collision;
 
+import com.bitdecay.helm.component.TimerComponent;
 import com.bitdecay.helm.sound.SFXLibrary;
 import com.bitdecay.helm.collision.CollisionKind;
 
@@ -18,8 +19,10 @@ public class CrashSystem extends com.bitdecay.helm.system.AbstractIteratingGameS
         pilot.doSound(com.bitdecay.helm.sound.SoundMode.PLAY, SFXLibrary.SHIP_CRASH);
         pilot.doSound(com.bitdecay.helm.sound.SoundMode.PLAY, SFXLibrary.SHIP_EXPLODE);
 
-        com.bitdecay.helm.component.TimerComponent timer = entity.getComponent(com.bitdecay.helm.component.TimerComponent.class);
-        levelPlayer.rollStat(com.bitdecay.helm.unlock.StatName.FLIGHT_TIME, timer.secondsElapsed);
+        if (entity.hasComponent(TimerComponent.class)) {
+            TimerComponent timer = entity.getComponent(TimerComponent.class);
+            levelPlayer.rollStat(com.bitdecay.helm.unlock.StatName.FLIGHT_TIME, timer.secondsElapsed);
+        }
 
         com.bitdecay.helm.component.TransformComponent transformComponent = entity.getComponent(com.bitdecay.helm.component.TransformComponent.class);
 
@@ -51,8 +54,7 @@ public class CrashSystem extends com.bitdecay.helm.system.AbstractIteratingGameS
     public boolean canActOn(com.bitdecay.helm.GameEntity entity) {
         return entity.hasComponents(
                 com.bitdecay.helm.component.CrashComponent.class,
-                com.bitdecay.helm.component.TransformComponent.class,
-                com.bitdecay.helm.component.TimerComponent.class
+                com.bitdecay.helm.component.TransformComponent.class
         );
     }
 }

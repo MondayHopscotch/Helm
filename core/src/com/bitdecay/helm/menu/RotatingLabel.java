@@ -17,11 +17,17 @@ public class RotatingLabel extends Table {
     private float spinAccel = .005f;
     private final Label innerLabel;
 
+    public RotatingLabel(String labelText, float fontSize, Skin skin) {
+        this(labelText, fontSize, skin, null);
+    }
+
     public RotatingLabel(String labelText, float fontSize, Skin skin, ClickListener listener) {
         super();
         innerLabel = new Label(labelText, skin);
         innerLabel.setFontScale(fontSize);
-        innerLabel.addListener(listener);
+        if (listener != null) {
+            addListener(listener);
+        }
 
         setTransform(true);
         setFillParent(false);

@@ -1,0 +1,1 @@
+{levelLines:[{startPoint:{x:575,y:-100},endPoint:{x:-575,y:-100}},{startPoint:{x:-575,y:-100},endPoint:{x:-575,y:525}},{startPoint:{x:575,y:525},endPoint:{x:575,y:-100}},{startPoint:{x:-575,y:525},endPoint:{x:-575,y:650}},{startPoint:{x:-575,y:650},endPoint:{x:575,y:650}},{startPoint:{x:575,y:650},endPoint:{x:575,y:525}}],finishPlatform:{x:1250,y:1325,width:450,height:50}}

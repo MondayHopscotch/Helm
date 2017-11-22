@@ -1,6 +1,9 @@
 package com.bitdecay.helm.system.movement;
 
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.helm.component.GravityAffectedComponent;
+import com.bitdecay.helm.component.TransformComponent;
+import com.bitdecay.helm.component.VelocityComponent;
 
 import java.util.Iterator;
 
@@ -79,9 +82,9 @@ public class GravityApplicationSystem extends com.bitdecay.helm.system.AbstractI
     @Override
     public boolean canActOn(com.bitdecay.helm.GameEntity entity) {
         return entity.hasComponents(
-                com.bitdecay.helm.component.GravityAffectedComponent.class,
-                com.bitdecay.helm.component.TransformComponent.class,
-                com.bitdecay.helm.component.VelocityComponent.class
+                GravityAffectedComponent.class,
+                TransformComponent.class,
+                VelocityComponent.class
         );
     }
 }

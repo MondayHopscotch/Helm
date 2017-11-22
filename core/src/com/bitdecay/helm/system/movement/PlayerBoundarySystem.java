@@ -3,6 +3,7 @@ package com.bitdecay.helm.system.movement;
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.helm.collision.CollisionKind;
 import com.bitdecay.helm.component.CrashComponent;
+import com.bitdecay.helm.component.TransformComponent;
 import com.bitdecay.helm.component.VelocityComponent;
 import com.bitdecay.helm.system.AbstractIteratingGameSystem;
 
@@ -28,7 +29,7 @@ public class PlayerBoundarySystem extends AbstractIteratingGameSystem {
     @Override
     public void actOnSingle(com.bitdecay.helm.GameEntity entity, float delta) {
         workingVector.set(center);
-        com.bitdecay.helm.component.TransformComponent transform = entity.getComponent(com.bitdecay.helm.component.TransformComponent.class);
+        TransformComponent transform = entity.getComponent(TransformComponent.class);
         if (workingVector.sub(transform.position).len() > radius) {
             entity.addComponent(new CrashComponent(CollisionKind.LEVEL_BOUNDARY));
         }
@@ -36,7 +37,7 @@ public class PlayerBoundarySystem extends AbstractIteratingGameSystem {
 
     @Override
     public boolean canActOn(com.bitdecay.helm.GameEntity entity) {
-        return entity.hasComponent(com.bitdecay.helm.component.TransformComponent.class) &&
+        return entity.hasComponent(TransformComponent.class) &&
                 entity.hasComponent(VelocityComponent.class);
     }
 }

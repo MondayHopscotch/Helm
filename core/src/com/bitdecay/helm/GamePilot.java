@@ -28,7 +28,5 @@ public interface GamePilot {
 
     void setTime(float secondsElapsed);
 
-    boolean isDebug();
-
     void saveLastReplay(String name);
 }

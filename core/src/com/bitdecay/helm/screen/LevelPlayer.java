@@ -80,7 +80,7 @@ public class LevelPlayer {
     boolean boostToggled = lastRecordedBoost;
 
     private static final int BASE_CAM_BUFFER = 500;
-    FollowOrthoCamera gameCam;
+    public final FollowOrthoCamera gameCam;
 
     private GamePilot pilot;
     private boolean isReplay;
@@ -98,7 +98,7 @@ public class LevelPlayer {
     Array<GameSystem> screenRenderSystems = new Array<>(1);
 
 
-    Array<GameEntity> allEntities = new Array<>(1000);
+    public Array<GameEntity> allEntities = new Array<>(1000);
 
     Array<GameEntity> pendingAdds = new Array<>(100);
     Array<GameEntity> pendingRemoves = new Array<>(100);
@@ -107,6 +107,7 @@ public class LevelPlayer {
     private PlayerBoundarySystem playerBoundarySystem;
 
     public Vector2 universalGravity = new Vector2();
+    public Vector2 originalGravity = new Vector2();
 
 
     public LevelPlayer(GamePilot pilot, boolean isReplay) {
@@ -220,10 +221,19 @@ public class LevelPlayer {
         gameRenderSystems.add(renderWormholeSystem);
         gameRenderSystems.add(landingHintSystem);
 
-        if (pilot.isDebug()) {
+        if (Helm.debug) {
             DebugFocusPointSystem debugFocusPointSystem = new DebugFocusPointSystem(pilot, shapeRenderer);
             gameRenderSystems.add(debugFocusPointSystem);
         }
+    }
+
+    public <T extends GameSystem> T getSystem(Class<T> clazz) {
+        for (GameSystem gameSystem : gameSystems) {
+            if (clazz.isAssignableFrom(gameSystem.getClass())) {
+                return clazz.cast(gameSystem);
+            }
+        }
+        return null;
     }
 
     private void addGameplaySystem(GameSystem system) {
@@ -299,6 +309,7 @@ public class LevelPlayer {
             allEntities.add(focusPoint);
         }
 
+        originalGravity.set(levelDef.gravity);
         universalGravity.set(levelDef.gravity);
 
         resetAllButInputSystems();

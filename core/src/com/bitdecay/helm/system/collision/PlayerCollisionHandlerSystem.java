@@ -1,8 +1,13 @@
 package com.bitdecay.helm.system.collision;
 
+import com.bitdecay.helm.component.BodyDefComponent;
 import com.bitdecay.helm.component.CrashComponent;
+import com.bitdecay.helm.component.RateLandingComponent;
 import com.bitdecay.helm.component.RenderColorComponent;
+import com.bitdecay.helm.component.TransformComponent;
 import com.bitdecay.helm.component.VelocityComponent;
+import com.bitdecay.helm.component.collide.CollidedWithComponent;
+import com.bitdecay.helm.component.collide.PlayerCollisionComponent;
 import com.bitdecay.helm.system.AbstractIteratingGameSystem;
 
 /**
@@ -29,26 +34,26 @@ public class PlayerCollisionHandlerSystem extends AbstractIteratingGameSystem {
         switch(collided.with) {
 
             case LANDING_PLATFORM:
-                entity.addComponent(new com.bitdecay.helm.component.RateLandingComponent(collided.geom, playerGeom, collided.delivererGeometry));
-                entity.removeComponent(com.bitdecay.helm.component.collide.CollidedWithComponent.class);
+                entity.addComponent(new RateLandingComponent(collided.geom, playerGeom, collided.delivererGeometry));
+                entity.removeComponent(CollidedWithComponent.class);
                 break;
             case WORMHOLE:
                 // other systems handle this case
                 break;
             default:
                 entity.addComponent(new CrashComponent(collided.with));
-                entity.removeComponent(com.bitdecay.helm.component.collide.CollidedWithComponent.class);
+                entity.removeComponent(CollidedWithComponent.class);
         }
     }
 
     @Override
     public boolean canActOn(com.bitdecay.helm.GameEntity entity) {
         return entity.hasComponents(
-                com.bitdecay.helm.component.collide.PlayerCollisionComponent.class,
-                com.bitdecay.helm.component.BodyDefComponent.class,
-                com.bitdecay.helm.component.collide.CollidedWithComponent.class,
+                PlayerCollisionComponent.class,
+                BodyDefComponent.class,
+                CollidedWithComponent.class,
                 VelocityComponent.class, // this velocity piece probably won't stay (?)
-                com.bitdecay.helm.component.TransformComponent.class,
+                TransformComponent.class,
                 RenderColorComponent.class
         );
     }
