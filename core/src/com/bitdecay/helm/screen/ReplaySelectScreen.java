@@ -2,14 +2,19 @@ package com.bitdecay.helm.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Sort;
 import com.bitdecay.helm.input.InputReplay;
+import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.persist.JsonUtils;
 
 import java.util.Comparator;
@@ -33,6 +38,52 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
         FileHandle replayDir = Gdx.files.local(com.bitdecay.helm.persist.ReplayUtils.REPLAY_DIR);
         FileHandle[] fileList = replayDir.list();
 
+        if (fileList.length > 0) {
+            buildReplayRows(table, fileList);
+        } else {
+            buildInfoPage(table);
+        }
+
+    }
+
+    private void buildInfoPage(Table table) {
+        Label noReplayLabel = new Label("No replays found", skin);
+        noReplayLabel.setAlignment(Align.center);
+        noReplayLabel.setFontScale(game.fontScale * 1.5f);
+
+        TextureRegion saveReplayTexture = game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("save_icon");
+        TextureRegionDrawable imageUp = new TextureRegionDrawable(saveReplayTexture);
+
+        BitImageButton saveReplayButton = new BitImageButton(imageUp, imageUp, game.fontScale * 0.4f, skin);
+        saveReplayButton.align(Align.bottomLeft);
+        saveReplayButton.setOrigin(Align.bottomLeft);
+        saveReplayButton.setTouchable(Touchable.disabled);
+
+        Table iconHintTable = new Table();
+        Label clickLabel = new Label("Click the", skin);
+        clickLabel.setAlignment(Align.center);
+        clickLabel.setFontScale(game.fontScale);
+
+        Label iconLabel = new Label("button after a successful landing", skin);
+        iconLabel.setAlignment(Align.center);
+        iconLabel.setFontScale(game.fontScale);
+
+        iconHintTable.add(clickLabel);
+        iconHintTable.add(saveReplayButton).padLeft(game.fontScale * 5).padRight(game.fontScale * 5);
+        iconHintTable.add(iconLabel);
+
+        Label saveLabel = new Label("to save a replay", skin);
+        saveLabel.setAlignment(Align.center);
+        saveLabel.setFontScale(game.fontScale);
+
+        table.add(noReplayLabel).padBottom(game.fontScale * 30);
+        table.row();
+        table.add(iconHintTable);
+        table.row();
+        table.add(saveLabel);
+    }
+
+    private void buildReplayRows(Table table, FileHandle[] fileList) {
         Sort sorter = Sort.instance();
         sorter.sort(fileList, new Comparator<FileHandle>() {
             @Override
