@@ -105,7 +105,7 @@ public class TitleScreen implements Screen {
                 public void clicked(InputEvent event, float x, float y) {
                     Helm.urlOpener.open("https://goo.gl/forms/pT6n5bB9rlH30ecu2");
                 }
-            });
+            }, false);
             feedbackTable.add(feedbackLabel).padBottom(game.fontScale * 20).align(Align.bottom).fillX().expandX();
 
             stage.addActor(feedbackTable);

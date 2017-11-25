@@ -37,6 +37,8 @@ public class SteeringPhase implements TutorialPhase {
     private BoostControlComponent boostControl;
     private boolean finishedSpinning;
 
+    private float angleForFinish = MathUtils.PI / 2;
+
     @Override
     public void start(Helm game, final LevelPlayer player, Stage stage) {
         stage.clear();
@@ -111,7 +113,7 @@ public class SteeringPhase implements TutorialPhase {
 
     @Override
     public boolean touchUp(int screenX, int screenY) {
-        if (totalSpin > MathUtils.PI2) {
+        if (totalSpin > angleForFinish) {
             finishedSpinning = true;
         }
 
