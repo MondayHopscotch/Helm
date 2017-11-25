@@ -271,7 +271,6 @@ public class LevelPlayer {
 
         ShipEntity ship = new ShipEntity(replay.levelDef.startPosition, replay.levelDef.startingFuel);
         ship.addComponent(new ReplayActiveComponent(replay));
-        printMatchingGameSystems(ship);
         allEntities.add(ship);
     }
 

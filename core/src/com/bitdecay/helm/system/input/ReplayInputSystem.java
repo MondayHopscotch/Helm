@@ -6,6 +6,7 @@ import com.bitdecay.helm.component.ReplayActiveComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
 import com.bitdecay.helm.input.InputRecord;
+import com.bitdecay.helm.math.Geom;
 import com.bitdecay.helm.system.AbstractIteratingGameSystem;
 
 /**
@@ -24,7 +25,12 @@ public class ReplayInputSystem extends AbstractIteratingGameSystem {
     public void actOnSingle(com.bitdecay.helm.GameEntity entity, float delta) {
         ReplayActiveComponent replay = entity.getComponent(ReplayActiveComponent.class);
         if (replay.nextInput >= replay.input.inputRecords.size) {
-            // we are done looking at inputs
+            // we are done looking at inputs, reset the controls.
+            BoostControlComponent boost = entity.getComponent(BoostControlComponent.class);
+            boost.pressed = false;
+
+            SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
+            steering.angle = Geom.ROTATION_UP;
             return;
         }
 

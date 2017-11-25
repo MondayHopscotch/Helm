@@ -311,10 +311,10 @@ public class ScoreMenu {
         buttonTable.clear();
 
         buttonTable.add(levelSelectButton);
+        buttonTable.add(playAgainButton).padLeft(pilot.getHelm().fontScale * 15);
 
         if (!isReplay) {
             // if we aren't watching a replay, let them save it
-            buttonTable.add(playAgainButton).padLeft(pilot.getHelm().fontScale * 15);
             buttonTable.add(saveReplayButton).padLeft(pilot.getHelm().fontScale * 15);
             buttonTable.add(nextLevelButton).padLeft(pilot.getHelm().fontScale * 15);
         }
