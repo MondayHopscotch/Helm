@@ -1,9 +1,11 @@
 package com.bitdecay.helm.menu;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 
 /**
  * Created by Monday on 10/22/2017.
@@ -22,8 +24,14 @@ public class RotatingLabel extends Table {
     }
 
     public RotatingLabel(String labelText, float fontSize, Skin skin, ClickListener listener) {
+        this(labelText, fontSize, skin, listener, true);
+    }
+
+    public RotatingLabel(String labelText, float fontSize, Skin skin, ClickListener listener, boolean fill) {
         super();
         innerLabel = new Label(labelText, skin);
+        innerLabel.setOrigin(Align.center);
+        innerLabel.setAlignment(Align.center);
         innerLabel.setFontScale(fontSize);
         if (listener != null) {
             addListener(listener);
@@ -31,7 +39,10 @@ public class RotatingLabel extends Table {
 
         setTransform(true);
         setFillParent(false);
-        add(innerLabel);
+        Cell<Label> labelCell = add(innerLabel);
+        if (fill) {
+            labelCell.expandX().fillX();
+        }
     }
 
     @Override
