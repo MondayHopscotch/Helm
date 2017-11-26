@@ -1,10 +1,14 @@
 package com.bitdecay.helm.system.collision;
 
+import com.badlogic.gdx.utils.TimeUtils;
+import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.collision.Collider;
 import com.bitdecay.helm.collision.CollisionDirection;
+import com.bitdecay.helm.collision.NoOpCollider;
 import com.bitdecay.helm.collision.SolidToCircleCollider;
 import com.bitdecay.helm.collision.SolidToLineCollider;
 import com.bitdecay.helm.collision.SolidToSolidCollider;
+import com.bitdecay.helm.component.collide.CollidedWithComponent;
 import com.bitdecay.helm.component.collide.CollisionGeometryComponent;
 import com.bitdecay.helm.component.collide.CollisionKindComponent;
 import com.bitdecay.helm.system.AbstractIteratingGameSystem;
@@ -32,8 +36,11 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
         for (Map.Entry<Integer, List<com.bitdecay.helm.GameEntity>> collisionKind : allCollisionEntities.entrySet()) {
             collisionKind.getValue().clear();
         }
-
     }
+
+    private Collider lastCollider;
+    private CollisionGeometryComponent geom1;
+    private CollisionGeometryComponent geom2;
 
     @Override
     public void after() {
@@ -42,11 +49,11 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
             return;
         }
 
-        for (com.bitdecay.helm.GameEntity entity1 : allCollisionEntities.get(CollisionDirection.RECEIVES)) {
-            for (com.bitdecay.helm.GameEntity entity2 : allCollisionEntities.get(CollisionDirection.DELIVERS)) {
+        for (GameEntity entity1 : allCollisionEntities.get(CollisionDirection.RECEIVES)) {
+            for (GameEntity entity2 : allCollisionEntities.get(CollisionDirection.DELIVERS)) {
                 if (entity1 != entity2) {
-                    CollisionGeometryComponent geom1 = entity1.getComponent(CollisionGeometryComponent.class);
-                    CollisionGeometryComponent geom2 = entity2.getComponent(CollisionGeometryComponent.class);
+                    geom1 = entity1.getComponent(CollisionGeometryComponent.class);
+                    geom2 = entity2.getComponent(CollisionGeometryComponent.class);
 
                     if ((geom1.direction & CollisionDirection.PLAYER) == 0 && (geom2.direction & CollisionDirection.PLAYER) == 0) {
                         // if neither is a player-collision, we can just drop it since the player will be involved in all
@@ -54,41 +61,58 @@ public class CollisionSystem extends AbstractIteratingGameSystem {
                         continue;
                     }
 
-                    CollisionKindComponent kind2 = entity2.getComponent(CollisionKindComponent.class);
-
-                    Collider collider = getCollider(geom1, geom2);
-
-                    if (collider.collisionFound()) {
+                    lastCollider = getCollider(geom1, geom2);
+                    if (lastCollider.collisionFound()) {
                         geom1.colliding = true;
                         geom2.colliding = true;
-                        entity1.addComponent(new com.bitdecay.helm.component.collide.CollidedWithComponent(entity2, geom2, kind2.kind, collider.getGeom2WorkingSet()));
+
+                        entity1.addComponent(new CollidedWithComponent(entity2, geom2, entity2.getComponent(CollisionKindComponent.class).kind, lastCollider.getGeom2WorkingSet()));
                     }
                 }
             }
         }
     }
 
+    private SolidToCircleCollider solidVCircle = new SolidToCircleCollider();
+    private Collider solidVLine = new SolidToLineCollider();
+    private Collider solidVSolid = new SolidToSolidCollider();
+    private Collider noOpCollider = new NoOpCollider();
+
+    int length1;
+    int length2;
+
     private Collider getCollider(CollisionGeometryComponent geom1, CollisionGeometryComponent geom2) {
-        int length1 = geom1.originalGeom.length;
-        int length2 = geom2.originalGeom.length;
+        length1 = geom1.originalGeom.length;
+        length2 = geom2.originalGeom.length;
         if (length1 > 4) {
             if (length2 == 1) {
                 // poly vs circle
-                return new SolidToCircleCollider(geom1, geom2, false);
+                solidVCircle.setGeom1(geom1);
+                solidVCircle.setGeom2(geom2);
+                solidVCircle.setFlipped(false);
+                return solidVCircle;
             } else if (length2 == 4) {
-                return new SolidToLineCollider(geom1, geom2);
+
+                solidVLine.setGeom1(geom1);
+                solidVLine.setGeom2(geom2);
+                return solidVLine;
             } else {
-                return new SolidToSolidCollider(geom1, geom2);
+                solidVSolid.setGeom1(geom1);
+                solidVSolid.setGeom2(geom2);
+                return solidVSolid;
             }
         }
 
         if (length1 == 1) {
             if (length2 > 4) {
-                return new SolidToCircleCollider(geom2, geom1, true);
+                solidVCircle.setGeom1(geom2);
+                solidVCircle.setGeom2(geom1);
+                solidVCircle.setFlipped(true);
+                return solidVCircle;
             }
         }
         // I think we can get away with ignoring all other collisions.
-        return new com.bitdecay.helm.collision.NoOpCollider(geom1, geom2);
+        return noOpCollider;
     }
 
     @Override
