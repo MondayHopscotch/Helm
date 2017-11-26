@@ -2,18 +2,24 @@ package com.bitdecay.helm.unlock.palette;
 
 import com.bitdecay.helm.scoring.ScoreStamps;
 import com.bitdecay.helm.system.render.GamePalette;
+import com.bitdecay.helm.unlock.palette.types.CharcoalPalette;
+import com.bitdecay.helm.unlock.palette.types.GuacamolePalette;
+import com.bitdecay.helm.unlock.palette.types.MutedPalette;
+import com.bitdecay.helm.unlock.palette.types.StandardPalette;
+import com.bitdecay.helm.unlock.palette.types.VideoKidPalette;
+import com.bitdecay.helm.unlock.palette.types.WhiteoutPalette;
 
 /**
  * Created by Monday on 6/5/2017.
  */
 
 public enum PaletteList {
-    STANDARD("Helm", new com.bitdecay.helm.unlock.palette.types.StandardPalette(), 0),
-    GUACAMOLE("Guacamole", new com.bitdecay.helm.unlock.palette.types.GuacamolePalette(), 100000),
-    WHITEOUT("Whiteout", new com.bitdecay.helm.unlock.palette.types.WhiteoutPalette(), 200000),
-    VIDEO_KID("Video Kid", new com.bitdecay.helm.unlock.palette.types.VideoKidPalette(), 300000),
-    CHARCOAL("Charcoal", new com.bitdecay.helm.unlock.palette.types.CharcoalPalette(), 400000),
-    MUTED("Muted", new com.bitdecay.helm.unlock.palette.types.MutedPalette(), 500000);
+    STANDARD("Helm", new StandardPalette(), 0),
+    GUACAMOLE("Guacamole", new GuacamolePalette(), 100000),
+    WHITEOUT("Whiteout", new WhiteoutPalette(), 200000),
+    VIDEO_KID("Video Kid", new VideoKidPalette(), 300000),
+    CHARCOAL("Charcoal", new CharcoalPalette(), 400000),
+    MUTED("Muted", new MutedPalette(), 500000);
 
     public final String name;
     public final int pointsForUnlock;

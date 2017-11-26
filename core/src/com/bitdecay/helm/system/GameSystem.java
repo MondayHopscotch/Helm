@@ -9,6 +9,7 @@ public interface GameSystem {
     void before();
     void after();
 
+    boolean isDisabled();
     void act(Array<com.bitdecay.helm.GameEntity> entities, float delta);
     boolean canActOn(com.bitdecay.helm.GameEntity entity);
 

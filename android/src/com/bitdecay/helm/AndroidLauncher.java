@@ -18,7 +18,7 @@ public class AndroidLauncher extends AndroidApplication implements URLOpener {
 		InputSystemFactory.setInputSystems(TouchScreenBoosterInputSystem.class, TouchScreenSteeringInputSystem.class);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useWakelock = true;
-
+		Helm.debug = true;
 		Helm.urlOpener = this;
 
 		initialize(new Helm(), config);

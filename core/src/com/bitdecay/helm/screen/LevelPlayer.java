@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.Helm;
@@ -361,9 +362,15 @@ public class LevelPlayer {
 
     protected void tick(float delta) {
         handleTickCount();
-
         for (GameSystem system : gameSystems) {
-            system.act(allEntities, delta);
+            if (!system.isDisabled()) {
+                long start = TimeUtils.millis();
+                system.act(allEntities, delta);
+                long time = TimeUtils.millis() - start;
+                if (time > 10) {
+                    System.out.println(system.getClass().getSimpleName() + " took " + time + "ms to run");
+                }
+            }
         }
         scaleCamBuffer();
         gameCam.update(delta);
@@ -398,16 +405,10 @@ public class LevelPlayer {
             InputRecord newRecord = new InputRecord(tick);
             if (recordingAngle != Float.NEGATIVE_INFINITY) {
                 newRecord.angle = recordingAngle;
-                if (Helm.debug) {
-                    System.out.println("TICK " + tick + " New angle '" + recordingAngle + "'");
-                }
                 recordingAngle = Float.NEGATIVE_INFINITY;
             }
             if (boostToggled) {
                 newRecord.boostToggled = true;
-                if (Helm.debug) {
-                    System.out.println("TICK " + tick + " Boost Toggled");
-                }
                 boostToggled = false;
             }
             recordedInput.inputRecords.add(newRecord);
