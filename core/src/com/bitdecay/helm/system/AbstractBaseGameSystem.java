@@ -33,4 +33,9 @@ public abstract class AbstractBaseGameSystem implements GameSystem {
     public void reset() {
         // override to implement
     }
+
+    @Override
+    public void dispose() {
+        // override to implement
+    }
 }
