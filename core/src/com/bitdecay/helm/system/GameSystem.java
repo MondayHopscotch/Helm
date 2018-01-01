@@ -15,4 +15,6 @@ public interface GameSystem {
     void reset();
 
     void setLevelPlayer(com.bitdecay.helm.screen.LevelPlayer levelPlayer);
+
+    void dispose();
 }
