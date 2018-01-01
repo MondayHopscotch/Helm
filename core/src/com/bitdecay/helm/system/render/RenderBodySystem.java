@@ -1,7 +1,10 @@
 package com.bitdecay.helm.system.render;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.bitdecay.helm.component.BodyDefComponent;
 import com.bitdecay.helm.component.RenderColorComponent;
+import com.bitdecay.helm.component.TransformComponent;
+import com.bitdecay.helm.math.Geom;
 import com.bitdecay.helm.system.AbstractIteratingGameSystem;
 
 /**
@@ -18,12 +21,12 @@ public class RenderBodySystem extends AbstractIteratingGameSystem {
 
     @Override
     public void actOnSingle(com.bitdecay.helm.GameEntity entity, float delta) {
-        com.bitdecay.helm.component.BodyDefComponent body = entity.getComponent(com.bitdecay.helm.component.BodyDefComponent.class);
-        com.bitdecay.helm.component.TransformComponent transform = entity.getComponent(com.bitdecay.helm.component.TransformComponent.class);
+        BodyDefComponent body = entity.getComponent(BodyDefComponent.class);
+        TransformComponent transform = entity.getComponent(TransformComponent.class);
 
         RenderColorComponent color = entity.getComponent(RenderColorComponent.class);
 
-        float[] transformed = com.bitdecay.helm.math.Geom.transformPoints(body.bodyPoints, transform);
+        float[] transformed = Geom.transformPoints(body.bodyPoints, transform);
 
         renderer.setColor(pilot.getHelm().palette.get(color.color));
         if (transformed.length > com.bitdecay.helm.math.Geom.DATA_POINTS_FOR_LINE) {

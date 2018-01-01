@@ -343,5 +343,6 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void dispose() {
+        levelPlayer.dispose();
     }
 }

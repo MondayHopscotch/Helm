@@ -42,6 +42,7 @@ import com.bitdecay.helm.system.movement.MovementSystem;
 import com.bitdecay.helm.system.movement.PlayerBoundarySystem;
 import com.bitdecay.helm.system.movement.SteeringSystem;
 import com.bitdecay.helm.system.render.DebugFocusPointSystem;
+import com.bitdecay.helm.system.render.IndicateStartReplaySystem;
 import com.bitdecay.helm.system.render.LandingHintSystem;
 import com.bitdecay.helm.system.render.RenderBodySystem;
 import com.bitdecay.helm.system.render.RenderExplosionSystem;
@@ -179,11 +180,7 @@ public class LevelPlayer {
 
         TimerSystem timerSystem = new TimerSystem(pilot);
 
-        ReplayInputSystem replayInputSystem = new ReplayInputSystem(pilot);
-
         addGameplaySystem(cameraSystem);
-
-        addGameplaySystem(replayInputSystem);
         addGameplaySystem(boostSystem);
         addGameplaySystem(steeringSystem);
 
@@ -221,6 +218,15 @@ public class LevelPlayer {
         gameRenderSystems.add(renderGravityWellSystem);
         gameRenderSystems.add(renderWormholeSystem);
         gameRenderSystems.add(landingHintSystem);
+
+
+        if (isReplay) {
+            ReplayInputSystem replayInputSystem = new ReplayInputSystem(pilot);
+            addGameplaySystem(replayInputSystem);
+
+            IndicateStartReplaySystem startReplaySystem = new IndicateStartReplaySystem(pilot);
+            gameRenderSystems.add(startReplaySystem);
+        }
 
         if (Helm.debug) {
             DebugFocusPointSystem debugFocusPointSystem = new DebugFocusPointSystem(pilot, shapeRenderer);
@@ -475,5 +481,16 @@ public class LevelPlayer {
         if (!isReplay) {
             Helm.stats.roll(statName, amount);
         }
+    }
+
+    public void dispose() {
+        for (GameSystem gameSystem : gameSystems) {
+            gameSystem.dispose();
+        }
+
+        for (GameSystem gameRenderSystem : gameRenderSystems) {
+            gameRenderSystem.dispose();
+        }
+
     }
 }
