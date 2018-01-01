@@ -42,4 +42,9 @@ public abstract class AbstractBaseGameSystem implements GameSystem {
         // override to implement
         return disabled;
     }
+
+    @Override
+    public void dispose() {
+        // override to implement
+    }
 }
