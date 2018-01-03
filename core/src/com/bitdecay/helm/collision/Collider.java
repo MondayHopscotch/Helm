@@ -15,6 +15,10 @@ public abstract class Collider {
     protected float[] geom1WorkingSet;
     protected float[] geom2WorkingSet;
 
+    protected Collider() {
+
+    }
+
     protected Collider(CollisionGeometryComponent geom1, CollisionGeometryComponent geom2) {
         this.geom1 = geom1;
         this.geom2 = geom2;
@@ -24,6 +28,16 @@ public abstract class Collider {
     }
 
     public abstract boolean collisionFound();
+
+    public void setGeom1(CollisionGeometryComponent geom1) {
+        this.geom1 = geom1;
+        geom1WorkingSet = getWorkingGeom(geom1);
+    }
+
+    public void setGeom2(CollisionGeometryComponent geom2) {
+        this.geom2 = geom2;
+        geom2WorkingSet = getWorkingGeom(geom2);
+    }
 
     public float[] getGeom1WorkingSet() {
         return geom1WorkingSet;

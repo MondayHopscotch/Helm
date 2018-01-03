@@ -42,7 +42,6 @@ public class ReplayInputSystem extends AbstractIteratingGameSystem {
             if (inputRecord.angle != Float.NEGATIVE_INFINITY) {
                 SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
                 steering.angle = inputRecord.angle;
-                System.out.println("REPLAY: TICK " + tick + " Setting angle: " + inputRecord.angle);
 
                 if (entity.hasComponent(HasSteeredComponent.class)) {
                     hasSteered = entity.getComponent(HasSteeredComponent.class);
@@ -61,7 +60,6 @@ public class ReplayInputSystem extends AbstractIteratingGameSystem {
                 }
                 boost.pressed = !boost.pressed;
             }
-            System.out.println("REPLAY: TICK " + tick + " Setting boost: " + boost.pressed);
 
             replay.nextInput++;
         }

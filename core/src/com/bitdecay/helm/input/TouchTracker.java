@@ -28,8 +28,6 @@ public class TouchTracker {
     }
 
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-//        System.out.println("Touch Move: ID: " + pointer + " X: " + screenX + " Y: " + screenY);
-
         Array.ArrayIterator<ActiveTouch> iter = new Array.ArrayIterator(activeTouches);
         ActiveTouch touch;
         while (iter.hasNext()) {

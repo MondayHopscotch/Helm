@@ -2,6 +2,7 @@ package com.bitdecay.helm.collision;
 
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.helm.component.collide.CollisionGeometryComponent;
 
 /**
  * Created by Monday on 2/18/2017.
@@ -11,9 +12,13 @@ public class SolidToCircleCollider extends Collider {
 
     private boolean flippedInputs;
 
-    public SolidToCircleCollider(com.bitdecay.helm.component.collide.CollisionGeometryComponent geom1, com.bitdecay.helm.component.collide.CollisionGeometryComponent geom2, boolean flippedInputs) {
+    public SolidToCircleCollider(CollisionGeometryComponent geom1, CollisionGeometryComponent geom2, boolean flippedInputs) {
         super(geom1, geom2);
         this.flippedInputs = flippedInputs;
+    }
+
+    public SolidToCircleCollider() {
+        super();
     }
 
     @Override
@@ -52,5 +57,9 @@ public class SolidToCircleCollider extends Collider {
         } else {
             return super.getGeom2WorkingSet();
         }
+    }
+
+    public void setFlipped(boolean flipped) {
+        this.flippedInputs = flipped;
     }
 }

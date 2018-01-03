@@ -1,5 +1,6 @@
 package com.bitdecay.helm.system;
 
+import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.screen.LevelPlayer;
 
 /**
@@ -7,8 +8,10 @@ import com.bitdecay.helm.screen.LevelPlayer;
  */
 public abstract class AbstractBaseGameSystem implements GameSystem {
 
-    public com.bitdecay.helm.GamePilot pilot;
+    public GamePilot pilot;
     public LevelPlayer levelPlayer;
+
+    public boolean disabled = false;
 
     public AbstractBaseGameSystem(com.bitdecay.helm.GamePilot pilot) {
         this.pilot = pilot;
@@ -32,6 +35,12 @@ public abstract class AbstractBaseGameSystem implements GameSystem {
     @Override
     public void reset() {
         // override to implement
+    }
+
+    @Override
+    public boolean isDisabled() {
+        // override to implement
+        return disabled;
     }
 
     @Override

@@ -12,6 +12,10 @@ public class SolidToSolidCollider extends Collider {
         super(geom1, geom2);
     }
 
+    public SolidToSolidCollider() {
+        super();
+    }
+
     @Override
     public boolean collisionFound() {
         boolean collisionFound;

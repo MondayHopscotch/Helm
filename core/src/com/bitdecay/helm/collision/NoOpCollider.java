@@ -11,6 +11,10 @@ public class NoOpCollider extends Collider {
         super(geom1, geom2);
     }
 
+    public NoOpCollider() {
+
+    }
+
     @Override
     public boolean collisionFound() {
         return false;

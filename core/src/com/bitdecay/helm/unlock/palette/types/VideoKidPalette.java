@@ -2,6 +2,7 @@ package com.bitdecay.helm.unlock.palette.types;
 
 import com.badlogic.gdx.graphics.Color;
 import com.bitdecay.helm.system.render.GamePalette;
+import com.bitdecay.helm.unlock.palette.GameColors;
 
 /**
  * Created by Monday on 6/13/2017.
@@ -15,15 +16,15 @@ public class VideoKidPalette extends GamePalette {
 
 
     public VideoKidPalette() {
-        colors.put(com.bitdecay.helm.unlock.palette.GameColors.LEVEL_SEGMENT, green3);
-        colors.put(com.bitdecay.helm.unlock.palette.GameColors.EXPLOSION, green1);
-        colors.put(com.bitdecay.helm.unlock.palette.GameColors.SHIP_BODY, green3);
-        colors.put(com.bitdecay.helm.unlock.palette.GameColors.LAUNCH_SMOKE, green1);
-        colors.put(com.bitdecay.helm.unlock.palette.GameColors.FUEL_METER, green2);
-        colors.put(com.bitdecay.helm.unlock.palette.GameColors.REPULSION_FIELD, green2);
-        colors.put(com.bitdecay.helm.unlock.palette.GameColors.GRAVITY_WELL, green2);
-        colors.put(com.bitdecay.helm.unlock.palette.GameColors.BOOST, green1);
-        colors.put(com.bitdecay.helm.unlock.palette.GameColors.LANDING_PLATFORM, green1);
-        colors.put(com.bitdecay.helm.unlock.palette.GameColors.BACKGROUND, green4);
+        colors.put(GameColors.LEVEL_SEGMENT, green3);
+        colors.put(GameColors.EXPLOSION, green1);
+        colors.put(GameColors.SHIP_BODY, green3);
+        colors.put(GameColors.LAUNCH_SMOKE, green1);
+        colors.put(GameColors.FUEL_METER, green2);
+        colors.put(GameColors.REPULSION_FIELD, green2);
+        colors.put(GameColors.GRAVITY_WELL, green2);
+        colors.put(GameColors.BOOST, green1);
+        colors.put(GameColors.LANDING_PLATFORM, green1);
+        colors.put(GameColors.BACKGROUND, green4);
     }
 }

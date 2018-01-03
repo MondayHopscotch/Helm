@@ -79,6 +79,7 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
 
             pilot.doSound(SoundMode.PLAY, SFXLibrary.SHIP_LAUNCH);
             levelPlayer.countStat(StatName.LAUNCHES, 1);
+            disabled = true;
         }
     }
 
@@ -106,6 +107,7 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
 
     @Override
     public void reset() {
+        disabled = false;
         touches = new TouchTracker(5);
     }
 

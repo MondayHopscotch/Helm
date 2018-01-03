@@ -14,6 +14,10 @@ public class SolidToLineCollider extends Collider {
         super(geom1, geom2);
     }
 
+    public SolidToLineCollider() {
+        super();
+    }
+
     @Override
     public boolean collisionFound() {
         Vector2 geom2Start = new Vector2(geom2WorkingSet[0], geom2WorkingSet[1]);

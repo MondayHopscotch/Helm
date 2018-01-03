@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.bitdecay.helm.GamePilot;
@@ -267,12 +268,18 @@ public class GameScreen implements Screen, GamePilot {
                 updateFrameTimes.add(TimeUtils.millis() - startTime);
                 if (updateFrameTimes.size >= 120) {
                     long totalTime = 0;
+                    long max = 0;
+                    long min = Long.MAX_VALUE;
                     for (Long frameTime : updateFrameTimes) {
                         totalTime += frameTime;
+                        max = Math.max(max, frameTime);
+                        min = Math.min(min, frameTime);
                     }
 
                     double average = 1.0 * totalTime / updateFrameTimes.size;
                     System.out.println("Average update time: " + average);
+                    System.out.println("Max update time: " + max);
+                    System.out.println("Min update time: " + min);
                     updateFrameTimes.clear();
                 }
             }
