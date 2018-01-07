@@ -5,18 +5,22 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.prefs.GamePrefs;
 import com.bitdecay.helm.sound.MusicLibrary;
@@ -36,12 +40,6 @@ public class TitleScreen implements Screen {
     private final Table extraMenu;
 
     private float menuTransitionSpeed = .15f;
-
-    private boolean spinningRight = true;
-    private float maxRotation = 10;
-    private float rotation = maxRotation;
-    private float spinSpeed = 0;
-    private float spinAccel = .005f;
 
     private static TitleScreen instance;
 
@@ -243,15 +241,6 @@ public class TitleScreen implements Screen {
         return menu;
     }
 
-    private Actor wrapLabel(Label label) {
-        Table labelParent = new Table();
-        labelParent.setTransform(true);
-        labelParent.setFillParent(false);
-        labelParent.add(label);
-        labelParent.setOrigin(labelParent.getMinWidth() / 2, labelParent.getMinHeight() / 2);
-        return labelParent;
-    }
-
     private void transitionMenu(final Actor from, final Actor to) {
         from.addAction(
                 Actions.sequence(
@@ -323,6 +312,39 @@ public class TitleScreen implements Screen {
             if (!music.isPlaying()) {
                 music.play();
             }
+        }
+
+        if (true) { // check for if user has seen the setting
+            Dialog dialog = new Dialog("What's New", game.skin);
+            dialog.getTitleLabel().setFontScale(game.fontScale);
+            dialog.setMovable(false);
+            dialog.setFillParent(false);
+            dialog.setClip(true);
+
+            Table whatsNewTable = dialog.getButtonTable();
+            Label thing1 = new Label("- This is a new thing", game.skin);
+            thing1.setFontScale(game.fontScale);
+            whatsNewTable.add(thing1);
+            whatsNewTable.row();
+
+            Label thing2 = new Label("- A second new thing!", game.skin);
+            thing2.setFontScale(game.fontScale);
+            whatsNewTable.add(thing2);
+            whatsNewTable.row();
+
+            dialog.add(whatsNewTable);
+            TextureAtlas.AtlasRegion nextIconTexture = game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("next_icon");
+            TextureRegionDrawable nextLevelIcon = new TextureRegionDrawable(nextIconTexture);
+            BitImageButton nextButton = new BitImageButton(nextLevelIcon, nextLevelIcon, game.fontScale * 0.4f, skin);
+            dialog.button(nextButton);
+
+            dialog.invalidateHierarchy();
+            dialog.invalidate();
+            dialog.layout();
+            dialog.show(stage);
+
+            System.out.println(dialog.getWidth());
+            System.out.println(dialog.getHeight());
         }
     }
 
