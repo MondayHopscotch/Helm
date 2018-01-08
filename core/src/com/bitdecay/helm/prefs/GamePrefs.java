@@ -4,6 +4,8 @@ package com.bitdecay.helm.prefs;
  * Created by Monday on 1/4/2017.
  */
 public class GamePrefs {
+    public static final String LAST_OPENED_VERSION = "lastOpenedVersion";
+
     public static final String CHOSEN_PALETTE = "chosenPalette";
 
     public static final String HIGH_SCORE = "highScore";

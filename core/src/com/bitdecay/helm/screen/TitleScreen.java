@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.Version;
 import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.prefs.GamePrefs;
@@ -314,37 +315,9 @@ public class TitleScreen implements Screen {
             }
         }
 
-        if (true) { // check for if user has seen the setting
-            Dialog dialog = new Dialog("What's New", game.skin);
-            dialog.getTitleLabel().setFontScale(game.fontScale);
-            dialog.setMovable(false);
-            dialog.setFillParent(false);
-            dialog.setClip(true);
-
-            Table whatsNewTable = dialog.getButtonTable();
-            Label thing1 = new Label("- This is a new thing", game.skin);
-            thing1.setFontScale(game.fontScale);
-            whatsNewTable.add(thing1);
-            whatsNewTable.row();
-
-            Label thing2 = new Label("- A second new thing!", game.skin);
-            thing2.setFontScale(game.fontScale);
-            whatsNewTable.add(thing2);
-            whatsNewTable.row();
-
-            dialog.add(whatsNewTable);
-            TextureAtlas.AtlasRegion nextIconTexture = game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("next_icon");
-            TextureRegionDrawable nextLevelIcon = new TextureRegionDrawable(nextIconTexture);
-            BitImageButton nextButton = new BitImageButton(nextLevelIcon, nextLevelIcon, game.fontScale * 0.4f, skin);
-            dialog.button(nextButton);
-
-            dialog.invalidateHierarchy();
-            dialog.invalidate();
-            dialog.layout();
-            dialog.show(stage);
-
-            System.out.println(dialog.getWidth());
-            System.out.println(dialog.getHeight());
+        if (Version.isNewVersionSinceLastOpen(game)) { // check for if user has seen the setting
+            Dialog changeDialog = Version.getChangeDialog(game);
+            changeDialog.show(stage);
         }
     }
 
