@@ -46,7 +46,12 @@ public class SplashScreen implements Screen {
             "Checking tire pressure",
             "Changing oil",
             "Adjusting seat",
-            "Swabbing the poop deck"
+            "Tuning thrusters",
+            "Calibrating gyroscopes",
+            "Polishing medals",
+            "Performing 52 point inspection",
+            "Counting pixels",
+            "Measuring vectors"
     };
 
     public SplashScreen(Helm helm) {
