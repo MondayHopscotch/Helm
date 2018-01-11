@@ -10,12 +10,11 @@ import com.bitdecay.helm.unlock.palette.types.*;
 
 public enum PaletteList {
     STANDARD("Helm", new StandardPalette(), 0),
-    GUACAMOLE("Guacamole", new GuacamolePalette(), 100000),
-    WHITEOUT("Whiteout", new WhiteoutPalette(), 200000),
     VIDEO_KID("Video Kid", new VideoKidPalette(), 300000),
-    CHARCOAL("Charcoal", new CharcoalPalette(), 400000),
-    MUTED("Muted", new MutedPalette(), 500000),
+    MUTED("MutedPalette", new MutedPalette(), 400000),
+    MIDNIGHT("Midnight", new MidnightPalette(), 500000),
     OCEAN("Ocean", new OceanPalette(), 500000),
+    BRIMSTONE("Brimstone", new BrimstonePalette(), 500000),
     AUTUMN("Autumn", new AutumnPalette(), 600000);
 
     public final String name;
