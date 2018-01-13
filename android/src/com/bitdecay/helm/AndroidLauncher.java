@@ -20,7 +20,7 @@ public class AndroidLauncher extends AndroidApplication implements URLOpener {
 		config.useWakelock = true;
 		Helm.urlOpener = this;
 
-		Helm.debug = true;
+//		Helm.debug = true;
 
 		initialize(new Helm(), config);
 	}
