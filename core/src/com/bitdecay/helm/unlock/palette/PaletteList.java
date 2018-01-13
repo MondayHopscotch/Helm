@@ -2,18 +2,20 @@ package com.bitdecay.helm.unlock.palette;
 
 import com.bitdecay.helm.scoring.ScoreStamps;
 import com.bitdecay.helm.system.render.GamePalette;
+import com.bitdecay.helm.unlock.palette.types.*;
 
 /**
  * Created by Monday on 6/5/2017.
  */
 
 public enum PaletteList {
-    STANDARD("Helm", new com.bitdecay.helm.unlock.palette.types.StandardPalette(), 0),
-    GUACAMOLE("Guacamole", new com.bitdecay.helm.unlock.palette.types.GuacamolePalette(), 100000),
-    WHITEOUT("Whiteout", new com.bitdecay.helm.unlock.palette.types.WhiteoutPalette(), 200000),
-    VIDEO_KID("Video Kid", new com.bitdecay.helm.unlock.palette.types.VideoKidPalette(), 300000),
-    CHARCOAL("Charcoal", new com.bitdecay.helm.unlock.palette.types.CharcoalPalette(), 400000),
-    MUTED("Muted", new com.bitdecay.helm.unlock.palette.types.MutedPalette(), 500000);
+    STANDARD("Helm", new StandardPalette(), 0),
+    MIDNIGHT("Midnight", new MidnightPalette(), 100000),
+    VIDEO_KID("Video Kid", new VideoKidPalette(), 200000),
+    BRIMSTONE("Brimstone", new BrimstonePalette(), 300000),
+    MUTED("MutedPalette", new MutedPalette(), 400000),
+    OCEAN("Ocean", new OceanPalette(), 500000),
+    AUTUMN("Autumn", new AutumnPalette(), 600000);
 
     public final String name;
     public final int pointsForUnlock;

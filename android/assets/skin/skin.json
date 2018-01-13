@@ -77,7 +77,6 @@
       "background": "scrollPane",
       "titleFont": "defaultFont",
       "titleFontColor": "white",
-      "stageBackground": "scrollPane"
     }
   },
   "com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle": {
