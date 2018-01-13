@@ -27,7 +27,7 @@ public class Version {
         }
 
         String lastVersion = helm.prefs.getString(GamePrefs.LAST_OPENED_VERSION, Version.CURRENT_VERSION);
-        if (lastVersion != CURRENT_VERSION) {
+        if (!Version.CURRENT_VERSION.equals(lastVersion)) {
             return true;
         } else {
             return false;
@@ -35,7 +35,7 @@ public class Version {
     }
 
     public static void updateLastUsedVersion(Helm helm) {
-        helm.prefs.putString(GamePrefs.LAST_OPENED_VERSION, CURRENT_VERSION);
+        helm.prefs.putString(GamePrefs.LAST_OPENED_VERSION, Version.CURRENT_VERSION);
     }
 
     public static Dialog getChangeDialog(final Helm game) {
