@@ -179,6 +179,15 @@ public class LevelPlayer {
 
         TimerSystem timerSystem = new TimerSystem(pilot);
 
+        if (isReplay) {
+            /*
+             * We have to add the replay input system BEFORE the game systems so it can
+             * properly configure the input for the coming world step
+             */
+            ReplayInputSystem replayInputSystem = new ReplayInputSystem(pilot);
+            addGameplaySystem(replayInputSystem);
+        }
+
         addGameplaySystem(cameraSystem);
         addGameplaySystem(boostSystem);
         addGameplaySystem(steeringSystem);
@@ -220,9 +229,6 @@ public class LevelPlayer {
 
 
         if (isReplay) {
-            ReplayInputSystem replayInputSystem = new ReplayInputSystem(pilot);
-            addGameplaySystem(replayInputSystem);
-
             IndicateStartReplaySystem startReplaySystem = new IndicateStartReplaySystem(pilot);
             gameRenderSystems.add(startReplaySystem);
         }

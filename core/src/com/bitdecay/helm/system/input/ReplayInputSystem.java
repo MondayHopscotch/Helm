@@ -16,6 +16,7 @@ import com.bitdecay.helm.system.AbstractIteratingGameSystem;
 public class ReplayInputSystem extends AbstractIteratingGameSystem {
     private HasSteeredComponent hasSteered;
     private BoostCountComponent boostCounter;
+    private ReplayActiveComponent replay;
 
     public ReplayInputSystem(com.bitdecay.helm.GamePilot pilot) {
         super(pilot);
@@ -23,7 +24,9 @@ public class ReplayInputSystem extends AbstractIteratingGameSystem {
 
     @Override
     public void actOnSingle(com.bitdecay.helm.GameEntity entity, float delta) {
-        ReplayActiveComponent replay = entity.getComponent(ReplayActiveComponent.class);
+        if (replay == null) {
+            replay = entity.getComponent(ReplayActiveComponent.class);
+        }
         if (replay.nextInput >= replay.input.inputRecords.size) {
             // we are done looking at inputs, reset the controls.
             BoostControlComponent boost = entity.getComponent(BoostControlComponent.class);
@@ -42,8 +45,6 @@ public class ReplayInputSystem extends AbstractIteratingGameSystem {
             if (inputRecord.angle != Float.NEGATIVE_INFINITY) {
                 SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
                 steering.angle = inputRecord.angle;
-                System.out.println("REPLAY: TICK " + tick + " Setting angle: " + inputRecord.angle);
-
                 if (entity.hasComponent(HasSteeredComponent.class)) {
                     hasSteered = entity.getComponent(HasSteeredComponent.class);
                     hasSteered.playerHasSteered = true;
@@ -61,7 +62,6 @@ public class ReplayInputSystem extends AbstractIteratingGameSystem {
                 }
                 boost.pressed = !boost.pressed;
             }
-            System.out.println("REPLAY: TICK " + tick + " Setting boost: " + boost.pressed);
 
             replay.nextInput++;
         }
@@ -77,6 +77,10 @@ public class ReplayInputSystem extends AbstractIteratingGameSystem {
         if (boostCounter != null) {
             boostCounter.boostCount = 0;
             boostCounter = null;
+        }
+
+        if (replay != null) {
+            replay.nextInput = 0;
         }
     }
 
