@@ -22,6 +22,7 @@ public class VideoKidPalette extends GamePalette {
         colors.put(com.bitdecay.helm.unlock.palette.GameColors.FUEL_METER, green2);
         colors.put(com.bitdecay.helm.unlock.palette.GameColors.REPULSION_FIELD, green2);
         colors.put(com.bitdecay.helm.unlock.palette.GameColors.GRAVITY_WELL, green2);
+        colors.put(com.bitdecay.helm.unlock.palette.GameColors.WORMHOLE, green2);
         colors.put(com.bitdecay.helm.unlock.palette.GameColors.BOOST, green1);
         colors.put(com.bitdecay.helm.unlock.palette.GameColors.LANDING_PLATFORM, green1);
         colors.put(com.bitdecay.helm.unlock.palette.GameColors.BACKGROUND, green4);
