@@ -13,12 +13,13 @@ import com.bitdecay.helm.prefs.GamePrefs;
  * Created by Monday on 12/21/2016.
  */
 public class Version {
-    public static String CURRENT_VERSION = "0.9.3";
+    public static String CURRENT_VERSION = "0.9.4";
 
     private static String[] versionChanges = new String[]{
-            "Fixed various bugs with things",
-            "Added more things to stuff",
-            "Increased number of levels"
+            "Added this change dialog",
+            "Level time medals tuned",
+            "Level start fuel tuned",
+            "Expand palette selection"
     };
 
     public static boolean isNewVersionSinceLastOpen(Helm helm) {

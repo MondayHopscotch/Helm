@@ -21,3 +21,4 @@ public class MidnightPalette extends com.bitdecay.helm.system.render.GamePalette
         colors.put(com.bitdecay.helm.unlock.palette.GameColors.BACKGROUND, new Color(0x140D17FF));
     }
 }
++
