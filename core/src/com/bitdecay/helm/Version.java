@@ -14,6 +14,7 @@ import com.bitdecay.helm.prefs.GamePrefs;
  */
 public class Version {
     public static String CURRENT_VERSION = "0.9.4";
+    public static String INITIAL_RELEASE_VERSION = "1.0.0";
 
     private static String[] versionChanges = new String[]{
             "Added this change dialog",
@@ -27,7 +28,12 @@ public class Version {
             return true;
         }
 
-        String lastVersion = helm.prefs.getString(GamePrefs.LAST_OPENED_VERSION, Version.CURRENT_VERSION);
+        String lastVersion = helm.prefs.getString(GamePrefs.LAST_OPENED_VERSION, "");
+        if ("" == lastVersion) {
+            updateLastUsedVersion(helm);
+            lastVersion = Version.INITIAL_RELEASE_VERSION;
+        }
+
         if (!Version.CURRENT_VERSION.equals(lastVersion)) {
             return true;
         } else {
