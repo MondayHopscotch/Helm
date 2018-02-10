@@ -10,12 +10,12 @@ import com.bitdecay.helm.unlock.palette.types.*;
 
 public enum PaletteList {
     STANDARD("Helm", new StandardPalette(), 0),
-    MIDNIGHT("Midnight", new MidnightPalette(), 100000),
-    VIDEO_KID("Video Kid", new VideoKidPalette(), 200000),
-    BRIMSTONE("Brimstone", new BrimstonePalette(), 300000),
-    MUTED("Muted", new MutedPalette(), 400000),
-    OCEAN("Ocean", new OceanPalette(), 500000),
-    AUTUMN("Autumn", new AutumnPalette(), 600000);
+    MIDNIGHT("Midnight", new MidnightPalette(), 225000),
+    VIDEO_KID("Video Kid", new VideoKidPalette(), 450000),
+    BRIMSTONE("Brimstone", new BrimstonePalette(), 675000),
+    MUTED("Muted", new MutedPalette(), 900000),
+    OCEAN("Ocean", new OceanPalette(), 1125000),
+    AUTUMN("Autumn", new AutumnPalette(), 1350000);
 
     public final String name;
     public final int pointsForUnlock;
