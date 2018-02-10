@@ -43,6 +43,7 @@ public class Version {
 
     public static void updateLastUsedVersion(Helm helm) {
         helm.prefs.putString(GamePrefs.LAST_OPENED_VERSION, Version.CURRENT_VERSION);
+        helm.prefs.flush();
     }
 
     public static Dialog getChangeDialog(final Helm game) {

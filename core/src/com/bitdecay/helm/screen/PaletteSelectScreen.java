@@ -101,7 +101,7 @@ public class PaletteSelectScreen extends AbstractScrollingItemScreen {
         shipColorImage.setSize(com.bitdecay.helm.menu.MedalUtils.imageSize, com.bitdecay.helm.menu.MedalUtils.imageSize); // just stealing this out of convenience
         colorSampleTable.add(shipColorImage);
 
-        table.add(colorSampleTable);
+        table.add(colorSampleTable).expandX();
 
         addBlankCell(table);
         table.add(checkMark).size(com.bitdecay.helm.menu.MedalUtils.imageSize, com.bitdecay.helm.menu.MedalUtils.imageSize);
