@@ -3,6 +3,7 @@
   levelList: [
     "level/ramping/pinch.json",
     "level/ramping/economy.json",
+    "level/erik/limpy.json",
     "level/ramping/tick_tock.json",
     "level/ramping/checkmark.json",
     "level/ramping/horseshoe.json"
