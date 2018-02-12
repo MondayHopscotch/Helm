@@ -3,6 +3,7 @@
   levelList: [
     "level/mixer/rewind.json",
     "level/mixer/fork.json",
+    "level/erik/mirror1.json",
     "level/mixer/caution.json",
     "level/mixer/round_trip.json"
   ]

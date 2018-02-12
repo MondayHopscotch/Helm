@@ -1,9 +1,0 @@
-{
-  worldName: "Guest Levels",
-  levelList: [
-    "level/erik/tribute.json",
-    "level/erik/limpy.json",
-    "level/erik/magneto.json",
-    "level/erik/mirror1.json"
-  ]
-}

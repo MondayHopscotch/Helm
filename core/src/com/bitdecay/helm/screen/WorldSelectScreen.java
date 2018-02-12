@@ -86,7 +86,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         }
 
         buildTutorialRow(worldTable);
-        worldTable.row().padTop(game.fontScale * 10);
+        worldTable.row().padTop(game.fontScale * 20);
 
         boolean allWorldsUnlocked = true;
         for (WorldInstance world : worlds) {
