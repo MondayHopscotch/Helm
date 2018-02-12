@@ -1,42 +1,42 @@
 [
   {
-    worldFile: "basics.json",
+    worldFile: "basics.json", // 5
     requiredLevelsForUnlock: 0
   },
   {
-    worldFile:   "caves.json",
-    requiredLevelsForUnlock: 2
-  },
-  {
-    worldFile: "explore.json",
+    worldFile:   "caves.json", // 6 // 11
     requiredLevelsForUnlock: 4
   },
   {
-    worldFile: "ramp_up.json",
+    worldFile: "explore.json", // 5 // 16
     requiredLevelsForUnlock: 9
   },
   {
-    worldFile: "channels.json",
-    requiredLevelsForUnlock: 9
+    worldFile: "ramp_up.json", // 6 // 22
+    requiredLevelsForUnlock: 13
   },
   {
-    worldFile: "black_hole.json",
-    requiredLevelsForUnlock: 10
+    worldFile: "channels.json", // 4 // 26
+    requiredLevelsForUnlock: 19
   },
   {
-    worldFile: "pushers.json",
-    requiredLevelsForUnlock: 16
+    worldFile: "black_hole.json", // 6 // 32
+    requiredLevelsForUnlock: 23
   },
   {
-    worldFile: "wormholes.json",
-    requiredLevelsForUnlock: 20
+    worldFile: "pushers.json", // 5 // 37
+    requiredLevelsForUnlock: 28
   },
   {
-    worldFile: "mixer.json",
-    requiredLevelsForUnlock: 21,
+    worldFile: "wormholes.json", // 4 // 41
+    requiredLevelsForUnlock: 33
   },
   {
-    worldFile: "extreme.json",
-    requiredLevelsForUnlock: 30
+    worldFile: "mixer.json", // 5 // 46
+    requiredLevelsForUnlock: 38
+  },
+  {
+    worldFile: "extreme.json", // 6 // 52
+    requiredLevelsForUnlock: 43
   }
 ]
