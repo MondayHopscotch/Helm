@@ -3,8 +3,7 @@
         sectionTitle: "A Game By",
         creditLines: [
 			{
-				text: "Bit Decay Games LLC 2017",
-				url: "https://bitdecaygames.itch.io/"
+				text: "Bit Decay Games LLC 2017"
 			}
 
         ]
