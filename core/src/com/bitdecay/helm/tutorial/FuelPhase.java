@@ -102,6 +102,7 @@ public class FuelPhase extends PagedPhase {
             @Override
             public void run() {
                 Vector3 project = player.gameCam.project(new Vector3(playerLocation.x, playerLocation.y, 0));
+                project.add(0, game.fontScale * -20, 0);
                 fuelLinePage.setPosition(project.x, project.y - fuelLinePage.getPrefHeight() / 2);
             }
         };

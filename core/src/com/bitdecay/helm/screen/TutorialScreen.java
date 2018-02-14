@@ -15,6 +15,7 @@ import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.component.CameraFollowComponent;
 import com.bitdecay.helm.entities.LandingPlatformEntity;
+import com.bitdecay.helm.menu.PauseMenu;
 import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.prefs.GamePrefs;
 import com.bitdecay.helm.scoring.LandingScore;
@@ -47,6 +48,8 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
     private final ShapeRenderer tutorialShaper;
     private final Stage stage;
 
+    private final PauseMenu examplePauseMenu;
+
     private boolean paused = false;
 
     public Array<TutorialPhase> phases;
@@ -57,6 +60,8 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
 
     public TutorialScreen(Helm game) {
         this.game = game;
+
+        examplePauseMenu = new PauseMenu(this);
 
         tutorialShaper = new ShapeRenderer();
         stage = new Stage();
@@ -147,6 +152,8 @@ public class TutorialScreen extends InputAdapter implements Screen, GamePilot {
 
         stage.act();
         stage.draw();
+
+        examplePauseMenu.updateAndDraw();
     }
 
     private void nextPhase() {
