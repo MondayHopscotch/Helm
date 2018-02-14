@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -30,7 +29,12 @@ public class CreditsScreen implements Screen {
     private final Skin skin;
 
     private static TextureRegion gotoTexture;
+    private final ScrollPane scroll;
 
+    // Some hackery happening here. Goal is to start at the bottom and then scroll up
+    // to force the player to realize there is a bunch of stuff in the credits.
+    private boolean requestStartAtBottom = true;
+    private boolean scrollBackToTop = false;
 
     public CreditsScreen(final Helm game) {
         this.game = game;
@@ -59,7 +63,7 @@ public class CreditsScreen implements Screen {
             addCreditSection(creditsTable, loadedCredit);
         }
 
-        ScrollPane scroll = new ScrollPane(creditsTable, skin);
+        scroll = new ScrollPane(creditsTable, skin);
 
         Table returnTable = new Table();
         returnTable.align(Align.bottomRight);
@@ -146,6 +150,18 @@ public class CreditsScreen implements Screen {
 
         stage.act();
         stage.draw();
+
+        if (requestStartAtBottom) {
+            scroll.setSmoothScrolling(false);
+            scroll.setScrollY(1000);
+            scroll.setScrollPercentY(1);
+            requestStartAtBottom = false;
+            scrollBackToTop = true;
+        } else if (scrollBackToTop) {
+            scroll.setSmoothScrolling(true);
+            scroll.setScrollPercentY(0);
+            scrollBackToTop = false;
+        }
     }
 
     @Override
