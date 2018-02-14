@@ -20,6 +20,8 @@ public class DesktopLauncher {
 		}
 		config.height = 900;
 
+//		config.fullscreen = true;
+
 		Helm.urlOpener = new DesktopURLOpener();
 
 		new LwjglApplication(new Helm(), config);
