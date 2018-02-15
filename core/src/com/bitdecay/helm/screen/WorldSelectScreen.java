@@ -15,6 +15,8 @@ import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.menu.MedalUtils;
 import com.bitdecay.helm.menu.RotatingLabel;
+import com.bitdecay.helm.sound.SFXLibrary;
+import com.bitdecay.helm.sound.SoundMode;
 import com.bitdecay.helm.unlock.StatName;
 import com.bitdecay.helm.world.LevelInstance;
 import com.bitdecay.helm.world.WorldInstance;
@@ -156,6 +158,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         return new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
@@ -171,6 +174,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         ClickListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
@@ -189,6 +193,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         ClickListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override

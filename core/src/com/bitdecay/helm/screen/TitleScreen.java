@@ -25,6 +25,8 @@ import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.prefs.GamePrefs;
 import com.bitdecay.helm.sound.MusicLibrary;
+import com.bitdecay.helm.sound.SFXLibrary;
+import com.bitdecay.helm.sound.SoundMode;
 
 /**
  * Created by Monday on 12/21/2016.
@@ -120,6 +122,7 @@ public class TitleScreen implements Screen {
         RotatingLabel startLabel = new RotatingLabel("Start", game.fontScale * 1.8f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 finishLoadingAssets();
                 stage.addAction(Transitions.getFadeOut(new Runnable() {
@@ -139,6 +142,7 @@ public class TitleScreen implements Screen {
         RotatingLabel optionsLabel = new RotatingLabel("Options", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 finishLoadingAssets();
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
@@ -153,6 +157,7 @@ public class TitleScreen implements Screen {
         final RotatingLabel extraMenuLabel = new RotatingLabel("Extras", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 transitionMenu(mainMenu, extraMenu);
             }
@@ -176,6 +181,7 @@ public class TitleScreen implements Screen {
         RotatingLabel paletteLabel = new RotatingLabel("Palette", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 finishLoadingAssets();
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
@@ -190,6 +196,7 @@ public class TitleScreen implements Screen {
         RotatingLabel statsLabel = new RotatingLabel("Stats", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 finishLoadingAssets();
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
@@ -204,6 +211,7 @@ public class TitleScreen implements Screen {
         RotatingLabel replayLabel = new RotatingLabel("Replays", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 finishLoadingAssets();
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
@@ -218,6 +226,7 @@ public class TitleScreen implements Screen {
         RotatingLabel creditLabel = new RotatingLabel("Credits", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 finishLoadingAssets();
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
@@ -232,6 +241,7 @@ public class TitleScreen implements Screen {
         final RotatingLabel mainMenuLabel = new RotatingLabel("Main Menu", game.fontScale * 1.2f, skin, new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 transitionMenu(extraMenu, mainMenu);
             }

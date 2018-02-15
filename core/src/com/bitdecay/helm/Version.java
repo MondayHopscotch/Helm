@@ -12,6 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.prefs.GamePrefs;
+import com.bitdecay.helm.screen.AudioUtils;
+import com.bitdecay.helm.sound.SFXLibrary;
+import com.bitdecay.helm.sound.SoundMode;
 
 /**
  * Created by Monday on 12/21/2016.
@@ -79,6 +82,7 @@ public class Version {
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
             }
         });

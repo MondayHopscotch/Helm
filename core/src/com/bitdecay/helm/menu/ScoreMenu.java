@@ -221,6 +221,7 @@ public class ScoreMenu {
         levelSelectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                pilot.doSound(SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 pilot.returnToMenus(false);
             }
@@ -235,6 +236,7 @@ public class ScoreMenu {
         saveReplayButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                pilot.doSound(SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 String defaultName = TimerUtils.getDateAsString() + " - " + pilot.getLevelName();
                 Gdx.input.getTextInput(new ReplayNameInputListener(pilot, saveReplayButton), "Replay Name", defaultName, "");
@@ -246,6 +248,7 @@ public class ScoreMenu {
         playAgainButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                pilot.doSound(SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 pilot.requestRestartLevel();
             }
@@ -257,6 +260,7 @@ public class ScoreMenu {
         nextLevelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                pilot.doSound(SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 pilot.goToNextLevel();
             }

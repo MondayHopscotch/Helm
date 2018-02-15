@@ -16,6 +16,8 @@ import com.badlogic.gdx.utils.Sort;
 import com.bitdecay.helm.input.InputReplay;
 import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.persist.JsonUtils;
+import com.bitdecay.helm.sound.SFXLibrary;
+import com.bitdecay.helm.sound.SoundMode;
 
 import java.util.Comparator;
 
@@ -115,6 +117,7 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
             ClickListener watchListener = new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                     Gdx.input.vibrate(10);
                     stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                         @Override
@@ -128,6 +131,7 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
             final ClickListener confirmListener = new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                     Gdx.input.vibrate(10);
                     com.bitdecay.helm.persist.ReplayUtils.deleteReplay(replayFile);
                     game.setScreen(new ReplaySelectScreen(game));
@@ -137,6 +141,7 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
             ClickListener firstDeleteListener = new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                     Gdx.input.vibrate(10);
                     deleteButton.clearListeners();
                     deleteButton.getLabel().setText("Confirm");
@@ -160,6 +165,7 @@ public class ReplaySelectScreen extends AbstractScrollingItemScreen {
         return new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
                 Gdx.input.vibrate(10);
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override

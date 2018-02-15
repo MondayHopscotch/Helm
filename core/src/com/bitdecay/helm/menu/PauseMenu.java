@@ -10,7 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.screen.AudioUtils;
 import com.bitdecay.helm.screen.ScreenElements;
+import com.bitdecay.helm.sound.SFXLibrary;
+import com.bitdecay.helm.sound.SoundMode;
 import com.bitdecay.helm.world.LevelInstance;
 
 /**
@@ -31,6 +34,8 @@ public class PauseMenu {
         pauseListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                pilot.doSound(SoundMode.PLAY, SFXLibrary.MENU_BOOP);
+                Gdx.input.vibrate(10);
                 pilot.togglePause();
                 pauseMenu.setVisible(!pauseMenu.isVisible());
                 goalsTable.setVisible(!goalsTable.isVisible());
@@ -65,6 +70,8 @@ public class PauseMenu {
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+//                pilot.doSound(SoundMode.PLAY, SFXLibrary.MENU_BOOP);
+                Gdx.input.vibrate(10);
                 pilot.returnToMenus(true);
             }
         });
