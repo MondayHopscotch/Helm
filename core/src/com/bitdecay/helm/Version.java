@@ -24,10 +24,12 @@ public class Version {
     public static String INITIAL_RELEASE_VERSION = "1.0.0";
 
     private static String[] versionChanges = new String[]{
-            "Added this change dialog",
-            "Level time medals tuned",
-            "Level start fuel tuned",
-            "Expand palette selection"
+            "Menu sound effects",
+            "Add tutorial step for pause menu",
+            "Remove link from bitDecay credit line",
+            "Updated 'Save Replay' icon",
+            "Tune World Unlock timings",
+            "Tune Palette Unlock timings"
     };
 
     public static boolean isNewVersionSinceLastOpen(Helm helm) {
