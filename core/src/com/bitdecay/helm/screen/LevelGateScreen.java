@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.menu.MedalUtils;
+import com.bitdecay.helm.sound.SFXLibrary;
+import com.bitdecay.helm.sound.SoundMode;
 import com.bitdecay.helm.time.TimerUtils;
 import com.bitdecay.helm.unlock.palette.GameColors;
 import com.bitdecay.helm.world.LevelInstance;
@@ -56,13 +58,24 @@ public class LevelGateScreen extends InputAdapter implements Screen {
         skin = game.skin;
     }
 
-    private void goToNextScreen() {
-        stage.addAction(Transitions.getFadeOut(new Runnable() {
-            @Override
-            public void run() {
-                game.setScreen(TransitionColorScreen.get(game, game.palette.get(GameColors.BACKGROUND), after));
-            }
-        }));
+    private void goToNextScreen(boolean fast) {
+        AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
+        Gdx.input.vibrate(10);
+        if (fast) {
+            stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
+                @Override
+                public void run() {
+                    game.setScreen(TransitionColorScreen.get(game, game.palette.get(GameColors.BACKGROUND), after));
+                }
+            }));
+        } else {
+            stage.addAction(Transitions.getFadeOut(new Runnable() {
+                @Override
+                public void run() {
+                    game.setScreen(TransitionColorScreen.get(game, game.palette.get(GameColors.BACKGROUND), after));
+                }
+            }));
+        }
     }
 
     private void build() {
@@ -102,7 +115,7 @@ public class LevelGateScreen extends InputAdapter implements Screen {
         timePassed += delta;
 
         if (timePassed >= MAX_WAIT_TIME) {
-            goToNextScreen();
+            goToNextScreen(false);
         }
 
         stage.act();
@@ -113,7 +126,7 @@ public class LevelGateScreen extends InputAdapter implements Screen {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (touchTriggered != true && timePassed > NO_INPUT_WAIT_TIME) {
             touchTriggered = true;
-            goToNextScreen();
+            goToNextScreen(true);
         }
         return true;
     }

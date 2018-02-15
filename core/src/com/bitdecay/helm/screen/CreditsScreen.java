@@ -21,6 +21,8 @@ import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.credits.CreditsData;
 import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.persist.JsonUtils;
+import com.bitdecay.helm.sound.SFXLibrary;
+import com.bitdecay.helm.sound.SoundMode;
 
 public class CreditsScreen implements Screen {
     private Helm game;
@@ -74,6 +76,8 @@ public class CreditsScreen implements Screen {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
+                Gdx.input.vibrate(10);
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
                     public void run() {

@@ -27,7 +27,7 @@ public class WrapUpPhase extends PagedPhase {
         final UpdatingContainer pausePage = TutorialUtils.getPage(game.fontScale, game.skin,
                 "If you need to pause or",
                 "want to exit from a level, tap",
-                "the three dots in the top left"
+                "the three dots in the top right"
         );
         pausePage.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         pages.add(pausePage);
