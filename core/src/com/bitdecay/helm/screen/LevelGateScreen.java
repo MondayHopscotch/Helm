@@ -57,6 +57,7 @@ public class LevelGateScreen extends InputAdapter implements Screen {
     }
 
     private void goToNextScreen() {
+        Gdx.input.vibrate(10);
         stage.addAction(Transitions.getFadeOut(new Runnable() {
             @Override
             public void run() {

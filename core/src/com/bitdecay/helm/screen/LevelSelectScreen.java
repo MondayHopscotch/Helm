@@ -1,5 +1,6 @@
 package com.bitdecay.helm.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -91,6 +92,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         return new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(10);
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
                     public void run() {
@@ -105,6 +107,7 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
         ClickListener listener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(10);
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
                     public void run() {

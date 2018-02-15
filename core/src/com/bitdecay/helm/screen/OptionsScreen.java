@@ -84,6 +84,7 @@ public class OptionsScreen implements Screen {
         doneLabel.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(10);
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
                     public void run() {
@@ -109,6 +110,13 @@ public class OptionsScreen implements Screen {
         settingInput.getImage().scaleBy(game.fontScale);
         settingInput.align(Align.bottomLeft);
         settingInput.setOrigin(Align.bottomLeft);
+
+        settingInput.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(10);
+            }
+        });
 
         int screenHeight = Gdx.graphics.getHeight();
 

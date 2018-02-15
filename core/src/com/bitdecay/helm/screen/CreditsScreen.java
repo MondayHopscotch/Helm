@@ -74,6 +74,7 @@ public class CreditsScreen implements Screen {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(10);
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
                     public void run() {
