@@ -31,34 +31,25 @@ import java.util.Map;
 /**
  * Created by Monday on 1/4/2017.
  */
-public class OptionsScreen implements Screen {
-
-    Helm game;
-
-    Stage stage;
-    Skin skin;
+public class OptionsScreen extends AbstractScrollingItemScreen {
     private float baseFontScale;
 
     private Map<String, Actor> labelMap = new HashMap<>();
     private Map<String, Actor> inputMap = new HashMap<>();
 
     private List<Runnable> closingActions = new ArrayList<>();
-    private final Table prefsTable;
+    private final Table prefsTable = new Table();
 
     public OptionsScreen(final Helm game) {
-        this.game = game;
+        super(game);
+        build(false);
+    }
 
-        stage = new Stage();
-        skin = game.skin;
-
+    @Override
+    public void populateRows(Table mainTable) {
         baseFontScale = game.fontScale * 0.8f;
 
-        Table mainTable = new Table();
-        mainTable.setFillParent(true);
-
-        prefsTable = new Table();
         prefsTable.align(Align.left);
-        prefsTable.pad(200);
 
         generateSliderIntSetting("Steering Sensitivity", GamePrefs.SENSITIVITY, GamePrefs.SENSITIVITY_DEFAULT, GamePrefs.SENSITIVITY_MIN, GamePrefs.SENSITIVITY_MAX);
         generateCheckBoxSetting("Use Lefty Controls", GamePrefs.USE_LEFT_HANDED_CONTROLS, GamePrefs.USE_LEFT_HANDED_CONTROLS_DEFAULT);
@@ -71,19 +62,17 @@ public class OptionsScreen implements Screen {
             }
         });
 
-        generateCheckBoxSetting("Disable Back Button", GamePrefs.DISABLE_BACK_BUTTON, GamePrefs.DISABLE_BACK_BUTTON_DEFAULT);
-        inputMap.get(GamePrefs.DISABLE_BACK_BUTTON).addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                boolean disabled = ((CheckBox) inputMap.get(GamePrefs.DISABLE_BACK_BUTTON)).isChecked();
-                Gdx.input.setCatchBackKey(disabled);
-            }
-        });
+        mainTable.add(prefsTable).fillX().expandX();
+    }
 
-        TextButton doneLabel = new TextButton("Save", skin);
-        doneLabel.getLabel().setFontScale(baseFontScale * 1.5f);
+    @Override
+    public String getTitle() {
+        return "Options";
+    }
 
-        doneLabel.addListener(new ClickListener() {
+    @Override
+    public ClickListener getReturnButtonAction() {
+        return new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
@@ -95,13 +84,7 @@ public class OptionsScreen implements Screen {
                     }
                 }));
             }
-        });
-
-        mainTable.add(prefsTable).expand().fill().align(Align.left);
-        mainTable.row();
-        mainTable.add(doneLabel);
-
-        stage.addActor(mainTable);
+        };
     }
 
     private void generateCheckBoxSetting(String displayName, final String settingName, boolean defaultValue) {
@@ -197,44 +180,11 @@ public class OptionsScreen implements Screen {
     }
 
     @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        stage.act();
-        stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
     public void hide() {
+        super.hide();
         for (Runnable closingAction : closingActions) {
             closingAction.run();
         }
         Helm.prefs.flush();
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
     }
 }
