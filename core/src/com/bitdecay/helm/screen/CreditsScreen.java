@@ -24,14 +24,8 @@ import com.bitdecay.helm.persist.JsonUtils;
 import com.bitdecay.helm.sound.SFXLibrary;
 import com.bitdecay.helm.sound.SoundMode;
 
-public class CreditsScreen implements Screen {
-    private Helm game;
-    private Stage stage = new Stage();
-
-    private final Skin skin;
-
+public class CreditsScreen extends AbstractScrollingItemScreen {
     private static TextureRegion gotoTexture;
-    private final ScrollPane scroll;
 
     // Some hackery happening here. Goal is to start at the bottom and then scroll up
     // to force the player to realize there is a bunch of stuff in the credits.
@@ -39,41 +33,34 @@ public class CreditsScreen implements Screen {
     private boolean scrollBackToTop = false;
 
     public CreditsScreen(final Helm game) {
-        this.game = game;
-
-        stage.setDebugAll(Helm.debug);
-
-        skin = game.skin;
-
+        super(game);
         initIcons();
+        build(false);
+    }
 
+    @Override
+    public void populateRows(Table mainTable) {
         FileHandle creditsFile = Gdx.files.internal("credits.json");
 
         CreditsData[] loadedCredits = JsonUtils.unmarshal(CreditsData[].class, creditsFile);
-
-        Table container = new Table();
-        container.setFillParent(true);
 
         Label creditTitle = new Label("Credits", skin);
         creditTitle.setColor(Color.GRAY);
         creditTitle.setFontScale(game.fontScale * 1.5f);
 
-        Table creditsTable = new Table();
-        creditsTable.setWidth(Gdx.graphics.getWidth() * .75f);
-
         for (CreditsData loadedCredit : loadedCredits) {
-            addCreditSection(creditsTable, loadedCredit);
+            addCreditSection(mainTable, loadedCredit);
         }
+    }
 
-        scroll = new ScrollPane(creditsTable, skin);
+    @Override
+    public String getTitle() {
+        return "Credits";
+    }
 
-        Table returnTable = new Table();
-        returnTable.align(Align.bottomRight);
-        returnTable.setOrigin(Align.bottomRight);
-
-        TextureRegionDrawable levelSelectDrawable = new TextureRegionDrawable(game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("exit_icon"));
-        BitImageButton returnButton = new BitImageButton(levelSelectDrawable, levelSelectDrawable, game.fontScale * 0.4f, skin);
-        returnButton.addListener(new ClickListener() {
+    @Override
+    public ClickListener getReturnButtonAction() {
+        return new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
@@ -85,19 +72,7 @@ public class CreditsScreen implements Screen {
                     }
                 }));
             }
-        });
-
-        returnTable.add(returnButton).padRight(game.fontScale).padBottom(game.fontScale);
-
-        stage.addActor(container);
-
-        container.add(creditTitle).expandX().fillX();
-        container.row();
-        container.add(scroll).expand().fill();
-        container.row();
-        container.add(returnTable).expandX().fillX();
-
-        Gdx.input.setInputProcessor(stage);
+        };
     }
 
     private void initIcons() {
@@ -144,17 +119,8 @@ public class CreditsScreen implements Screen {
     }
 
     @Override
-    public void show() {
-    }
-
-    @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        stage.act();
-        stage.draw();
-
+        super.render(delta);
         if (requestStartAtBottom) {
             scroll.setSmoothScrolling(false);
             scroll.setScrollY(1000);
@@ -166,29 +132,5 @@ public class CreditsScreen implements Screen {
             scroll.setScrollPercentY(0);
             scrollBackToTop = false;
         }
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
     }
 }

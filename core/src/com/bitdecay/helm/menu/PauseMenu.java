@@ -111,4 +111,8 @@ public class PauseMenu {
         this.level = level;
         ScreenElements.getGoalsElement(goalsTable, pilot.getHelm(), level, pilot.getHelm().skin);
     }
+
+    public void doPause() {
+        pauseListener.clicked(null, 0, 0);
+    }
 }
