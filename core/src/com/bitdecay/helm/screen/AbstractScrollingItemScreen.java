@@ -28,7 +28,7 @@ public abstract class AbstractScrollingItemScreen implements Screen {
     private Table titleTable;
     protected final Table itemTable;
     private Table returnTable;
-    private final ScrollPane scroll;
+    protected final ScrollPane scroll;
 
     private boolean backPressed = false;
 
