@@ -1,6 +1,7 @@
 package com.bitdecay.helm.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -258,6 +259,11 @@ public class GameScreen implements Screen, GamePilot {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         long startTime = TimeUtils.millis();
+
+        if (!paused && Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            pauseMenu.doPause();
+        }
+
         if (!paused) {
             levelPlayer.update(delta);
             if (Helm.debug) {
