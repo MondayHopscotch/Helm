@@ -1,6 +1,7 @@
 package com.bitdecay.helm.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -28,6 +29,8 @@ public abstract class AbstractScrollingItemScreen implements Screen {
     protected final Table itemTable;
     private Table returnTable;
     private final ScrollPane scroll;
+
+    private boolean backPressed = false;
 
     private boolean requestAutoScrollToBottom = false;
     private float iconSize;
@@ -74,6 +77,7 @@ public abstract class AbstractScrollingItemScreen implements Screen {
     }
 
     protected void build(boolean autoScrollToBottom) {
+        backPressed = false;
         requestAutoScrollToBottom = autoScrollToBottom;
         Label titleLabel = new Label(getTitle(), skin);
         titleLabel.setFontScale(game.fontScale * 2);
@@ -111,6 +115,11 @@ public abstract class AbstractScrollingItemScreen implements Screen {
 
         stage.act();
         stage.draw();
+
+        if (!backPressed && Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            backPressed = true;
+            getReturnButtonAction().clicked(null, 0, 0);
+        }
 
         if (requestAutoScrollToBottom) {
             requestAutoScrollToBottom = false;
