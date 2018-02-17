@@ -44,9 +44,8 @@ public class Helm extends Game {
 
         Helm.prefs = Gdx.app.getPreferences("helm-pref");
 
-        // this is here for Android
+        // this is here for Android back button
         Gdx.input.setCatchBackKey(true);
-//        Gdx.input.setCatchBackKey(Helm.prefs.getBoolean(GamePrefs.DISABLE_BACK_BUTTON, GamePrefs.DISABLE_BACK_BUTTON_DEFAULT));
 
         stats = new com.bitdecay.helm.unlock.Statistics();
         stats.init(Helm.prefs);
