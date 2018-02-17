@@ -36,6 +36,7 @@ public class LevelGateScreen extends InputAdapter implements Screen {
 
         gateScreen.timePassed = 0;
         gateScreen.after = after;
+        gateScreen.pendingTransition = true;
         gateScreen.build();
         return gateScreen;
     }
@@ -46,6 +47,9 @@ public class LevelGateScreen extends InputAdapter implements Screen {
 
     private float timePassed = 0;
     private boolean touchTriggered = false;
+
+    private boolean pendingTransition = true;
+
     private GameScreen after;
 
     private LevelGateScreen(Helm game) {
@@ -112,10 +116,13 @@ public class LevelGateScreen extends InputAdapter implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        timePassed += delta;
+        if (pendingTransition) {
+            timePassed += delta;
 
-        if (timePassed >= MAX_WAIT_TIME) {
-            goToNextScreen(false);
+            if (timePassed >= MAX_WAIT_TIME) {
+                goToNextScreen(false);
+                pendingTransition = false;
+            }
         }
 
         stage.act();
