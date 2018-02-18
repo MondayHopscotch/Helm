@@ -241,14 +241,18 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
     public void buildHintedUnlockRow(com.bitdecay.helm.world.WorldInstance world, Table worldTable, int levelsCompleted) {
         int left = world.requiredLevelsForUnlock - levelsCompleted;
-        String remainingText = "Beat " + left + " more " + (left > 1 ? "levels" : "level") + " to unlock '" + world.getWorldName() + "'";
 
-        Label leftTillUnlockLabel = new Label(remainingText, skin);
-        leftTillUnlockLabel.setColor(Color.GRAY);
-        leftTillUnlockLabel.setAlignment(Align.center);
-        leftTillUnlockLabel.setFontScale(game.fontScale);
+        RotatingLabel worldNameLabel = new RotatingLabel(world.getWorldName(), game.fontScale, skin, null);
+        worldNameLabel.innerLabel.setColor(Color.GRAY);
+        worldTable.add(worldNameLabel).colspan(2);
 
-        worldTable.add(leftTillUnlockLabel).colspan(6);
+        String simplifiedHint = "Complete " + left + " more " + (left > 1 ? "levels" : "level");
+        Label hintLabel = new Label(simplifiedHint, skin);
+        hintLabel.setColor(Color.GRAY);
+        hintLabel.setAlignment(Align.center);
+        hintLabel.setFontScale(game.fontScale);
+        worldTable.add(hintLabel).colspan(4);
+
     }
 
     @Override
