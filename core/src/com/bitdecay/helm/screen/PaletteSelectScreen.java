@@ -121,7 +121,7 @@ public class PaletteSelectScreen extends AbstractScrollingItemScreen {
         Label paletteNameLabel = getNameLabel(paletteInfo);
         paletteNameLabel.setColor(Color.GRAY);
         table.add(paletteNameLabel).expand();
-        Label unlockHintLabel = new Label(Integer.toString(paletteInfo.pointsForUnlock - currentPoints) + " points to go", skin);
+        Label unlockHintLabel = new Label("Score " + Integer.toString(paletteInfo.pointsForUnlock - currentPoints) + " more points", skin);
         unlockHintLabel.setColor(Color.GRAY);
         unlockHintLabel.setAlignment(Align.center);
         unlockHintLabel.setFontScale(game.fontScale);

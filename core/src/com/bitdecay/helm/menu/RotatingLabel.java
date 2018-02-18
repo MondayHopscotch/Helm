@@ -17,7 +17,7 @@ public class RotatingLabel extends Table {
     private float rotation = maxRotation;
     private float spinSpeed = 0;
     private float spinAccel = .005f;
-    private final Label innerLabel;
+    public final Label innerLabel;
 
     public RotatingLabel(String labelText, float fontSize, Skin skin) {
         this(labelText, fontSize, skin, null);
