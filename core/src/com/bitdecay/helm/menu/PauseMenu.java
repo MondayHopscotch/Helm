@@ -90,7 +90,7 @@ public class PauseMenu {
         pauseButtonLabel.addListener(pauseListener);
 
         int screenWidth = Gdx.graphics.getWidth();
-        mainTable.add(pauseButtonLabel).padRight(screenWidth / 25).width(screenWidth / 10).height(screenWidth / 10);
+        mainTable.add(pauseButtonLabel).width(screenWidth / 10).height(screenWidth / 10);
 
         goalsTable = new Table(pilot.getHelm().skin);
         goalsTable.setFillParent(true);

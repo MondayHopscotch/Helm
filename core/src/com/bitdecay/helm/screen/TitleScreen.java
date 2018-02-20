@@ -48,6 +48,7 @@ public class TitleScreen implements Screen {
     private float menuTransitionSpeed = .15f;
 
     private static TitleScreen instance;
+    private boolean canTogglePause;
 
     public static TitleScreen get(Helm game) {
         if (instance == null) {
@@ -360,13 +361,17 @@ public class TitleScreen implements Screen {
         stage.act();
         stage.draw();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+        if (canTogglePause && Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            canTogglePause = false;
             Gdx.input.vibrate(10);
             if (activeMenu == extraMenu) {
                 transitionMenu(extraMenu, mainMenu);
             } else {
                 Gdx.app.exit();
             }
+        } else if (!Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            // Force an explicit release of the key before we can pause again
+            canTogglePause = true;
         }
     }
 
