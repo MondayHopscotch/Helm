@@ -43,9 +43,12 @@ public class TitleScreen implements Screen {
     private final Table mainMenu;
     private final Table extraMenu;
 
+    private Actor activeMenu;
+
     private float menuTransitionSpeed = .15f;
 
     private static TitleScreen instance;
+    private boolean canTogglePause;
 
     public static TitleScreen get(Helm game) {
         if (instance == null) {
@@ -66,6 +69,7 @@ public class TitleScreen implements Screen {
         Image bgImage = new Image(backgroundImage);
         bgImage.setScaling(Scaling.fillY);
         bgImage.setFillParent(true);
+        bgImage.setAlign(Align.left);
 
         stage.addActor(bgImage);
 
@@ -73,6 +77,7 @@ public class TitleScreen implements Screen {
         mainTable.setFillParent(true);
 
         mainMenu = buildMainMenu();
+        activeMenu = mainMenu;
         mainTable.add(mainMenu).expand().align(Align.right);
 
         Table extraTable = new Table();
@@ -294,7 +299,13 @@ public class TitleScreen implements Screen {
                                         );
                                     }
                                 }
-                        )
+                        ),
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                activeMenu = to;
+                            }
+                        })
                 )
         );
     }
@@ -350,8 +361,17 @@ public class TitleScreen implements Screen {
         stage.act();
         stage.draw();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-            Gdx.app.exit();
+        if (canTogglePause && Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            canTogglePause = false;
+            Gdx.input.vibrate(10);
+            if (activeMenu == extraMenu) {
+                transitionMenu(extraMenu, mainMenu);
+            } else {
+                Gdx.app.exit();
+            }
+        } else if (!Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            // Force an explicit release of the key before we can pause again
+            canTogglePause = true;
         }
     }
 

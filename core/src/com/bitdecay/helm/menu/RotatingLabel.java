@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Align;
 
 public class RotatingLabel extends Table {
     private boolean spinningRight = true;
-    private float maxRotation = 10;
+    private float maxRotation = 5;
     private float rotation = maxRotation;
     private float spinSpeed = 0;
     private float spinAccel = .005f;

@@ -46,6 +46,7 @@ public class GameScreen implements Screen, GamePilot {
 
     private ScoreMenu scoreMenu;
     private PauseMenu pauseMenu;
+    private boolean canTogglePause = true;
     private boolean paused = false;
     private Overlay overlay;
 
@@ -260,8 +261,14 @@ public class GameScreen implements Screen, GamePilot {
 
         long startTime = TimeUtils.millis();
 
-        if (!paused && Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-            pauseMenu.doPause();
+        if (!scoreMenu.visible) {
+            if (canTogglePause && Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+                canTogglePause = false;
+                pauseMenu.doPause();
+            } else if (!Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+                // Force an explicit release of the key before we can pause again
+                canTogglePause = true;
+            }
         }
 
         if (!paused) {
