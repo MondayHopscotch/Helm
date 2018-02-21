@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,12 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.Version;
-import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.prefs.GamePrefs;
 import com.bitdecay.helm.sound.MusicLibrary;
@@ -335,13 +332,13 @@ public class TitleScreen implements Screen {
         Music music = game.assets.get(MusicLibrary.AMBIENT_MUSIC, Music.class);
         music.setLooping(true);
 
-        if (game.prefs.getBoolean(GamePrefs.MUTE_MUSIC)) {
-            if (music.isPlaying()) {
-                music.pause();
-            }
-        } else {
+        if (game.prefs.getBoolean(GamePrefs.MUSIC_ENABLED)) {
             if (!music.isPlaying()) {
                 music.play();
+            }
+        } else {
+            if (music.isPlaying()) {
+                music.pause();
             }
         }
 

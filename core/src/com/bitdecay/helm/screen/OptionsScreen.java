@@ -1,25 +1,17 @@
 package com.bitdecay.helm.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.prefs.GamePrefs;
-import com.bitdecay.helm.sound.MusicLibrary;
 import com.bitdecay.helm.sound.SFXLibrary;
 import com.bitdecay.helm.sound.SoundMode;
 
@@ -53,10 +45,10 @@ public class OptionsScreen extends AbstractScrollingItemScreen {
         prefsTable.align(Align.left);
 
         generateSliderIntSetting("Steering Sensitivity", GamePrefs.SENSITIVITY, GamePrefs.SENSITIVITY_DEFAULT, GamePrefs.SENSITIVITY_MIN, GamePrefs.SENSITIVITY_MAX);
-        generateCheckBoxSetting("Use Lefty Controls", GamePrefs.USE_LEFT_HANDED_CONTROLS, GamePrefs.USE_LEFT_HANDED_CONTROLS_DEFAULT);
+        generateCheckBoxSetting("Left-handed Controls", GamePrefs.USE_LEFT_HANDED_CONTROLS, GamePrefs.USE_LEFT_HANDED_CONTROLS_DEFAULT);
 
-        generateCheckBoxSetting("Mute Music", GamePrefs.MUTE_MUSIC, GamePrefs.MUTE_MUSIC_DEFAULT);
-        inputMap.get(GamePrefs.MUTE_MUSIC).addListener(new ClickListener() {
+        generateCheckBoxSetting("Ambient Music", GamePrefs.MUSIC_ENABLED, GamePrefs.MUSIC_ENABLED_DEFAULT);
+        inputMap.get(GamePrefs.MUSIC_ENABLED).addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 updateMusicMute();
@@ -165,17 +157,17 @@ public class OptionsScreen extends AbstractScrollingItemScreen {
     }
 
     private void updateMusicMute() {
-        boolean mute = ((CheckBox) inputMap.get(GamePrefs.MUTE_MUSIC)).isChecked();
-        if (mute) {
-            Music music = game.assets.get(com.bitdecay.helm.sound.MusicLibrary.AMBIENT_MUSIC, Music.class);
-            if (music.isPlaying()) {
-                music.pause();
-            }
-        } else {
+        boolean enabled = ((CheckBox) inputMap.get(GamePrefs.MUSIC_ENABLED)).isChecked();
+        if (enabled) {
             Music music = game.assets.get(com.bitdecay.helm.sound.MusicLibrary.AMBIENT_MUSIC, Music.class);
             music.setLooping(true);
             if (!music.isPlaying()) {
                 music.play();
+            }
+        } else {
+            Music music = game.assets.get(com.bitdecay.helm.sound.MusicLibrary.AMBIENT_MUSIC, Music.class);
+            if (music.isPlaying()) {
+                music.pause();
             }
         }
     }

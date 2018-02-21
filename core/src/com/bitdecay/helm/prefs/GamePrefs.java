@@ -21,10 +21,10 @@ public class GamePrefs {
     public static final String SENSITIVITY = "steeringSensitivity";
     public static final int SENSITIVITY_MIN = -100;
     public static final int SENSITIVITY_MAX = 200;
-    public static final int SENSITIVITY_DEFAULT = 0;
+    public static final int SENSITIVITY_DEFAULT = 25;
 
-    public static final String MUTE_MUSIC = "musicMusic";
-    public static final boolean MUTE_MUSIC_DEFAULT = false;
+    public static final String MUSIC_ENABLED = "musicEnabled";
+    public static final boolean MUSIC_ENABLED_DEFAULT = false;
 
     public static final String TUTORIAL_COMPLETE = "tutorialComplete";
     public static final boolean TUTORIAL_COMPLETE_DEFAULT = false;
