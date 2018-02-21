@@ -360,6 +360,7 @@ public class TitleScreen implements Screen {
 
         if (canTogglePause && Gdx.input.isKeyPressed(Input.Keys.BACK)) {
             canTogglePause = false;
+            AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
             Gdx.input.vibrate(10);
             if (activeMenu == extraMenu) {
                 transitionMenu(extraMenu, mainMenu);
