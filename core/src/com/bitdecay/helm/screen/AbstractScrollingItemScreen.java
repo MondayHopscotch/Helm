@@ -54,7 +54,6 @@ public abstract class AbstractScrollingItemScreen implements Screen {
         Table mainTable = new Table();
 
         scroll = new ScrollPane(mainTable, skin);
-        scroll.setCancelTouchFocus(false);
 
         itemTable = new Table();
         mainTable.add(itemTable).width(Gdx.graphics.getWidth() * 0.8f).padTop(game.fontScale * 10).padBottom(game.fontScale * 30);

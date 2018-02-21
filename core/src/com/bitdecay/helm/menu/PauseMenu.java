@@ -54,9 +54,10 @@ public class PauseMenu {
         pauseMenu = new Table();
         pauseMenu.setFillParent(true);
         pauseMenu.align(Align.center);
+
         Label pauseDisplayLabel = new Label("Paused", pilot.getHelm().skin);
         pauseDisplayLabel.setFontScale(pilot.getHelm().fontScale * 3);
-        pauseMenu.add(pauseDisplayLabel);
+        pauseMenu.add(pauseDisplayLabel).align(Align.center).padTop(pilot.getHelm().fontScale * 5);
         pauseMenu.row();
         pauseMenu.setVisible(false);
         pauseMenu.addListener(pauseListener);
@@ -77,10 +78,10 @@ public class PauseMenu {
         });
 
         Table buttonTable = new Table();
-        buttonTable.align(Align.center);
+        buttonTable.align(Align.bottom);
         buttonTable.add(resumeButton).padRight(pilot.getHelm().fontScale * 10);
         buttonTable.add(quitButton).padLeft(pilot.getHelm().fontScale * 10);
-        pauseMenu.add(buttonTable);
+        pauseMenu.add(buttonTable).padBottom(pilot.getHelm().fontScale * 5).expand().fill();
 
         Label pauseButtonLabel = new Label("...", pilot.getHelm().skin);
         pauseButtonLabel.setFontScale(pilot.getHelm().fontScale);

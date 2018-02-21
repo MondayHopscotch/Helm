@@ -97,6 +97,7 @@ public class LevelGateScreen extends InputAdapter implements Screen {
         screenTable.row();
 
         Table fillTable =  new Table(skin);
+        fillTable.align(Align.bottom);
         ScreenElements.getGoalsElement(fillTable, game, after.currentLevel, skin);
 
         screenTable.add(fillTable).fill().expand();
