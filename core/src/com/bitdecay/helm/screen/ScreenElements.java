@@ -22,21 +22,36 @@ public class ScreenElements {
         table.clear();
 
         Table scoreTable = new Table(skin);
-        Table timeTable = new Table(skin);
+        scoreTable.setOrigin(Align.bottomLeft);
 
+        Table timeTable = new Table(skin);
+        timeTable.setOrigin(Align.bottomRight);
 
         if (level.getBestTime() != com.bitdecay.helm.prefs.GamePrefs.TIME_NOT_SET &&
                 level.getHighScore() != com.bitdecay.helm.prefs.GamePrefs.SCORE_NOT_SET) {
             buildCurrentScoreParts(game, level, scoreTable, skin);
+            scoreTable.add(getBlankLabel(skin)).padBottom(game.fontScale * 10).row();
+
             buildCurrentTimeParts(game, level, timeTable, skin);
+            timeTable.add(getBlankLabel(skin)).padBottom(game.fontScale * 10).row();
         }
 
-        buildTargetScoreParts(game, level, scoreTable, skin);
-        buildTargetTimeParts(game, level, timeTable, skin);
+        buildScoreTable(game, level, scoreTable, skin);
+        buildTimeTable(game, level, timeTable, skin);
 
-        table.add(scoreTable).padRight(10 * game.fontScale);
-        table.add(timeTable).padLeft(10 * game.fontScale);
+        table.add(scoreTable).align(Align.bottomLeft)
+                .padLeft(10 * game.fontScale)
+                .padBottom(10 * game.fontScale)
+                .expandX();
+        table.add(timeTable).align(Align.bottomRight)
+                .padRight(10 * game.fontScale)
+                .padBottom(10 * game.fontScale)
+                .expandX();
         return table;
+    }
+
+    private static Label getBlankLabel(Skin skin) {
+        return new Label("", skin);
     }
 
     private static void buildCurrentScoreParts(Helm game, LevelInstance level, Table table, Skin skin) {
@@ -63,30 +78,23 @@ public class ScreenElements {
         table.add(scoreTable).row();
     }
 
-    private static void buildTargetScoreParts(Helm game, LevelInstance level, Table table, Skin skin) {
-        MedalUtils.LevelRating scoreRank = MedalUtils.getScoreRank(level, level.getHighScore());
-        if (MedalUtils.LevelRating.DEV.equals(scoreRank)) {
-            return;
+    private static void buildScoreTable(Helm game, LevelInstance level, Table table, Skin skin) {
+        Table innerScoreTable = new Table(skin);
+        for (int i = MedalUtils.LevelRating.values().length - 1; i > 0; i--) {
+            MedalUtils.LevelRating medal = MedalUtils.LevelRating.values()[i];
+
+            Image medalImage = MedalUtils.getRankImage(medal);
+            Label scoreLabel = new Label(Integer.toString(level.getScoreNeededForMedal(medal)), skin);
+            scoreLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
+            scoreLabel.setAlignment(Align.center);
+            scoreLabel.setOrigin(Align.center);
+
+            Table scoreMedalTable = new Table(skin);
+            innerScoreTable.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).align(Align.left).expand(false, false).fill(false);
+            innerScoreTable.add(scoreLabel).expandX();
+            innerScoreTable.add(scoreMedalTable).row();
         }
-
-        Label scoreTextLabel = new Label("Score for " + scoreRank.nextRank().medalName() + " medal", skin);
-        scoreTextLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        scoreTextLabel.setAlignment(Align.center);
-        scoreTextLabel.setOrigin(Align.center);
-
-        Image medalImage = MedalUtils.getRankImage(scoreRank.nextRank());
-        Label scoreLabel = new Label(Integer.toString(level.getScoreNeededForMedal(scoreRank.nextRank())), skin);
-        scoreLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        scoreLabel.setAlignment(Align.center);
-        scoreLabel.setOrigin(Align.center);
-
-        Table scoreTable = new Table(skin);
-        scoreTable.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
-        scoreTable.add(scoreLabel);
-
-        table.add(scoreTextLabel).row();
-        table.add(scoreTable);
-        table.row();
+        table.add(innerScoreTable).row();
     }
 
     private static void buildCurrentTimeParts(Helm game, LevelInstance level, Table table, Skin skin) {
@@ -114,29 +122,22 @@ public class ScreenElements {
         table.row();
     }
 
-    private static void buildTargetTimeParts(Helm game, LevelInstance level, Table table, Skin skin) {
-        MedalUtils.LevelRating timeRank = MedalUtils.getTimeRank(level, level.getBestTime());
-        if (MedalUtils.LevelRating.DEV.equals(timeRank)) {
-            return;
+    private static void buildTimeTable(Helm game, LevelInstance level, Table table, Skin skin) {
+        Table innerTimeTable = new Table(skin);
+        for (int i = MedalUtils.LevelRating.values().length - 1; i > 0; i--) {
+            MedalUtils.LevelRating medal = MedalUtils.LevelRating.values()[i];
+
+            Image medalImage = MedalUtils.getRankImage(medal);
+            Label timeLabel = new Label(TimerUtils.getFormattedTime(level.getTimeNeededForMedal(medal)), skin);
+            timeLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
+            timeLabel.setAlignment(Align.center);
+            timeLabel.setOrigin(Align.center);
+
+            Table timeMedalTable = new Table(skin);
+            innerTimeTable.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).align(Align.left).expand(false, false).fill(false);
+            innerTimeTable.add(timeLabel).expandX();
+            innerTimeTable.add(timeMedalTable).row();
         }
-
-        Label timeTextLabel = new Label("Time for " + timeRank.nextRank().medalName() + " medal", skin);
-        timeTextLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        timeTextLabel.setAlignment(Align.center);
-        timeTextLabel.setOrigin(Align.center);
-
-        Image medalImage = MedalUtils.getRankImage(timeRank.nextRank());
-        Label scoreLabel = new Label(TimerUtils.getFormattedTime(level.getTimeNeededForMedal(timeRank.nextRank())), skin);
-        scoreLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
-        scoreLabel.setAlignment(Align.center);
-        scoreLabel.setOrigin(Align.center);
-
-        Table scoreTable = new Table(skin);
-        scoreTable.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
-        scoreTable.add(scoreLabel);
-
-        table.add(timeTextLabel).row();
-        table.add(scoreTable);
-        table.row();
+        table.add(innerTimeTable).row();
     }
 }

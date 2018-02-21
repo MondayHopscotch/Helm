@@ -43,6 +43,7 @@ public class OptionsScreen extends AbstractScrollingItemScreen {
     public OptionsScreen(final Helm game) {
         super(game);
         build(false);
+        scroll.setCancelTouchFocus(false);
     }
 
     @Override

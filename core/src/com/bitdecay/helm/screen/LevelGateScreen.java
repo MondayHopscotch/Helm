@@ -25,7 +25,7 @@ import com.bitdecay.helm.world.LevelInstance;
 public class LevelGateScreen extends InputAdapter implements Screen {
 
     private static final float NO_INPUT_WAIT_TIME = 0.25f;
-    private static final float MAX_WAIT_TIME = 5f;
+    private static final float MAX_WAIT_TIME = 10f;
 
     public static LevelGateScreen gateScreen;
 
@@ -97,6 +97,7 @@ public class LevelGateScreen extends InputAdapter implements Screen {
         screenTable.row();
 
         Table fillTable =  new Table(skin);
+        fillTable.align(Align.bottom);
         ScreenElements.getGoalsElement(fillTable, game, after.currentLevel, skin);
 
         screenTable.add(fillTable).fill().expand();
