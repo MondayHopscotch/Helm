@@ -21,7 +21,7 @@ public class GamePrefs {
     public static final String SENSITIVITY = "steeringSensitivity";
     public static final int SENSITIVITY_MIN = -100;
     public static final int SENSITIVITY_MAX = 200;
-    public static final int SENSITIVITY_DEFAULT = 0;
+    public static final int SENSITIVITY_DEFAULT = 25;
 
     public static final String MUTE_MUSIC = "musicMusic";
     public static final boolean MUTE_MUSIC_DEFAULT = false;
