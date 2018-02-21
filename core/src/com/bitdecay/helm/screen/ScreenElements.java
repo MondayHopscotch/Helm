@@ -39,8 +39,14 @@ public class ScreenElements {
         buildScoreTable(game, level, scoreTable, skin);
         buildTimeTable(game, level, timeTable, skin);
 
-        table.add(scoreTable).align(Align.bottomLeft).padLeft(10 * game.fontScale).expandX();
-        table.add(timeTable).align(Align.bottomRight).padRight(10 * game.fontScale).expandX();
+        table.add(scoreTable).align(Align.bottomLeft)
+                .padLeft(10 * game.fontScale)
+                .padBottom(10 * game.fontScale)
+                .expandX();
+        table.add(timeTable).align(Align.bottomRight)
+                .padRight(10 * game.fontScale)
+                .padBottom(10 * game.fontScale)
+                .expandX();
         return table;
     }
 
