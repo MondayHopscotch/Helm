@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.Helm;
@@ -30,6 +31,8 @@ public class PauseMenu {
 
     public PauseMenu(final GamePilot pilot) {
         this.pilot = pilot;
+
+        float iconSize = pilot.getHelm().fontScale * 0.5f;
 
         pauseListener = new ClickListener() {
             @Override
@@ -62,12 +65,12 @@ public class PauseMenu {
         pauseMenu.setVisible(false);
         pauseMenu.addListener(pauseListener);
 
-        TextButton resumeButton = new TextButton("Resume", pilot.getHelm().skin);
-        resumeButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
+        TextureRegionDrawable resumeIcon = new TextureRegionDrawable(TextureCache.getIcon(pilot.getHelm(), "next_icon"));
+        BitImageButton resumeButton = new BitImageButton(resumeIcon, resumeIcon, iconSize, pilot.getHelm().skin);
         resumeButton.addListener(pauseListener);
 
-        TextButton quitButton = new TextButton("Abandon", pilot.getHelm().skin);
-        quitButton.getLabel().setFontScale(pilot.getHelm().fontScale * 0.8f);
+        TextureRegionDrawable quitIcon = new TextureRegionDrawable(TextureCache.getIcon(pilot.getHelm(), "exit_icon"));
+        BitImageButton quitButton = new BitImageButton(quitIcon, quitIcon, iconSize, pilot.getHelm().skin);
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -79,8 +82,8 @@ public class PauseMenu {
 
         Table buttonTable = new Table();
         buttonTable.align(Align.bottom);
-        buttonTable.add(resumeButton).padRight(pilot.getHelm().fontScale * 10);
-        buttonTable.add(quitButton).padLeft(pilot.getHelm().fontScale * 10);
+        buttonTable.add(quitButton).padRight(pilot.getHelm().fontScale * 10);
+        buttonTable.add(resumeButton).padLeft(pilot.getHelm().fontScale * 10);
         pauseMenu.add(buttonTable).padBottom(pilot.getHelm().fontScale * 5).expand().fill();
 
         Label pauseButtonLabel = new Label("...", pilot.getHelm().skin);

@@ -45,7 +45,7 @@ public abstract class AbstractScrollingItemScreen implements Screen {
         }
         skin = game.skin;
 
-        iconSize = game.fontScale * 0.4f;
+        iconSize = game.fontScale * 0.5f;
         exitIcon = game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("exit_icon");
 
         Table container = new Table();

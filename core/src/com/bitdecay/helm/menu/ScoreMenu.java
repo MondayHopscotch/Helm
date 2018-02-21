@@ -85,7 +85,7 @@ public class ScoreMenu {
         this.pilot = pilot;
 
 
-        float iconSize = pilot.getHelm().fontScale * 0.4f;
+        float iconSize = pilot.getHelm().fontScale * 0.5f;
         initIcons();
 
         stage = new Stage();
@@ -285,11 +285,11 @@ public class ScoreMenu {
     }
 
     private void initIcons() {
-        levelSelectTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("exit_icon");
-        retryLevelTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("retry_icon");
-        saveReplayTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("save_icon");
-        saveCompleteTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("saved_icon");
-        nextLevelTexture = pilot.getHelm().assets.get("img/icons.atlas", TextureAtlas.class).findRegion("next_icon");
+        levelSelectTexture = TextureCache.getIcon(pilot.getHelm(), "exit_icon");
+        retryLevelTexture = TextureCache.getIcon(pilot.getHelm(), "retry_icon");
+        saveReplayTexture = TextureCache.getIcon(pilot.getHelm(), "save_icon");
+        saveCompleteTexture = TextureCache.getIcon(pilot.getHelm(), "saved_icon");
+        nextLevelTexture = TextureCache.getIcon(pilot.getHelm(), "next_icon");
     }
 
     private Actor addUnlockLabel(String text) {

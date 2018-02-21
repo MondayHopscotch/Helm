@@ -105,7 +105,7 @@ public class CreditsScreen extends AbstractScrollingItemScreen {
                 };
 
                 TextureRegionDrawable gotoDrawable = new TextureRegionDrawable(gotoTexture);
-                BitImageButton linkButton = new BitImageButton(gotoDrawable, gotoDrawable, game.fontScale * 0.2f, game.skin);
+                BitImageButton linkButton = new BitImageButton(gotoDrawable, gotoDrawable, game.fontScale * 0.3f, game.skin);
 
                 linkButton.addListener(linkListener);
                 lineLabel.addListener(linkListener);
