@@ -2,12 +2,14 @@ package com.bitdecay.helm.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.menu.MedalUtils;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.prefs.GamePrefs;
@@ -160,5 +162,21 @@ public class LevelSelectScreen extends AbstractScrollingItemScreen {
     private void addTimeMedal(Table table, com.bitdecay.helm.world.LevelInstance level) {
         Image medalImage = MedalUtils.getIconForBestTime(level);
         table.add(medalImage).size(MedalUtils.imageSize, MedalUtils.imageSize).expand(false, false).fill(false);
+    }
+
+    @Override
+    public void show() {
+        super.show();
+
+        if(Helm.prefs.getBoolean(GamePrefs.SHOW_DEV_MEDAL_DIALOG) && !Helm.prefs.getBoolean(GamePrefs.ALERTED_OF_DEV_MEDALS)) {
+            // Don't need to show this again
+            Helm.prefs.putBoolean(GamePrefs.SHOW_DEV_MEDAL_DIALOG, false);
+
+            // Remember that we've displayed it to the user
+            Helm.prefs.putBoolean(GamePrefs.ALERTED_OF_DEV_MEDALS, true);
+
+            Dialog devMedalDialog = ScreenElements.getDevMedalDialog(game);
+            devMedalDialog.show(stage);
+        }
     }
 }

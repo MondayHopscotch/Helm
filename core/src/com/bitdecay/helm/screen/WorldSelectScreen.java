@@ -68,11 +68,14 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
             WorldInstance testInstance = WorldUtils.buildWorldInstance(testWorld);
             buildWorldRow(testInstance, worldTable);
             worldTable.row().padTop(game.fontScale * 10);
+        }
 
-            // print level count
-            int levelCount = 0;
-            for (WorldInstance world : worlds) {
-                levelCount += world.levels.size;
+
+        // print level count
+        int levelCount = 0;
+        for (WorldInstance world : worlds) {
+            levelCount += world.levels.size;
+            if (Helm.debug) {
                 for (LevelInstance level : world.levels) {
                     if (level.getScoreNeededForMedal(MedalUtils.LevelRating.DEV) == Integer.MAX_VALUE) {
                         System.out.println(level.levelDef.name + " does not have a dev score");
@@ -82,9 +85,12 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
                         System.out.println(level.levelDef.name + " does not have a dev time");
                     }
                 }
-
             }
+        }
 
+        game.totalLevels = levelCount;
+
+        if (Helm.debug) {
             System.out.println(levelCount + " levels across all worlds");
         }
 
