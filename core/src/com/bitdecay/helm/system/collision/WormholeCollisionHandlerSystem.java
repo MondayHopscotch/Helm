@@ -2,6 +2,7 @@ package com.bitdecay.helm.system.collision;
 
 import com.badlogic.gdx.math.Vector2;
 import com.bitdecay.helm.collision.CollisionKind;
+import com.bitdecay.helm.math.Geom;
 import com.bitdecay.helm.sound.SFXLibrary;
 import com.bitdecay.helm.system.AbstractIteratingGameSystem;
 
@@ -21,11 +22,14 @@ public class WormholeCollisionHandlerSystem extends AbstractIteratingGameSystem 
         com.bitdecay.helm.component.collide.CollidedWithComponent collidedWithComponent = entity.getComponent(com.bitdecay.helm.component.collide.CollidedWithComponent.class);
         if (CollisionKind.PLAYER.equals(collidedWithComponent.with)) {
             float[] otherGeom = collidedWithComponent.delivererGeometry;
+            Vector2 center = new Vector2();
             for (int i = 1; i < otherGeom.length; i += 2) {
-                if (com.bitdecay.helm.math.Geom.distance(transform.position, new Vector2(otherGeom[i-1], otherGeom[i])) > geom.originalGeom[0]) {
-                    // the body wasn't fully in the wormhole, so don't do anything yet
-                    return;
-                }
+                center.add(otherGeom[i-1], otherGeom[i]);
+            }
+            center.scl(1/ (otherGeom.length / 2.0f));
+            if (Geom.distance(transform.position, center) > geom.originalGeom[0]) {
+                // center of body too far away still
+                return;
             }
              entity.removeComponent(com.bitdecay.helm.component.collide.CollidedWithComponent.class);
 
