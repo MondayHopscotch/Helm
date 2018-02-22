@@ -1,13 +1,26 @@
 package com.bitdecay.helm.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.menu.MedalUtils;
+import com.bitdecay.helm.prefs.GamePrefs;
+import com.bitdecay.helm.sound.SFXLibrary;
+import com.bitdecay.helm.sound.SoundMode;
 import com.bitdecay.helm.time.TimerUtils;
+import com.bitdecay.helm.unlock.LiveStat;
+import com.bitdecay.helm.unlock.StatName;
 import com.bitdecay.helm.world.LevelInstance;
 
 /**
@@ -18,7 +31,7 @@ public class ScreenElements {
 
     private static float INFO_FONT_SCALE = 1.0f;
 
-    public static  Table getGoalsElement(Table table, Helm game, LevelInstance level, Skin skin) {
+    public static Table getGoalsElement(Table table, Helm game, LevelInstance level, Skin skin) {
         table.clear();
 
         Table scoreTable = new Table(skin);
@@ -79,6 +92,12 @@ public class ScreenElements {
         for (int i = MedalUtils.LevelRating.values().length - 1; i > 0; i--) {
             MedalUtils.LevelRating medal = MedalUtils.LevelRating.values()[i];
 
+            int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID, Integer.MIN_VALUE);
+            if (medal.equals(MedalUtils.LevelRating.DEV) && levelsCompleted < game.totalLevels) {
+                // player has not finished all levels, hide dev medals
+                continue;
+            }
+
             Image medalImage = MedalUtils.getRankImage(medal);
             Label scoreLabel = new Label(Integer.toString(level.getScoreNeededForMedal(medal)), skin);
             scoreLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
@@ -122,6 +141,12 @@ public class ScreenElements {
         for (int i = MedalUtils.LevelRating.values().length - 1; i > 0; i--) {
             MedalUtils.LevelRating medal = MedalUtils.LevelRating.values()[i];
 
+            int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID, Integer.MIN_VALUE);
+            if (medal.equals(MedalUtils.LevelRating.DEV) && levelsCompleted < game.totalLevels) {
+                // player has not finished all levels, hide dev medals
+                continue;
+            }
+
             Image medalImage = MedalUtils.getRankImage(medal);
             Label timeLabel = new Label(TimerUtils.getFormattedTime(level.getTimeNeededForMedal(medal)), skin);
             timeLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
@@ -134,5 +159,52 @@ public class ScreenElements {
             innerTimeTable.add(timeMedalTable).row();
         }
         table.add(innerTimeTable).row();
+    }
+
+    public static Dialog getDevMedalDialog(final Helm game) {
+        Dialog dialog = new Dialog("Congratulations, Cadet!", game.skin) {
+            @Override
+            protected void result(Object object) {
+
+            }
+        };
+        dialog.getTitleLabel().setFontScale(game.fontScale);
+        dialog.getTitleLabel().setAlignment(Align.center);
+        dialog.padTop(game.fontScale * 6);
+        dialog.setMovable(false);
+
+        Table whatsNewTable = new Table(game.skin);
+        whatsNewTable.align(Align.left);
+
+        Widget[] widgets = {
+                getTextLabel("You've completed the training program.", game),
+                getTextLabel("The developer scores are now visible.", game),
+                getTextLabel("See how many you can beat!", game),
+        };
+        for (Widget widget : widgets) {
+            whatsNewTable.add(widget).align(Align.center);
+            whatsNewTable.row();
+        }
+        dialog.getContentTable().add(whatsNewTable);
+        TextureAtlas.AtlasRegion nextIconTexture = game.assets.get("img/icons.atlas", TextureAtlas.class).findRegion("dev_medal");
+        TextureRegionDrawable nextLevelIcon = new TextureRegionDrawable(nextIconTexture);
+        BitImageButton nextButton = new BitImageButton(nextLevelIcon, nextLevelIcon, game.fontScale * 0.4f, game.skin);
+        nextButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
+                Gdx.input.vibrate(10);
+            }
+        });
+        dialog.getButtonTable().align(Align.right);
+        dialog.button(nextButton);
+        return dialog;
+    }
+
+    private static Label getTextLabel(String text, Helm game) {
+        Label textLabel = new Label(text, game.skin);
+        textLabel.setAlignment(Align.center);
+        textLabel.setFontScale(game.fontScale * 0.8f);
+        return textLabel;
     }
 }

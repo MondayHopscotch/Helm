@@ -38,6 +38,9 @@ public class Helm extends Game {
 
     public GamePalette palette;
 
+    // A sort of hacky way to track how many levels are here
+    public int totalLevels;
+
     @Override
     public void create() {
         aspectRatio = 1.0f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight();

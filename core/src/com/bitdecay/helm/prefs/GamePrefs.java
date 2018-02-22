@@ -28,4 +28,10 @@ public class GamePrefs {
 
     public static final String TUTORIAL_COMPLETE = "tutorialComplete";
     public static final boolean TUTORIAL_COMPLETE_DEFAULT = false;
+
+    public static final String ALERTED_OF_DEV_MEDALS = "alertedOfDevMedals";
+    public static final boolean ALERTED_OF_DEV_MEDALS_DEFAULT = false;
+
+    public static final String SHOW_DEV_MEDAL_DIALOG = "showDevDialog";
+    public static final boolean SHOW_DEV_MEDAL_DIALOG_DEFAULT = false;
 }

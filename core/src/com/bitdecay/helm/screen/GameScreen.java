@@ -168,6 +168,14 @@ public class GameScreen implements Screen, GamePilot {
         if (currentLevel.getHighScore() == GamePrefs.SCORE_NOT_SET) {
             // first time beating the level!
             Helm.stats.count(StatName.LEVELS_COMPLETED, 1);
+
+            int levelsCompleted = Helm.prefs.getInteger(StatName.LEVELS_COMPLETED.preferenceID, Integer.MIN_VALUE);
+            if (levelsCompleted >= game.totalLevels) {
+                // player finished all levels
+                if (!Helm.prefs.getBoolean(GamePrefs.ALERTED_OF_DEV_MEDALS)) {
+                    Helm.prefs.putBoolean(GamePrefs.SHOW_DEV_MEDAL_DIALOG, true);
+                }
+            }
         }
 
         if (score.total() >= currentLevel.getScoreNeededForMedal(MedalUtils.LevelRating.DEV)) {
