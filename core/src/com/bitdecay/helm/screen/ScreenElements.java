@@ -172,6 +172,7 @@ public class ScreenElements {
         dialog.getTitleLabel().setAlignment(Align.center);
         dialog.padTop(game.fontScale * 6);
         dialog.setMovable(false);
+        dialog.setModal(true);
 
         Table whatsNewTable = new Table(game.skin);
         whatsNewTable.align(Align.left);
