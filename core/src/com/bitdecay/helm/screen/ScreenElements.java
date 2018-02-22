@@ -27,14 +27,11 @@ public class ScreenElements {
         Table timeTable = new Table(skin);
         timeTable.setOrigin(Align.bottomRight);
 
-        if (level.getBestTime() != com.bitdecay.helm.prefs.GamePrefs.TIME_NOT_SET &&
-                level.getHighScore() != com.bitdecay.helm.prefs.GamePrefs.SCORE_NOT_SET) {
-            buildCurrentScoreParts(game, level, scoreTable, skin);
-            scoreTable.add(getBlankLabel(skin)).padBottom(game.fontScale * 10).row();
+        buildCurrentScoreParts(game, level, scoreTable, skin);
+        scoreTable.add(getBlankLabel(skin)).padBottom(game.fontScale * 10).row();
 
-            buildCurrentTimeParts(game, level, timeTable, skin);
-            timeTable.add(getBlankLabel(skin)).padBottom(game.fontScale * 10).row();
-        }
+        buildCurrentTimeParts(game, level, timeTable, skin);
+        timeTable.add(getBlankLabel(skin)).padBottom(game.fontScale * 10).row();
 
         buildScoreTable(game, level, scoreTable, skin);
         buildTimeTable(game, level, timeTable, skin);
@@ -55,10 +52,6 @@ public class ScreenElements {
     }
 
     private static void buildCurrentScoreParts(Helm game, LevelInstance level, Table table, Skin skin) {
-        if (level.getHighScore() == com.bitdecay.helm.prefs.GamePrefs.SCORE_NOT_SET) {
-            return;
-        }
-
         Label scoreTextLabel = new Label("Current Best Score", skin);
         scoreTextLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
         scoreTextLabel.setAlignment(Align.center);
@@ -66,6 +59,9 @@ public class ScreenElements {
 
         Image medalImage = MedalUtils.getIconForHighScore(level);
         Label scoreLabel = new Label(Integer.toString(level.getHighScore()), skin);
+        if (level.getHighScore() == com.bitdecay.helm.prefs.GamePrefs.SCORE_NOT_SET) {
+            scoreLabel.setText("-----");
+        }
         scoreLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
         scoreLabel.setAlignment(Align.center);
         scoreLabel.setOrigin(Align.center);
@@ -98,10 +94,6 @@ public class ScreenElements {
     }
 
     private static void buildCurrentTimeParts(Helm game, LevelInstance level, Table table, Skin skin) {
-        if (level.getBestTime() == com.bitdecay.helm.prefs.GamePrefs.TIME_NOT_SET) {
-            return;
-        }
-
         Label timeTextLabel = new Label("Current Best Time", skin);
         timeTextLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
         timeTextLabel.setAlignment(Align.center);
@@ -109,6 +101,9 @@ public class ScreenElements {
 
         Image medalImage = MedalUtils.getIconForBestTime(level);
         Label timeLabel = new Label(TimerUtils.getFormattedTime(level.getBestTime()), skin);
+        if (level.getBestTime() == com.bitdecay.helm.prefs.GamePrefs.TIME_NOT_SET) {
+            timeLabel.setText("--.---");
+        }
         timeLabel.setFontScale(INFO_FONT_SCALE * game.fontScale);
         timeLabel.setAlignment(Align.center);
         timeLabel.setOrigin(Align.center);
