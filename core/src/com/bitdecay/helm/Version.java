@@ -24,12 +24,11 @@ public class Version {
     public static String INITIAL_RELEASE_VERSION = "1.0.0";
 
     private static String[] versionChanges = new String[]{
-            "Menu sound effects",
-            "Add tutorial step for pause menu",
-            "Remove link from bitDecay credit line",
-            "Updated 'Save Replay' icon",
-            "Tune World Unlock timings",
-            "Tune Palette Unlock timings"
+            "Fix replay playback",
+            "Tune wormhole collisions",
+            "Show all medal times/scores",
+            "Capture mobile back button",
+            "Consistent screen buttons"
     };
 
     public static boolean isNewVersionSinceLastOpen(Helm helm) {
