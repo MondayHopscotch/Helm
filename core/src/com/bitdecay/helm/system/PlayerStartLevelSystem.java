@@ -2,7 +2,6 @@ package com.bitdecay.helm.system;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.GamePilot;
 import com.bitdecay.helm.collision.CollisionKind;
@@ -54,7 +53,7 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
         }
 
         if (launchTouchFound) {
-            levelPlayer.beginInputReplayCapture();
+            levelPlayer.beginTickCapture();
             entity.removeComponent(ShipLaunchComponent.class);
 
             // reset player input so the ship doesn't start pointing some weird direction
