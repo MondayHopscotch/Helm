@@ -24,7 +24,7 @@ public class GamePrefs {
     public static final int SENSITIVITY_DEFAULT = 25;
 
     public static final String MUSIC_ENABLED = "musicEnabled";
-    public static final boolean MUSIC_ENABLED_DEFAULT = false;
+    public static final boolean MUSIC_ENABLED_DEFAULT = true;
 
     public static final String TUTORIAL_COMPLETE = "tutorialComplete";
     public static final boolean TUTORIAL_COMPLETE_DEFAULT = false;

@@ -332,7 +332,7 @@ public class TitleScreen implements Screen {
         Music music = game.assets.get(MusicLibrary.AMBIENT_MUSIC, Music.class);
         music.setLooping(true);
 
-        if (game.prefs.getBoolean(GamePrefs.MUSIC_ENABLED)) {
+        if (game.prefs.getBoolean(GamePrefs.MUSIC_ENABLED, GamePrefs.MUSIC_ENABLED_DEFAULT)) {
             if (!music.isPlaying()) {
                 music.play();
             }
