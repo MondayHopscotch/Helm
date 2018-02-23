@@ -1,6 +1,5 @@
 package com.bitdecay.helm.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -74,7 +73,7 @@ public class LevelPlayer {
     int tick = 0;
     InputReplay recordedInput = new InputReplay();
     boolean resetQueued = false;
-    boolean captureActive = false;
+    boolean tickActive = false;
 
     float recordingAngle = Float.NEGATIVE_INFINITY;
     boolean lastRecordedBoost = false;
@@ -395,7 +394,7 @@ public class LevelPlayer {
             recordedInput.reset();
             resetQueued = false;
         }
-        if (captureActive) {
+        if (tickActive) {
             tick++;
         }
     }
@@ -463,13 +462,13 @@ public class LevelPlayer {
         boostToggled = true;
     }
 
-    public void beginInputReplayCapture() {
+    public void beginTickCapture() {
         resetQueued = true;
-        captureActive = true;
+        tickActive = true;
     }
 
-    public void stopReplayCapture() {
-        captureActive = false;
+    public void stopTickCapture() {
+        tickActive = false;
     }
 
     public int getTick() {

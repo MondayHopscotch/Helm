@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.Array;
@@ -76,7 +74,6 @@ public class GameScreen implements Screen, GamePilot {
         currentReplay = null;
 
 
-
         requestRestartLevel();
     }
 
@@ -126,7 +123,7 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void doSound(SoundMode mode, String soundName) {
-       AudioUtils.doSound(game, mode, soundName);
+        AudioUtils.doSound(game, mode, soundName);
     }
 
     @Override
@@ -150,7 +147,8 @@ public class GameScreen implements Screen, GamePilot {
 
     @Override
     public void finishLevel(LandingScore score) {
-        switch(currentMode){
+        levelPlayer.stopTickCapture();
+        switch (currentMode) {
             case PLAY_MODE:
                 scoreRun(score);
                 break;
@@ -161,10 +159,12 @@ public class GameScreen implements Screen, GamePilot {
     }
 
     private void scoreRun(LandingScore score) {
-        levelPlayer.stopReplayCapture();
-        System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
         int levelScore = score.total();
-        System.out.println("SCORE: " + levelScore);
+        if (Helm.debug) {
+            System.out.println("ANGLE: " + score.angleScore + " SPEED: " + score.speedScore);
+            System.out.println("SCORE: " + levelScore);
+        }
+
         if (currentLevel.getHighScore() == GamePrefs.SCORE_NOT_SET) {
             // first time beating the level!
             Helm.stats.count(StatName.LEVELS_COMPLETED, 1);
@@ -292,8 +292,10 @@ public class GameScreen implements Screen, GamePilot {
                         totalTime += frameTime;
                     }
 
-                    double average = 1.0 * totalTime / updateFrameTimes.size;
-                    System.out.println("Average update time: " + average);
+                    if (Helm.debug) {
+                        double average = 1.0 * totalTime / updateFrameTimes.size;
+                        System.out.println("Average update time: " + average);
+                    }
                     updateFrameTimes.clear();
                 }
             }
@@ -312,14 +314,16 @@ public class GameScreen implements Screen, GamePilot {
                     totalTime += frameTime;
                 }
 
-                double average = 1.0 * totalTime / renderFrameTimes.size;
-                System.out.println("Average render time: " + average);
+                if (Helm.debug) {
+                    double average = 1.0 * totalTime / renderFrameTimes.size;
+                    System.out.println("Average render time: " + average);
+                }
                 renderFrameTimes.clear();
             }
         }
 
         if (reloadQueued) {
-            switch(currentMode) {
+            switch (currentMode) {
                 case PLAY_MODE:
                     setLevel(currentLevel);
                     break;
