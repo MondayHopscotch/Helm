@@ -11,4 +11,5 @@ public abstract class AbstractInputSystem extends AbstractIteratingGameSystem im
     public AbstractInputSystem(com.bitdecay.helm.GamePilot pilot) {
         super(pilot);
     }
+    public abstract boolean shouldReset();
 }
