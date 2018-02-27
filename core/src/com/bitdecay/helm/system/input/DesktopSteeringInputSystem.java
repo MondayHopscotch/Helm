@@ -18,6 +18,11 @@ public class DesktopSteeringInputSystem extends AbstractInputSystem {
     }
 
     @Override
+    public boolean shouldReset() {
+        return false;
+    }
+
+    @Override
     public void actOnSingle(com.bitdecay.helm.GameEntity entity, float delta) {
         com.bitdecay.helm.component.control.SteeringControlComponent control = entity.getComponent(com.bitdecay.helm.component.control.SteeringControlComponent.class);
 

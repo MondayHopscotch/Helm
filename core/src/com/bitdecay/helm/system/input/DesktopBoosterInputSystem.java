@@ -17,6 +17,11 @@ public class DesktopBoosterInputSystem extends AbstractInputSystem {
     }
 
     @Override
+    public boolean shouldReset() {
+        return true;
+    }
+
+    @Override
     public void actOnSingle(com.bitdecay.helm.GameEntity entity, float delta) {
         BoostControlComponent button = entity.getComponent(BoostControlComponent.class);
         pressTrack = button.pressed;

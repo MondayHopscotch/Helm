@@ -256,6 +256,12 @@ public class LevelPlayer {
         for (GameSystem gameSystem : gameSystems) {
             if (!inputSystems.contains(gameSystem, true)) {
                 gameSystem.reset();
+            } else {
+                if (gameSystem instanceof AbstractInputSystem) {
+                    if (((AbstractInputSystem) gameSystem).shouldReset()) {
+                        gameSystem.reset();
+                    }
+                }
             }
         }
     }

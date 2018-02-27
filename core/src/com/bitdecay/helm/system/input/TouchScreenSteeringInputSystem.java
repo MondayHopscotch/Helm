@@ -35,6 +35,11 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
     }
 
     @Override
+    public boolean shouldReset() {
+        return false;
+    }
+
+    @Override
     public void actOnSingle(com.bitdecay.helm.GameEntity entity, float delta) {
         SteeringControlComponent control = entity.getComponent(SteeringControlComponent.class);
 
