@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
@@ -20,9 +19,17 @@ import com.bitdecay.helm.unlock.StatName;
 
 public class StatsScreen extends AbstractScrollingItemScreen {
 
+    private static StatsScreen instance;
+
+    public static StatsScreen get(Helm game) {
+        if (instance == null) {
+            instance = new StatsScreen(game);
+        }
+        return instance;
+    }
+
     public StatsScreen(Helm game) {
         super(game);
-        build(false);
     }
 
     @Override

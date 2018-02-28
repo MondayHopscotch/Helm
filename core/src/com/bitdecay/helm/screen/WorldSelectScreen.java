@@ -2,17 +2,14 @@ package com.bitdecay.helm.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.bitdecay.helm.Helm;
-import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.menu.MedalUtils;
 import com.bitdecay.helm.menu.RotatingLabel;
 import com.bitdecay.helm.sound.SFXLibrary;
@@ -33,15 +30,13 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
     public static WorldSelectScreen get(Helm game) {
         if (instance == null) {
             instance = new WorldSelectScreen(game);
-        } else {
-            instance.build(false);
         }
         return instance;
     }
 
     public WorldSelectScreen(final Helm game) {
         super(game);
-        build(true);
+        requestAutoScrollToBottom = true;
     }
 
     @Override
@@ -204,7 +199,7 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
                     public void run() {
-                        game.setScreen(new LevelSelectScreen(game, world));
+                        game.setScreen(LevelSelectScreen.get(game, world));
                     }
                 }));
             }

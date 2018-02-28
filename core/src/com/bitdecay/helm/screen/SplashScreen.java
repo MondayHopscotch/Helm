@@ -146,6 +146,7 @@ public class SplashScreen implements Screen {
                     @Override
                     public void run() {
                         helm.setScreen(TitleScreen.get(helm));
+                        dispose();
                     }
                 })
         );

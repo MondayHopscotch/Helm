@@ -27,9 +27,17 @@ public class PaletteSelectScreen extends AbstractScrollingItemScreen {
     private Map<Color, Pixmap> pixmapCache = new HashMap<>();
     private Image selectedRowImage;
 
+    private static PaletteSelectScreen instance;
+
+    public static PaletteSelectScreen get(Helm game) {
+        if (instance == null) {
+            instance = new PaletteSelectScreen(game);
+        }
+        return instance;
+    }
+
     public PaletteSelectScreen(Helm game) {
         super(game);
-        build(false);
     }
 
     private Pixmap getPixmap(Color color) {

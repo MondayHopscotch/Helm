@@ -1,18 +1,13 @@
 package com.bitdecay.helm.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -32,10 +27,18 @@ public class CreditsScreen extends AbstractScrollingItemScreen {
     private boolean requestStartAtBottom = true;
     private boolean scrollBackToTop = false;
 
+    private static CreditsScreen instance;
+
+    public static CreditsScreen get(Helm game) {
+        if (instance == null) {
+            instance = new CreditsScreen(game);
+        }
+        return instance;
+    }
+
     public CreditsScreen(final Helm game) {
         super(game);
         initIcons();
-        build(false);
     }
 
     @Override
@@ -100,6 +103,8 @@ public class CreditsScreen extends AbstractScrollingItemScreen {
                 ClickListener linkListener = new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
+                        Gdx.input.vibrate(10);
                         Helm.urlOpener.open(creditLine.url);
                     }
                 };

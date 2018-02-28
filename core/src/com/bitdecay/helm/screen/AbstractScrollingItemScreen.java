@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.menu.BitImageButton;
 
 /**
@@ -22,25 +23,31 @@ import com.bitdecay.helm.menu.BitImageButton;
 
 public abstract class AbstractScrollingItemScreen implements Screen {
 
-    protected final com.bitdecay.helm.Helm game;
+    protected final Helm game;
     Stage stage;
     Skin skin;
     private Table titleTable;
-    protected final Table itemTable;
+    protected Table itemTable;
     private Table returnTable;
-    protected final ScrollPane scroll;
+    protected ScrollPane scroll;
 
     private boolean backPressed = false;
 
-    private boolean requestAutoScrollToBottom = false;
+    public boolean requestAutoScrollToBottom = false;
     private float iconSize;
     private TextureAtlas.AtlasRegion exitIcon;
 
     public AbstractScrollingItemScreen(final com.bitdecay.helm.Helm game) {
         this.game = game;
+    }
 
-        stage = new Stage();
-        if (com.bitdecay.helm.Helm.debug) {
+    private void init() {
+        if (stage == null) {
+            stage = new Stage();
+        }
+        stage.clear();
+
+        if (Helm.debug) {
             stage.setDebugAll(true);
         }
         skin = game.skin;
@@ -76,9 +83,9 @@ public abstract class AbstractScrollingItemScreen implements Screen {
         container.add(returnTable).expandX().fillX();
     }
 
-    protected void build(boolean autoScrollToBottom) {
+    protected void build() {
+        init();
         backPressed = false;
-        requestAutoScrollToBottom = autoScrollToBottom;
         Label titleLabel = new Label(getTitle(), skin);
         titleLabel.setFontScale(game.fontScale * 2);
         titleLabel.setAlignment(Align.topLeft);
@@ -104,6 +111,7 @@ public abstract class AbstractScrollingItemScreen implements Screen {
 
     @Override
     public void show() {
+        build();
         stage.addAction(Transitions.getFadeIn());
         Gdx.input.setInputProcessor(stage);
     }

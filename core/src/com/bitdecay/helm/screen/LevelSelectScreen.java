@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.bitdecay.helm.Helm;
@@ -17,6 +16,7 @@ import com.bitdecay.helm.sound.SFXLibrary;
 import com.bitdecay.helm.sound.SoundMode;
 import com.bitdecay.helm.time.TimerUtils;
 import com.bitdecay.helm.world.LevelInstance;
+import com.bitdecay.helm.world.WorldInstance;
 
 /**
  * Created by Monday on 2/9/2017.
@@ -24,13 +24,24 @@ import com.bitdecay.helm.world.LevelInstance;
 
 public class LevelSelectScreen extends AbstractScrollingItemScreen {
 
-    private final com.bitdecay.helm.world.WorldInstance world;
+    private com.bitdecay.helm.world.WorldInstance world;
+
+    private static LevelSelectScreen instance;
+
+    public static LevelSelectScreen get(Helm game, WorldInstance world) {
+        if (instance == null) {
+            instance = new LevelSelectScreen(game, world);
+        } else {
+            instance.world = world;
+        }
+        return instance;
+    }
 
     public LevelSelectScreen(final com.bitdecay.helm.Helm game, final com.bitdecay.helm.world.WorldInstance world) {
         super(game);
         this.world = world;
 
-        build(false);
+        build();
     }
 
     @Override
