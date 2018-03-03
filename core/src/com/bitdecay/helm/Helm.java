@@ -75,6 +75,7 @@ public class Helm extends Game {
         init();
         Loader.loadAssets(assets);
         assets.finishLoading();
+        getScreen().show();
     }
 
     private void checkUpdateClears() {
@@ -116,12 +117,7 @@ public class Helm extends Game {
     @Override
     public void pause() {
         super.pause();
-        for (Screen screen : screens.iterator()) {
-            screen.dispose();
-        }
-        screens.clear();
 
-        assets.dispose();
         if (Helm.prefs != null) {
             Helm.prefs.flush();
         }
@@ -130,5 +126,14 @@ public class Helm extends Game {
     @Override
     public void dispose() {
         super.dispose();
+
+        for (Screen screen : screens.iterator()) {
+            screen.dispose();
+        }
+        screens.clear();
+        assets.dispose();
+        if (Helm.prefs != null) {
+            Helm.prefs.flush();
+        }
     }
 }
