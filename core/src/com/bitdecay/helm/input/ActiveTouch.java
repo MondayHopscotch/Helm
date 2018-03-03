@@ -13,8 +13,6 @@ public class ActiveTouch {
     public Vector2 currentLocation = new Vector2();
     public Vector2 lastDelta = new Vector2();
 
-    private Vector2 workingVec = new Vector2();
-
     public ActiveTouch(int pointerNum, int screenX, int screenY) {
         this.pointerNum = pointerNum;
         startingLocation.x = screenX;
@@ -26,11 +24,7 @@ public class ActiveTouch {
     }
 
     public void captureDelta() {
-        // Always track based on our starting position to avoid rounding errors when
-        // the touch point is barely moving
-        lastDelta.set(startingLocation).sub(lastLocation);
-        workingVec.set(startingLocation).sub(currentLocation);
-        lastDelta.sub(workingVec);
+        lastDelta.set(currentLocation).sub(lastLocation);
     }
 
     public void consumeDeltaInto(Vector2 into) {
