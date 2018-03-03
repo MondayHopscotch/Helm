@@ -20,7 +20,7 @@ import com.bitdecay.helm.sound.SoundMode;
  * Created by Monday on 12/21/2016.
  */
 public class Version {
-    public static String CURRENT_VERSION = "1.0.1 Screen Beta";
+    public static String CURRENT_VERSION = "1.0.1";
     public static String INITIAL_RELEASE_VERSION = "1.0.1";
 
     private static String[] versionChanges = new String[]{
