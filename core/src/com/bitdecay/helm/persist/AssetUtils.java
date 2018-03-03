@@ -9,12 +9,20 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class AssetUtils {
 
+    private static String skinFileName = "skin/ui.atlas";
+    private static String iconFileName = "img/icons.atlas";
+
     public static void loadImageAtlases(AssetManager assets) {
-        assets.load("img/icons.atlas", TextureAtlas.class);
+        if (!assets.isLoaded(iconFileName, TextureAtlas.class)) {
+            assets.load(iconFileName, TextureAtlas.class);
+            assets.finishLoadingAsset(iconFileName);
+        }
     }
 
     public static void loadSkinSync(AssetManager assets) {
-        assets.load("skin/ui.atlas", TextureAtlas.class);
-        assets.finishLoadingAsset("skin/ui.atlas");
+        if (!assets.isLoaded(skinFileName, TextureAtlas.class)) {
+            assets.load(skinFileName, TextureAtlas.class);
+            assets.finishLoadingAsset(skinFileName);
+        }
     }
 }

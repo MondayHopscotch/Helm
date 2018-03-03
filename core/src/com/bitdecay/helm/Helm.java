@@ -5,9 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.bitdecay.helm.assets.Loader;
 import com.bitdecay.helm.external.URLOpener;
 import com.bitdecay.helm.screen.SplashScreen;
 import com.bitdecay.helm.system.render.GamePalette;
@@ -38,8 +40,7 @@ public class Helm extends Game {
     // A sort of hacky way to track how many levels are here
     public int totalLevels;
 
-    @Override
-    public void create() {
+    public void init() {
         aspectRatio = 1.0f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight();
 
         Helm.prefs = Gdx.app.getPreferences("helm-pref");
@@ -54,12 +55,26 @@ public class Helm extends Game {
         palette = PaletteList.valueOf(Helm.prefs.getString(com.bitdecay.helm.prefs.GamePrefs.CHOSEN_PALETTE, com.bitdecay.helm.unlock.palette.PaletteList.STANDARD.name())).palette;
 
         assets = new AssetManager();
+        Texture.setAssetManager(assets);
         skin = new Skin(Gdx.files.internal("skin/skin.json"), new TextureAtlas(Gdx.files.internal("skin/ui.atlas")));
         skin.getFont("defaultFont").setUseIntegerPositions(true);
         // super arbitrary number to try to get fonts to scale nicely for different screens
         fontScale = (int) (Gdx.graphics.getHeight() / 168.75f);
+    }
 
+    @Override
+    public void create() {
+        init();
+        Loader.loadAssets(assets);
         setScreen(new SplashScreen(this));
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        init();
+        Loader.loadAssets(assets);
+        assets.finishLoading();
     }
 
     private void checkUpdateClears() {
@@ -73,7 +88,9 @@ public class Helm extends Game {
 
         for (String updateSetting : updatesRequiringClear) {
             if (Helm.prefs.getBoolean(updateSetting, true)) {
-                System.out.println("Clearing prefs for '" + updateSetting + "'");
+                if (Helm.debug) {
+                    System.out.println("Clearing prefs for '" + updateSetting + "'");
+                }
                 prefClearRequired = true;
             }
         }
@@ -97,9 +114,8 @@ public class Helm extends Game {
     }
 
     @Override
-    public void dispose() {
-        super.dispose();
-
+    public void pause() {
+        super.pause();
         for (Screen screen : screens.iterator()) {
             screen.dispose();
         }
@@ -109,5 +125,10 @@ public class Helm extends Game {
         if (Helm.prefs != null) {
             Helm.prefs.flush();
         }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
     }
 }

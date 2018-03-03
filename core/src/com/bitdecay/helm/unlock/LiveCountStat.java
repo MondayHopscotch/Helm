@@ -1,6 +1,7 @@
 package com.bitdecay.helm.unlock;
 
 import com.badlogic.gdx.Preferences;
+import com.bitdecay.helm.Helm;
 
 /**
  * Created by Monday on 2/19/2017.
@@ -16,12 +17,16 @@ public class LiveCountStat extends LiveStat {
     @Override
     protected void load(Preferences preferences) {
         count = preferences.getInteger(statName.preferenceID, 0);
-        System.out.println("Initializing stat '" + statName.preferenceID + "' with value '" + count + "'");
+        if (Helm.debug) {
+            System.out.println("Initializing stat '" + statName.preferenceID + "' with value '" + count + "'");
+        }
     }
 
     @Override
     public void save(Preferences preferences) {
-        System.out.println("Saving stat '" + statName.preferenceID + "' with value '" + count + "'");
+        if (Helm.debug) {
+            System.out.println("Saving stat '" + statName.preferenceID + "' with value '" + count + "'");
+        }
         preferences.putInteger(statName.preferenceID, count);
     }
 

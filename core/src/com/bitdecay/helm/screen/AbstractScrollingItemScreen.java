@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -33,7 +32,8 @@ public abstract class AbstractScrollingItemScreen implements Screen {
 
     private boolean backPressed = false;
 
-    public boolean requestAutoScrollToBottom = false;
+    public boolean requestAutoScroll = false;
+    public float requestedScrollPercent = 0;
     private float iconSize;
     private TextureAtlas.AtlasRegion exitIcon;
 
@@ -129,9 +129,9 @@ public abstract class AbstractScrollingItemScreen implements Screen {
             getReturnButtonAction().clicked(null, 0, 0);
         }
 
-        if (requestAutoScrollToBottom) {
-            requestAutoScrollToBottom = false;
-            scroll.setScrollPercentY(1);
+        if (requestAutoScroll) {
+            requestAutoScroll = false;
+            scroll.setScrollPercentY(requestedScrollPercent);
         }
     }
 

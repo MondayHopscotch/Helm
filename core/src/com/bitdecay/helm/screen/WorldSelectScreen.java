@@ -36,7 +36,8 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
 
     public WorldSelectScreen(final Helm game) {
         super(game);
-        requestAutoScrollToBottom = true;
+        requestAutoScroll = true;
+        requestedScrollPercent = 1;
     }
 
     @Override
@@ -254,6 +255,18 @@ public class WorldSelectScreen extends AbstractScrollingItemScreen {
         hintLabel.setFontScale(game.fontScale);
         worldTable.add(hintLabel).colspan(4);
 
+    }
+
+    @Override
+    public void hide() {
+        super.hide();
+        requestedScrollPercent = scroll.getScrollPercentY();
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        requestAutoScroll = true;
     }
 
     @Override

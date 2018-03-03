@@ -63,7 +63,9 @@ public class LevelInstance {
             }
 
             saveHighScore(newScore);
-            System.out.println("Saving new high score for " + levelDef.name + ": " + newScore);
+            if (Helm.debug) {
+                System.out.println("Saving new high score for " + levelDef.name + ": " + newScore);
+            }
             return newScore - Math.max(0, oldHighScore); // if no score is set, make sure we don't go negative
         } else {
             return 0;
@@ -88,7 +90,9 @@ public class LevelInstance {
             }
 
             saveBestTime(newTime);
-            System.out.println("Saving new best time for " + levelDef.name + ": " + newTime);
+            if (Helm.debug) {
+                System.out.println("Saving new best time for " + levelDef.name + ": " + newTime);
+            }
             return newTime - oldBestTime;
         } else {
             return 0;

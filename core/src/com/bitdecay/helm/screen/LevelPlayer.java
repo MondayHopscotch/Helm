@@ -279,7 +279,7 @@ public class LevelPlayer {
 
         ShipEntity ship = new ShipEntity(levelDef.startPosition, levelDef.startingFuel);
         ship.addComponent(new PlayerActiveComponent());
-        printMatchingGameSystems(ship);
+//        printMatchingGameSystems(ship);
         allEntities.add(ship);
     }
 
