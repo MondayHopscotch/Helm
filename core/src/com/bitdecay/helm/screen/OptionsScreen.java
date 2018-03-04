@@ -55,6 +55,8 @@ public class OptionsScreen extends AbstractScrollingItemScreen {
     public void populateRows(Table mainTable) {
         baseFontScale = game.fontScale * 0.8f;
 
+        prefsTable.clear();
+
         prefsTable.align(Align.left);
 
         generateSliderIntSetting("Steering Sensitivity", GamePrefs.SENSITIVITY, GamePrefs.SENSITIVITY_DEFAULT, GamePrefs.SENSITIVITY_MIN, GamePrefs.SENSITIVITY_MAX);
