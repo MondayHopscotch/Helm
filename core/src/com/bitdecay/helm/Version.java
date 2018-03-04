@@ -20,8 +20,8 @@ import com.bitdecay.helm.sound.SoundMode;
  * Created by Monday on 12/21/2016.
  */
 public class Version {
-    public static String CURRENT_VERSION = "1.0.1";
-    public static String INITIAL_RELEASE_VERSION = "1.0.1";
+    public static String CURRENT_VERSION = "1.0.2";
+    public static String INITIAL_RELEASE_VERSION = "1.0.2";
 
     private static String[] versionChanges = new String[]{
             "Proper texture handling"
