@@ -24,11 +24,7 @@ public class Version {
     public static String INITIAL_RELEASE_VERSION = "1.0.1";
 
     private static String[] versionChanges = new String[]{
-            "Fix replay playback",
-            "Tune wormhole collisions",
-            "Show all medal times/scores",
-            "Capture mobile back button",
-            "Consistent screen buttons"
+            "Proper texture handling"
     };
 
     public static boolean isNewVersionSinceLastOpen(Helm helm) {
