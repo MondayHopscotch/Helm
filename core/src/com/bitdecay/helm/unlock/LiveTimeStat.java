@@ -1,6 +1,7 @@
 package com.bitdecay.helm.unlock;
 
 import com.badlogic.gdx.Preferences;
+import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.time.TimerUtils;
 
 /**
@@ -17,12 +18,16 @@ public class LiveTimeStat extends LiveStat {
     @Override
     protected void load(Preferences preferences) {
         amount = preferences.getFloat(statName.preferenceID, 0);
-        System.out.println("Initializing stat '" + statName.preferenceID + "' with value '" + amount + "'");
+        if (Helm.debug) {
+            System.out.println("Initializing stat '" + statName.preferenceID + "' with value '" + amount + "'");
+        }
     }
 
     @Override
     public void save(Preferences preferences) {
-        System.out.println("Saving stat '" + statName.preferenceID + "' with value '" + amount + "'");
+        if (Helm.debug) {
+            System.out.println("Saving stat '" + statName.preferenceID + "' with value '" + amount + "'");
+        }
         preferences.putFloat(statName.preferenceID, amount);
     }
 

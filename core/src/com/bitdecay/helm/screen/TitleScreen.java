@@ -37,10 +37,10 @@ public class TitleScreen implements Screen {
     Skin skin;
     com.bitdecay.helm.Helm game;
 
-    private final Table mainMenu;
-    private final Table extraMenu;
+    private Table mainMenu;
+    private Table extraMenu;
 
-    private Actor activeMenu;
+    private boolean mainMenuActive = true;
 
     private float menuTransitionSpeed = .15f;
 
@@ -56,6 +56,9 @@ public class TitleScreen implements Screen {
 
     private TitleScreen(Helm game) {
         this.game = game;
+    }
+
+    private void buildScreen() {
         stage = new Stage();
         stage.setDebugAll(Helm.debug);
 
@@ -74,18 +77,15 @@ public class TitleScreen implements Screen {
         mainTable.setFillParent(true);
 
         mainMenu = buildMainMenu();
-        activeMenu = mainMenu;
         mainTable.add(mainMenu).expand().align(Align.right);
+        mainMenu.setVisible(mainMenuActive);
 
         Table extraTable = new Table();
         extraTable.setFillParent(true);
 
         extraMenu = buildExtraMenu();
         extraTable.add(extraMenu).expand().align(Align.right);
-
-        extraMenu.setVisible(false);
-        System.out.println(extraMenu.getWidth());
-
+        extraMenu.setVisible(!mainMenuActive);
 
         Table versionTable = new Table();
         versionTable.setFillParent(true);
@@ -107,6 +107,8 @@ public class TitleScreen implements Screen {
             RotatingLabel feedbackLabel = new RotatingLabel("Give Feedback", game.fontScale * 1.2f, skin, new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
+                    Gdx.input.vibrate(10);
                     Helm.urlOpener.open("https://goo.gl/forms/pT6n5bB9rlH30ecu2");
                 }
             }, false);
@@ -151,7 +153,7 @@ public class TitleScreen implements Screen {
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
                     public void run() {
-                        game.setScreen(new OptionsScreen(game));
+                        game.setScreen(OptionsScreen.get(game));
                     }
                 }));
             }
@@ -190,7 +192,7 @@ public class TitleScreen implements Screen {
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
                     public void run() {
-                        game.setScreen(new PaletteSelectScreen(game));
+                        game.setScreen(PaletteSelectScreen.get(game));
                     }
                 }));
             }
@@ -205,7 +207,7 @@ public class TitleScreen implements Screen {
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
                     public void run() {
-                        game.setScreen(new StatsScreen(game));
+                        game.setScreen(StatsScreen.get(game));
                     }
                 }));
             }
@@ -220,7 +222,7 @@ public class TitleScreen implements Screen {
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
                     public void run() {
-                        game.setScreen(new ReplaySelectScreen(game));
+                        game.setScreen(ReplaySelectScreen.get(game));
                     }
                 }));
             }
@@ -235,7 +237,7 @@ public class TitleScreen implements Screen {
                 stage.addAction(Transitions.getQuickFadeOut(new Runnable() {
                     @Override
                     public void run() {
-                        game.setScreen(new CreditsScreen(game));
+                        game.setScreen(CreditsScreen.get(game));
                     }
                 }));
             }
@@ -300,13 +302,12 @@ public class TitleScreen implements Screen {
                         Actions.run(new Runnable() {
                             @Override
                             public void run() {
-                                activeMenu = to;
+                                mainMenuActive = to == mainMenu;
                             }
                         })
                 )
         );
     }
-
 
     private void finishLoadingAssets() {
         game.assets.finishLoading();
@@ -327,6 +328,8 @@ public class TitleScreen implements Screen {
 
     @Override
     public void show() {
+        System.out.println("GDXSTATE TITLE: SHOW");
+        buildScreen();
         Gdx.input.setInputProcessor(stage);
         stage.addAction(Transitions.getFadeIn());
         Music music = game.assets.get(MusicLibrary.AMBIENT_MUSIC, Music.class);
@@ -362,7 +365,7 @@ public class TitleScreen implements Screen {
             canTogglePause = false;
             AudioUtils.doSound(game, SoundMode.PLAY, SFXLibrary.MENU_BOOP);
             Gdx.input.vibrate(10);
-            if (activeMenu == extraMenu) {
+            if (!mainMenuActive) {
                 transitionMenu(extraMenu, mainMenu);
             } else {
                 Gdx.app.exit();

@@ -2,6 +2,7 @@ package com.bitdecay.helm.sound;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 
 /**
  * Created by Monday on 12/15/2016.
@@ -21,7 +22,9 @@ public class MusicLibrary {
 
     public static void loadAllAsync(AssetManager assets) {
         for (String musicName : allMusic) {
-            assets.load(musicName, Music.class);
+            if (!assets.isLoaded(musicName, Music.class)) {
+                assets.load(musicName, Music.class);
+            }
         }
     }
 }

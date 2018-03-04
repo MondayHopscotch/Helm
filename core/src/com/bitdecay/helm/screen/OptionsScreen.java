@@ -32,15 +32,30 @@ public class OptionsScreen extends AbstractScrollingItemScreen {
     private List<Runnable> closingActions = new ArrayList<>();
     private final Table prefsTable = new Table();
 
+    private static OptionsScreen instance;
+
+    public static OptionsScreen get(Helm game) {
+        if (instance == null) {
+            instance = new OptionsScreen(game);
+        }
+        return instance;
+    }
+
     public OptionsScreen(final Helm game) {
         super(game);
-        build(false);
+    }
+
+    @Override
+    public void show() {
+        super.show();
         scroll.setCancelTouchFocus(false);
     }
 
     @Override
     public void populateRows(Table mainTable) {
         baseFontScale = game.fontScale * 0.8f;
+
+        prefsTable.clear();
 
         prefsTable.align(Align.left);
 

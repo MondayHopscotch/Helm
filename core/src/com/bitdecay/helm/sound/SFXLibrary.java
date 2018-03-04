@@ -40,7 +40,9 @@ public class SFXLibrary {
 
     public static void loadAllAsync(AssetManager assets) {
         for (String sfxName : allSounds) {
-            assets.load(sfxName, Sound.class);
+            if (!assets.isLoaded(sfxName, Sound.class)) {
+                assets.load(sfxName, Sound.class);
+            }
         }
     }
 }

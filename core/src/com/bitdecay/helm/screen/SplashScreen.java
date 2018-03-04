@@ -16,11 +16,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.bitdecay.helm.Helm;
+import com.bitdecay.helm.assets.Loader;
 import com.bitdecay.helm.menu.IconUtils;
 import com.bitdecay.helm.menu.MedalUtils;
-import com.bitdecay.helm.persist.AssetUtils;
 import com.bitdecay.helm.sound.MusicLibrary;
-import com.bitdecay.helm.sound.SFXLibrary;
 
 /**
  * Created by Monday on 4/8/2017.
@@ -87,7 +86,7 @@ public class SplashScreen implements Screen {
     @Override
     public void show() {
         // if this screen is shown, we are reloading all assets
-        reloadAllAssets();
+        Loader.loadAssets(helm.assets);
 
         loadingText.addAction(
                 Actions.sequence(
@@ -128,15 +127,6 @@ public class SplashScreen implements Screen {
         );
     }
 
-    private void reloadAllAssets() {
-        System.out.println("Reloading ALL ASSETS: " + System.currentTimeMillis());
-        helm.assets.clear();
-        SFXLibrary.loadAllAsync(helm.assets);
-        MusicLibrary.loadAllAsync(helm.assets);
-        AssetUtils.loadSkinSync(helm.assets);
-        AssetUtils.loadImageAtlases(helm.assets);
-    }
-
     private void nextScreen() {
         loadingText.addAction(Actions.fadeOut(1));
         animatedText.setText("");
@@ -146,6 +136,7 @@ public class SplashScreen implements Screen {
                     @Override
                     public void run() {
                         helm.setScreen(TitleScreen.get(helm));
+                        stage.dispose();
                     }
                 })
         );
@@ -199,6 +190,6 @@ public class SplashScreen implements Screen {
 
     @Override
     public void dispose() {
-        stage.dispose();
+//        stage.dispose();
     }
 }

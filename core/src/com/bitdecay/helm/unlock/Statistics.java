@@ -50,10 +50,14 @@ public class Statistics {
         LiveStat stat = statistics.get(statName);
         if (stat != null) {
             if (StatType.COUNT != stat.statName.type) {
-                System.out.println("Adding count to wrong stat type. Bailing");
+                if (Helm.debug) {
+                    System.out.println("Adding count to wrong stat type. Bailing");
+                }
                 return;
             }
-            System.out.println("Adding '" + count + "' to stat '" + statName.preferenceID + "'");
+            if (Helm.debug) {
+                System.out.println("Adding '" + count + "' to stat '" + statName.preferenceID + "'");
+            }
             ((LiveCountStat)stat).count += count;
             stat.save(preferences);
             preferences.flush();
@@ -64,10 +68,14 @@ public class Statistics {
         LiveStat stat = statistics.get(statName);
         if (stat != null) {
             if (StatType.TIME != stat.statName.type) {
-                System.out.println("Adding time to wrong stat type. Bailing");
+                if (Helm.debug) {
+                    System.out.println("Adding time to wrong stat type. Bailing");
+                }
                 return;
             }
-            System.out.println("Adding '" + time + "' to stat '" + statName.preferenceID + "'");
+            if (Helm.debug) {
+                System.out.println("Adding '" + time + "' to stat '" + statName.preferenceID + "'");
+            }
             ((LiveTimeStat)stat).amount += time;
             stat.save(preferences);
             preferences.flush();

@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Sort;
+import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.input.InputReplay;
 import com.bitdecay.helm.menu.BitImageButton;
 import com.bitdecay.helm.persist.JsonUtils;
@@ -25,9 +26,18 @@ import java.util.Comparator;
  * Created by Monday on 2/26/2017.
  */
 public class ReplaySelectScreen extends AbstractScrollingItemScreen {
+
+    private static ReplaySelectScreen instance;
+
+    public static ReplaySelectScreen get(Helm game) {
+        if (instance == null) {
+            instance = new ReplaySelectScreen(game);
+        }
+        return instance;
+    }
+
     public ReplaySelectScreen(com.bitdecay.helm.Helm game) {
         super(game);
-        build(false);
     }
 
     @Override

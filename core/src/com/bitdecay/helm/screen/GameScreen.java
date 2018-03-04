@@ -212,7 +212,7 @@ public class GameScreen implements Screen, GamePilot {
             if (isQuit) {
                 Helm.stats.count(StatName.ABANDONS, 1);
             }
-            game.setScreen(TransitionColorScreen.get(game, Color.BLACK, new LevelSelectScreen(game, activeWorld)));
+            game.setScreen(TransitionColorScreen.get(game, Color.BLACK, LevelSelectScreen.get(game, activeWorld)));
         }
     }
 

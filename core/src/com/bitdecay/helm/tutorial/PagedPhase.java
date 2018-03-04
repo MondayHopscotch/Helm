@@ -58,7 +58,6 @@ public abstract class PagedPhase implements TutorialPhase {
 
         currentPage++;
         if (currentPage >= pages.size) {
-            System.out.println("NO PAGES LEFT!");
             return false;
         }
 

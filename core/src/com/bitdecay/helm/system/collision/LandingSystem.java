@@ -2,6 +2,7 @@ package com.bitdecay.helm.system.collision;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.collision.CollisionKind;
 import com.bitdecay.helm.component.BoostCountComponent;
 import com.bitdecay.helm.component.BoosterComponent;
@@ -73,22 +74,28 @@ public class LandingSystem extends AbstractIteratingGameSystem {
         float maxPlatformReference = Geom.getMaxAlongVector(landing.landingGeometry, normalVector);
         float surfaceDifference = maxPlatformReference - minBodyReference;
 
-        System.out.println("LANDING VECTOR: " + velocity.currentVelocity);
-        System.out.println("LANDING ANGLE: " + radsAwayFromStraightUp);
-        System.out.println("LANDING SURFACE DIFFERENCE: " + surfaceDifference);
+        if (Helm.debug) {
+            System.out.println("LANDING VECTOR: " + velocity.currentVelocity);
+            System.out.println("LANDING ANGLE: " + radsAwayFromStraightUp);
+            System.out.println("LANDING SURFACE DIFFERENCE: " + surfaceDifference);
+        }
 
         // velocity checks
         float impactSpeed = velocity.currentVelocity.dot(normalVector);
         if (Math.abs(impactSpeed) > MAX_LANDING_SPEED || impactSpeed > 0) {
             entity.addComponent(new CrashComponent(CollisionKind.LANDING_PLATFORM));
-            System.out.println("LANDED TO0 HARD: " + velocity.currentVelocity + " impactVelocify: " + impactSpeed);
+            if (Helm.debug) {
+                System.out.println("LANDED TO0 HARD: " + velocity.currentVelocity + " impactVelocify: " + impactSpeed);
+            }
             return;
         }
 
         // angle checks
         if (radsAwayFromStraightUp > MAX_LANDING_ANGLE) {
             entity.addComponent(new CrashComponent(CollisionKind.LANDING_PLATFORM));
-            System.out.println("LANDED CROOKED: " + radsAwayFromStraightUp);
+            if (Helm.debug) {
+                System.out.println("LANDED CROOKED: " + radsAwayFromStraightUp);
+            }
             return;
         }
 
@@ -97,7 +104,9 @@ public class LandingSystem extends AbstractIteratingGameSystem {
             // TODO: Tune this value. This represents how far into the platform the player can be to still count
             // as hitting it from the top
             entity.addComponent(new CrashComponent(CollisionKind.LANDING_PLATFORM));
-            System.out.println("LANDED FROM WRONG SIDE OF PLAT. Surface Difference: " + surfaceDifference);
+            if (Helm.debug) {
+                System.out.println("LANDED FROM WRONG SIDE OF PLAT. Surface Difference: " + surfaceDifference);
+            }
             return;
         }
 
@@ -147,13 +156,17 @@ public class LandingSystem extends AbstractIteratingGameSystem {
     }
 
     private int rateFuelRemaining(FuelComponent fuel) {
-        System.out.println("Fuel: " + fuel.fuelRemaining + "/" + fuel.maxFuel);
+        if (Helm.debug) {
+            System.out.println("Fuel: " + fuel.fuelRemaining + "/" + fuel.maxFuel);
+        }
         // higher starting fuel and higher burn rate have higher reward for remaining fuel
         return (int) ((fuel.maxFuel * fuel.burnRate) * (fuel.fuelRemaining / fuel.maxFuel));
     }
 
     private int rateAngle(float radsAwayFromStraightUp) {
-        System.out.println("Landing Angle: " + radsAwayFromStraightUp);
+        if (Helm.debug) {
+            System.out.println("Landing Angle: " + radsAwayFromStraightUp);
+        }
         if (radsAwayFromStraightUp > MAX_LANDING_ANGLE_FOR_SCORE) {
             return 0;
         } else {
@@ -166,7 +179,9 @@ public class LandingSystem extends AbstractIteratingGameSystem {
 
     private int rateSpeed(float impactSpeed) {
         float absImpactSpeed = Math.abs(impactSpeed);
-        System.out.println("Landing Velocity: " + impactSpeed);
+        if (Helm.debug) {
+            System.out.println("Landing Velocity: " + impactSpeed);
+        }
         if (absImpactSpeed > MAX_LANDING_SPEED_FOR_SCORE) {
             return 0;
         } else {
@@ -190,9 +205,10 @@ public class LandingSystem extends AbstractIteratingGameSystem {
             platformMin = Math.min(platformMin, surfaceVector.dot(landing.landingGeometry[i - 1], landing.landingGeometry[i]));
             platformMax = Math.max(platformMax, surfaceVector.dot(landing.landingGeometry[i - 1], landing.landingGeometry[i]));
         }
-
-        System.out.println("PlatformMin: " + platformMin + "   PlatformMax: " + platformMax);
-        System.out.println("shipCenter: " + shipCenter);
+        if (Helm.debug) {
+            System.out.println("PlatformMin: " + platformMin + "   PlatformMax: " + platformMax);
+            System.out.println("shipCenter: " + shipCenter);
+        }
 
         platformMiddle = (platformMin + platformMax) / 2;
 
