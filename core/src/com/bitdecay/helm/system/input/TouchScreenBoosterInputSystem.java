@@ -5,6 +5,7 @@ import com.bitdecay.helm.component.BoostCountComponent;
 import com.bitdecay.helm.component.BoosterComponent;
 import com.bitdecay.helm.component.PlayerActiveComponent;
 import com.bitdecay.helm.component.control.BoostControlComponent;
+import com.bitdecay.helm.input.ActiveTouch;
 import com.bitdecay.helm.input.TouchTracker;
 
 /**
@@ -32,7 +33,7 @@ public class TouchScreenBoosterInputSystem extends AbstractInputSystem {
         BoostControlComponent button = entity.getComponent(BoostControlComponent.class);
         pressTrack = button.pressed;
         button.pressed = false;
-        for (com.bitdecay.helm.input.ActiveTouch touch : tracker.activeTouches) {
+        for (ActiveTouch touch : tracker.getTouches()) {
             if (button.activeArea.contains(touch.currentLocation)) {
                 button.pressed = true;
             }

@@ -8,6 +8,7 @@ import com.bitdecay.helm.component.HasSteeredComponent;
 import com.bitdecay.helm.GameEntity;
 import com.bitdecay.helm.Helm;
 import com.bitdecay.helm.component.control.SteeringControlComponent;
+import com.bitdecay.helm.input.ActiveTouch;
 import com.bitdecay.helm.input.TouchTracker;
 import com.bitdecay.helm.prefs.GamePrefs;
 
@@ -50,14 +51,18 @@ public class TouchScreenSteeringInputSystem extends AbstractInputSystem {
         // track our angle for recording purposes
         tempAngle = control.angle;
 
-        for (com.bitdecay.helm.input.ActiveTouch touch : tracker.activeTouches) {
+        for (ActiveTouch touch : tracker.getTouches()) {
             if (control.activeArea.contains(touch.startingLocation)) {
 
                 touch.consumeDeltaInto(deltaVector);
                 int sensitivity = BASE_LINEARITY - prefSensitivity;
+                System.out.println("Raw Delta: " + deltaVector);
                 scaleBasedOnScreenSize(deltaVector);
+                System.out.println("Scaled Delta: " + deltaVector);
                 accelerate(deltaVector, sensitivity, BASE_INTERSECTION);
+                System.out.println("Accel Delta: " + deltaVector);
                 control.angle -= deltaVector.x / sensitivity;
+                System.out.println();
 
                 if (control.angle != SteeringControlComponent.ANGLE_NOT_SET) {
                     while (control.angle > MathUtils.PI2) {

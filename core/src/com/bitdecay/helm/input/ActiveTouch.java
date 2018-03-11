@@ -25,9 +25,11 @@ public class ActiveTouch {
 
     public void captureDelta() {
         lastDelta.set(currentLocation).sub(lastLocation);
+        lastLocation.set(currentLocation);
     }
 
     public void consumeDeltaInto(Vector2 into) {
+        captureDelta();
         into.x = lastDelta.x;
         into.y = lastDelta.y;
         lastDelta.set(Vector2.Zero);

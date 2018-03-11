@@ -46,7 +46,7 @@ public class PlayerStartLevelSystem extends AbstractIteratingGameSystem implemen
 
         boolean launchTouchFound = false;
 
-        for (ActiveTouch touch : touches.activeTouches) {
+        for (ActiveTouch touch : touches.getTouches()) {
             if (boostInput.activeArea.contains(touch.startingLocation)) {
                 launchTouchFound = true;
             }

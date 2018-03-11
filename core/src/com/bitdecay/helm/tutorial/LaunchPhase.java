@@ -105,7 +105,7 @@ public class LaunchPhase implements TutorialPhase {
         if (boostControl.activeArea.contains(screenX, screenY)) {
             ship.addComponent(boostControl);
             PlayerStartLevelSystem startSystem = player.getSystem(PlayerStartLevelSystem.class);
-            startSystem.touches.activeTouches.add(new ActiveTouch(0, screenX, screenY));
+            startSystem.touches.activeTouchMap.put(0, new ActiveTouch(0, screenX, screenY));
         }
         return false;
     }
