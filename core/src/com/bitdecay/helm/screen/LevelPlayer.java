@@ -378,9 +378,9 @@ public class LevelPlayer {
 
     protected void tick(float delta) {
         handleTickCount();
-
-        for (GameSystem system : gameSystems) {
-            system.act(allEntities, delta);
+        System.out.println(gameSystems);
+        for (int i = 0; i < gameSystems.size; i++) {
+            gameSystems.get(i).act(allEntities, delta);
         }
         scaleCamBuffer();
         gameCam.update(delta);
