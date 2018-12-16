@@ -20,11 +20,13 @@ import com.bitdecay.helm.sound.SoundMode;
  * Created by Monday on 12/21/2016.
  */
 public class Version {
-    public static String CURRENT_VERSION = "1.0.2";
+    public static String CURRENT_VERSION = "1.0.3";
     public static String INITIAL_RELEASE_VERSION = "1.0.2";
 
+    // NOTE: Don't make these too long as the modal dialog doesn't try to wrap text
     private static String[] versionChanges = new String[]{
-            "Proper texture handling"
+            "Fixed bug in tutorial",
+            "Updates to title screen layout"
     };
 
     public static boolean isNewVersionSinceLastOpen(Helm helm) {
