@@ -93,7 +93,7 @@ public class TitleScreen implements Screen {
         versionTable.align(Align.bottomLeft);
 
         Actor versionActor = buildVersionTag();
-        versionTable.add(versionActor).align(Align.left).fill().expand();
+        versionTable.add(versionActor).align(Align.left).padLeft(game.fontScale * 10f).fill().expand();
 
         stage.addActor(mainTable);
         stage.addActor(extraTable);
