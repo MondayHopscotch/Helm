@@ -378,7 +378,6 @@ public class LevelPlayer {
 
     protected void tick(float delta) {
         handleTickCount();
-        System.out.println(gameSystems);
         for (int i = 0; i < gameSystems.size; i++) {
             gameSystems.get(i).act(allEntities, delta);
         }
