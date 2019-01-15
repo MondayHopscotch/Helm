@@ -28,12 +28,7 @@ public class ReplayInputSystem extends AbstractIteratingGameSystem {
             replay = entity.getComponent(ReplayActiveComponent.class);
         }
         if (replay.nextInput >= replay.input.inputRecords.size) {
-            // we are done looking at inputs, reset the controls.
-            BoostControlComponent boost = entity.getComponent(BoostControlComponent.class);
-            boost.pressed = false;
-
-            SteeringControlComponent steering = entity.getComponent(SteeringControlComponent.class);
-            steering.angle = Geom.ROTATION_UP;
+            // we are done looking at inputs
             return;
         }
 
