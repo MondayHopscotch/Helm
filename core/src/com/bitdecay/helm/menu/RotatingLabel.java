@@ -16,7 +16,7 @@ public class RotatingLabel extends Table {
     private float maxRotation = 5;
     private float rotation = maxRotation;
     private float spinSpeed = 0;
-    private float spinAccel = .005f;
+    private float spinAccel = .3f;
     public final Label innerLabel;
 
     public RotatingLabel(String labelText, float fontSize, Skin skin) {
@@ -50,15 +50,15 @@ public class RotatingLabel extends Table {
         super.act(delta);
         if (spinningRight) {
             if (rotation > 0) {
-                spinSpeed -= spinAccel;
+                spinSpeed -= spinAccel * delta;
             } else {
-                spinSpeed += spinAccel;
+                spinSpeed += spinAccel * delta;
             }
         } else {
             if (rotation > 0) {
-                spinSpeed += spinAccel;
+                spinSpeed += spinAccel * delta;
             } else {
-                spinSpeed -= spinAccel;
+                spinSpeed -= spinAccel * delta;
             }
         }
 
