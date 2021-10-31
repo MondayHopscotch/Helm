@@ -23,7 +23,7 @@ import com.bitdecay.helm.ui.UpdatingContainer;
  */
 
 public class LandingAnglePhase extends PagedPhase {
-    private float rotation = 0.02f;
+    private float rotation = 1.2f;
 
     private SteeringControlComponent steering;
     private TransformComponent transform;
@@ -83,7 +83,7 @@ public class LandingAnglePhase extends PagedPhase {
                 rotation *= -1;
                 transform.angle = minRot;
         }
-        transform.angle += rotation;
+        transform.angle += rotation * delta;
 
         if (currentPage >= pages.size) {
             transform.angle = Geom.ROTATION_UP;
